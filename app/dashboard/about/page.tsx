@@ -87,7 +87,7 @@ export default function AboutPage() {
   const [savedChairmanAuthor, setSavedChairmanAuthor] = useState(chairmanAuthor);
   const [savedChairmanDesignation, setSavedChairmanDesignation] = useState(chairmanDesignation);
   const [savedChairmanImage, setSavedChairmanImage] = useState(chairmanImage);
-  const [previewSection, setPreviewSection] = useState<"history" | "vision" | "join" | "message" | "leadership" | null>(null);
+  const [previewSection, setPreviewSection] = useState<"history" | "vision" | "join" | "message" | "leadership" | "gallery" | null>(null);
 
   const updateVisionMission = (field: keyof VisionMissionContent, value: string) => {
     setVisionMission({ ...visionMission, [field]: value });
