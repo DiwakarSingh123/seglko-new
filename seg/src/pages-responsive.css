@@ -1,0 +1,313 @@
+/* ============================================
+   PAGES RESPONSIVE CSS
+   Covers: FacultyPage, ProgramsPage, ProgramDetailPage,
+           OurInstitutions, ContactUs, History, Chairman,
+           MissionVision, WhyJoinSeg, ExploreMore,
+           ResearchProjects, AwardWinningProjects, etc.
+   ============================================ */
+
+/* ── TABLET (max-width: 1023px) ── */
+@media (max-width: 1023px) {
+
+  /* FacultyPage hero */
+  [style*="gridTemplateColumns: '1fr 560px 240px'"],
+  [style*="gridTemplateColumns: '1fr 480px 220px'"],
+  [style*="gridTemplateColumns: '1fr 420px 200px'"] {
+    grid-template-columns: 1fr 1fr !important;
+    padding: 60px 20px 40px !important;
+  }
+
+  /* ProgramDetailPage hero */
+  [style*="gridTemplateColumns: '1fr 1fr'"] {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* CTA sections */
+  [style*="gridTemplateColumns: '1fr auto'"] {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* ProgramsPage grid */
+  [style*="minmax(360px, 1fr)"],
+  [style*="minmax(380px, 1fr)"] {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  /* OurInstitutions grid */
+  [style*="minmax(380px, 1fr)"] {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  /* ProgramDetailPage highlights */
+  [style*="repeat(4, 1fr)"] {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  /* ProgramDetailPage why choose */
+  [style*="repeat(4, 1fr)"] {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  /* Specializations grid */
+  [style*="gridTemplateColumns: '280px 1fr'"] {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* FacultyPage filter tabs */
+  [style*="overflowX: 'auto'"] {
+    overflow-x: auto !important;
+  }
+
+  /* FacultyPage programs grid */
+  [style*="minmax(300px, 1fr)"] {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  /* Recruiter section */
+  [style*="overflowX: 'auto'"] {
+    overflow-x: auto !important;
+    padding-bottom: 8px !important;
+  }
+
+  /* CTA margin */
+  [style*="margin: '0 45px 60px'"],
+  [style*="margin: '0 45px 50px'"] {
+    margin: 0 20px 40px !important;
+    padding: 36px 28px !important;
+  }
+}
+
+/* ── MOBILE (max-width: 767px) ── */
+@media (max-width: 767px) {
+
+  /* FacultyPage hero - stack to column */
+  [style*="gridTemplateColumns: '1fr 560px 240px'"],
+  [style*="gridTemplateColumns: '1fr 480px 220px'"],
+  [style*="gridTemplateColumns: '1fr 420px 200px'"] {
+    display: flex !important;
+    flex-direction: column !important;
+    padding: 40px 16px 30px !important;
+    gap: 24px !important;
+  }
+
+  /* Hide campus image on mobile */
+  [style*="height: '480px'"][style*="borderRadius: '18px'"],
+  [style*="height: '400px'"][style*="borderRadius: '18px'"] {
+    display: none !important;
+  }
+
+  /* Stats column on mobile */
+  [style*="flexDirection: 'column'"][style*="gap: '12px'"] {
+    flex-direction: row !important;
+    flex-wrap: wrap !important;
+    gap: 10px !important;
+  }
+
+  /* ProgramsPage grid - single column */
+  [style*="minmax(360px, 1fr)"],
+  [style*="minmax(380px, 1fr)"],
+  [style*="minmax(300px, 1fr)"] {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* ProgramDetailPage hero */
+  [style*="gridTemplateColumns: '1fr 1fr'"] {
+    grid-template-columns: 1fr !important;
+    padding: 36px 16px !important;
+  }
+
+  /* ProgramDetailPage highlights */
+  [style*="repeat(4, 1fr)"] {
+    grid-template-columns: repeat(2, 1fr) !important;
+    padding: 24px 16px !important;
+  }
+
+  /* Specializations */
+  [style*="gridTemplateColumns: '280px 1fr'"] {
+    grid-template-columns: 1fr !important;
+    padding: 30px 16px !important;
+  }
+
+  [style*="gridTemplateColumns: '1fr 1fr'"][style*="gap: '16px'"] {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Why choose */
+  [style*="repeat(4, 1fr)"][style*="gap: '24px'"] {
+    grid-template-columns: repeat(2, 1fr) !important;
+    padding: 24px 16px !important;
+  }
+
+  /* Career paths */
+  [style*="justifyContent: 'center'"][style*="flexWrap: 'wrap'"] {
+    gap: 14px !important;
+  }
+
+  /* CTA sections */
+  [style*="gridTemplateColumns: '1fr auto'"] {
+    grid-template-columns: 1fr !important;
+    padding: 28px 20px !important;
+  }
+
+  [style*="margin: '0 45px 60px'"],
+  [style*="margin: '0 45px 50px'"] {
+    margin: 0 14px 30px !important;
+    padding: 28px 18px !important;
+    border-radius: 14px !important;
+  }
+
+  /* Hero banners on pages */
+  [style*="padding: '60px 45px 50px'"],
+  [style*="padding: '60px 45px 40px'"] {
+    padding: 36px 16px 28px !important;
+  }
+
+  [style*="fontSize: '2.8rem'"] {
+    font-size: 1.8rem !important;
+  }
+
+  /* FacultyPage filter tabs */
+  [style*="background: '#fff'"][style*="borderRadius: '14px'"][style*="padding: '8px'"] {
+    flex-wrap: wrap !important;
+    width: 100% !important;
+  }
+
+  /* FacultyPage programs grid */
+  [style*="padding: '36px 45px'"] {
+    padding: 24px 16px !important;
+  }
+
+  /* Recruiter section */
+  [style*="padding: '40px 45px'"] {
+    padding: 28px 16px !important;
+  }
+
+  /* OurInstitutions */
+  [style*="padding: '44px 45px 0'"] {
+    padding: 24px 16px 0 !important;
+  }
+
+  /* ProgramsPage hero */
+  [style*="padding: '60px 45px 50px'"] {
+    padding: 36px 16px 28px !important;
+  }
+
+  [style*="padding: '44px 45px 0'"] {
+    padding: 24px 16px 0 !important;
+  }
+
+  /* Buttons full width on mobile */
+  [style*="display: 'flex'"][style*="gap: '14px'"][style*="flexWrap: 'wrap'"] {
+    flex-direction: column !important;
+  }
+
+  /* Tables responsive */
+  .fee-table-container { overflow-x: auto; }
+  .fee-table { min-width: 600px; }
+
+  /* Admission process */
+  .ap-hero__title { font-size: 2.5rem !important; }
+  .ap-hero__floating-card { display: none; }
+  .ap-step__card { flex-direction: column !important; }
+  .ap-step__illustration { display: none; }
+  .ap-checks { grid-template-columns: 1fr !important; }
+
+  /* Eligibility */
+  .eligibility-layout { flex-direction: column !important; }
+  .eligibility-sidebar { width: 100% !important; }
+  .eligibility-tabs { flex-wrap: wrap !important; }
+
+  /* Placements page */
+  .placements-hero__title { font-size: 2.2rem !important; }
+  .placements-hero__subtitle { font-size: 1.4rem !important; white-space: normal !important; }
+  .placements-grid { grid-template-columns: 1fr !important; }
+  .placement-card { flex-direction: column !important; }
+
+  /* Program page */
+  .program-hero__content { padding: 6rem 5% 3rem !important; }
+  .program-hero__title { font-size: 2.5rem !important; }
+  .program-info__grid { grid-template-columns: 1fr !important; }
+  .program-why__grid { grid-template-columns: 1fr !important; }
+  .program-spec__grid { grid-template-columns: 1fr !important; }
+  .program-cta__buttons { flex-direction: column !important; align-items: center !important; }
+
+  /* Contact page */
+  .contact-hero { padding: 40px 16px !important; }
+  .contact-form-section { padding: 24px 16px !important; }
+
+  /* History page */
+  .history-hero { padding: 40px 16px !important; }
+
+  /* Mission Vision */
+  .mission-vision-hero { padding: 40px 16px !important; }
+
+  /* Why Join SEG */
+  .why-join-hero { padding: 40px 16px !important; }
+
+  /* Chairman */
+  .chairman-hero { padding: 40px 16px !important; }
+
+  /* Research pages */
+  .research-hero { padding: 40px 16px !important; }
+  .research-grid { grid-template-columns: 1fr !important; }
+
+  /* Explore More */
+  .explore-hero { padding: 40px 16px !important; }
+  .explore-grid { grid-template-columns: 1fr !important; }
+}
+
+/* ── SMALL MOBILE (max-width: 480px) ── */
+@media (max-width: 480px) {
+
+  [style*="fontSize: '2.8rem'"] { font-size: 1.6rem !important; }
+  [style*="fontSize: '2rem'"] { font-size: 1.4rem !important; }
+
+  /* ProgramDetailPage highlights - single column */
+  [style*="repeat(4, 1fr)"] {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Why choose - single column */
+  [style*="repeat(4, 1fr)"][style*="gap: '24px'"] {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Stats cards */
+  [style*="flexDirection: 'column'"][style*="gap: '12px'"] {
+    flex-direction: column !important;
+  }
+
+  .ap-hero__title { font-size: 2rem !important; }
+  .placements-hero__title { font-size: 1.8rem !important; }
+  .program-hero__title { font-size: 2rem !important; }
+
+  /* Fee table */
+  .fee-stats-bar { grid-template-columns: 1fr !important; }
+  .quota-stats-bar { grid-template-columns: 1fr !important; }
+}
+
+/* ── 375px ── */
+@media (max-width: 375px) {
+  [style*="padding: '36px 16px 28px'"] { padding: 28px 12px 20px !important; }
+  [style*="fontSize: '1.8rem'"] { font-size: 1.5rem !important; }
+  .ap-hero__title { font-size: 1.8rem !important; }
+  .placements-hero__title { font-size: 1.6rem !important; }
+  .program-hero__title { font-size: 1.8rem !important; }
+  .fee-hero__title { font-size: 1.8rem !important; }
+  .quota-hero__title { font-size: 1.8rem !important; }
+  .eligibility-hero__title { font-size: 2rem !important; }
+}
+
+/* ── 320px ── */
+@media (max-width: 320px) {
+  [style*="padding: '28px 12px 20px'"] { padding: 22px 10px 16px !important; }
+  [style*="fontSize: '1.5rem'"] { font-size: 1.3rem !important; }
+  .ap-hero__title { font-size: 1.5rem !important; }
+  .placements-hero__title { font-size: 1.4rem !important; }
+  .program-hero__title { font-size: 1.5rem !important; }
+  .fee-hero__title { font-size: 1.5rem !important; }
+  .eligibility-hero__title { font-size: 1.6rem !important; }
+  .eligibility-container { padding: 1rem !important; }
+  .quota-info-card { padding: 20px !important; }
+  .ap-step__card { padding: 1rem !important; }
+}

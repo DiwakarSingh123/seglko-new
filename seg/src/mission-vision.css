@@ -1,0 +1,551 @@
+/* ===== MISSION & VISION PAGE ===== */
+
+.mission-vision-page {
+  background: #ffffff;
+  overflow: hidden;
+  width: 100%;
+}
+
+/* --- Hero Section (Matches History Page) --- */
+.mv-hero {
+  position: relative;
+  padding: 40px 5% 100px;
+  background: linear-gradient(135deg, #f7faff 0%, #ffffff 40%, #ffffff 100%);
+  width: 100%;
+}
+
+.mv-hero::before {
+  content: '';
+  position: absolute;
+  top: 50px;
+  left: 30%;
+  width: 250px;
+  height: 250px;
+  background-image: repeating-radial-gradient(circle at center, transparent 0, transparent 4px, rgba(255, 190, 35, 0.2) 5px, rgba(255, 190, 35, 0.2) 6px);
+  border-radius: 50%;
+  opacity: 0.8;
+  z-index: 0;
+}
+
+.mv-hero__inner {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  max-width: none;
+  margin: 0 auto;
+  gap: 48px;
+  position: relative;
+  z-index: 1;
+}
+
+.mv-hero__content {
+  flex: 1;
+  min-width: 0;
+  max-width: 560px;
+  padding-right: 0;
+}
+
+.mv-hero__breadcrumbs {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #1041c6;
+  margin-bottom: 30px;
+}
+
+.mv-hero__breadcrumbs a {
+  color: #1041c6;
+  text-decoration: none;
+}
+
+.mv-hero__breadcrumbs a:hover {
+  text-decoration: underline;
+}
+
+.mv-hero__breadcrumbs .separator {
+  color: #64748b;
+  font-size: 12px;
+}
+
+.mv-hero__breadcrumbs .current {
+  color: #2563eb;
+}
+
+.mv-hero__title {
+  font-size: clamp(2.5rem, 4vw, 48px);
+  font-weight: 700;
+  line-height: 1.15;
+  color: #112347;
+  margin-bottom: 16px;
+}
+
+.mv-hero__title .text-blue {
+  color: #2563eb;
+}
+
+.mv-hero__accent-line {
+  width: 50px;
+  height: 4px;
+  background-color: #ffbe23;
+  border-radius: 4px;
+  margin-bottom: 24px;
+}
+
+.mv-hero__text {
+  font-size: 16px;
+  line-height: 1.6;
+  color: #475569;
+  max-width: 500px;
+}
+
+.mv-hero__visual {
+  flex: 1;
+  min-width: 0;
+  position: relative;
+  z-index: 1;
+}
+
+.mv-hero__image {
+  width: 100%;
+  height: 650px;
+  object-fit: cover;
+  border-radius: 18px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
+/* --- Stats Bar --- */
+.mv-stats-bar {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: 100%;
+  margin: -80px auto 0;
+  background: linear-gradient(90deg, #021a52 0%, #062b80 100%);
+  border-radius: 16px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  align-items: center;
+  padding: 50px 5%;
+  gap: 0;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+}
+
+.mv-stats-bar__item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  min-width: 0;
+  padding: 0 10px;
+}
+
+.mv-stats-bar__item+.mv-stats-bar__item {
+  border-left: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.mv-stats-bar__icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: rgba(255, 190, 35, 0.1);
+  border: 1px solid rgba(255, 190, 35, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffbe23;
+  flex-shrink: 0;
+}
+
+.mv-stats-bar__icon svg {
+  width: 32px;
+  height: 32px;
+}
+
+.mv-stats-bar__info {
+  display: flex;
+  flex-direction: column;
+}
+
+.mv-stats-bar__value {
+  font-size: 28px;
+  font-weight: 700;
+  color: #ffbe23;
+  line-height: 1.1;
+}
+
+.mv-stats-bar__label {
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.8);
+  margin-top: 4px;
+  line-height: 1.3;
+}
+
+/* --- Mission & Vision Content Section --- */
+.mv-content {
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 60px 5% 80px;
+  position: relative;
+}
+
+/* Two-column header layout */
+.mv-content__header {
+  display: flex;
+  align-items: flex-start;
+  gap: 60px;
+  margin-bottom: 70px;
+}
+
+.mv-content__header-left {
+  flex: 0 0 420px;
+}
+
+.mv-content__eyebrow {
+  font-size: 14px;
+  font-weight: 700;
+  color: #2563eb;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  display: block;
+  margin-bottom: 12px;
+}
+
+.mv-content__eyebrow-line {
+  width: 50px;
+  height: 4px;
+  background-color: #ffbe23;
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+
+.mv-content__title {
+  font-size: 42px;
+  font-weight: 700;
+  color: #0f172a;
+  line-height: 1.2;
+}
+
+.mv-content__header-right {
+  flex: 1;
+  padding-top: 40px;
+}
+
+.mv-content__intro {
+  font-size: 15px;
+  line-height: 1.75;
+  color: #475569;
+}
+
+/* Decorative dot patterns */
+.mv-content__dots--top-right {
+  position: absolute;
+  top: 80px;
+  right: 20px;
+  width: 120px;
+  height: 120px;
+  background-image: radial-gradient(circle, #ffbe23 1.5px, transparent 1.5px);
+  background-size: 14px 14px;
+  opacity: 0.4;
+  z-index: 0;
+}
+
+/* --- Mission & Vision Cards --- */
+.mv-card {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  align-items: stretch;
+  background: #ffffff;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.06);
+  border: 1px solid #e8edf5;
+  margin-bottom: 60px;
+  position: relative;
+}
+
+.mv-card--reverse {
+  direction: rtl;
+}
+
+.mv-card--reverse>* {
+  direction: ltr;
+}
+
+.mv-card__visual {
+  background: linear-gradient(135deg, #eef4ff 0%, #f0f4ff 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 30px;
+  min-height: 320px;
+}
+
+.mv-card__image {
+  width: 100%;
+  max-width: 420px;
+  height: auto;
+  object-fit: contain;
+  border-radius: 12px;
+}
+
+.mv-card__body {
+  padding: 30px 50px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.mv-card__icon-wrap {
+  margin-bottom: 20px;
+}
+
+.mv-card__icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: #112b6b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  box-shadow: 0 4px 15px rgba(17, 43, 107, 0.25);
+}
+
+.mv-card__icon--vision {
+  background: #112b6b;
+}
+
+.mv-card__icon svg {
+  width: 28px;
+  height: 28px;
+}
+
+.mv-card__title {
+  font-size: 28px;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 8px;
+}
+
+.mv-card__title-line {
+  width: 40px;
+  height: 3px;
+  background-color: #ffbe23;
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+
+.mv-card__text {
+  font-size: 15px;
+  line-height: 1.75;
+  color: #475569;
+}
+
+/* Dot patterns on cards */
+.mv-card__dots--right {
+  position: absolute;
+  top: 20px;
+  right: -10px;
+  width: 100px;
+  height: 140px;
+  background-image: radial-gradient(circle, #c8d6e5 1.5px, transparent 1.5px);
+  background-size: 12px 12px;
+  opacity: 0.5;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.mv-card__dots--left {
+  position: absolute;
+  bottom: 20px;
+  left: -10px;
+  width: 100px;
+  height: 140px;
+  background-image: radial-gradient(circle, #c8d6e5 1.5px, transparent 1.5px);
+  background-size: 12px 12px;
+  opacity: 0.5;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Small decorative elements */
+.mv-content::before {
+  content: '';
+  position: absolute;
+  top: 200px;
+  left: 10px;
+  width: 16px;
+  height: 16px;
+  background: #ffbe23;
+  border-radius: 50%;
+  opacity: 0.3;
+}
+
+.mv-content::after {
+  content: '';
+  position: absolute;
+  bottom: 100px;
+  right: 30px;
+  width: 12px;
+  height: 12px;
+  border: 2px solid #2563eb;
+  border-radius: 50%;
+  opacity: 0.3;
+}
+
+/* --- Responsive Styles --- */
+@media (max-width: 1024px) {
+  .mv-hero {
+    padding: 40px 20px 100px;
+  }
+
+  .mv-hero__inner {
+    flex-direction: column;
+    text-align: center;
+    gap: 40px;
+  }
+
+  .mv-hero__content {
+    padding-right: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .mv-stats-bar {
+    margin: -50px 20px 0;
+    width: auto;
+    padding: 24px;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+  }
+
+  .mv-stats-bar__item {
+    padding: 0 10px;
+  }
+
+  .mv-stats-bar__item:nth-child(even) {
+    border-left: none;
+    padding-left: 0;
+  }
+
+  .mv-stats-bar__item:nth-child(2) {
+    border-left: 1px solid rgba(255, 255, 255, 0.15);
+    padding-left: 20px;
+  }
+
+  .mv-stats-bar__item:nth-child(4) {
+    border-left: 1px solid rgba(255, 255, 255, 0.15);
+    padding-left: 20px;
+  }
+
+  .mv-content {
+    padding: 60px 20px;
+  }
+
+  .mv-content__header {
+    flex-direction: column;
+    gap: 30px;
+    margin-bottom: 50px;
+  }
+
+  .mv-content__header-left {
+    flex: none;
+    width: 100%;
+  }
+
+  .mv-content__header-right {
+    padding-top: 0;
+  }
+
+  .mv-card {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .mv-card--reverse {
+    direction: ltr;
+  }
+
+  .mv-card__body {
+    padding: 40px 30px;
+  }
+
+  .mv-card__visual {
+    min-height: 300px;
+  }
+}
+
+@media (max-width: 768px) {
+  .mv-hero {
+    padding: 30px 14px 88px;
+  }
+
+  .mv-hero__breadcrumbs {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .mv-hero__title {
+    font-size: clamp(2rem, 9vw, 2.7rem);
+  }
+
+  .mv-hero__image {
+    height: 260px;
+  }
+
+  .mv-stats-bar {
+    margin: -42px 14px 0;
+    grid-template-columns: 1fr;
+    padding: 20px 18px;
+    border-radius: 14px;
+  }
+
+  .mv-stats-bar__item {
+    padding: 0;
+    border-left: none !important;
+    padding-left: 0 !important;
+    justify-content: flex-start;
+  }
+
+  .mv-content {
+    padding: 52px 14px;
+  }
+
+  .mv-content__title {
+    font-size: 30px;
+  }
+
+  .mv-card {
+    margin-bottom: 40px;
+  }
+
+  .mv-card__body {
+    padding: 30px 20px;
+  }
+
+  .mv-card__visual {
+    min-height: 240px;
+    padding: 24px;
+  }
+
+  .mv-card__title {
+    font-size: 24px;
+  }
+
+  .mv-card__dots--right,
+  .mv-card__dots--left {
+    display: none;
+  }
+
+  .mv-content__dots--top-right {
+    display: none;
+  }
+}

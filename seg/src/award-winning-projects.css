@@ -1,0 +1,378 @@
+/* ===== AWARD WINNING PROJECTS PAGE ===== */
+.award-projects-page {
+  width: 100%;
+  font-family: 'Inter', sans-serif;
+  background-color: #fafbfc;
+  overflow-x: hidden;
+}
+
+/* ── Hero ── */
+.aw-hero {
+  position: relative;
+  background: white;
+  padding: 4rem 5% 2rem;
+  overflow: hidden;
+  margin-top: 60px; /* Clear navbar logo */
+}
+
+.aw-hero__container {
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.aw-hero__content {
+  max-width: 600px;
+}
+
+.aw-hero__title {
+  font-size: clamp(2.5rem, 6vw, 4rem);
+  font-weight: 800;
+  color: #032155;
+  margin-bottom: 1.5rem;
+  letter-spacing: -1.5px;
+}
+
+.aw-hero__title::after {
+  content: '';
+  display: block;
+  width: 60px;
+  height: 4px;
+  background: #ffbe23;
+  margin-top: 1rem;
+}
+
+.aw-hero__text {
+  font-size: 1.15rem;
+  color: #64748b;
+  line-height: 1.6;
+}
+
+.aw-hero__visual {
+  width: 350px;
+  opacity: 0.8;
+}
+
+/* ── Layout Grid ── */
+.aw-main {
+  padding: 2rem 5% 6rem;
+}
+
+.aw-main__container {
+  display: grid;
+  grid-template-columns: 1fr 400px;
+  gap: 3rem;
+}
+
+/* ── Accordion ── */
+.aw-accordion {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.aw-accordion__item {
+  background: white;
+  border-radius: 16px;
+  border: 1px solid #f1f5f9;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.aw-accordion__item.active {
+  border-color: #2563eb;
+  box-shadow: 0 10px 30px rgba(37, 99, 235, 0.08);
+}
+
+.aw-accordion__header {
+  padding: 1.5rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  background: white;
+}
+
+.aw-accordion__header-left {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.aw-accordion__icon {
+  width: 48px;
+  height: 48px;
+  background: #eff6ff;
+  color: #2563eb;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.aw-accordion__item.active .aw-accordion__icon {
+  background: #2563eb;
+  color: white;
+}
+
+.aw-accordion__name {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.aw-accordion__chevron {
+  color: #94a3b8;
+  transition: transform 0.3s ease;
+}
+
+.aw-accordion__item.active .aw-accordion__chevron {
+  transform: rotate(180deg);
+  color: #2563eb;
+}
+
+.aw-accordion__content {
+  padding: 0 2rem 2rem 6.5rem;
+  display: none;
+}
+
+.aw-accordion__item.active .aw-accordion__content {
+  display: block;
+}
+
+.aw-projects-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.aw-projects-list__title {
+  font-weight: 700;
+  color: #2563eb;
+  margin-bottom: 1rem;
+  display: block;
+}
+
+.aw-project-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  color: #475569;
+  font-size: 1rem;
+  line-height: 1.5;
+  padding: 0.75rem 0;
+  border-bottom: 1px dashed #f1f5f9;
+}
+
+.aw-project-row:last-child {
+  border-bottom: none;
+}
+
+.aw-project-row__check {
+  color: #2563eb;
+  flex-shrink: 0;
+}
+
+/* ── Right Column Cards ── */
+.aw-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* Impact Card */
+.aw-card--impact {
+  background: linear-gradient(180deg, #032155 0%, #0849bc 100%);
+  color: white;
+  padding: 3rem 2.5rem;
+  border-radius: 24px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 20px 50px rgba(3, 33, 85, 0.15);
+}
+
+.aw-card__title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 2.5rem;
+  position: relative;
+  z-index: 2;
+}
+
+.aw-card__title::after {
+  content: '';
+  display: block;
+  width: 40px;
+  height: 3px;
+  background: #ffbe23;
+  margin-top: 0.75rem;
+}
+
+.aw-metrics {
+  display: flex;
+  flex-direction: row; /* Changed from column to row */
+  justify-content: space-between;
+  gap: 1.5rem;
+  position: relative;
+  z-index: 2;
+}
+
+.aw-metric {
+  text-align: center;
+}
+
+.aw-metric__icon {
+  width: 48px;
+  height: 48px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1rem;
+}
+
+.aw-metric__value {
+  font-size: 2rem;
+  font-weight: 800;
+  display: block;
+}
+
+.aw-metric__label {
+  font-size: 0.9rem;
+  opacity: 0.8;
+  font-weight: 600;
+}
+
+/* Funding Card */
+.aw-card--funding {
+  background: white;
+  padding: 2.5rem;
+  border-radius: 24px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+  border: 1px solid #f1f5f9;
+}
+
+.aw-funding__header {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  margin-bottom: 2rem;
+}
+
+.aw-funding__icon {
+  width: 48px;
+  height: 48px;
+  background: #eff6ff;
+  color: #2563eb;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.aw-funding__title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #032155;
+}
+
+.aw-funding__text {
+  font-size: 0.95rem;
+  color: #64748b;
+  line-height: 1.6;
+  margin-bottom: 2rem;
+}
+
+.aw-collab {
+  display: flex;
+  gap: 1.25rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #f1f5f9;
+}
+
+.aw-collab__icon {
+  color: #2563eb;
+  flex-shrink: 0;
+}
+
+.aw-collab__text {
+  font-size: 0.9rem;
+  color: #475569;
+  line-height: 1.5;
+}
+
+/* ── Footer Bar ── */
+.aw-footer-bar {
+  margin: 2rem 5% 5rem;
+  background: white;
+  padding: 1.5rem 3rem;
+  border-radius: 20px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.04);
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  border: 1px solid #f1f5f9;
+  position: relative;
+  overflow: hidden;
+}
+
+.aw-footer-bar__icon {
+  width: 56px;
+  height: 56px;
+  background: #2563eb;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.aw-footer-bar__info {
+  display: flex;
+  flex-direction: column;
+}
+
+.aw-footer-bar__title {
+  font-weight: 800;
+  font-size: 1.15rem;
+  color: #032155;
+}
+
+.aw-footer-bar__desc {
+  font-size: 1rem;
+  color: #64748b;
+}
+
+.aw-footer-bar__visual {
+  margin-left: auto;
+  opacity: 0.3;
+}
+
+/* ── Responsive ── */
+@media (max-width: 1200px) {
+  .aw-main__container { grid-template-columns: 1fr; }
+  .aw-sidebar { flex-direction: row; }
+  .aw-card--impact, .aw-card--funding { flex: 1; }
+  .aw-metrics { flex-direction: row; justify-content: space-around; }
+}
+
+@media (max-width: 992px) {
+  .aw-hero__container { flex-direction: column; text-align: center; }
+  .aw-hero__title::after { margin: 1rem auto 0; }
+  .aw-hero__visual { display: none; }
+  .aw-sidebar { flex-direction: column; }
+}
+
+@media (max-width: 768px) {
+  .aw-accordion__header { padding: 1.25rem; }
+  .aw-accordion__content { padding: 0 1.25rem 1.5rem 4.5rem; }
+  .aw-metrics { flex-direction: column; gap: 2rem; }
+  .aw-footer-bar { flex-direction: column; text-align: center; padding: 2rem; }
+  .aw-footer-bar__visual { display: none; }
+  .aw-footer-bar__icon { margin-bottom: 1rem; }
+}

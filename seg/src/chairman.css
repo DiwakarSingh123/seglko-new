@@ -1,0 +1,724 @@
+/* ===== CHAIRMAN PAGE ===== */
+
+.chairman-page {
+  width: 100%;
+  background: #ffffff;
+  overflow: hidden;
+}
+
+.chairman-hero {
+  position: relative;
+  padding: 44px 32px 70px;
+  background:
+    linear-gradient(135deg, #f4f8ff 0%, #ffffff 38%, #ffffff 100%);
+}
+
+.chairman-hero::before {
+  content: '';
+  position: absolute;
+  left: -40px;
+  bottom: 28px;
+  width: 260px;
+  height: 160px;
+  background:
+    radial-gradient(circle at 22% 30%, rgba(36, 102, 255, 0.1) 2px, transparent 3px);
+  background-size: 24px 24px;
+  opacity: 0.9;
+  pointer-events: none;
+}
+
+.chairman-hero::after {
+  content: '';
+  position: absolute;
+  left: -120px;
+  bottom: -110px;
+  width: 380px;
+  height: 240px;
+  border: 2px solid rgba(65, 138, 255, 0.16);
+  border-radius: 50%;
+  transform: rotate(-12deg);
+  pointer-events: none;
+}
+
+.chairman-hero__shell {
+  display: grid;
+  grid-template-columns: minmax(0, 0.92fr) minmax(560px, 1.08fr);
+  gap: 24px;
+  align-items: stretch;
+  width: 100%;
+  max-width: none;
+  margin: 0 auto;
+}
+
+.chairman-hero__copy {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+  padding: 40px 12px 20px 36px;
+}
+
+.chairman-hero__breadcrumbs {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 34px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #1241c6;
+}
+
+.chairman-hero__breadcrumbs .separator {
+  color: #5f7096;
+  font-size: 11px;
+}
+
+.chairman-hero__breadcrumbs .current {
+  color: #2d63f3;
+}
+
+.chairman-hero__dots {
+  position: absolute;
+  left: 0;
+  top: 120px;
+  width: 24px;
+  height: 144px;
+  background:
+    radial-gradient(circle, #ffbe23 1.9px, transparent 2.2px);
+  background-size: 24px 16px;
+}
+
+.chairman-hero__title {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: clamp(3rem, 5.4vw, 5.25rem);
+  line-height: 0.95;
+  text-transform: uppercase;
+  letter-spacing: -0.04em;
+}
+
+.chairman-hero__title span {
+  font-weight: 800;
+  color: #0d215f;
+}
+
+.chairman-hero__title strong {
+  font-weight: 800;
+  color: #2b5ef3;
+}
+
+.chairman-hero__signature-row {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-top: 28px;
+}
+
+.chairman-hero__signature-line {
+  flex: 1;
+  max-width: 76px;
+  height: 2px;
+  background: linear-gradient(90deg, #2f6bf8, #5b96ff);
+}
+
+.chairman-hero__signature {
+  margin: 0;
+  font-size: clamp(2.2rem, 3.6vw, 3.6rem);
+  line-height: 1;
+  color: #1d66eb;
+  font-family: "Brush Script MT", "Segoe Script", cursive;
+}
+
+.chairman-hero__visual {
+  position: relative;
+  min-height: 560px;
+  padding-left: 76px;
+}
+
+.chairman-hero__campus-wrap {
+  position: absolute;
+  inset: 0 0 72px 120px;
+  overflow: hidden;
+  border-radius: 0 0 0 150px;
+}
+
+.chairman-hero__campus {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 65% center;
+}
+
+.chairman-hero__portrait-blob {
+  position: absolute;
+  left: 84px;
+  top: 0;
+  width: 330px;
+  height: 430px;
+  border-radius: 180px 180px 90px 90px;
+  background: linear-gradient(180deg, #0f52ea, #1c63f0);
+}
+
+.chairman-hero__portrait-wrap {
+  position: absolute;
+  left: 18px;
+  bottom: 0;
+  width: 490px;
+  height: 560px;
+  overflow: hidden;
+}
+
+.chairman-hero__portrait {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 83% 58%;
+  filter: saturate(0.95) contrast(1.04);
+}
+
+.chairman-hero__quote {
+  position: absolute;
+  right: 22px;
+  bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  max-width: 470px;
+  padding: 16px 22px;
+  background: rgba(255, 255, 255, 0.94);
+  color: #214078;
+  font-size: 15px;
+  line-height: 1.45;
+  font-weight: 700;
+  box-shadow: 0 16px 28px rgba(0, 0, 0, 0.08);
+}
+
+.chairman-hero__quote-mark {
+  font-size: 70px;
+  line-height: 0.8;
+  color: #ffbc1e;
+  font-weight: 800;
+}
+
+.chairman-hero__quote p {
+  margin: 0;
+}
+
+.chairman-letter {
+  padding: 26px 32px 80px;
+  background: #ffffff;
+}
+
+.chairman-letter__shell {
+  display: grid;
+  grid-template-columns: minmax(340px, 0.82fr) minmax(0, 1.18fr);
+  gap: 0;
+  width: 100%;
+  max-width: none;
+  margin: 0 auto;
+  border-radius: 24px;
+  background: linear-gradient(180deg, #ffffff, #fbfdff);
+  box-shadow: 0 22px 48px rgba(10, 34, 95, 0.08);
+  border: 1px solid rgba(20, 72, 201, 0.08);
+  overflow: hidden;
+}
+
+.chairman-letter__profile {
+  position: relative;
+  min-height: 580px;
+  background: linear-gradient(180deg, #f9fbff, #ffffff);
+}
+
+.chairman-letter__photo-wrap {
+  position: absolute;
+  inset: 36px 36px 72px;
+  overflow: hidden;
+  border-radius: 14px;
+}
+
+.chairman-letter__photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 83% 58%;
+  filter: saturate(0.96);
+}
+
+.chairman-letter__nameplate {
+  position: absolute;
+  left: 36px;
+  right: 36px;
+  bottom: 36px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 18px 22px;
+  border-radius: 0 0 14px 14px;
+  background: linear-gradient(90deg, rgba(9, 76, 212, 0.95), rgba(8, 61, 164, 0.92));
+  color: #ffffff;
+}
+
+.chairman-letter__nameplate-icon {
+  width: 66px;
+  height: 66px;
+  flex: 0 0 66px;
+  border-radius: 50%;
+  background: #ffc539;
+  color: #1752cc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chairman-letter__nameplate-icon svg {
+  width: 34px;
+  height: 34px;
+}
+
+.chairman-letter__nameplate-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.chairman-letter__nameplate-copy strong {
+  font-size: 24px;
+  line-height: 1.1;
+  font-weight: 700;
+}
+
+.chairman-letter__nameplate-copy span {
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.chairman-letter__content {
+  position: relative;
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1fr);
+  gap: 18px;
+  padding: 46px 38px 36px 18px;
+}
+
+.chairman-letter__quote-mark {
+  position: absolute;
+  top: 20px;
+  right: 18px;
+  font-size: 110px;
+  line-height: 0.8;
+  color: rgba(55, 96, 182, 0.16);
+  font-weight: 700;
+}
+
+.chairman-letter__rail {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 10px;
+}
+
+.chairman-letter__rail-line {
+  position: absolute;
+  top: 18px;
+  bottom: 28px;
+  width: 2px;
+  background: linear-gradient(180deg, rgba(38, 104, 242, 0.65), rgba(38, 104, 242, 0.1));
+}
+
+.chairman-letter__rail-dot {
+  position: relative;
+  z-index: 1;
+  width: 18px;
+  height: 18px;
+  margin: 0 0 128px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 2px solid #4c85ff;
+  box-shadow: 0 0 0 4px rgba(76, 133, 255, 0.14);
+}
+
+.chairman-letter__rail-dot:last-child {
+  margin-bottom: 0;
+}
+
+.chairman-letter__body {
+  display: flex;
+  flex-direction: column;
+}
+
+.chairman-letter__point {
+  padding: 0 28px 22px 0;
+  border-bottom: 1px solid rgba(30, 63, 138, 0.14);
+}
+
+.chairman-letter__point + .chairman-letter__point {
+  padding-top: 22px;
+}
+
+.chairman-letter__point p {
+  margin: 0;
+  font-size: 17px;
+  line-height: 1.7;
+  font-weight: 600;
+  color: #243d76;
+}
+
+.chairman-letter__signoff {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  padding-top: 26px;
+}
+
+.chairman-letter__signoff-line {
+  width: 86px;
+  height: 4px;
+  margin-bottom: 2px;
+  border-radius: 999px;
+  background: #ffc539;
+}
+
+.chairman-letter__signoff p,
+.chairman-letter__signoff strong,
+.chairman-letter__signoff span {
+  margin: 0;
+}
+
+.chairman-letter__signoff p {
+  font-size: 17px;
+  color: #2f69ea;
+  font-weight: 700;
+}
+
+.chairman-letter__signoff strong {
+  font-size: 20px;
+  color: #18306a;
+}
+
+.chairman-letter__signoff span {
+  font-size: 16px;
+  color: #54688f;
+}
+
+.chairman-letter__dots {
+  position: absolute;
+  right: 24px;
+  bottom: 24px;
+  width: 114px;
+  height: 88px;
+  background: radial-gradient(circle, rgba(70, 126, 255, 0.26) 1.6px, transparent 2px);
+  background-size: 18px 18px;
+}
+
+@media (max-width: 1280px) {
+  .chairman-hero {
+    padding-left: 22px;
+    padding-right: 22px;
+  }
+
+  .chairman-hero__shell {
+    grid-template-columns: minmax(0, 0.95fr) minmax(500px, 1.05fr);
+  }
+
+  .chairman-hero__copy {
+    padding-left: 24px;
+  }
+
+  .chairman-hero__visual {
+    min-height: 520px;
+    padding-left: 50px;
+  }
+
+  .chairman-hero__campus-wrap {
+    inset: 0 0 74px 92px;
+  }
+
+  .chairman-hero__portrait-blob {
+    left: 66px;
+    width: 290px;
+    height: 396px;
+  }
+
+  .chairman-hero__portrait-wrap {
+    width: 430px;
+    height: 520px;
+  }
+
+  .chairman-letter {
+    padding-left: 22px;
+    padding-right: 22px;
+  }
+
+  .chairman-letter__shell {
+    grid-template-columns: minmax(320px, 0.8fr) minmax(0, 1.2fr);
+  }
+
+  .chairman-letter__point p {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .chairman-hero {
+    padding-top: 32px;
+    padding-bottom: 52px;
+  }
+
+  .chairman-hero__shell {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .chairman-hero__copy {
+    align-items: center;
+    text-align: center;
+    padding: 0 10px;
+  }
+
+  .chairman-hero__breadcrumbs {
+    justify-content: center;
+    margin-bottom: 22px;
+  }
+
+  .chairman-hero__dots {
+    left: 16px;
+    top: 18px;
+    width: 96px;
+    height: 72px;
+  }
+
+  .chairman-hero__signature-row {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .chairman-hero__visual {
+    min-height: 560px;
+    padding-left: 0;
+  }
+
+  .chairman-hero__campus-wrap {
+    inset: 0 0 70px 0;
+    border-radius: 28px;
+  }
+
+  .chairman-hero__portrait-blob {
+    left: 50%;
+    top: 18px;
+    width: 280px;
+    height: 360px;
+    transform: translateX(-50%);
+  }
+
+  .chairman-hero__portrait-wrap {
+    left: 50%;
+    bottom: 40px;
+    width: 360px;
+    height: 430px;
+    transform: translateX(-50%);
+  }
+
+  .chairman-hero__quote {
+    left: 20px;
+    right: 20px;
+    bottom: 10px;
+    max-width: none;
+  }
+
+  .chairman-letter {
+    padding-top: 0;
+    padding-bottom: 56px;
+  }
+
+  .chairman-letter__shell {
+    grid-template-columns: 1fr;
+  }
+
+  .chairman-letter__profile {
+    min-height: 480px;
+  }
+
+  .chairman-letter__content {
+    padding: 34px 24px 34px 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .chairman-hero {
+    padding: 24px 14px 44px;
+  }
+
+  .chairman-hero__title {
+    font-size: clamp(2.2rem, 12vw, 3.5rem);
+  }
+
+  .chairman-hero__signature-row {
+    gap: 12px;
+    margin-top: 22px;
+  }
+
+  .chairman-hero__signature-line {
+    max-width: 42px;
+  }
+
+  .chairman-hero__signature {
+    font-size: clamp(1.6rem, 8vw, 2.4rem);
+  }
+
+  .chairman-hero__visual {
+    min-height: 380px;
+  }
+
+  .chairman-hero__campus-wrap {
+    inset: 0 0 86px 0;
+    border-radius: 18px;
+  }
+
+  .chairman-hero__portrait-blob {
+    width: 180px;
+    height: 240px;
+  }
+
+  .chairman-hero__portrait-wrap {
+    width: 220px;
+    height: 280px;
+    bottom: 74px;
+  }
+
+  .chairman-hero__quote {
+    gap: 10px;
+    padding: 12px 14px;
+    font-size: 13px;
+    line-height: 1.4;
+  }
+
+  .chairman-hero__quote-mark {
+    font-size: 40px;
+  }
+
+  .chairman-letter {
+    padding: 0 14px 44px;
+  }
+
+  .chairman-letter__profile {
+    min-height: 340px;
+  }
+
+  .chairman-letter__photo-wrap {
+    inset: 20px 20px 92px;
+  }
+
+  .chairman-letter__nameplate {
+    left: 20px;
+    right: 20px;
+    bottom: 20px;
+    padding: 14px 16px;
+  }
+
+  .chairman-letter__nameplate-icon {
+    width: 48px;
+    height: 48px;
+    flex-basis: 48px;
+  }
+
+  .chairman-letter__nameplate-copy strong {
+    font-size: 16px;
+  }
+
+  .chairman-letter__nameplate-copy span {
+    font-size: 12px;
+  }
+
+  .chairman-letter__content {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    padding: 22px 16px 22px;
+  }
+
+  .chairman-letter__rail {
+    display: none;
+  }
+
+  .chairman-letter__quote-mark {
+    font-size: 78px;
+    right: 12px;
+  }
+
+  .chairman-letter__point,
+  .chairman-letter__point + .chairman-letter__point {
+    padding-right: 0;
+  }
+
+  .chairman-letter__point p {
+    font-size: 15px;
+  }
+
+  .chairman-letter__signoff strong {
+    font-size: 18px;
+  }
+
+  .chairman-letter__signoff span {
+    font-size: 14px;
+  }
+
+  .chairman-letter__dots {
+    width: 78px;
+    height: 58px;
+  }
+}
+
+@media (max-width: 480px) {
+  .chairman-hero {
+    padding: 20px 12px 36px;
+  }
+  .chairman-hero__title {
+    font-size: clamp(1.8rem, 10vw, 2.8rem);
+  }
+  .chairman-hero__visual { min-height: 320px; }
+  .chairman-hero__portrait-blob { width: 150px; height: 200px; }
+  .chairman-hero__portrait-wrap { width: 180px; height: 230px; bottom: 60px; }
+  .chairman-hero__quote { font-size: 12px; padding: 10px 12px; }
+  .chairman-letter { padding: 0 12px 36px; }
+  .chairman-letter__profile { min-height: 300px; }
+  .chairman-letter__nameplate-copy strong { font-size: 15px; }
+  .chairman-letter__point p { font-size: 14px; }
+}
+
+@media (max-width: 375px) {
+  .chairman-hero { padding: 16px 10px 30px; }
+  .chairman-hero__title { font-size: clamp(1.6rem, 9vw, 2.4rem); }
+  .chairman-hero__visual { min-height: 280px; }
+  .chairman-hero__portrait-blob { width: 130px; height: 170px; }
+  .chairman-hero__portrait-wrap { width: 160px; height: 200px; bottom: 50px; }
+  .chairman-hero__quote { font-size: 11px; padding: 8px 10px; gap: 6px; }
+  .chairman-hero__quote-mark { font-size: 32px; }
+  .chairman-letter { padding: 0 10px 28px; }
+  .chairman-letter__profile { min-height: 260px; }
+  .chairman-letter__photo-wrap { inset: 14px 14px 80px; }
+  .chairman-letter__nameplate { left: 14px; right: 14px; bottom: 14px; padding: 10px 12px; }
+  .chairman-letter__nameplate-icon { width: 40px; height: 40px; flex-basis: 40px; }
+  .chairman-letter__nameplate-copy strong { font-size: 14px; }
+  .chairman-letter__nameplate-copy span { font-size: 11px; }
+  .chairman-letter__content { padding: 16px 12px; }
+  .chairman-letter__point p { font-size: 13px; }
+  .chairman-letter__signoff strong { font-size: 15px; }
+  .chairman-letter__signoff span { font-size: 12px; }
+}
+
+@media (max-width: 320px) {
+  .chairman-hero { padding: 14px 8px 26px; }
+  .chairman-hero__title { font-size: 1.5rem; }
+  .chairman-hero__visual { min-height: 240px; }
+  .chairman-hero__portrait-blob { width: 110px; height: 150px; }
+  .chairman-hero__portrait-wrap { width: 140px; height: 175px; bottom: 44px; }
+  .chairman-hero__quote { display: none; }
+  .chairman-letter { padding: 0 8px 24px; }
+  .chairman-letter__profile { min-height: 220px; }
+  .chairman-letter__point p { font-size: 12px; line-height: 1.6; }
+  .chairman-letter__signoff strong { font-size: 14px; }
+}

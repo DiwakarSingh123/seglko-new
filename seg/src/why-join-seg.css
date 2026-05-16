@@ -1,0 +1,477 @@
+/* ===== WHY JOIN SEG PAGE ===== */
+
+.wjs-page {
+  background: #ffffff;
+  overflow: hidden;
+  width: 100%;
+}
+
+/* ─── Hero (matches History / Mission-Vision hero exactly) ─── */
+.wjs-hero {
+  position: relative;
+  padding: 40px 45px 120px;
+  background: linear-gradient(135deg, #f7faff 0%, #ffffff 40%, #ffffff 100%);
+  width: 100%;
+}
+
+.wjs-hero::before {
+  content: '';
+  position: absolute;
+  top: 50px;
+  left: 30%;
+  width: 250px;
+  height: 250px;
+  background-image: repeating-radial-gradient(
+    circle at center,
+    transparent 0,
+    transparent 4px,
+    rgba(255, 190, 35, 0.2) 5px,
+    rgba(255, 190, 35, 0.2) 6px
+  );
+  border-radius: 50%;
+  opacity: 0.8;
+  z-index: 0;
+}
+
+.wjs-hero__inner {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 48px;
+  position: relative;
+  z-index: 1;
+}
+
+.wjs-hero__content {
+  flex: 1;
+  min-width: 0;
+  max-width: 560px;
+}
+
+.wjs-hero__breadcrumbs {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #1041c6;
+  margin-bottom: 30px;
+}
+
+.wjs-hero__breadcrumbs a {
+  color: #1041c6;
+  text-decoration: none;
+}
+
+.wjs-hero__breadcrumbs a:hover {
+  text-decoration: underline;
+}
+
+.wjs-hero__breadcrumbs .separator {
+  color: #64748b;
+  font-size: 12px;
+}
+
+.wjs-hero__breadcrumbs .current {
+  color: #2563eb;
+}
+
+.wjs-hero__title {
+  font-size: clamp(2.5rem, 4vw, 48px);
+  font-weight: 700;
+  line-height: 1.15;
+  color: #112347;
+  margin-bottom: 16px;
+}
+
+.wjs-hero__title .text-blue {
+  color: #2563eb;
+}
+
+.wjs-hero__accent-line {
+  width: 50px;
+  height: 4px;
+  background-color: #ffbe23;
+  border-radius: 4px;
+  margin-bottom: 24px;
+}
+
+.wjs-hero__text {
+  font-size: 16px;
+  line-height: 1.6;
+  color: #475569;
+  max-width: 500px;
+}
+
+.wjs-hero__visual {
+  flex: 1;
+  min-width: 0;
+  position: relative;
+  z-index: 1;
+}
+
+.wjs-hero__image {
+  width: 100%;
+  height: 560px;
+  object-fit: cover;
+  border-radius: 18px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
+/* ─── Stats Bar ─── */
+.wjs-stats-bar {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  margin: -60px auto 0;
+  background: linear-gradient(90deg, #021a52 0%, #062b80 100%);
+  border-radius: 16px;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  align-items: center;
+  padding: 30px 34px;
+  gap: 0;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+}
+
+.wjs-stats-bar__item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-width: 0;
+  padding: 0 22px;
+}
+
+.wjs-stats-bar__item + .wjs-stats-bar__item {
+  border-left: 1px solid rgba(255, 255, 255, 0.15);
+  padding-left: 22px;
+}
+
+.wjs-stats-bar__icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: rgba(255, 190, 35, 0.1);
+  border: 1px solid rgba(255, 190, 35, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffbe23;
+  flex-shrink: 0;
+}
+
+.wjs-stats-bar__icon svg {
+  width: 32px;
+  height: 32px;
+}
+
+.wjs-stats-bar__info {
+  display: flex;
+  flex-direction: column;
+}
+
+.wjs-stats-bar__value {
+  font-size: 28px;
+  font-weight: 700;
+  color: #ffbe23;
+  line-height: 1.1;
+}
+
+.wjs-stats-bar__label {
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.8);
+  margin-top: 4px;
+  line-height: 1.3;
+}
+
+/* ─── Main Content Section ─── */
+.wjs-content {
+  background: #f0f4ff;
+  width: 100%;
+  padding: 90px 45px 100px;
+}
+
+/* Section Heading */
+.wjs-content__heading {
+  margin-bottom: 60px;
+}
+
+.wjs-content__eyebrow {
+  display: block;
+  font-size: 13px;
+  font-weight: 700;
+  color: #2563eb;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  margin-bottom: 10px;
+}
+
+.wjs-content__eyebrow-line {
+  width: 44px;
+  height: 3px;
+  background: #ffbe23;
+  border-radius: 4px;
+  margin-bottom: 18px;
+}
+
+.wjs-content__title {
+  font-size: clamp(1.8rem, 3.5vw, 40px);
+  font-weight: 700;
+  color: #0f172a;
+  line-height: 1.2;
+}
+
+.wjs-content__title .text-seg-blue {
+  color: #2563eb;
+}
+
+/* ─── Reason Cards ─── */
+.wjs-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+}
+
+.wjs-card {
+  display: flex;
+  align-items: stretch;
+  background: #ffffff;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e4ecf7;
+  position: relative;
+  min-height: 160px;
+  transition: box-shadow 0.25s ease, transform 0.25s ease;
+}
+
+.wjs-card:hover {
+  box-shadow: 0 8px 32px rgba(17, 65, 198, 0.1);
+  transform: translateY(-2px);
+}
+
+/* Left blue gradient icon box */
+.wjs-card__icon-box {
+  flex-shrink: 0;
+  width: 160px;
+  background: linear-gradient(145deg, #2563eb 0%, #1041c6 60%, #0d35a8 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* subtle inner circle pattern */
+.wjs-card__icon-box::before {
+  content: '';
+  position: absolute;
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.wjs-card__icon-box::after {
+  content: '';
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.wjs-card__icon-circle {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  position: relative;
+  z-index: 1;
+}
+
+.wjs-card__icon-circle svg {
+  width: 34px;
+  height: 34px;
+}
+
+/* Left yellow accent line between icon box and body */
+.wjs-card__body {
+  flex: 1;
+  padding: 36px 40px;
+  border-left: 4px solid #ffbe23;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+}
+
+.wjs-card__title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #2563eb;
+  margin-bottom: 6px;
+}
+
+.wjs-card__accent-line {
+  width: 36px;
+  height: 3px;
+  background: #ffbe23;
+  border-radius: 4px;
+  margin-bottom: 14px;
+}
+
+.wjs-card__text {
+  font-size: 15px;
+  line-height: 1.75;
+  color: #374151;
+}
+
+/* Dot pattern decoration on the right side */
+.wjs-card__dots {
+  position: absolute;
+  top: 50%;
+  right: 16px;
+  transform: translateY(-50%);
+  width: 80px;
+  height: 100px;
+  background-image: radial-gradient(circle, #c5d3e8 1.5px, transparent 1.5px);
+  background-size: 10px 10px;
+  opacity: 0.55;
+  pointer-events: none;
+  flex-shrink: 0;
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 1024px) {
+  .wjs-hero {
+    padding: 40px 20px 100px;
+  }
+
+  .wjs-hero__inner {
+    flex-direction: column;
+    text-align: center;
+    gap: 40px;
+  }
+
+  .wjs-hero__content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 100%;
+  }
+
+  .wjs-stats-bar {
+    margin: -50px 20px 0;
+    width: auto;
+    padding: 24px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+  }
+
+  .wjs-stats-bar__item {
+    padding: 0 10px;
+  }
+
+  .wjs-stats-bar__item:nth-child(even) {
+    border-left: none;
+    padding-left: 0;
+  }
+
+  .wjs-stats-bar__item:nth-child(2),
+  .wjs-stats-bar__item:nth-child(4) {
+    border-left: 1px solid rgba(255, 255, 255, 0.15);
+    padding-left: 20px;
+  }
+
+  .wjs-content {
+    padding: 70px 20px 80px;
+  }
+
+  .wjs-card__icon-box {
+    width: 130px;
+  }
+
+  .wjs-card__body {
+    padding: 28px 30px;
+  }
+
+  .wjs-card__dots {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .wjs-hero {
+    padding: 30px 14px 88px;
+  }
+
+  .wjs-hero__breadcrumbs {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .wjs-hero__title {
+    font-size: clamp(2rem, 9vw, 2.7rem);
+  }
+
+  .wjs-hero__image {
+    height: 260px;
+  }
+
+  .wjs-stats-bar {
+    margin: -42px 14px 0;
+    grid-template-columns: 1fr;
+    padding: 20px 18px;
+    border-radius: 14px;
+  }
+
+  .wjs-stats-bar__item {
+    padding: 0;
+    border-left: none !important;
+    padding-left: 0 !important;
+    justify-content: flex-start;
+  }
+
+  .wjs-content {
+    padding: 52px 14px 60px;
+  }
+
+  .wjs-content__title {
+    font-size: 1.7rem;
+  }
+
+  .wjs-card {
+    flex-direction: column;
+    min-height: auto;
+  }
+
+  .wjs-card__icon-box {
+    width: 100%;
+    height: 120px;
+  }
+
+  .wjs-card__body {
+    border-left: none;
+    border-top: 4px solid #ffbe23;
+    padding: 24px 20px;
+  }
+
+  .wjs-card__title {
+    font-size: 18px;
+  }
+}
