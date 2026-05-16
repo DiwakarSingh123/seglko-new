@@ -1,0 +1,68 @@
+[
+  {
+    "id": 1,
+    "student": "Rahul Sharma",
+    "program": "B.Tech CSE",
+    "company": "TCS",
+    "pkg": "₹6.5 LPA",
+    "role": "Software Engineer",
+    "year": "2024",
+    "institution": "SIET",
+    "color": "from-blue-400 to-blue-600"
+  },
+  {
+    "id": 2,
+    "student": "Priya Singh",
+    "program": "MBA",
+    "company": "HDFC Bank",
+    "pkg": "₹8.2 LPA",
+    "role": "Management Trainee",
+    "year": "2024",
+    "institution": "SIMS",
+    "color": "from-purple-400 to-purple-600"
+  },
+  {
+    "id": 3,
+    "student": "Amit Patel",
+    "program": "B.Tech ECE",
+    "company": "Infosys",
+    "pkg": "₹5.5 LPA",
+    "role": "Systems Engineer",
+    "year": "2024",
+    "institution": "SIET",
+    "color": "from-emerald-400 to-emerald-600"
+  },
+  {
+    "id": 4,
+    "student": "Sneha Reddy",
+    "program": "MCA",
+    "company": "Wipro",
+    "pkg": "₹6.0 LPA",
+    "role": "Project Engineer",
+    "year": "2024",
+    "institution": "SIET",
+    "color": "from-orange-400 to-orange-600"
+  },
+  {
+    "id": 5,
+    "student": "Vikram Malhotra",
+    "program": "B.Tech CSE",
+    "company": "HCL Technologies",
+    "pkg": "₹7.0 LPA",
+    "role": "Software Developer",
+    "year": "2023",
+    "institution": "SIET",
+    "color": "from-rose-400 to-rose-600"
+  },
+  {
+    "id": 6,
+    "student": "Anjali Gupta",
+    "program": "MBA",
+    "company": "Deloitte",
+    "pkg": "₹9.5 LPA",
+    "role": "Business Analyst",
+    "year": "2023",
+    "institution": "SIMS",
+    "color": "from-teal-400 to-teal-600"
+  }
+]

@@ -1,30 +1,22 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import GalleryTab from "../components/GalleryTab";
 
 interface Program {
   id: number;
   name: string;
+  description: string;
   level: string;
   duration: string;
   seats: number;
   institution: string;
   status: string;
   fee: string;
+  color: string;
+  slug: string;
+  icon: string;
+  image: string;
 }
-
-const initialPrograms: Program[] = [
-  { id: 1, name: "B.Tech Computer Science & Engineering", level: "UG", duration: "4 Years", seats: 120, institution: "SIET", status: "Active", fee: "₹85,000/yr" },
-  { id: 2, name: "B.Tech Electronics & Communication", level: "UG", duration: "4 Years", seats: 60, institution: "SIET", status: "Active", fee: "₹85,000/yr" },
-  { id: 3, name: "B.Tech Mechanical Engineering", level: "UG", duration: "4 Years", seats: 60, institution: "SIET", status: "Active", fee: "₹80,000/yr" },
-  { id: 4, name: "MBA (Master of Business Administration)", level: "PG", duration: "2 Years", seats: 60, institution: "SIMS", status: "Active", fee: "₹95,000/yr" },
-  { id: 5, name: "MCA (Master of Computer Applications)", level: "PG", duration: "2 Years", seats: 60, institution: "SIET", status: "Active", fee: "₹75,000/yr" },
-  { id: 6, name: "BBA (Bachelor of Business Administration)", level: "UG", duration: "3 Years", seats: 60, institution: "SIMS", status: "Active", fee: "₹65,000/yr" },
-  { id: 7, name: "B.Pharm (Bachelor of Pharmacy)", level: "UG", duration: "4 Years", seats: 60, institution: "SCP", status: "Active", fee: "₹90,000/yr" },
-  { id: 8, name: "D.Pharm (Diploma in Pharmacy)", level: "Diploma", duration: "2 Years", seats: 60, institution: "SCP", status: "Active", fee: "₹55,000/yr" },
-  { id: 9, name: "B.Ed (Bachelor of Education)", level: "UG", duration: "2 Years", seats: 100, institution: "SCOE", status: "Active", fee: "₹50,000/yr" },
-  { id: 10, name: "M.Ed (Master of Education)", level: "PG", duration: "2 Years", seats: 50, institution: "SCOE", status: "Active", fee: "₹55,000/yr" },
-];
 
 const levelColors: Record<string, string> = {
   UG: "bg-blue-100 text-blue-700",
@@ -34,9 +26,28 @@ const levelColors: Record<string, string> = {
 
 export default function ProgramsPage() {
   const [tab, setTab] = useState<"list" | "gallery">("list");
-  const [programsList, setProgramsList] = useState<Program[]>(initialPrograms);
+  const [programsList, setProgramsList] = useState<Program[]>([]);
   const [search, setSearch] = useState("");
   const [level, setLevel] = useState("All");
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    fetchPrograms();
+  }, []);
+
+  const fetchPrograms = async () => {
+    setIsLoading(true);
+    try {
+      const res = await fetch("/api/programs");
+      if (res.ok) {
+        const data = await res.json();
+        setProgramsList(data);
+      }
+    } catch (error) {
+      console.error("Failed to fetch programs:", error);
+    }
+    setIsLoading(false);
+  };
 
   const filtered = programsList.filter((p) => {
     const s = p.name.toLowerCase().includes(search.toLowerCase()) || p.institution.toLowerCase().includes(search.toLowerCase());
@@ -44,17 +55,63 @@ export default function ProgramsPage() {
     return s && l;
   });
 
-  const addProgram = () => {
-    const nextId = programsList.length ? Math.max(...programsList.map((p) => p.id)) + 1 : 1;
-    setProgramsList([...programsList, { id: nextId, name: "New Program", level: "UG", duration: "0 Years", seats: 0, institution: "New Institution", status: "Active", fee: "₹0/yr" }]);
+  const addProgram = async () => {
+    const newProgram = {
+      name: "New Program",
+      description: "Brief description here...",
+      level: "UG",
+      duration: "0 Years",
+      seats: 0,
+      institution: "New Institution",
+      status: "Active",
+      fee: "₹0/yr",
+      color: "blue",
+      slug: "new-program",
+      icon: "GearIcon",
+      image: "program1"
+    };
+
+    try {
+      const res = await fetch("/api/programs", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newProgram)
+      });
+      if (res.ok) {
+        const saved = await res.json();
+        setProgramsList([...programsList, saved]);
+      }
+    } catch (error) {
+      console.error("Failed to add program:", error);
+    }
   };
 
   const updateProgram = (id: number, field: keyof Program, value: string | number) => {
     setProgramsList(programsList.map((p) => (p.id === id ? { ...p, [field]: value } : p)));
   };
 
-  const deleteProgram = (id: number) => {
-    setProgramsList(programsList.filter((p) => p.id !== id));
+  const saveProgram = async (program: Program) => {
+    try {
+      await fetch("/api/programs", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(program)
+      });
+      alert(`Saved ${program.name} successfully!`);
+    } catch (error) {
+      console.error("Failed to save program:", error);
+    }
+  };
+
+  const deleteProgram = async (id: number) => {
+    try {
+      const res = await fetch(`/api/programs?id=${id}`, { method: "DELETE" });
+      if (res.ok) {
+        setProgramsList(programsList.filter((p) => p.id !== id));
+      }
+    } catch (error) {
+      console.error("Failed to delete program:", error);
+    }
   };
 
   return (
@@ -80,7 +137,7 @@ export default function ProgramsPage() {
             <div className={`h-9 w-9 rounded-xl ${s.color} flex items-center justify-center text-white mb-3 shadow-md`}>
               <span className="material-symbols-outlined text-lg">{s.icon}</span>
             </div>
-            <div className="text-2xl font-black text-slate-800">{s.value}</div>
+            <div className="text-2xl font-black text-slate-800">{isLoading ? "..." : s.value}</div>
             <div className="text-xs text-slate-400 mt-0.5">{s.label}</div>
           </div>
         ))}
@@ -102,22 +159,41 @@ export default function ProgramsPage() {
 
       {tab === "list" && (
         <div className="space-y-4">
-          {programsList.map((program) => (
+          {isLoading && <p className="text-slate-500 p-4">Loading programs...</p>}
+          {!isLoading && programsList.map((program) => (
             <div key={program.id} className="rounded-3xl border border-slate-100 bg-white p-5 shadow-sm">
               <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
                 <div>
                   <h2 className="text-lg font-black text-slate-900">Program {program.id}: {program.name}</h2>
-                  <p className="text-sm text-slate-500 mt-1">Edit this program content.</p>
+                  <p className="text-sm text-slate-500 mt-1">Edit this program content. Ensure changes are saved!</p>
                 </div>
-                <button onClick={() => deleteProgram(program.id)} className="inline-flex items-center gap-2 rounded-xl border border-rose-100 bg-rose-50 px-4 py-2 text-sm font-semibold text-rose-600 hover:bg-rose-100 transition-colors">
-                  <span className="material-symbols-outlined">delete</span>Delete
-                </button>
+                <div className="flex gap-2">
+                  <button onClick={() => saveProgram(program)} className="inline-flex items-center gap-2 rounded-xl border border-emerald-100 bg-emerald-50 px-4 py-2 text-sm font-semibold text-emerald-600 hover:bg-emerald-100 transition-colors">
+                    <span className="material-symbols-outlined">save</span>Save
+                  </button>
+                  <button onClick={() => deleteProgram(program.id)} className="inline-flex items-center gap-2 rounded-xl border border-rose-100 bg-rose-50 px-4 py-2 text-sm font-semibold text-rose-600 hover:bg-rose-100 transition-colors">
+                    <span className="material-symbols-outlined">delete</span>Delete
+                  </button>
+                </div>
               </div>
-              <div className="grid gap-4 lg:grid-cols-3 mt-5">
+              
+              <div className="grid gap-4 lg:grid-cols-2 mt-5">
                 <div>
                   <label className="block text-xs font-bold text-slate-600 mb-1.5">Program Name</label>
                   <input type="text" value={program.name} onChange={(e) => updateProgram(program.id, "name", e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-3 px-4 text-sm outline-none focus:ring-2 focus:ring-indigo-200" />
                 </div>
+                <div>
+                  <label className="block text-xs font-bold text-slate-600 mb-1.5">Frontend Slug (URL path)</label>
+                  <input type="text" value={program.slug} onChange={(e) => updateProgram(program.id, "slug", e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-3 px-4 text-sm outline-none focus:ring-2 focus:ring-indigo-200" />
+                </div>
+              </div>
+
+              <div className="mt-4">
+                <label className="block text-xs font-bold text-slate-600 mb-1.5">Frontend Description</label>
+                <textarea rows={2} value={program.description} onChange={(e) => updateProgram(program.id, "description", e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-3 px-4 text-sm outline-none focus:ring-2 focus:ring-indigo-200" />
+              </div>
+
+              <div className="grid gap-4 lg:grid-cols-4 mt-4">
                 <div>
                   <label className="block text-xs font-bold text-slate-600 mb-1.5">Level</label>
                   <input type="text" value={program.level} onChange={(e) => updateProgram(program.id, "level", e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-3 px-4 text-sm outline-none focus:ring-2 focus:ring-indigo-200" />
@@ -126,8 +202,6 @@ export default function ProgramsPage() {
                   <label className="block text-xs font-bold text-slate-600 mb-1.5">Duration</label>
                   <input type="text" value={program.duration} onChange={(e) => updateProgram(program.id, "duration", e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-3 px-4 text-sm outline-none focus:ring-2 focus:ring-indigo-200" />
                 </div>
-              </div>
-              <div className="grid gap-4 lg:grid-cols-3 mt-4">
                 <div>
                   <label className="block text-xs font-bold text-slate-600 mb-1.5">Seats</label>
                   <input type="number" value={program.seats} onChange={(e) => updateProgram(program.id, "seats", Number(e.target.value))} className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-3 px-4 text-sm outline-none focus:ring-2 focus:ring-indigo-200" />
@@ -136,15 +210,38 @@ export default function ProgramsPage() {
                   <label className="block text-xs font-bold text-slate-600 mb-1.5">Institution</label>
                   <input type="text" value={program.institution} onChange={(e) => updateProgram(program.id, "institution", e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-3 px-4 text-sm outline-none focus:ring-2 focus:ring-indigo-200" />
                 </div>
+              </div>
+
+              <div className="grid gap-4 lg:grid-cols-4 mt-4">
                 <div>
                   <label className="block text-xs font-bold text-slate-600 mb-1.5">Fee</label>
                   <input type="text" value={program.fee} onChange={(e) => updateProgram(program.id, "fee", e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-3 px-4 text-sm outline-none focus:ring-2 focus:ring-indigo-200" />
                 </div>
+                <div>
+                  <label className="block text-xs font-bold text-slate-600 mb-1.5">Status</label>
+                  <input type="text" value={program.status} onChange={(e) => updateProgram(program.id, "status", e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-3 px-4 text-sm outline-none focus:ring-2 focus:ring-indigo-200" />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-slate-600 mb-1.5">Card Color</label>
+                  <select value={program.color} onChange={(e) => updateProgram(program.id, "color", e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-3 px-4 text-sm outline-none focus:ring-2 focus:ring-indigo-200">
+                    <option value="blue">Blue</option>
+                    <option value="green">Green</option>
+                    <option value="violet">Violet</option>
+                    <option value="orange">Orange</option>
+                    <option value="cyan">Cyan</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-slate-600 mb-1.5">Image Ref</label>
+                  <select value={program.image} onChange={(e) => updateProgram(program.id, "image", e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-3 px-4 text-sm outline-none focus:ring-2 focus:ring-indigo-200">
+                    <option value="program1">Program 1</option>
+                    <option value="program2">Program 2</option>
+                    <option value="program3">Program 3</option>
+                    <option value="program4">Program 4</option>
+                  </select>
+                </div>
               </div>
-              <div className="mt-4">
-                <label className="block text-xs font-bold text-slate-600 mb-1.5">Status</label>
-                <input type="text" value={program.status} onChange={(e) => updateProgram(program.id, "status", e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-3 px-4 text-sm outline-none focus:ring-2 focus:ring-indigo-200 max-w-xs" />
-              </div>
+
             </div>
           ))}
 
@@ -185,8 +282,8 @@ export default function ProgramsPage() {
                       <td className="px-5 py-3.5"><span className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-700">{p.status}</span></td>
                       <td className="px-5 py-3.5">
                         <div className="flex gap-1.5">
-                          <button className="h-7 w-7 flex items-center justify-center rounded-lg bg-indigo-50 text-indigo-600 hover:bg-indigo-100 transition-colors">
-                            <span className="material-symbols-outlined text-sm">edit</span>
+                          <button onClick={() => saveProgram(p)} className="h-7 w-7 flex items-center justify-center rounded-lg bg-emerald-50 text-emerald-600 hover:bg-emerald-100 transition-colors">
+                            <span className="material-symbols-outlined text-sm">save</span>
                           </button>
                           <button onClick={() => deleteProgram(p.id)} className="h-7 w-7 flex items-center justify-center rounded-lg bg-rose-50 text-rose-500 hover:bg-rose-100 transition-colors">
                             <span className="material-symbols-outlined text-sm">delete</span>

@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import GalleryTab from "../components/GalleryTab";
 
 const notices = [
@@ -46,19 +46,78 @@ export default function StudentZonePage() {
   const [tab, setTab] = useState<"notices" | "resources" | "grievance" | "life" | "gallery">("notices");
   const [showDrawer, setShowDrawer] = useState(false);
   const [form, setForm] = useState(emptyNotice);
-  const [noticeList, setNoticeList] = useState(notices);
-  const [lifeItems, setLifeItems] = useState<LifeItem[]>(initialLifeItems);
+  const [noticeList, setNoticeList] = useState<any[]>([]);
+  const [resourcesList, setResourcesList] = useState<any[]>([]);
+  const [lifeItems, setLifeItems] = useState<LifeItem[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<LifeCategory>("Campus Views");
   const [editingLife, setEditingLife] = useState<LifeItem | null>(null);
   const [showAddLife, setShowAddLife] = useState(false);
   const [lifeForm, setLifeForm] = useState({ title: "", desc: "", category: "Campus Views" as LifeCategory });
+  const [loading, setLoading] = useState(true);
+
+  // Fetch initial data
+  useEffect(() => {
+    fetch('/api/student-zone')
+      .then(res => res.json())
+      .then(data => {
+        if (data) {
+          setNoticeList(data.notices || []);
+          setResourcesList(data.resources || []);
+          setLifeItems(data.lifeItems || []);
+        }
+        setLoading(false);
+      });
+  }, []);
+
+  const saveData = async (updatedData: any) => {
+    try {
+      await fetch('/api/student-zone', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedData),
+      });
+    } catch (error) {
+      console.error('Error saving data:', error);
+    }
+  };
 
   const handleAdd = () => {
     if (!form.title.trim()) return;
     const today = new Date().toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
-    setNoticeList((prev) => [{ id: prev.length + 1, ...form, date: today }, ...prev]);
+    const newList = [{ id: Date.now(), ...form, date: today }, ...noticeList];
+    setNoticeList(newList);
+    saveData({ notices: newList, resources: resourcesList, lifeItems });
     setForm(emptyNotice);
     setShowDrawer(false);
+  };
+
+  const handleDeleteNotice = (id: number) => {
+    const newList = noticeList.filter(n => n.id !== id);
+    setNoticeList(newList);
+    saveData({ notices: newList, resources: resourcesList, lifeItems });
+  };
+
+  const handleAddLife = () => {
+    if (!lifeForm.title.trim()) return;
+    const newList = [...lifeItems, { id: Date.now(), ...lifeForm }];
+    setLifeItems(newList);
+    saveData({ notices: noticeList, resources: resourcesList, lifeItems: newList });
+    setLifeForm({ title: "", desc: "", category: "Campus Views" });
+    setShowAddLife(false);
+  };
+
+  const handleEditLife = () => {
+    if (!editingLife) return;
+    const newList = lifeItems.map((x) => x.id === editingLife.id ? editingLife : x);
+    setLifeItems(newList);
+    saveData({ notices: noticeList, resources: resourcesList, lifeItems: newList });
+    setEditingLife(null);
+  };
+
+  const handleDeleteLife = (id: number) => {
+    const newList = lifeItems.filter((x) => x.id !== id);
+    setLifeItems(newList);
+    saveData({ notices: noticeList, resources: resourcesList, lifeItems: newList });
   };
 
   const closeDrawer = () => { setShowDrawer(false); setForm(emptyNotice); };
@@ -80,7 +139,7 @@ export default function StudentZonePage() {
         {[
           { label: "Active Notices", value: noticeList.length, icon: "campaign", color: "bg-indigo-500" },
           { label: "Pinned", value: noticeList.filter(n => n.pinned).length, icon: "push_pin", color: "bg-amber-500" },
-          { label: "Resources", value: resources.length, icon: "folder", color: "bg-blue-500" },
+          { label: "Resources", value: resourcesList.length, icon: "folder", color: "bg-blue-500" },
           { label: "Grievances", value: "3", icon: "report_problem", color: "bg-rose-500" },
         ].map((s) => (
           <div key={s.label} className="bg-white rounded-2xl border border-slate-100 p-4 shadow-sm">
@@ -140,7 +199,7 @@ export default function StudentZonePage() {
                       <button className="h-7 w-7 flex items-center justify-center rounded-lg bg-indigo-50 text-indigo-600 hover:bg-indigo-100 transition-colors">
                         <span className="material-symbols-outlined text-sm">edit</span>
                       </button>
-                      <button className="h-7 w-7 flex items-center justify-center rounded-lg bg-rose-50 text-rose-500 hover:bg-rose-100 transition-colors">
+                      <button onClick={() => handleDeleteNotice(n.id)} className="h-7 w-7 flex items-center justify-center rounded-lg bg-rose-50 text-rose-500 hover:bg-rose-100 transition-colors">
                         <span className="material-symbols-outlined text-sm">delete</span>
                       </button>
                     </div>
@@ -161,7 +220,7 @@ export default function StudentZonePage() {
             </button>
           </div>
           <div className="p-5 space-y-3">
-            {resources.map((r, i) => (
+            {resourcesList.map((r, i) => (
               <div key={i} className="flex items-center justify-between p-4 bg-slate-50 rounded-xl border border-slate-100 hover:border-indigo-200 transition-colors">
                 <div className="flex items-center gap-3">
                   <div className="h-10 w-10 rounded-xl bg-rose-100 flex items-center justify-center">
@@ -230,7 +289,7 @@ export default function StudentZonePage() {
                 <input value={editingLife.desc} onChange={(e) => setEditingLife({ ...editingLife, desc: e.target.value })} placeholder="Description" className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-indigo-200" />
                 <div className="flex justify-end gap-3">
                   <button onClick={() => setEditingLife(null)} className="px-5 py-2.5 rounded-xl border border-slate-200 text-sm font-semibold text-slate-700 hover:bg-slate-50">Cancel</button>
-                  <button onClick={() => { setLifeItems((prev) => prev.map((x) => x.id === editingLife.id ? editingLife : x)); setEditingLife(null); }} className="px-5 py-2.5 rounded-xl text-sm font-semibold text-white" style={{ backgroundColor: "#151869" }}>Save</button>
+                  <button onClick={handleEditLife} className="px-5 py-2.5 rounded-xl text-sm font-semibold text-white" style={{ backgroundColor: "#151869" }}>Save</button>
                 </div>
               </div>
             </div>
@@ -256,12 +315,7 @@ export default function StudentZonePage() {
                 <input value={lifeForm.desc} onChange={(e) => setLifeForm({ ...lifeForm, desc: e.target.value })} placeholder="Description" className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-indigo-200" />
                 <div className="flex justify-end gap-3">
                   <button onClick={() => setShowAddLife(false)} className="px-5 py-2.5 rounded-xl border border-slate-200 text-sm font-semibold text-slate-700 hover:bg-slate-50">Cancel</button>
-                  <button onClick={() => {
-                    if (!lifeForm.title.trim()) return;
-                    setLifeItems((prev) => [...prev, { id: Date.now(), ...lifeForm }]);
-                    setLifeForm({ title: "", desc: "", category: "Campus Views" });
-                    setShowAddLife(false);
-                  }} className="px-5 py-2.5 rounded-xl text-sm font-semibold text-white" style={{ backgroundColor: "#151869" }}>Add</button>
+                  <button onClick={handleAddLife} className="px-5 py-2.5 rounded-xl text-sm font-semibold text-white" style={{ backgroundColor: "#151869" }}>Add</button>
                 </div>
               </div>
             </div>
@@ -298,7 +352,7 @@ export default function StudentZonePage() {
                       <button onClick={() => setEditingLife(item)} className="h-7 w-7 flex items-center justify-center rounded-lg bg-indigo-50 text-indigo-600 hover:bg-indigo-100 transition-colors">
                         <span className="material-symbols-outlined text-sm">edit</span>
                       </button>
-                      <button onClick={() => setLifeItems((prev) => prev.filter((x) => x.id !== item.id))} className="h-7 w-7 flex items-center justify-center rounded-lg bg-rose-50 text-rose-500 hover:bg-rose-100 transition-colors">
+                      <button onClick={() => handleDeleteLife(item.id)} className="h-7 w-7 flex items-center justify-center rounded-lg bg-rose-50 text-rose-500 hover:bg-rose-100 transition-colors">
                         <span className="material-symbols-outlined text-sm">delete</span>
                       </button>
                     </div>

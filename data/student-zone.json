@@ -1,0 +1,128 @@
+{
+  "notices": [
+    {
+      "id": 1778933132405,
+      "title": "sadasd",
+      "category": "Scholarship",
+      "institution": "All",
+      "pinned": true,
+      "date": "May 16, 2026"
+    },
+    {
+      "id": 1,
+      "title": "Examination Schedule - Even Semester 2024",
+      "category": "Exam",
+      "date": "May 10, 2024",
+      "institution": "SIET",
+      "pinned": true
+    },
+    {
+      "id": 2,
+      "title": "Scholarship Application Form 2024-25",
+      "category": "Scholarship",
+      "date": "May 8, 2024",
+      "institution": "All",
+      "pinned": true
+    },
+    {
+      "id": 3,
+      "title": "Annual Sports Meet Registration Open",
+      "category": "Event",
+      "date": "May 5, 2024",
+      "institution": "All",
+      "pinned": false
+    },
+    {
+      "id": 4,
+      "title": "Library Timing Change Notice",
+      "category": "General",
+      "date": "May 3, 2024",
+      "institution": "SIET",
+      "pinned": false
+    },
+    {
+      "id": 5,
+      "title": "Industrial Visit to NTPC Lucknow",
+      "category": "Event",
+      "date": "Apr 28, 2024",
+      "institution": "SIET",
+      "pinned": false
+    }
+  ],
+  "resources": [
+    {
+      "name": "Student Handbook 2024-25",
+      "type": "PDF",
+      "size": "2.4 MB",
+      "downloads": 1240
+    },
+    {
+      "name": "Academic Calendar 2024-25",
+      "type": "PDF",
+      "size": "1.1 MB",
+      "downloads": 980
+    },
+    {
+      "name": "Hostel Rules & Regulations",
+      "type": "PDF",
+      "size": "0.8 MB",
+      "downloads": 650
+    },
+    {
+      "name": "Anti-Ragging Policy",
+      "type": "PDF",
+      "size": "0.5 MB",
+      "downloads": 420
+    }
+  ],
+  "lifeItems": [
+    {
+      "id": 1,
+      "title": "Welcome to SEG",
+      "desc": "Where dreams take shape",
+      "category": "Campus Views"
+    },
+    {
+      "id": 2,
+      "title": "Our Campus",
+      "desc": "Explore our beautiful campus",
+      "category": "Campus Views"
+    },
+    {
+      "id": 3,
+      "title": "Library Moments",
+      "desc": "Knowledge at your fingertips",
+      "category": "Library"
+    },
+    {
+      "id": 4,
+      "title": "Knowledge Hub",
+      "desc": "Our state-of-the-art library",
+      "category": "Library"
+    },
+    {
+      "id": 5,
+      "title": "Student Life",
+      "desc": "Vibrant student community",
+      "category": "Students"
+    },
+    {
+      "id": 6,
+      "title": "Learning & Growth",
+      "desc": "Students in action",
+      "category": "Students"
+    },
+    {
+      "id": 7,
+      "title": "Annual Fest",
+      "desc": "Celebrating talent and culture",
+      "category": "Events"
+    },
+    {
+      "id": 8,
+      "title": "Computer Labs",
+      "desc": "Modern computing facilities",
+      "category": "Facilities"
+    }
+  ]
+}

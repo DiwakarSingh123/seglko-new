@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 type ArticleType = "International" | "National";
 type Paper = { id: number; faculty: string; type: ArticleType; title: string; journal: string; year: string; dept: string };
@@ -83,10 +83,39 @@ export default function ResearchPage() {
   const [tab, setTab] = useState<"publications" | "session" | "awards" | "innovation">("publications");
   const [selectedDept, setSelectedDept] = useState(departments[0]);
   const [selectedSessionDept, setSelectedSessionDept] = useState(projectDepts[0]);
-  const [papers, setPapers] = useState<Paper[]>(initialPapers);
-  const [projects, setProjects] = useState<Project[]>(initialProjects);
-  const [awards, setAwards] = useState<Award[]>(initialAwards);
-  const [innovations, setInnovations] = useState<Innovation[]>(initialInnovations);
+  const [papers, setPapers] = useState<Paper[]>([]);
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [awards, setAwards] = useState<Award[]>([]);
+  const [innovations, setInnovations] = useState<Innovation[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch initial data
+  useEffect(() => {
+    fetch('/api/research')
+      .then(res => res.json())
+      .then(data => {
+        if (data) {
+          setPapers(data.papers || []);
+          setProjects(data.projects || []);
+          setAwards(data.awards || []);
+          setInnovations(data.innovations || []);
+        }
+        setLoading(false);
+      });
+  }, []);
+
+  const saveData = async (updatedData: any) => {
+    try {
+      await fetch('/api/research', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedData),
+      });
+    } catch (error) {
+      console.error('Error saving data:', error);
+    }
+  };
+
   const [showAdd, setShowAdd] = useState(false);
   const [editingPaper, setEditingPaper] = useState<Paper | null>(null);
   const [editingProject, setEditingProject] = useState<Project | null>(null);
@@ -100,33 +129,67 @@ export default function ResearchPage() {
 
   const handleAdd = () => {
     if (!form.faculty || !form.title) return;
-    setPapers((prev) => [...prev, { id: Date.now(), ...form }]);
+    const newList = [...papers, { id: Date.now(), ...form }];
+    setPapers(newList);
+    saveData({ papers: newList, projects, awards, innovations });
     setForm({ faculty: "", type: "International", title: "", journal: "", year: "", dept: departments[0] });
     setShowAdd(false);
   };
 
   const handleEditSave = () => {
     if (!editingPaper) return;
-    setPapers((prev) => prev.map((p) => p.id === editingPaper.id ? editingPaper : p));
+    const newList = papers.map((p) => p.id === editingPaper.id ? editingPaper : p);
+    setPapers(newList);
+    saveData({ papers: newList, projects, awards, innovations });
     setEditingPaper(null);
+  };
+
+  const handlePaperDelete = (id: number) => {
+    const newList = papers.filter((p) => p.id !== id);
+    setPapers(newList);
+    saveData({ papers: newList, projects, awards, innovations });
   };
 
   const handleProjectSave = () => {
     if (!editingProject) return;
-    setProjects((prev) => prev.map((project) => project.id === editingProject.id ? editingProject : project));
+    const newList = projects.map((project) => project.id === editingProject.id ? editingProject : project);
+    setProjects(newList);
+    saveData({ papers, projects: newList, awards, innovations });
     setEditingProject(null);
+  };
+
+  const handleProjectDelete = (id: number) => {
+    const newList = projects.filter((p) => p.id !== id);
+    setProjects(newList);
+    saveData({ papers, projects: newList, awards, innovations });
   };
 
   const handleAwardSave = () => {
     if (!editingAward) return;
-    setAwards((prev) => prev.map((award) => award.id === editingAward.id ? editingAward : award));
+    const newList = awards.map((award) => award.id === editingAward.id ? editingAward : award);
+    setAwards(newList);
+    saveData({ papers, projects, awards: newList, innovations });
     setEditingAward(null);
+  };
+
+  const handleAwardDelete = (id: number) => {
+    const newList = awards.filter((a) => a.id !== id);
+    setAwards(newList);
+    saveData({ papers, projects, awards: newList, innovations });
   };
 
   const handleInnovationSave = () => {
     if (!editingInnovation) return;
-    setInnovations((prev) => prev.map((innovation) => innovation.id === editingInnovation.id ? editingInnovation : innovation));
+    const newList = innovations.map((innovation) => innovation.id === editingInnovation.id ? editingInnovation : innovation);
+    setInnovations(newList);
+    saveData({ papers, projects, awards, innovations: newList });
     setEditingInnovation(null);
+  };
+
+  const handleInnovationDelete = (id: number) => {
+    const newList = innovations.filter((i) => i.id !== id);
+    setInnovations(newList);
+    saveData({ papers, projects, awards, innovations: newList });
   };
 
   return (
@@ -375,7 +438,7 @@ export default function ResearchPage() {
                           <button onClick={() => setEditingInnovation(innovation)} className="h-7 w-7 flex items-center justify-center rounded-lg bg-indigo-50 text-indigo-600 hover:bg-indigo-100 transition-colors">
                             <span className="material-symbols-outlined text-sm">edit</span>
                           </button>
-                          <button onClick={() => setInnovations((prev) => prev.filter((x) => x.id !== innovation.id))} className="h-7 w-7 flex items-center justify-center rounded-lg bg-rose-50 text-rose-500 hover:bg-rose-100 transition-colors">
+                          <button onClick={() => handleInnovationDelete(innovation.id)} className="h-7 w-7 flex items-center justify-center rounded-lg bg-rose-50 text-rose-500 hover:bg-rose-100 transition-colors">
                             <span className="material-symbols-outlined text-sm">delete</span>
                           </button>
                         </div>
@@ -417,8 +480,8 @@ export default function ResearchPage() {
                         <span className="material-symbols-outlined text-sm">edit</span>
                       </button>
                       <button
-                        onClick={() => setAwards((prev) => prev.filter((x) => x.id !== award.id))}
-                        className="h-8 w-8 rounded-lg bg-rose-50 text-rose-600 hover:bg-rose-100 transition-colors grid place-items-center"
+                        onClick={() => handleAwardDelete(award.id)}
+                        className="h-8 w-8 rounded-lg bg-rose-50 text-rose-500 hover:bg-rose-100 transition-colors grid place-items-center"
                       >
                         <span className="material-symbols-outlined text-sm">delete</span>
                       </button>
@@ -489,7 +552,7 @@ export default function ResearchPage() {
                       <button onClick={() => setEditingProject(project)} className="h-9 w-9 rounded-lg bg-indigo-50 text-indigo-600 hover:bg-indigo-100 transition-colors grid place-items-center">
                         <span className="material-symbols-outlined text-sm">edit</span>
                       </button>
-                      <button onClick={() => setProjects((prev) => prev.filter((x) => x.id !== project.id))} className="h-9 w-9 rounded-lg bg-rose-50 text-rose-600 hover:bg-rose-100 transition-colors grid place-items-center">
+                      <button onClick={() => handleProjectDelete(project.id)} className="h-9 w-9 rounded-lg bg-rose-50 text-rose-600 hover:bg-rose-100 transition-colors grid place-items-center">
                         <span className="material-symbols-outlined text-sm">delete</span>
                       </button>
                     </div>
@@ -574,7 +637,7 @@ export default function ResearchPage() {
                           <button onClick={() => setEditingPaper(p)} className="h-7 w-7 flex items-center justify-center rounded-lg bg-indigo-50 text-indigo-600 hover:bg-indigo-100 transition-colors">
                             <span className="material-symbols-outlined text-sm">edit</span>
                           </button>
-                          <button onClick={() => setPapers((prev) => prev.filter((x) => x.id !== p.id))} className="h-7 w-7 flex items-center justify-center rounded-lg bg-rose-50 text-rose-500 hover:bg-rose-100 transition-colors">
+                          <button onClick={() => handlePaperDelete(p.id)} className="h-7 w-7 flex items-center justify-center rounded-lg bg-rose-50 text-rose-500 hover:bg-rose-100 transition-colors">
                             <span className="material-symbols-outlined text-sm">delete</span>
                           </button>
                         </div>

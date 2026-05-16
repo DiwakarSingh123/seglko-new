@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import GalleryTab from "../components/GalleryTab";
 
 const inquiries = [
@@ -19,36 +19,47 @@ const statusStyle: Record<string, string> = {
 export default function ContactPage() {
   type Faq = { q: string; a: string };
   const [tab, setTab] = useState<"inquiries" | "info" | "faq" | "gallery">("inquiries");
-  const [faqs, setFaqs] = useState<Faq[]>([
-    { q: "How long does it take to get a response?", a: "We respond to all queries within 24 hours." },
-    { q: "How can I apply for admission?", a: "Visit our website and fill the online application form under the Admissions section." },
-    { q: "Can I visit the campus before admission?", a: "Yes, you can book a campus visit through our website or call our admissions helpline." },
-    { q: "Do you provide scholarship assistance?", a: "Yes, we offer merit-based and need-based scholarships. Contact admissions for details." },
-    { q: "How can I track my application?", a: "Login to your student portal to track your application status in real-time." },
-    { q: "Who can I contact for admission support?", a: "Call 09555699988 or email admission.cell@seglko.org for admission support." },
-  ]);
+  const [faqs, setFaqs] = useState<Faq[]>([]);
   const [editingFaq, setEditingFaq] = useState<(Faq & { index: number }) | null>(null);
   const [filter, setFilter] = useState("All");
 
   const [contactDetails, setContactDetails] = useState({
-    address: "L-5, First Floor, Lajpat Nagar - II, Delhi, Delhi, India, 110024",
-    phone: "09555699988, 09810054878",
-    email: "admission.cell@seglko.org",
-    website: "www.seglko.org",
+    address: "",
+    phone: "",
+    email: "",
+    website: "",
   });
 
-  const [savedContactDetails, setSavedContactDetails] = useState(contactDetails);
+  const [socialLinks, setSocialLinks] = useState<{label: string, icon: string, url: string}[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const [socialLinks, setSocialLinks] = useState([
-    { label: "Facebook", icon: "facebook", url: "https://facebook.com/seglko" },
-    { label: "Instagram", icon: "photo_camera", url: "https://instagram.com/seglko" },
-    { label: "Twitter / X", icon: "alternate_email", url: "https://twitter.com/seglko" },
-    { label: "YouTube", icon: "play_circle", url: "https://youtube.com/@seglko" },
-    { label: "LinkedIn", icon: "work", url: "https://linkedin.com/company/seglko" },
-    { label: "WhatsApp", icon: "chat", url: "https://wa.me/919555699988" },
-  ]);
+  // Fetch initial data
+  useEffect(() => {
+    fetch('/api/contact')
+      .then(res => res.json())
+      .then(data => {
+        if (data) {
+          setFaqs(data.faqs || []);
+          setContactDetails(data.contactDetails || { address: "", phone: "", email: "", website: "" });
+          setSocialLinks(data.socialLinks || []);
+        }
+        setLoading(false);
+      });
+  }, []);
 
-  const [savedSocialLinks, setSavedSocialLinks] = useState(socialLinks);
+  const saveData = async (updatedData: any) => {
+    try {
+      await fetch('/api/contact', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedData),
+      });
+      alert('Changes saved successfully!');
+    } catch (error) {
+      console.error('Error saving data:', error);
+      alert('Failed to save changes.');
+    }
+  };
 
   const updateContactDetail = (field: keyof typeof contactDetails, value: string) => {
     setContactDetails({ ...contactDetails, [field]: value });
@@ -58,8 +69,38 @@ export default function ContactPage() {
     setSocialLinks(socialLinks.map((s) => (s.label === label ? { ...s, url: value } : s)));
   };
 
-  const saveContactInfo = () => setSavedContactDetails(contactDetails);
-  const saveSocialLinks = () => setSavedSocialLinks(socialLinks);
+  const saveContactInfo = () => {
+    saveData({ faqs, contactDetails, socialLinks });
+  };
+  
+  const saveSocialLinks = () => {
+    saveData({ faqs, contactDetails, socialLinks });
+  };
+
+  const saveFaqs = (newFaqs: Faq[]) => {
+    saveData({ faqs: newFaqs, contactDetails, socialLinks });
+  };
+
+  const handleFaqSave = () => {
+    if (editingFaq) {
+      const newFaqs = faqs.map((f, i) => i === editingFaq.index ? { q: editingFaq.q, a: editingFaq.a } : f);
+      setFaqs(newFaqs);
+      saveFaqs(newFaqs);
+      setEditingFaq(null);
+    }
+  };
+
+  const handleAddFaq = () => {
+    const newFaqs = [...faqs, { q: "New Question?", a: "Answer here." }];
+    setFaqs(newFaqs);
+    saveFaqs(newFaqs);
+  };
+
+  const handleDeleteFaq = (idx: number) => {
+    const newFaqs = faqs.filter((_, i) => i !== idx);
+    setFaqs(newFaqs);
+    saveFaqs(newFaqs);
+  };
 
   const filtered = inquiries.filter((i) => filter === "All" || i.status === filter);
 
@@ -170,14 +211,14 @@ export default function ContactPage() {
                 <textarea value={editingFaq.a} onChange={(e) => setEditingFaq({ ...editingFaq, a: e.target.value })} placeholder="Answer" rows={3} className="w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-indigo-200 resize-none" />
                 <div className="flex justify-end gap-3">
                   <button onClick={() => setEditingFaq(null)} className="px-5 py-2.5 rounded-2xl border border-slate-200 text-sm font-semibold text-slate-700 hover:bg-slate-50">Cancel</button>
-                  <button onClick={() => { setFaqs((prev) => prev.map((f, i) => i === editingFaq.index ? { q: editingFaq.q, a: editingFaq.a } : f)); setEditingFaq(null); }} className="px-5 py-2.5 rounded-2xl bg-indigo-600 text-sm font-semibold text-white hover:bg-indigo-700">Save</button>
+                  <button onClick={handleFaqSave} className="px-5 py-2.5 rounded-2xl bg-indigo-600 text-sm font-semibold text-white hover:bg-indigo-700">Save</button>
                 </div>
               </div>
             </div>
           )}
           <div className="flex items-center justify-between mb-5">
             <h2 className="text-sm font-black text-slate-800">Frequently Asked Questions</h2>
-            <button onClick={() => setFaqs((prev) => [...prev, { q: "New Question?", a: "Answer here." }])} className="flex items-center gap-1.5 px-3 py-1.5 bg-indigo-600 text-white rounded-xl text-xs font-semibold hover:bg-indigo-700 transition-colors">
+            <button onClick={handleAddFaq} className="flex items-center gap-1.5 px-3 py-1.5 bg-indigo-600 text-white rounded-xl text-xs font-semibold hover:bg-indigo-700 transition-colors">
               <span className="material-symbols-outlined text-sm">add</span>Add FAQ
             </button>
           </div>
@@ -193,7 +234,7 @@ export default function ContactPage() {
                     <button onClick={() => setEditingFaq({ ...faq, index: i })} className="h-7 w-7 flex items-center justify-center rounded-lg bg-white text-indigo-600 hover:bg-indigo-50 transition-colors border border-slate-200">
                       <span className="material-symbols-outlined text-sm">edit</span>
                     </button>
-                    <button onClick={() => setFaqs((prev) => prev.filter((_, idx) => idx !== i))} className="h-7 w-7 flex items-center justify-center rounded-lg bg-white text-rose-500 hover:bg-rose-50 transition-colors border border-slate-200">
+                    <button onClick={() => handleDeleteFaq(i)} className="h-7 w-7 flex items-center justify-center rounded-lg bg-white text-rose-500 hover:bg-rose-50 transition-colors border border-slate-200">
                       <span className="material-symbols-outlined text-sm">delete</span>
                     </button>
                   </div>
