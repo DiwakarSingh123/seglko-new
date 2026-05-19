@@ -54,6 +54,8 @@ export default function StudentZonePage() {
   const [showAddLife, setShowAddLife] = useState(false);
   const [lifeForm, setLifeForm] = useState({ title: "", desc: "", category: "Campus Views" as LifeCategory });
   const [loading, setLoading] = useState(true);
+  const [editingNoticeId, setEditingNoticeId] = useState<number | null>(null);
+
 
   // Fetch initial data
   useEffect(() => {
@@ -83,11 +85,17 @@ export default function StudentZonePage() {
 
   const handleAdd = () => {
     if (!form.title.trim()) return;
-    const today = new Date().toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
-    const newList = [{ id: Date.now(), ...form, date: today }, ...noticeList];
+    let newList;
+    if (editingNoticeId !== null) {
+      newList = noticeList.map(n => n.id === editingNoticeId ? { ...n, ...form } : n);
+    } else {
+      const today = new Date().toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+      newList = [{ id: Date.now(), ...form, date: today }, ...noticeList];
+    }
     setNoticeList(newList);
     saveData({ notices: newList, resources: resourcesList, lifeItems });
     setForm(emptyNotice);
+    setEditingNoticeId(null);
     setShowDrawer(false);
   };
 
@@ -120,7 +128,8 @@ export default function StudentZonePage() {
     saveData({ notices: noticeList, resources: resourcesList, lifeItems: newList });
   };
 
-  const closeDrawer = () => { setShowDrawer(false); setForm(emptyNotice); };
+  const closeDrawer = () => { setShowDrawer(false); setForm(emptyNotice); setEditingNoticeId(null); };
+
 
   return (
     <div className="space-y-5">
@@ -196,9 +205,14 @@ export default function StudentZonePage() {
                   </td>
                   <td className="px-5 py-3.5">
                     <div className="flex gap-1.5">
-                      <button className="h-7 w-7 flex items-center justify-center rounded-lg bg-indigo-50 text-indigo-600 hover:bg-indigo-100 transition-colors">
+                      <button onClick={() => {
+                        setForm({ title: n.title, category: n.category, institution: n.institution, pinned: n.pinned });
+                        setEditingNoticeId(n.id);
+                        setShowDrawer(true);
+                      }} className="h-7 w-7 flex items-center justify-center rounded-lg bg-indigo-50 text-indigo-600 hover:bg-indigo-100 transition-colors">
                         <span className="material-symbols-outlined text-sm">edit</span>
                       </button>
+
                       <button onClick={() => handleDeleteNotice(n.id)} className="h-7 w-7 flex items-center justify-center rounded-lg bg-rose-50 text-rose-500 hover:bg-rose-100 transition-colors">
                         <span className="material-symbols-outlined text-sm">delete</span>
                       </button>
@@ -371,8 +385,8 @@ export default function StudentZonePage() {
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-5 border-b border-slate-100">
           <div>
-            <h2 className="text-base font-black text-slate-800">Add New Notice</h2>
-            <p className="text-xs text-slate-400 mt-0.5">Fill in the details below</p>
+            <h2 className="text-base font-black text-slate-800">{editingNoticeId !== null ? "Edit Notice" : "Add New Notice"}</h2>
+            <p className="text-xs text-slate-400 mt-0.5">{editingNoticeId !== null ? "Make changes to the notice" : "Fill in the details below"}</p>
           </div>
           <button onClick={closeDrawer} className="h-9 w-9 flex items-center justify-center rounded-xl hover:bg-slate-100 transition-colors">
             <span className="material-symbols-outlined text-slate-400">close</span>
@@ -443,9 +457,10 @@ export default function StudentZonePage() {
             Cancel
           </button>
           <button type="button" onClick={handleAdd} className="flex-1 px-4 py-3 rounded-xl text-white text-sm font-semibold transition-colors" style={{ backgroundColor: "#151869" }}>
-            Add Notice
+            {editingNoticeId !== null ? "Save Changes" : "Add Notice"}
           </button>
         </div>
+
       </div>
 
       {/* Backdrop */}
