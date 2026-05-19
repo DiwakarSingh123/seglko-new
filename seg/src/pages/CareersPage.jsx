@@ -14,7 +14,7 @@ const jobCategories = [
 
 export default function CareersPage() {
   const [activeCategory, setActiveCategory] = useState('all');
-  const [jobs, setJobs] = useState<any[]>([
+  const [jobs, setJobs] = useState([
     {
       id: 1,
       title: 'Chairman PS',
@@ -64,7 +64,7 @@ export default function CareersPage() {
       .catch(err => console.error("Error loading career jobs settings:", err));
   }, []);
 
-  const getCategoryCount = (catId: string) => {
+  const getCategoryCount = (catId) => {
     if (catId === 'all') return jobs.length;
     return jobs.filter(job => job.category === catId).length;
   };

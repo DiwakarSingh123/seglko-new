@@ -6,7 +6,7 @@ export default function EligibilityCriteria() {
   const [activeTab, setActiveTab] = useState('undergraduate');
   const [openAccordion, setOpenAccordion] = useState('academic');
 
-  const [criteria, setCriteria] = useState<any>({
+  const [criteria, setCriteria] = useState({
     undergraduate: {
       academic: [
         "Must have passed 10+2 examination with Physics and Mathematics as compulsory subjects.",
@@ -60,7 +60,7 @@ export default function EligibilityCriteria() {
       .catch(err => console.error("Error loading eligibility criteria settings:", err));
   }, []);
 
-  const toggleAccordion = (id: string) => {
+  const toggleAccordion = (id) => {
     if (openAccordion === id) {
       setOpenAccordion("");
     } else {
@@ -197,7 +197,7 @@ export default function EligibilityCriteria() {
                   {openAccordion === 'academic' && (
                     <div className="eligibility-accordion-body">
                       <div className="eligibility-checklist">
-                        {currentCriteria.academic.map((text: string, i: number) => (
+                        {currentCriteria.academic.map((text, i) => (
                           <div className="eligibility-check-item" key={i}>
                             <span className="eligibility-check-icon">✓</span>
                             {text}
@@ -231,7 +231,7 @@ export default function EligibilityCriteria() {
                   {openAccordion === 'age' && (
                     <div className="eligibility-accordion-body">
                       <div className="eligibility-checklist">
-                        {currentCriteria.age.map((text: string, i: number) => (
+                        {currentCriteria.age.map((text, i) => (
                           <div className="eligibility-check-item" key={i}>
                             <span className="eligibility-check-icon">✓</span>
                             {text}
@@ -264,7 +264,7 @@ export default function EligibilityCriteria() {
                   {openAccordion === 'additional' && (
                     <div className="eligibility-accordion-body eligibility-accordion-body--purple">
                       <div className="eligibility-checklist">
-                        {currentCriteria.additional.map((text: string, i: number) => (
+                        {currentCriteria.additional.map((text, i) => (
                           <React.Fragment key={i}>
                             <div className="eligibility-check-item">
                               <span className="eligibility-check-icon">

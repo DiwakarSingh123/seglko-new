@@ -131,7 +131,7 @@ export default function ManagementQuota() {
             </ul>
           </div>
         </div>
-      </section>
+      </main>
     </div>
   );
 }

@@ -60,7 +60,7 @@ export default function HistoryTimeline() {
       </div>
 
       <div className="history-timeline__list">
-        {historyData.milestones.map((item: any, index: number) => (
+        {historyData.milestones.map((item, index) => (
           <div key={index} className="timeline-item">
             <div className="timeline-item__marker-area">
               <div className="timeline-item__icon-wrap">
