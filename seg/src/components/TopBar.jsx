@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 const MailIcon = () => (
@@ -8,6 +9,25 @@ const MailIcon = () => (
 );
 
 export default function TopBar() {
+  const [general, setGeneral] = useState({
+    tollFree: "1800-180-7686",
+    hrEmail: "hr@seglko.org",
+    contactEmail: "admission.cell@seglko.org",
+    contactPhone: "09555699988",
+    marqueeNews: "Admissions are Open for academic session 2026-27. Register online today for attractive scholarships."
+  });
+
+  useEffect(() => {
+    fetch('http://localhost:3000/api/settings')
+      .then(res => res.json())
+      .then(data => {
+        if (data && data.general) {
+          setGeneral(data.general);
+        }
+      })
+      .catch(err => console.error("Error loading general settings:", err));
+  }, []);
+
   return (
     <div className="top-bar">
       <div className="top-bar__left">
@@ -19,11 +39,11 @@ export default function TopBar() {
           <a href="#" className="top-bar__link">Alumini</a>
         </div>
         <div className="top-bar__utility">
-          <span className="top-bar__link">Toll Free no: 1800-180-7686</span>
+          <span className="top-bar__link">Toll Free no: {general.tollFree}</span>
           <span className="top-bar__divider top-bar__divider--visible" />
           <span className="top-bar__link top-bar__email">
             <MailIcon />
-            <span>: For jobs ( send Cv ) ~hr @seglko.org</span>
+            <span>: For jobs ( send Cv ) ~ {general.hrEmail}</span>
           </span>
         </div>
       </div>

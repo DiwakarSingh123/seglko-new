@@ -62,5 +62,52 @@
       "q": "Who can I contact for admission support?",
       "a": "Call 09555699988 or email admission.cell@seglko.org for admission support."
     }
+  ],
+  "inquiries": [
+    {
+      "id": "INQ-001",
+      "name": "Ravi Kumar",
+      "email": "ravi@gmail.com",
+      "phone": "+91 98765 43210",
+      "subject": "Admission inquiry for B.Tech",
+      "date": "May 10, 2026",
+      "status": "New"
+    },
+    {
+      "id": "INQ-002",
+      "name": "Sunita Devi",
+      "email": "sunita@gmail.com",
+      "phone": "+91 87654 32109",
+      "subject": "Fee structure for MBA",
+      "date": "May 9, 2026",
+      "status": "Replied"
+    },
+    {
+      "id": "INQ-003",
+      "name": "Mohit Sharma",
+      "email": "mohit@gmail.com",
+      "phone": "+91 76543 21098",
+      "subject": "Hostel facility availability",
+      "date": "May 8, 2026",
+      "status": "New"
+    },
+    {
+      "id": "INQ-004",
+      "name": "Pooja Singh",
+      "email": "pooja@gmail.com",
+      "phone": "+91 65432 10987",
+      "subject": "Scholarship details",
+      "date": "May 7, 2026",
+      "status": "Closed"
+    },
+    {
+      "id": "INQ-005",
+      "name": "Arjun Patel",
+      "email": "arjun@gmail.com",
+      "phone": "+91 54321 09876",
+      "subject": "Campus visit request",
+      "date": "May 6, 2026",
+      "status": "Replied"
+    }
   ]
 }

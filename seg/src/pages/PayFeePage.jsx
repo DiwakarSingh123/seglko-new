@@ -1,21 +1,8 @@
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import institutionsBg from '../assets/images/institutions-bg.png';
 import aboutBg from '../assets/images/about-bg.png';
 import campusBg from '../assets/images/campus-bg.png';
-
-const institutions = [
-  { name: 'Saroj Institute of Technology & Management', city: 'Lucknow', code: '123', image: institutionsBg, color: '#1041c6', payUrl: 'https://seglko.org/' },
-  { name: 'Shivdan Singh Institute of Technology & Management', city: 'Aligarh', code: '007', image: aboutBg, color: '#16a34a', payUrl: 'https://ssitm.in/' },
-  { name: 'Lucknow Institute of Pharmacy', city: 'Lucknow', code: '572', image: campusBg, color: '#e31e24', payUrl: 'https://seglko.org/lip/' },
-];
-
-const features = [
-  { icon: '🛡️', title: 'Secure & Trusted', desc: 'Your payments are protected with bank-level security.' },
-  { icon: '⚡', title: 'Quick & Easy', desc: 'Pay your fees in just a few simple steps.' },
-  { icon: '🕐', title: '24/7 Availability', desc: 'Make payments anytime, from anywhere.' },
-  { icon: '🧾', title: 'Instant Receipt', desc: 'Get instant payment confirmation & receipt.' },
-  { icon: '🎧', title: 'Need Help?', desc: 'Our support team is always here to assist you.' },
-];
 
 /* Real-looking QR SVG */
 const QRCode = ({ color }) => (
@@ -85,6 +72,65 @@ const LockIcon = () => (
 );
 
 export default function PayFeePage() {
+  const [institutions, setInstitutions] = useState([
+    { name: 'Saroj Institute of Technology & Management', city: 'Lucknow', code: '123', image: institutionsBg, color: '#1041c6', payUrl: 'https://seglko.org/' },
+    { name: 'Shivdan Singh Institute of Technology & Management', city: 'Aligarh', code: '007', image: aboutBg, color: '#16a34a', payUrl: 'https://ssitm.in/' },
+    { name: 'Lucknow Institute of Pharmacy', city: 'Lucknow', code: '572', image: campusBg, color: '#e31e24', payUrl: 'https://seglko.org/lip/' },
+  ]);
+
+  const [features, setFeatures] = useState([
+    { icon: '🛡️', title: 'Secure & Trusted', desc: 'Your payments are protected with bank-level security.' },
+    { icon: '⚡', title: 'Quick & Easy', desc: 'Pay your fees in just a few simple steps.' },
+    { icon: '🕐', title: '24/7 Availability', desc: 'Make payments anytime, from anywhere.' },
+    { icon: '🧾', title: 'Instant Receipt', desc: 'Get instant payment confirmation & receipt.' },
+    { icon: '🎧', title: 'Need Help?', desc: 'Our support team is always here to assist you.' },
+  ]);
+
+  const [general, setGeneral] = useState({
+    tollFree: "1800-180-7686",
+    hrEmail: "hr@seglko.org",
+    contactEmail: "admission.cell@seglko.org",
+    contactPhone: "09555699988",
+  });
+
+  useEffect(() => {
+    // Load institutions
+    fetch('http://localhost:3000/api/institutions')
+      .then(res => res.json())
+      .then(data => {
+        if (data && data.length > 0) {
+          const mapped = data.map(item => ({
+            name: item.title,
+            city: item.location || 'Lucknow',
+            code: item.code || '123',
+            image: item.tag?.toLowerCase().includes('pharm') ? campusBg :
+                   item.tag?.toLowerCase().includes('poly') ? aboutBg : institutionsBg,
+            color: item.tag?.toLowerCase().includes('law') ? '#7c3aed' :
+                   item.tag?.toLowerCase().includes('pharm') ? '#e31e24' :
+                   item.tag?.toLowerCase().includes('poly') ? '#16a34a' : '#1041c6',
+            payUrl: item.url || 'https://seglko.org/'
+          }));
+          setInstitutions(mapped);
+        }
+      })
+      .catch(err => console.error("Error loading institutions:", err));
+
+    // Load settings
+    fetch('http://localhost:3000/api/settings')
+      .then(res => res.json())
+      .then(settings => {
+        if (settings) {
+          if (settings.payFee && settings.payFee.features) {
+            setFeatures(settings.payFee.features);
+          }
+          if (settings.general) {
+            setGeneral(settings.general);
+          }
+        }
+      })
+      .catch(err => console.error("Error loading settings:", err));
+  }, []);
+
   return (
     <div style={{ background: '#f0f4ff', minHeight: '100vh' }}>
       <style>{`
@@ -263,7 +309,7 @@ export default function PayFeePage() {
                   <div className="pf-card__qr-box">
                     <QRCode color={inst.color} />
                   </div>
-                  <a href="#" className="pf-card__dl" style={{ color: inst.color }}>
+                  <a href="#" className="pf-card__dl" style={{ color: inst.color }} onClick={(e) => { e.preventDefault(); alert("Downloading QR code is not active in sandbox simulation."); }}>
                     Download QR Code 📥
                   </a>
                 </div>
@@ -288,7 +334,7 @@ export default function PayFeePage() {
               {/* Footer */}
               <div className="pf-card__foot" style={{ background: `${inst.color}08`, borderTop: `1px solid ${inst.color}20` }}>
                 <MailIcon />
-                For payment issues, contact: <strong>admission.cell@seglko.org</strong>
+                For payment issues, contact: <strong>{general.contactEmail || "admission.cell@seglko.org"}</strong>
               </div>
             </div>
           ))}

@@ -1,9 +1,40 @@
-import React from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import '../ManagementQuota.css';
 import institutionsBg from '../assets/images/institutions-bg.png';
 
-const ManagementQuota = () => {
+export default function ManagementQuota() {
+  const [data, setData] = useState({
+    heroTitle: "Management Admission Quota",
+    heroSubtitle: "We offer dedicated seats under the Management Quota for students seeking direct admission through a transparent and merit-guided process. Secure your future with personalized guidance.",
+    guidelines: [
+      "Admissions are strictly on merit basis for the reserved seats.",
+      "Candidates must meet the minimum eligibility criteria defined by the University/State Govt.",
+      "Direct application to the college office or online portal is required.",
+      "Original documents verification is mandatory during the final step.",
+      "Counseling sessions are available for choice of branch."
+    ],
+    documents: [
+      "10th & 12th Marksheets (Original & Photocopies)",
+      "Entrance Exam Scorecard (if applicable)",
+      "Transfer Certificate (TC) & Migration Certificate",
+      "Character Certificate from last attended institution",
+      "Category Certificate (if claiming any reservation)",
+      "Aadhar Card & Passport size photographs"
+    ]
+  });
+
+  useEffect(() => {
+    fetch('http://localhost:3000/api/settings')
+      .then(res => res.json())
+      .then(settings => {
+        if (settings && settings.managementQuota) {
+          setData(settings.managementQuota);
+        }
+      })
+      .catch(err => console.error("Error loading Management Quota settings:", err));
+  }, []);
+
   return (
     <div className="quota-page">
       {/* Hero Section */}
@@ -17,10 +48,10 @@ const ManagementQuota = () => {
               <span className="separator">&gt;</span>
               <span className="current">Management Quota</span>
             </div>
-            <h1 className="quota-hero__title">Management <br />Admission Quota</h1>
+            <h1 className="quota-hero__title" dangerouslySetInnerHTML={{ __html: data.heroTitle.replace("Quota", "<br />Quota") }} />
             <div className="quota-hero__accent-line"></div>
             <p className="quota-hero__text">
-              We offer dedicated seats under the Management Quota for students seeking direct admission through a transparent and merit-guided process. Secure your future with personalized guidance.
+              {data.heroSubtitle}
             </p>
           </div>
           <div className="quota-hero__visual">
@@ -78,11 +109,9 @@ const ManagementQuota = () => {
               Admission Guidelines
             </h2>
             <ul className="quota-list">
-              <li>Admissions are strictly on merit basis for the reserved seats.</li>
-              <li>Candidates must meet the minimum eligibility criteria defined by the University/State Govt.</li>
-              <li>Direct application to the college office or online portal is required.</li>
-              <li>Original documents verification is mandatory during the final step.</li>
-              <li>Counseling sessions are available for choice of branch.</li>
+              {data.guidelines.map((item, index) => (
+                <li key={index}>{item}</li>
+              ))}
             </ul>
             <div className="quota-cta">
               <h3>Ready to secure your seat?</h3>
@@ -96,18 +125,13 @@ const ManagementQuota = () => {
               Required Documents
             </h2>
             <ul className="quota-list">
-              <li>10th & 12th Marksheets (Original & Photocopies)</li>
-              <li>Entrance Exam Scorecard (if applicable)</li>
-              <li>Transfer Certificate (TC) & Migration Certificate</li>
-              <li>Character Certificate from last attended institution</li>
-              <li>Category Certificate (if claiming any reservation)</li>
-              <li>Aadhar Card & Passport size photographs</li>
+              {data.documents.map((item, index) => (
+                <li key={index}>{item}</li>
+              ))}
             </ul>
           </div>
         </div>
-      </main>
+      </section>
     </div>
   );
-};
-
-export default ManagementQuota;
+}

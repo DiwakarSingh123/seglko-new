@@ -40,7 +40,33 @@ export default function ContactUs() {
       });
   }, []);
 
-  const handleSubmit = (e) => { e.preventDefault(); alert('Message sent!'); };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!form.name.trim() || !form.email.trim() || !form.message.trim()) {
+      alert('Please fill in Name, Email, and Message.');
+      return;
+    }
+    
+    fetch('http://localhost:3000/api/contact', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(form),
+    })
+      .then(res => {
+        if (!res.ok) throw new Error('Failed to submit form');
+        return res.json();
+      })
+      .then(data => {
+        alert('Message sent successfully! Our team will contact you soon.');
+        setForm({ name: '', email: '', phone: '', course: '', inquiry: '', message: '' });
+      })
+      .catch(err => {
+        console.error('Error submitting form:', err);
+        alert('Failed to send message. Please try again later.');
+      });
+  };
 
   if (loading) return <div style={{ padding: '100px', textAlign: 'center' }}>Loading...</div>;
   if (error) return <div style={{ padding: '100px', textAlign: 'center' }}>Error: {error}</div>;

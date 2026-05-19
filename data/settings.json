@@ -1,0 +1,222 @@
+{
+  "general": {
+    "tollFree": "1800-180-7686",
+    "hrEmail": "hr@seglko.org",
+    "contactEmail": "admission.cell@seglko.org",
+    "contactPhone": "09555699988",
+    "marqueeNews": "Admissions are Open for academic session 2026-27. Register online today for attractive scholarships."
+  },
+  "aboutHistory": {
+    "headline": "The Legacy of Saroj Educational Group",
+    "description": "A journey marked by dedication, growth, and a commitment to educational excellence that has shaped thousands of lives and continues to lead the way for future leaders.",
+    "milestones": [
+      { "id": "1", "year": "1997", "title": "Humble Beginnings", "description": "The journey began in 1997 with the foundation of the Shivdan Singh Institute of Technology & Management (SSITM) in Algarh. Driven by a vision to provide quality technical education, this marked the inception of SEG's legacy." },
+      { "id": "2", "year": "2001", "title": "Expanding Horizons", "description": "In 2001, SEG expanded its influence with the establishment of the Saroj Institute of Management (SIMS) in Lucknow. This milestone amplified SEG's impact, attracting students from various regions seeking quality education." },
+      { "id": "3", "year": "2010", "title": "Growth & Excellence", "description": "Continued expansion and strengthening of academic programs, establishing SEG as a trusted name in technical and management education across Northern India." },
+      { "id": "4", "year": "Present", "title": "Leading Into Future", "description": "Today, SEG stands as a premier institution with multiple campuses, diverse programs, and a strong commitment to academic excellence and student success." }
+    ]
+  },
+  "aboutVisionMission": {
+    "sectionLabel": "OUR MISSION & VISION",
+    "mainHeading": "Guided by Purpose, Driven by Impact",
+    "missionTitle": "Our Mission",
+    "missionDescription": "At Saroj Educational Group (SEG), our mission is to impart quality education that fosters innovation, critical thinking, and holistic development. We aim to nurture professionals who are not only industry-ready but also equipped to contribute responsibly to society. By integrating contemporary teaching methodologies with industry standards, we aspire to create leaders who excel in their fields.",
+    "missionImage": "",
+    "visionTitle": "Our Vision",
+    "visionDescription": "To be a globally recognized center of excellence in education, research and innovation, nurturing future leaders and professionals.",
+    "visionImage": ""
+  },
+  "aboutJoin": {
+    "joinSection": {
+      "sectionLabel": "WHY CHOOSE SEG",
+      "heading": "Why Join Saroj Educational Group (SEG)?",
+      "subheading": "A Proven Path to Growth and Success",
+      "description": "SEG offers a unique combination of academic excellence, modern infrastructure, practical exposure, and a supportive campus environment designed to help students succeed in their careers and personal development."
+    },
+    "joinFeatures": [
+      { "id": "1", "title": "Academic Excellence", "description": "SEG prioritizes a robust academic foundation combined with practical application, guided by experienced faculty and current industry standards." },
+      { "id": "2", "title": "State-of-the-Art Infrastructure", "description": "Modern classrooms, advanced labs, and a digital library provide the ideal setting for innovation and growth." },
+      { "id": "3", "title": "Holistic Development", "description": "Extracurricular activities, clubs, and events help nurture leadership, teamwork and confidence." }
+    ]
+  },
+  "aboutChairman": {
+    "message": "Education lays the foundation for building a better tomorrow and shaping ground for future leaders. Since our inception, SEG has remained steadfast in its mission to impart quality education, develop practical skills, and instill a sense of responsibility in our students.\n\nEducation at SEG is not just about obtaining degrees; it is about shaping character, developing critical thinking, and preparing individuals for real-world challenges. Our dedicated faculty, state-of-the-art facilities, and industry-driven curriculum aim to provide a holistic learning experience that prepares students for a successful future.\n\nI firmly believe that education is the key to empowerment, and at SEG, we strive to ignite the spark of curiosity, creativity, and courage in every learner. I invite you to be a part of this remarkable journey of knowledge, growth, and transformation.",
+    "author": "Mr. Sunil Singh",
+    "designation": "Chairman, Saroj Educational Group",
+    "image": ""
+  },
+  "admissionProcess": {
+    "heroTitle": "ADMISSION PROCESS",
+    "heroSubtitle": "Your Journey to a Bright Future Starts Here",
+    "phone": "+91 9555699988",
+    "email": "admission.cell@seglko.org",
+    "steps": [
+      {
+        "number": "01",
+        "title": "Register Yourself",
+        "text": "Create your account using your email address and basic personal information."
+      },
+      {
+        "number": "02",
+        "title": "Verify Email",
+        "text": "Check your email for a verification link to activate your account."
+      },
+      {
+        "number": "03",
+        "title": "Fill Application Form Online",
+        "text": "Complete the detailed application form with your academic and personal information."
+      },
+      {
+        "number": "04",
+        "title": "Pay Application Fee",
+        "text": "Secure your application by paying the non-refundable processing fee."
+      },
+      {
+        "number": "05",
+        "title": "Submit Application",
+        "text": "Review and submit your completed application for processing."
+      }
+    ]
+  },
+  "eligibilityCriteria": {
+    "undergraduate": {
+      "academic": [
+        "Must have passed 10+2 examination with Physics and Mathematics as compulsory subjects.",
+        "Minimum aggregate marks of 45% (40% for reserved category) in the qualifying examination."
+      ],
+      "age": [
+        "Candidates must be at least 17 years of age on or before 31st December of the admission year."
+      ],
+      "additional": [
+        "All candidates must submit original documents for verification",
+        "International students must have equivalent qualifications",
+        "5% relaxation in marks for reserved category candidates",
+        "Admission subject to availability of seats"
+      ]
+    },
+    "postgraduate": {
+      "academic": [
+        "Must hold a recognized Bachelor's degree in the relevant field.",
+        "Minimum aggregate marks of 50% (45% for reserved category) in the qualifying examination."
+      ],
+      "age": [
+        "No specific upper age limit is set for postgraduate admissions."
+      ],
+      "additional": [
+        "Entrance exam scorecard must be submitted at counseling.",
+        "Equivalence certificates are required for degrees from foreign institutions."
+      ]
+    },
+    "diploma": {
+      "academic": [
+        "Must have passed the 10th standard or equivalent from a recognized board.",
+        "Minimum 35% marks required in the qualifying exam."
+      ],
+      "age": [
+        "Minimum age should be 14 years as of 1st July of the admission year."
+      ],
+      "additional": [
+        "Subject choices are allocated based on polytechnic entrance scores."
+      ]
+    }
+  },
+  "whyJoinSeg": {
+    "heroTitle": "The Legacy of Saroj Educational Group",
+    "heroSubtitle": "A journey marked by dedication, growth, and a commitment to educational excellence that has shaped thousands of lives and continues to lead the way for future leaders.",
+    "reasons": [
+      {
+        "id": "academic-excellence",
+        "title": "Academic Excellence",
+        "icon": "graduation",
+        "text": "At SEG, we prioritize a robust academic foundation that balances theoretical knowledge with practical application. Our experienced faculty members, many of whom are industry experts and researchers, guide students through a comprehensive curriculum designed to meet global standards."
+      },
+      {
+        "id": "infrastructure",
+        "title": "State-of-the-Art Infrastructure",
+        "icon": "institution",
+        "text": "SEG is equipped with state-of-the-art infrastructure, including modern classrooms, advanced laboratories, a vast digital library, and high-speed internet access. Our campus creates a conducive environment for learning and research."
+      },
+      {
+        "id": "holistic-development",
+        "title": "Holistic Development",
+        "icon": "people",
+        "text": "Beyond academics, SEG believes in nurturing well-rounded individuals. We offer a variety of extracurricular activities, clubs, and cultural events that enhance leadership skills, teamwork, and creativity."
+      },
+      {
+        "id": "industry-connections",
+        "title": "Strong Industry Connections",
+        "icon": "briefcase",
+        "text": "SEG maintains strong ties with reputed industries and organizations, facilitating internships, guest lectures, and placement opportunities. Our dedicated placement cell works tirelessly to connect students with leading companies."
+      }
+    ]
+  },
+  "payFee": {
+    "features": [
+      { "icon": "🛡️", "title": "Secure & Trusted", "desc": "Your payments are protected with bank-level security." },
+      { "icon": "⚡", "title": "Quick & Easy", "desc": "Pay your fees in just a few simple steps." },
+      { "icon": "🕐", "title": "24/7 Availability", "desc": "Make payments anytime, from anywhere." },
+      { "icon": "🧾", "title": "Instant Receipt", "desc": "Get instant payment confirmation & receipt." }
+    ]
+  },
+  "careers": {
+    "jobs": [
+      {
+        "id": 1,
+        "title": "Chairman PS",
+        "category": "administration",
+        "tag": "Administration",
+        "dept": "Secretariat",
+        "location": "Lucknow",
+        "experience": "5-8 Years",
+        "type": "Full Time",
+        "posted": "05 June 2025",
+        "color": "blue"
+      },
+      {
+        "id": 2,
+        "title": "Admission Counsellor",
+        "category": "administration",
+        "tag": "Admissions",
+        "dept": "Counselling",
+        "location": "Lucknow",
+        "experience": "1-3 Years",
+        "type": "Full Time",
+        "posted": "05 June 2025",
+        "color": "violet"
+      },
+      {
+        "id": 3,
+        "title": "Assistant Professor",
+        "category": "teaching",
+        "tag": "Teaching",
+        "dept": "Pharmacy",
+        "location": "Lucknow",
+        "experience": "2-5 Years",
+        "type": "Full Time",
+        "posted": "05 June 2025",
+        "color": "green"
+      }
+    ]
+  },
+  "managementQuota": {
+    "heroTitle": "Management Admission Quota",
+    "heroSubtitle": "We offer dedicated seats under the Management Quota for students seeking direct admission through a transparent and merit-guided process. Secure your future with personalized guidance.",
+    "contactPhone": "+91 9555699988",
+    "contactEmail": "admission.cell@seglko.org",
+    "guidelines": [
+      "Admissions are strictly on merit basis for the reserved seats.",
+      "Candidates must meet the minimum eligibility criteria defined by the University/State Govt.",
+      "Direct application to the college office or online portal is required.",
+      "Original documents verification is mandatory during the final step.",
+      "Counseling sessions are available for choice of branch."
+    ],
+    "documents": [
+      "10th & 12th Marksheets (Original & Photocopies)",
+      "Entrance Exam Scorecard (if applicable)",
+      "Transfer Certificate (TC) & Migration Certificate",
+      "Character Certificate from last attended institution",
+      "Category Certificate (if claiming any reservation)",
+      "Aadhar Card & Passport size photographs"
+    ]
+  }
+}

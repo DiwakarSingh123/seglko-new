@@ -105,6 +105,43 @@ export default function AboutPage() {
   const [savedChairmanImage, setSavedChairmanImage] = useState(chairmanImage);
   const [previewSection, setPreviewSection] = useState<"history" | "vision" | "join" | "message" | "leadership" | "gallery" | "faculties" | null>(null);
 
+  // Fetch dynamic page customizer settings on mount
+  useEffect(() => {
+    fetch('/api/settings')
+      .then(res => res.json())
+      .then(data => {
+        if (data && !data.error) {
+          if (data.aboutHistory) {
+            setHistoryHeadline(data.aboutHistory.headline || "");
+            setHistoryDescription(data.aboutHistory.description || "");
+            setMilestones(data.aboutHistory.milestones || []);
+            setSavedHistory(data.aboutHistory);
+          }
+          if (data.aboutVisionMission) {
+            setVisionMission(data.aboutVisionMission);
+            setSavedVisionMission(data.aboutVisionMission);
+          }
+          if (data.aboutJoin) {
+            setJoinSection(data.aboutJoin.joinSection || {});
+            setJoinFeatures(data.aboutJoin.joinFeatures || []);
+            setSavedJoinSection(data.aboutJoin.joinSection || {});
+            setSavedJoinFeatures(data.aboutJoin.joinFeatures || []);
+          }
+          if (data.aboutChairman) {
+            setChairmanMessage(data.aboutChairman.message || "");
+            setChairmanAuthor(data.aboutChairman.author || "");
+            setChairmanDesignation(data.aboutChairman.designation || "");
+            setChairmanImage(data.aboutChairman.image || "");
+            setSavedChairmanMessage(data.aboutChairman.message || "");
+            setSavedChairmanAuthor(data.aboutChairman.author || "");
+            setSavedChairmanDesignation(data.aboutChairman.designation || "");
+            setSavedChairmanImage(data.aboutChairman.image || "");
+          }
+        }
+      })
+      .catch(err => console.error(err));
+  }, []);
+
   const updateVisionMission = (field: keyof VisionMissionContent, value: string) => {
     setVisionMission({ ...visionMission, [field]: value });
   };
@@ -132,14 +169,48 @@ export default function AboutPage() {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ faculties, awards, stories }),
-    })
+    }).catch(err => console.error(err));
+
+    // Fetch, merge, and save global settings
+    fetch('/api/settings')
       .then(res => res.json())
-      .then(resData => {
-        if (resData.success) {
-          alert('Changes saved successfully!');
-        }
+      .then(currentSettings => {
+        const updated = {
+          ...currentSettings,
+          aboutHistory: {
+            headline: historyHeadline,
+            description: historyDescription,
+            milestones,
+          },
+          aboutVisionMission: visionMission,
+          aboutJoin: {
+            joinSection,
+            joinFeatures,
+          },
+          aboutChairman: {
+            message: chairmanMessage,
+            author: chairmanAuthor,
+            designation: chairmanDesignation,
+            image: chairmanImage,
+          }
+        };
+
+        fetch('/api/settings', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(updated),
+        })
+          .then(res => res.json())
+          .then(resData => {
+            if (resData.success) {
+              alert('Changes saved successfully!');
+            }
+          });
       })
-      .catch(err => console.error(err));
+      .catch(err => {
+        console.error(err);
+        alert('Failed to save to settings database');
+      });
   };
 
 

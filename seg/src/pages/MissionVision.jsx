@@ -1,13 +1,36 @@
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import institutionsBg from '../assets/images/seg.jpeg';
 import missionImg from '../assets/images/mission-illustration.png';
 import visionImg from '../assets/images/vision-illustration.png';
 import '../mission-vision.css';
 
-const MissionVision = () => {
+export default function MissionVision() {
+  const [data, setData] = useState({
+    sectionLabel: "OUR MISSION & VISION",
+    mainHeading: "Guided by Purpose, Driven by Impact",
+    missionTitle: "Our Mission",
+    missionDescription: "At Saroj Educational Group (SEG), our mission is to impart quality education that fosters innovation, critical thinking, and holistic development. We aim to nurture professionals who are not only industry-ready but also equipped to contribute responsibly to society. By integrating contemporary teaching methodologies with industry standards, we aspire to create leaders who excel in their fields.",
+    missionImage: "",
+    visionTitle: "Our Vision",
+    visionDescription: "To be a globally recognized center of excellence in education, research and innovation, nurturing future leaders and professionals.",
+    visionImage: ""
+  });
+
+  useEffect(() => {
+    fetch('http://localhost:3000/api/settings')
+      .then(res => res.json())
+      .then(settings => {
+        if (settings && settings.aboutVisionMission) {
+          setData(settings.aboutVisionMission);
+        }
+      })
+      .catch(err => console.error("Error loading Mission & Vision settings:", err));
+  }, []);
+
   return (
     <div className="mission-vision-page">
-      {/* Hero Section - Same as History Page */}
+      {/* Hero Section */}
       <section className="mv-hero">
         <div className="mv-hero__inner">
           <div className="mv-hero__content">
@@ -82,9 +105,6 @@ const MissionVision = () => {
                 <line x1="8" y1="14" x2="8.01" y2="14" />
                 <line x1="16" y1="14" x2="16.01" y2="14" />
                 <line x1="12" y1="14" x2="12.01" y2="14" />
-                <line x1="8" y1="18" x2="8.01" y2="18" />
-                <line x1="16" y1="18" x2="16.01" y2="18" />
-                <line x1="12" y1="18" x2="12.01" y2="18" />
               </svg>
             </div>
             <div className="mv-stats-bar__info">
@@ -113,18 +133,16 @@ const MissionVision = () => {
 
       {/* Mission & Vision Content Section */}
       <section className="mv-content">
-        {/* Section Header - Two Column */}
+        {/* Section Header */}
         <div className="mv-content__header">
           <div className="mv-content__header-left">
-            <span className="mv-content__eyebrow">OUR MISSION & VISION</span>
+            <span className="mv-content__eyebrow">{data.sectionLabel}</span>
             <div className="mv-content__eyebrow-line"></div>
-            <h2 className="mv-content__title">
-              Guided by Purpose,<br />Driven by Impact
-            </h2>
+            <h2 className="mv-content__title" dangerouslySetInnerHTML={{ __html: data.mainHeading.replace(",", ",<br />") }} />
           </div>
           <div className="mv-content__header-right">
             <p className="mv-content__intro">
-              At Saroj Educational Group (SEG), our mission is to impart quality education that fosters innovation, critical thinking, and holistic development. We aim to nurture professionals who are not only industry-ready but also equipped to contribute responsibly to society. By integrating contemporary teaching methodologies with industry standards, we aspire to create leaders who excel in their fields.
+              {data.missionDescription}
             </p>
           </div>
         </div>
@@ -135,7 +153,7 @@ const MissionVision = () => {
         {/* Mission Card */}
         <div className="mv-card">
           <div className="mv-card__visual">
-            <img src={missionImg} alt="Our Mission" className="mv-card__image" />
+            <img src={data.missionImage || missionImg} alt="Our Mission" className="mv-card__image" />
           </div>
           <div className="mv-card__body">
             <div className="mv-card__icon-wrap">
@@ -153,10 +171,10 @@ const MissionVision = () => {
                 </svg>
               </div>
             </div>
-            <h3 className="mv-card__title">Our Mission</h3>
+            <h3 className="mv-card__title">{data.missionTitle}</h3>
             <div className="mv-card__title-line"></div>
             <p className="mv-card__text">
-              At Saroj Educational Group (SEG), our mission is to impart quality education that fosters innovation, critical thinking, and holistic development. We aim to nurture professionals who are not only industry-ready but also equipped to contribute responsibly to society. By integrating contemporary teaching methodologies with industry standards, we aspire to create leaders who excel in their fields.
+              {data.missionDescription}
             </p>
           </div>
           {/* Dot pattern decoration */}
@@ -174,14 +192,14 @@ const MissionVision = () => {
                 </svg>
               </div>
             </div>
-            <h3 className="mv-card__title">Our Vision</h3>
+            <h3 className="mv-card__title">{data.visionTitle}</h3>
             <div className="mv-card__title-line"></div>
             <p className="mv-card__text">
-              Our vision is to be a globally recognized institution that empowers students with knowledge, skills, and values to become responsible citizens and leaders. We envision a future where our graduates drive innovation, contribute to societal progress, and uphold the highest standards of ethics and professionalism in their respective fields.
+              {data.visionDescription}
             </p>
           </div>
           <div className="mv-card__visual">
-            <img src={visionImg} alt="Our Vision" className="mv-card__image" />
+            <img src={data.visionImage || visionImg} alt="Our Vision" className="mv-card__image" />
           </div>
           {/* Dot pattern decoration */}
           <div className="mv-card__dots mv-card__dots--left"></div>
@@ -189,6 +207,4 @@ const MissionVision = () => {
       </section>
     </div>
   );
-};
-
-export default MissionVision;
+}

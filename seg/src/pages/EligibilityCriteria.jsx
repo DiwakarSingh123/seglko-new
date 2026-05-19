@@ -1,18 +1,74 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import '../EligibilityCriteria.css';
 
-const EligibilityCriteria = () => {
+export default function EligibilityCriteria() {
   const [activeTab, setActiveTab] = useState('undergraduate');
-  const [openAccordion, setOpenAccordion] = useState('additional');
+  const [openAccordion, setOpenAccordion] = useState('academic');
 
-  const toggleAccordion = (id) => {
+  const [criteria, setCriteria] = useState<any>({
+    undergraduate: {
+      academic: [
+        "Must have passed 10+2 examination with Physics and Mathematics as compulsory subjects.",
+        "Minimum aggregate marks of 45% (40% for reserved category) in the qualifying examination."
+      ],
+      age: [
+        "Candidates must be at least 17 years of age on or before 31st December of the admission year."
+      ],
+      additional: [
+        "All candidates must submit original documents for verification",
+        "International students must have equivalent qualifications",
+        "5% relaxation in marks for reserved category candidates",
+        "Admission subject to availability of seats"
+      ]
+    },
+    postgraduate: {
+      academic: [
+        "Must hold a recognized Bachelor's degree in the relevant field.",
+        "Minimum aggregate marks of 50% (45% for reserved category) in the qualifying examination."
+      ],
+      age: [
+        "No specific upper age limit is set for postgraduate admissions."
+      ],
+      additional: [
+        "Entrance exam scorecard must be submitted at counseling.",
+        "Equivalence certificates are required for degrees from foreign institutions."
+      ]
+    },
+    diploma: {
+      academic: [
+        "Must have passed the 10th standard or equivalent from a recognized board.",
+        "Minimum 35% marks required in the qualifying exam."
+      ],
+      age: [
+        "Minimum age should be 14 years as of 1st July of the admission year."
+      ],
+      additional: [
+        "Subject choices are allocated based on polytechnic entrance scores."
+      ]
+    }
+  });
+
+  useEffect(() => {
+    fetch('http://localhost:3000/api/settings')
+      .then(res => res.json())
+      .then(settings => {
+        if (settings && settings.eligibilityCriteria) {
+          setCriteria(settings.eligibilityCriteria);
+        }
+      })
+      .catch(err => console.error("Error loading eligibility criteria settings:", err));
+  }, []);
+
+  const toggleAccordion = (id: string) => {
     if (openAccordion === id) {
-      setOpenAccordion(null);
+      setOpenAccordion("");
     } else {
       setOpenAccordion(id);
     }
   };
+
+  const currentCriteria = criteria[activeTab] || criteria['undergraduate'];
 
   return (
     <div className="eligibility-page">
@@ -120,7 +176,7 @@ const EligibilityCriteria = () => {
 
               {/* ACCORDION */}
               <div className="eligibility-accordion">
-                {/* Item 1 */}
+                {/* Item 1 - Academic */}
                 <div className={`eligibility-accordion-item ${openAccordion === 'academic' ? 'open' : ''}`}>
                   <button className="eligibility-accordion-header" onClick={() => toggleAccordion('academic')}>
                     <div className="eligibility-accordion-header-left">
@@ -141,20 +197,18 @@ const EligibilityCriteria = () => {
                   {openAccordion === 'academic' && (
                     <div className="eligibility-accordion-body">
                       <div className="eligibility-checklist">
-                        <div className="eligibility-check-item">
-                          <span className="eligibility-check-icon">✓</span>
-                          Must have passed 10+2 examination with Physics and Mathematics as compulsory subjects.
-                        </div>
-                        <div className="eligibility-check-item">
-                          <span className="eligibility-check-icon">✓</span>
-                          Minimum aggregate marks of 45% (40% for reserved category) in the qualifying examination.
-                        </div>
+                        {currentCriteria.academic.map((text: string, i: number) => (
+                          <div className="eligibility-check-item" key={i}>
+                            <span className="eligibility-check-icon">✓</span>
+                            {text}
+                          </div>
+                        ))}
                       </div>
                     </div>
                   )}
                 </div>
 
-                {/* Item 2 */}
+                {/* Item 2 - Age */}
                 <div className={`eligibility-accordion-item ${openAccordion === 'age' ? 'open' : ''}`}>
                   <button className="eligibility-accordion-header" onClick={() => toggleAccordion('age')}>
                     <div className="eligibility-accordion-header-left">
@@ -177,16 +231,18 @@ const EligibilityCriteria = () => {
                   {openAccordion === 'age' && (
                     <div className="eligibility-accordion-body">
                       <div className="eligibility-checklist">
-                         <div className="eligibility-check-item">
-                          <span className="eligibility-check-icon">✓</span>
-                          Candidates must be at least 17 years of age on or before 31st December of the admission year.
-                        </div>
+                        {currentCriteria.age.map((text: string, i: number) => (
+                          <div className="eligibility-check-item" key={i}>
+                            <span className="eligibility-check-icon">✓</span>
+                            {text}
+                          </div>
+                        ))}
                       </div>
                     </div>
                   )}
                 </div>
 
-                {/* Item 3 */}
+                {/* Item 3 - Additional */}
                 <div className={`eligibility-accordion-item ${openAccordion === 'additional' ? 'open' : ''}`}>
                   <button className="eligibility-accordion-header" onClick={() => toggleAccordion('additional')}>
                     <div className="eligibility-accordion-header-left">
@@ -201,47 +257,24 @@ const EligibilityCriteria = () => {
                     </div>
                     <span className="eligibility-accordion-arrow">
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        {openAccordion === 'additional' ? (
-                          <polyline points="18 15 12 9 6 15"></polyline>
-                        ) : (
-                          <polyline points="6 9 12 15 18 9"></polyline>
-                        )}
+                        <polyline points="6 9 12 15 18 9"></polyline>
                       </svg>
                     </span>
                   </button>
                   {openAccordion === 'additional' && (
                     <div className="eligibility-accordion-body eligibility-accordion-body--purple">
                       <div className="eligibility-checklist">
-                        <div className="eligibility-check-item">
-                          <span className="eligibility-check-icon">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                          </span>
-                          All candidates must submit original documents for verification
-                        </div>
-                        <div className="eligibility-check-line"></div>
-                        
-                        <div className="eligibility-check-item">
-                          <span className="eligibility-check-icon">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                          </span>
-                          International students must have equivalent qualifications
-                        </div>
-                        <div className="eligibility-check-line"></div>
-                        
-                        <div className="eligibility-check-item">
-                          <span className="eligibility-check-icon">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                          </span>
-                          5% relaxation in marks for reserved category candidates
-                        </div>
-                        <div className="eligibility-check-line"></div>
-                        
-                        <div className="eligibility-check-item">
-                          <span className="eligibility-check-icon">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                          </span>
-                          Admission subject to availability of seats
-                        </div>
+                        {currentCriteria.additional.map((text: string, i: number) => (
+                          <React.Fragment key={i}>
+                            <div className="eligibility-check-item">
+                              <span className="eligibility-check-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                              </span>
+                              {text}
+                            </div>
+                            {i < currentCriteria.additional.length - 1 && <div className="eligibility-check-line"></div>}
+                          </React.Fragment>
+                        ))}
                       </div>
                     </div>
                   )}
@@ -317,6 +350,4 @@ const EligibilityCriteria = () => {
 
     </div>
   );
-};
-
-export default EligibilityCriteria;
+}

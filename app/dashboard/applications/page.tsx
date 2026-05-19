@@ -73,7 +73,7 @@ export default function ApplicationsPage() {
                   <td className="px-5 py-3.5">
                     <div className="flex items-center gap-2.5">
                       <div className={`h-8 w-8 rounded-full bg-gradient-to-br ${a.color} flex items-center justify-center text-white text-[10px] font-bold flex-shrink-0`}>
-                        {a.student.split(" ").map(n => n[0]).join("")}
+                        {a.student.split(" ").map((n: string) => n[0]).join("")}
                       </div>
                       <div>
                         <div className="text-sm font-semibold text-slate-800">{a.student}</div>

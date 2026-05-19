@@ -4,6 +4,14 @@ import path from 'path';
 
 const dataFilePath = path.join(process.cwd(), 'data', 'contact.json');
 
+const defaultInquiries = [
+  { id: "INQ-001", name: "Ravi Kumar", email: "ravi@gmail.com", phone: "+91 98765 43210", subject: "Admission inquiry for B.Tech", date: "May 10, 2026", status: "New" },
+  { id: "INQ-002", name: "Sunita Devi", email: "sunita@gmail.com", phone: "+91 87654 32109", subject: "Fee structure for MBA", date: "May 9, 2026", status: "Replied" },
+  { id: "INQ-003", name: "Mohit Sharma", email: "mohit@gmail.com", phone: "+91 76543 21098", subject: "Hostel facility availability", date: "May 8, 2026", status: "New" },
+  { id: "INQ-004", name: "Pooja Singh", email: "pooja@gmail.com", phone: "+91 65432 10987", subject: "Scholarship details", date: "May 7, 2026", status: "Closed" },
+  { id: "INQ-005", name: "Arjun Patel", email: "arjun@gmail.com", phone: "+91 54321 09876", subject: "Campus visit request", date: "May 6, 2026", status: "Replied" }
+];
+
 // Initialize data directory and file if they don't exist
 const initializeDataFile = () => {
   const dir = path.dirname(dataFilePath);
@@ -34,7 +42,8 @@ const initializeDataFile = () => {
         { q: "Do you provide scholarship assistance?", a: "Yes, we offer merit-based and need-based scholarships. Contact admissions for details." },
         { q: "How can I track my application?", a: "Login to your student portal to track your application status in real-time." },
         { q: "Who can I contact for admission support?", a: "Call 09555699988 or email admission.cell@seglko.org for admission support." },
-      ]
+      ],
+      inquiries: defaultInquiries
     };
     fs.writeFileSync(dataFilePath, JSON.stringify(defaultData, null, 2));
   }
@@ -45,6 +54,13 @@ export async function GET() {
     initializeDataFile();
     const fileData = fs.readFileSync(dataFilePath, 'utf8');
     const data = JSON.parse(fileData);
+    
+    // Migrate existing data file to include inquiries if not present
+    if (!data.inquiries) {
+      data.inquiries = defaultInquiries;
+      fs.writeFileSync(dataFilePath, JSON.stringify(data, null, 2));
+    }
+    
     return NextResponse.json(data, {
       headers: {
         'Access-Control-Allow-Origin': '*',
@@ -69,8 +85,76 @@ export async function PUT(request: Request) {
     
     fs.writeFileSync(dataFilePath, JSON.stringify(updatedData, null, 2));
     
-    return NextResponse.json({ success: true, data: updatedData });
+    return NextResponse.json({ success: true, data: updatedData }, {
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+      }
+    });
   } catch (error) {
-    return NextResponse.json({ error: 'Failed to update data' }, { status: 500 });
+    return NextResponse.json({ error: 'Failed to update data' }, {
+      status: 500,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+      }
+    });
   }
+}
+
+export async function POST(request: Request) {
+  try {
+    initializeDataFile();
+    const newInquiry = await request.json();
+    
+    const fileData = fs.readFileSync(dataFilePath, 'utf8');
+    const data = JSON.parse(fileData);
+    if (!data.inquiries) {
+      data.inquiries = [];
+    }
+    
+    const dateOptions: Intl.DateTimeFormatOptions = { month: 'short', day: 'numeric', year: 'numeric' };
+    const formattedDate = new Date().toLocaleDateString('en-US', dateOptions);
+    
+    const nextId = `INQ-${String(data.inquiries.length + 1).padStart(3, '0')}`;
+    
+    const fullInquiry = {
+      id: nextId,
+      name: newInquiry.name || 'Anonymous',
+      email: newInquiry.email || '',
+      phone: newInquiry.phone || '',
+      subject: newInquiry.message || newInquiry.inquiry || 'No message',
+      date: formattedDate,
+      status: 'New'
+    };
+    
+    data.inquiries.unshift(fullInquiry);
+    
+    fs.writeFileSync(dataFilePath, JSON.stringify(data, null, 2));
+    
+    return NextResponse.json({ success: true, data: fullInquiry }, {
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+      }
+    });
+  } catch (error) {
+    return NextResponse.json({ error: 'Failed to submit inquiry' }, {
+      status: 500,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+      }
+    });
+  }
+}
+
+export async function OPTIONS() {
+  return NextResponse.json({}, {
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+    }
+  });
 }

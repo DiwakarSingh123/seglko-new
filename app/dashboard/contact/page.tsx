@@ -2,14 +2,6 @@
 import { useState, useEffect } from "react";
 import GalleryTab from "../components/GalleryTab";
 
-const inquiries = [
-  { id: "INQ-001", name: "Ravi Kumar", email: "ravi@gmail.com", phone: "+91 98765 43210", subject: "Admission inquiry for B.Tech", date: "May 10, 2024", status: "New" },
-  { id: "INQ-002", name: "Sunita Devi", email: "sunita@gmail.com", phone: "+91 87654 32109", subject: "Fee structure for MBA", date: "May 9, 2024", status: "Replied" },
-  { id: "INQ-003", name: "Mohit Sharma", email: "mohit@gmail.com", phone: "+91 76543 21098", subject: "Hostel facility availability", date: "May 8, 2024", status: "New" },
-  { id: "INQ-004", name: "Pooja Singh", email: "pooja@gmail.com", phone: "+91 65432 10987", subject: "Scholarship details", date: "May 7, 2024", status: "Closed" },
-  { id: "INQ-005", name: "Arjun Patel", email: "arjun@gmail.com", phone: "+91 54321 09876", subject: "Campus visit request", date: "May 6, 2024", status: "Replied" },
-];
-
 const statusStyle: Record<string, string> = {
   New: "bg-blue-100 text-blue-700",
   Replied: "bg-emerald-100 text-emerald-700",
@@ -22,6 +14,7 @@ export default function ContactPage() {
   const [faqs, setFaqs] = useState<Faq[]>([]);
   const [editingFaq, setEditingFaq] = useState<(Faq & { index: number }) | null>(null);
   const [filter, setFilter] = useState("All");
+  const [inquiries, setInquiries] = useState<any[]>([]);
 
   const [contactDetails, setContactDetails] = useState({
     address: "",
@@ -42,6 +35,7 @@ export default function ContactPage() {
           setFaqs(data.faqs || []);
           setContactDetails(data.contactDetails || { address: "", phone: "", email: "", website: "" });
           setSocialLinks(data.socialLinks || []);
+          setInquiries(data.inquiries || []);
         }
         setLoading(false);
       });
@@ -49,16 +43,37 @@ export default function ContactPage() {
 
   const saveData = async (updatedData: any) => {
     try {
+      const mergedData = {
+        faqs,
+        contactDetails,
+        socialLinks,
+        inquiries,
+        ...updatedData
+      };
       await fetch('/api/contact', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(updatedData),
+        body: JSON.stringify(mergedData),
       });
-      alert('Changes saved successfully!');
     } catch (error) {
       console.error('Error saving data:', error);
       alert('Failed to save changes.');
     }
+  };
+
+  const handleReply = (id: string) => {
+    const updated = inquiries.map(inq => inq.id === id ? { ...inq, status: "Replied" } : inq);
+    setInquiries(updated);
+    saveData({ inquiries: updated });
+    alert('Marked as replied!');
+  };
+
+  const handleDeleteInquiry = (id: string) => {
+    if (!confirm("Are you sure you want to delete this inquiry?")) return;
+    const updated = inquiries.filter(inq => inq.id !== id);
+    setInquiries(updated);
+    saveData({ inquiries: updated });
+    alert('Inquiry deleted successfully!');
   };
 
   const updateContactDetail = (field: keyof typeof contactDetails, value: string) => {
@@ -70,15 +85,18 @@ export default function ContactPage() {
   };
 
   const saveContactInfo = () => {
-    saveData({ faqs, contactDetails, socialLinks });
+    saveData({ contactDetails });
+    alert('Contact details saved successfully!');
   };
   
   const saveSocialLinks = () => {
-    saveData({ faqs, contactDetails, socialLinks });
+    saveData({ socialLinks });
+    alert('Social links saved successfully!');
   };
 
   const saveFaqs = (newFaqs: Faq[]) => {
-    saveData({ faqs: newFaqs, contactDetails, socialLinks });
+    saveData({ faqs: newFaqs });
+    alert('FAQs saved successfully!');
   };
 
   const handleFaqSave = () => {
@@ -180,10 +198,18 @@ export default function ContactPage() {
                     </td>
                     <td className="px-5 py-3.5">
                       <div className="flex gap-1.5">
-                        <button className="h-7 w-7 flex items-center justify-center rounded-lg bg-indigo-50 text-indigo-600 hover:bg-indigo-100 transition-colors" title="Reply">
+                        <button 
+                          onClick={() => handleReply(inq.id)}
+                          className="h-7 w-7 flex items-center justify-center rounded-lg bg-indigo-50 text-indigo-600 hover:bg-indigo-100 transition-colors" 
+                          title="Reply / Mark as Replied"
+                        >
                           <span className="material-symbols-outlined text-sm">reply</span>
                         </button>
-                        <button className="h-7 w-7 flex items-center justify-center rounded-lg bg-rose-50 text-rose-500 hover:bg-rose-100 transition-colors" title="Delete">
+                        <button 
+                          onClick={() => handleDeleteInquiry(inq.id)}
+                          className="h-7 w-7 flex items-center justify-center rounded-lg bg-rose-50 text-rose-500 hover:bg-rose-100 transition-colors" 
+                          title="Delete Inquiry"
+                        >
                           <span className="material-symbols-outlined text-sm">delete</span>
                         </button>
                       </div>
