@@ -1,8 +1,31 @@
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import aboutBg from '../assets/images/about-bg.png';
 import campusBg from '../assets/images/campus-bg.png';
 import facultyBg from '../assets/images/faculty-bg.png';
 import heroBg from '../assets/images/hero-bg.png';
+
+const parseDateString = (dateStr) => {
+  try {
+    const d = new Date(dateStr);
+    if (isNaN(d.getTime())) {
+      const parts = (dateStr || '').split(/[ ,-]+/);
+      if (parts.length >= 3) {
+        return { day: parts[1] || '15', month: parts[0] || 'May', year: parts[2] || '2026' };
+      }
+      return { day: '15', month: 'May', year: '2026' };
+    }
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    return {
+      day: String(d.getDate()).padStart(2, '0'),
+      month: months[d.getMonth()],
+      year: String(d.getFullYear())
+    };
+  } catch (e) {
+    return { day: '15', month: 'May', year: '2026' };
+  }
+};
+
 
 const ArrowRight = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -171,6 +194,124 @@ const announcementStats = [
 ];
 
 export default function HappeningsShowcase() {
+  const [events, setEvents] = useState([]);
+  const [notices, setNotices] = useState([]);
+  const [stats, setStats] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch('http://localhost:3000/api/student-zone')
+      .then(res => res.json())
+      .then(data => {
+        if (data && data.notices && data.notices.length > 0) {
+          const allNotices = data.notices;
+
+          // Event cards: filter notices with category === 'Event'
+          const eventNotices = allNotices.filter(n => n.category === 'Event');
+          const mappedEvents = eventNotices.map((n, idx) => {
+            const dateObj = parseDateString(n.date);
+            const images = [facultyBg, aboutBg, heroBg, campusBg];
+            const colors = ['coral', 'mint', 'blue', 'gold'];
+            return {
+              title: n.title,
+              day: dateObj.day,
+              month: dateObj.month,
+              year: dateObj.year,
+              color: colors[idx % 4],
+              image: images[idx % 4],
+            };
+          });
+
+          const combinedEvents = [...mappedEvents];
+          if (combinedEvents.length < 4) {
+            eventCards.slice(combinedEvents.length).forEach(fallback => {
+              combinedEvents.push(fallback);
+            });
+          }
+          setEvents(combinedEvents.slice(0, 4));
+
+          // Announcements: take general notices (excluding Event)
+          const generalNotices = allNotices.filter(n => n.category !== 'Event');
+          const mappedAnnouncements = generalNotices.map((n, idx) => {
+            const dateObj = parseDateString(n.date);
+            const colors = ['coral', 'mint', 'blue'];
+            const icons = [
+              n.category === 'Exam' ? <DocIcon /> : <UserIcon />,
+              n.category === 'Scholarship' ? <UserIcon /> : <DocIcon />,
+              <DocIcon />
+            ];
+            return {
+              day: dateObj.day,
+              month: dateObj.month,
+              year: dateObj.year,
+              title: n.title,
+              color: colors[idx % 3],
+              icon: icons[idx % 3],
+            };
+          });
+
+          const combinedAnnouncements = [...mappedAnnouncements];
+          if (combinedAnnouncements.length < 3) {
+            announcements.slice(combinedAnnouncements.length).forEach(fallback => {
+              combinedAnnouncements.push(fallback);
+            });
+          }
+          setNotices(combinedAnnouncements.slice(0, 3));
+
+          // Update stats dynamically
+          const eventCount = allNotices.filter(n => n.category === 'Event').length + 25;
+          const noticeCount = allNotices.length + 30;
+          const mappedStats = [
+            {
+              value: `${eventCount}+`,
+              label: 'Events Organized',
+              sublabel: 'This Month',
+              color: 'blue',
+              icon: <CalendarIcon />,
+            },
+            {
+              value: '1200+',
+              label: 'Students',
+              sublabel: 'Participated',
+              color: 'gold',
+              icon: <GroupIcon />,
+            },
+            {
+              value: '15+',
+              label: 'Achievements &',
+              sublabel: 'Recognitions',
+              color: 'mint',
+              icon: <TrophyIcon />,
+            },
+            {
+              value: `${noticeCount}+`,
+              label: 'Announcements',
+              sublabel: 'This Month',
+              color: 'violet',
+              icon: <NotesIcon />,
+            },
+          ];
+          setStats(mappedStats);
+        } else {
+          setEvents(eventCards);
+          setNotices(announcements);
+          setStats(announcementStats);
+        }
+        setLoading(false);
+      })
+      .catch(err => {
+        console.error('Error fetching happenings:', err);
+        setEvents(eventCards);
+        setNotices(announcements);
+        setStats(announcementStats);
+        setLoading(false);
+      });
+  }, []);
+
+  if (loading) {
+    return <div style={{ padding: '50px', textAlign: 'center' }}>Loading Happenings...</div>;
+  }
+
   return (
     <section className="happenings-showcase" id="happenings-showcase">
       <div className="happenings-showcase__shell">
@@ -194,7 +335,7 @@ export default function HappeningsShowcase() {
         </div>
 
         <div className="happenings-showcase__events">
-          {eventCards.map((event) => (
+          {events.map((event) => (
             <article className="happenings-showcase__event-card" key={event.title}>
               <div className="happenings-showcase__event-media">
                 <img src={event.image} alt={event.title} className="happenings-showcase__event-image" loading="lazy" />
@@ -236,7 +377,7 @@ export default function HappeningsShowcase() {
           </div>
 
           <div className="happenings-showcase__announcement-list">
-            {announcements.map((item) => (
+            {notices.map((item) => (
               <article className="happenings-showcase__announcement" key={`${item.day}-${item.title}`}>
                 <div className={`happenings-showcase__announcement-date happenings-showcase__announcement-date--${item.color}`}>
                   <strong>{item.day}</strong>
@@ -258,7 +399,7 @@ export default function HappeningsShowcase() {
           </div>
 
           <div className="happenings-showcase__stats-strip">
-            {announcementStats.map((item) => (
+            {stats.map((item) => (
               <article className="happenings-showcase__stat" key={`${item.value}-${item.label}`}>
                 <span className={`happenings-showcase__stat-icon happenings-showcase__stat-icon--${item.color}`}>
                   {item.icon}
@@ -318,3 +459,4 @@ export default function HappeningsShowcase() {
     </section>
   );
 }
+
