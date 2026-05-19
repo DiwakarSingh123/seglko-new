@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import GalleryTab from "../components/GalleryTab";
 
@@ -36,7 +36,23 @@ interface JoinFeature {
 }
 
 export default function AboutPage() {
-  const [tab, setTab] = useState<"history" | "vision" | "join" | "message" | "leadership" | "gallery">("history");
+  const [tab, setTab] = useState<"history" | "vision" | "join" | "message" | "leadership" | "gallery" | "faculties">("history");
+  const [faculties, setFaculties] = useState<any[]>([]);
+  const [awards, setAwards] = useState<any[]>([]);
+  const [stories, setStories] = useState<any[]>([]);
+
+  useEffect(() => {
+    fetch('/api/faculty')
+      .then(res => res.json())
+      .then(data => {
+        if (data) {
+          setFaculties(data.faculties || []);
+          setAwards(data.awards || []);
+          setStories(data.stories || []);
+        }
+      });
+  }, []);
+
   const [milestones, setMilestones] = useState<Milestone[]>([
     { id: "1", year: "1997", title: "Humble Beginnings", description: "The journey began in 1997 with the foundation of the Shivdan Singh Institute of Technology & Management (SSITM) in Algarh. Driven by a vision to provide quality technical education, this marked the inception of SEG's legacy." },
     { id: "2", year: "2001", title: "Expanding Horizons", description: "In 2001, SEG expanded its influence with the establishment of the Saroj Institute of Management (SIMS) in Lucknow. This milestone amplified SEG's impact, attracting students from various regions seeking quality education." },
@@ -87,7 +103,7 @@ export default function AboutPage() {
   const [savedChairmanAuthor, setSavedChairmanAuthor] = useState(chairmanAuthor);
   const [savedChairmanDesignation, setSavedChairmanDesignation] = useState(chairmanDesignation);
   const [savedChairmanImage, setSavedChairmanImage] = useState(chairmanImage);
-  const [previewSection, setPreviewSection] = useState<"history" | "vision" | "join" | "message" | "leadership" | "gallery" | null>(null);
+  const [previewSection, setPreviewSection] = useState<"history" | "vision" | "join" | "message" | "leadership" | "gallery" | "faculties" | null>(null);
 
   const updateVisionMission = (field: keyof VisionMissionContent, value: string) => {
     setVisionMission({ ...visionMission, [field]: value });
@@ -110,7 +126,22 @@ export default function AboutPage() {
     setSavedChairmanAuthor(chairmanAuthor);
     setSavedChairmanDesignation(chairmanDesignation);
     setSavedChairmanImage(chairmanImage);
+
+    // Save faculty API data
+    fetch('/api/faculty', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ faculties, awards, stories }),
+    })
+      .then(res => res.json())
+      .then(resData => {
+        if (resData.success) {
+          alert('Changes saved successfully!');
+        }
+      })
+      .catch(err => console.error(err));
   };
+
 
   const addJoinFeature = () => {
     const newId = (joinFeatures.length + 1).toString();
@@ -170,6 +201,7 @@ export default function AboutPage() {
           { id: "vision", label: "Vision & Mission", icon: "flag" },
           { id: "join", label: "Why Join SEG", icon: "group" },
           { id: "message", label: "Chairman's Message", icon: "chat" },
+          { id: "faculties", label: "Top Faculties (Learn from the Best)", icon: "school" },
           { id: "gallery", label: "Gallery", icon: "photo_library" },
         ].map((t) => (
           <button key={t.id} onClick={() => setTab(t.id as typeof tab)}
@@ -579,6 +611,302 @@ export default function AboutPage() {
                 </button>
               </div>
             ))}
+          </div>
+        </div>
+      )}
+
+      {tab === "faculties" && (
+        <div className="space-y-6">
+          {/* Faculties Section */}
+          <div className="p-6 bg-white border shadow-sm rounded-2xl border-slate-100">
+            <div className="flex items-center justify-between mb-5">
+              <div>
+                <h2 className="text-sm font-black text-slate-800">Top Distinguished Faculties</h2>
+                <p className="text-xs text-slate-400 mt-0.5">Faculty members featured in the "Learn from the Best" section</p>
+              </div>
+              <button
+                onClick={() => {
+                  setFaculties([...faculties, { id: Date.now(), name: "New Professor", role: "Role/Title", school: "School Name", image: "facultyBg", tone: "cyan" }]);
+                }}
+                className="flex items-center gap-1.5 px-3 py-1.5 bg-indigo-600 text-white rounded-xl text-xs font-semibold hover:bg-indigo-700 transition-colors"
+              >
+                <span className="text-sm material-symbols-outlined">add</span>Add Faculty
+              </button>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {faculties.map((f, index) => (
+                <div key={f.id} className="p-4 border bg-slate-50 rounded-2xl border-slate-200 space-y-3">
+                  <div className="flex justify-between items-center">
+                    <span className="text-xs font-bold text-slate-400">Faculty #{index + 1}</span>
+                    <button
+                      onClick={() => setFaculties(faculties.filter(x => x.id !== f.id))}
+                      className="text-xs text-rose-600 bg-white border border-rose-100 rounded-lg px-2.5 py-1 hover:bg-rose-50 transition-colors"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="block text-[10px] font-bold text-slate-500 mb-1">Name</label>
+                      <input
+                        type="text"
+                        value={f.name}
+                        onChange={(e) => {
+                          setFaculties(faculties.map(x => x.id === f.id ? { ...x, name: e.target.value } : x));
+                        }}
+                        className="w-full bg-white border border-slate-200 rounded-xl py-2 px-3 text-xs outline-none focus:ring-2 focus:ring-indigo-200 transition-all"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[10px] font-bold text-slate-500 mb-1">Role / Designation</label>
+                      <input
+                        type="text"
+                        value={f.role}
+                        onChange={(e) => {
+                          setFaculties(faculties.map(x => x.id === f.id ? { ...x, role: e.target.value } : x));
+                        }}
+                        className="w-full bg-white border border-slate-200 rounded-xl py-2 px-3 text-xs outline-none focus:ring-2 focus:ring-indigo-200 transition-all"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-[10px] font-bold text-slate-500 mb-1">School / Department</label>
+                    <input
+                      type="text"
+                      value={f.school}
+                      onChange={(e) => {
+                        setFaculties(faculties.map(x => x.id === f.id ? { ...x, school: e.target.value } : x));
+                      }}
+                      className="w-full bg-white border border-slate-200 rounded-xl py-2 px-3 text-xs outline-none focus:ring-2 focus:ring-indigo-200 transition-all"
+                    />
+                  </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="block text-[10px] font-bold text-slate-500 mb-1">Card Accent Tone</label>
+                      <select
+                        value={f.tone}
+                        onChange={(e) => {
+                          setFaculties(faculties.map(x => x.id === f.id ? { ...x, tone: e.target.value } : x));
+                        }}
+                        className="w-full bg-white border border-slate-200 rounded-xl py-2 px-3 text-xs outline-none focus:ring-2 focus:ring-indigo-200 transition-all"
+                      >
+                        {["cyan", "gold", "blue", "violet"].map(t => <option key={t} value={t}>{t}</option>)}
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-[10px] font-bold text-slate-500 mb-1">Image Key</label>
+                      <select
+                        value={f.image}
+                        onChange={(e) => {
+                          setFaculties(faculties.map(x => x.id === f.id ? { ...x, image: e.target.value } : x));
+                        }}
+                        className="w-full bg-white border border-slate-200 rounded-xl py-2 px-3 text-xs outline-none focus:ring-2 focus:ring-indigo-200 transition-all"
+                      >
+                        {["facultyBg", "aboutBg", "institutionsBg", "campusBg"].map(img => <option key={img} value={img}>{img}</option>)}
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Awards Section */}
+          <div className="p-6 bg-white border shadow-sm rounded-2xl border-slate-100">
+            <div className="flex items-center justify-between mb-5">
+              <div>
+                <h2 className="text-sm font-black text-slate-800">Awards & Achievements</h2>
+                <p className="text-xs text-slate-400 mt-0.5">National recognitions and college certifications</p>
+              </div>
+              <button
+                onClick={() => {
+                  setAwards([...awards, { id: Date.now(), title: "Award Title", body: "Awarding Body", desc: "Award description here...", tone: "gold" }]);
+                }}
+                className="flex items-center gap-1.5 px-3 py-1.5 bg-indigo-600 text-white rounded-xl text-xs font-semibold hover:bg-indigo-700 transition-colors"
+              >
+                <span className="text-sm material-symbols-outlined">add</span>Add Award
+              </button>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {awards.map((aw, index) => (
+                <div key={aw.id} className="p-4 border bg-slate-50 rounded-2xl border-slate-200 space-y-3">
+                  <div className="flex justify-between items-center">
+                    <span className="text-xs font-bold text-slate-400">Award #{index + 1}</span>
+                    <button
+                      onClick={() => setAwards(awards.filter(x => x.id !== aw.id))}
+                      className="text-xs text-rose-600 bg-white border border-rose-100 rounded-lg px-2.5 py-1 hover:bg-rose-50 transition-colors"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="block text-[10px] font-bold text-slate-500 mb-1">Title</label>
+                      <input
+                        type="text"
+                        value={aw.title}
+                        onChange={(e) => {
+                          setAwards(awards.map(x => x.id === aw.id ? { ...x, title: e.target.value } : x));
+                        }}
+                        className="w-full bg-white border border-slate-200 rounded-xl py-2 px-3 text-xs outline-none focus:ring-2 focus:ring-indigo-200 transition-all"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[10px] font-bold text-slate-500 mb-1">Awarded By</label>
+                      <input
+                        type="text"
+                        value={aw.body}
+                        onChange={(e) => {
+                          setAwards(awards.map(x => x.id === aw.id ? { ...x, body: e.target.value } : x));
+                        }}
+                        className="w-full bg-white border border-slate-200 rounded-xl py-2 px-3 text-xs outline-none focus:ring-2 focus:ring-indigo-200 transition-all"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-[10px] font-bold text-slate-500 mb-1">Description</label>
+                    <textarea
+                      rows={2}
+                      value={aw.desc}
+                      onChange={(e) => {
+                        setAwards(awards.map(x => x.id === aw.id ? { ...x, desc: e.target.value } : x));
+                      }}
+                      className="w-full bg-white border border-slate-200 rounded-xl py-2 px-3 text-xs outline-none focus:ring-2 focus:ring-indigo-200 transition-all resize-none"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[10px] font-bold text-slate-500 mb-1">Card Accent Tone</label>
+                    <select
+                      value={aw.tone}
+                      onChange={(e) => {
+                        setAwards(awards.map(x => x.id === aw.id ? { ...x, tone: e.target.value } : x));
+                      }}
+                      className="w-full bg-white border border-slate-200 rounded-xl py-2 px-3 text-xs outline-none focus:ring-2 focus:ring-indigo-200 transition-all"
+                    >
+                      {["cyan", "gold", "blue", "violet"].map(t => <option key={t} value={t}>{t}</option>)}
+                    </select>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Success Stories Section */}
+          <div className="p-6 bg-white border shadow-sm rounded-2xl border-slate-100">
+            <div className="flex items-center justify-between mb-5">
+              <div>
+                <h2 className="text-sm font-black text-slate-800">Student Success Stories</h2>
+                <p className="text-xs text-slate-400 mt-0.5">Alumni packages, companies, and batches</p>
+              </div>
+              <button
+                onClick={() => {
+                  setStories([...stories, { id: Date.now(), name: "Student Name", batch: "Batch Name", company: "Company Name", role: "Role", package: "Package LPA", image: "facultyBg", tone: "blue" }]);
+                }}
+                className="flex items-center gap-1.5 px-3 py-1.5 bg-indigo-600 text-white rounded-xl text-xs font-semibold hover:bg-indigo-700 transition-colors"
+              >
+                <span className="text-sm material-symbols-outlined">add</span>Add Story
+              </button>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {stories.map((s, index) => (
+                <div key={s.id} className="p-4 border bg-slate-50 rounded-2xl border-slate-200 space-y-3">
+                  <div className="flex justify-between items-center">
+                    <span className="text-xs font-bold text-slate-400">Story #{index + 1}</span>
+                    <button
+                      onClick={() => setStories(stories.filter(x => x.id !== s.id))}
+                      className="text-xs text-rose-600 bg-white border border-rose-100 rounded-lg px-2.5 py-1 hover:bg-rose-50 transition-colors"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="block text-[10px] font-bold text-slate-500 mb-1">Name</label>
+                      <input
+                        type="text"
+                        value={s.name}
+                        onChange={(e) => {
+                          setStories(stories.map(x => x.id === s.id ? { ...x, name: e.target.value } : x));
+                        }}
+                        className="w-full bg-white border border-slate-200 rounded-xl py-2 px-3 text-xs outline-none focus:ring-2 focus:ring-indigo-200 transition-all"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[10px] font-bold text-slate-500 mb-1">Batch</label>
+                      <input
+                        type="text"
+                        value={s.batch}
+                        onChange={(e) => {
+                          setStories(stories.map(x => x.id === s.id ? { ...x, batch: e.target.value } : x));
+                        }}
+                        className="w-full bg-white border border-slate-200 rounded-xl py-2 px-3 text-xs outline-none focus:ring-2 focus:ring-indigo-200 transition-all"
+                      />
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-3 gap-2">
+                    <div className="col-span-2">
+                      <label className="block text-[10px] font-bold text-slate-500 mb-1">Company</label>
+                      <input
+                        type="text"
+                        value={s.company}
+                        onChange={(e) => {
+                          setStories(stories.map(x => x.id === s.id ? { ...x, company: e.target.value } : x));
+                        }}
+                        className="w-full bg-white border border-slate-200 rounded-xl py-2 px-3 text-xs outline-none focus:ring-2 focus:ring-indigo-200 transition-all"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[10px] font-bold text-slate-500 mb-1">Package</label>
+                      <input
+                        type="text"
+                        value={s.package}
+                        onChange={(e) => {
+                          setStories(stories.map(x => x.id === s.id ? { ...x, package: e.target.value } : x));
+                        }}
+                        className="w-full bg-white border border-slate-200 rounded-xl py-2 px-3 text-xs outline-none focus:ring-2 focus:ring-indigo-200 transition-all"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-[10px] font-bold text-slate-500 mb-1">Role / Designation</label>
+                    <input
+                      type="text"
+                      value={s.role}
+                      onChange={(e) => {
+                        setStories(stories.map(x => x.id === s.id ? { ...x, role: e.target.value } : x));
+                      }}
+                      className="w-full bg-white border border-slate-200 rounded-xl py-2 px-3 text-xs outline-none focus:ring-2 focus:ring-indigo-200 transition-all"
+                    />
+                  </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="block text-[10px] font-bold text-slate-500 mb-1">Card Accent Tone</label>
+                      <select
+                        value={s.tone}
+                        onChange={(e) => {
+                          setStories(stories.map(x => x.id === s.id ? { ...x, tone: e.target.value } : x));
+                        }}
+                        className="w-full bg-white border border-slate-200 rounded-xl py-2 px-3 text-xs outline-none focus:ring-2 focus:ring-indigo-200 transition-all"
+                      >
+                        {["cyan", "gold", "blue", "violet"].map(t => <option key={t} value={t}>{t}</option>)}
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-[10px] font-bold text-slate-500 mb-1">Image Key</label>
+                      <select
+                        value={s.image}
+                        onChange={(e) => {
+                          setStories(stories.map(x => x.id === s.id ? { ...x, image: e.target.value } : x));
+                        }}
+                        className="w-full bg-white border border-slate-200 rounded-xl py-2 px-3 text-xs outline-none focus:ring-2 focus:ring-indigo-200 transition-all"
+                      >
+                        {["facultyBg", "aboutBg", "institutionsBg", "campusBg"].map(img => <option key={img} value={img}>{img}</option>)}
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       )}
