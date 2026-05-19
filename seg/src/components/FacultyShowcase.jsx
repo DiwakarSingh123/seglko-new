@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import aboutBg from '../assets/images/about-bg.png';
 import facultyBg from '../assets/images/faculty-bg.png';
@@ -109,6 +109,36 @@ export default function FacultyShowcase() {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('Top Faculties');
 
+  const [faculties, setFaculties] = useState(facultyCards);
+  const [awards, setAwards] = useState(awardsCards);
+  const [stories, setStories] = useState(storiesCards);
+
+  useEffect(() => {
+    fetch('http://localhost:3000/api/faculty')
+      .then(res => res.json())
+      .then(data => {
+        if (data) {
+          const imageMap = { facultyBg, aboutBg, institutionsBg, campusBg };
+          if (data.faculties && data.faculties.length > 0) {
+            setFaculties(data.faculties.map(item => ({
+              ...item,
+              image: imageMap[item.image] || imageMap.facultyBg
+            })));
+          }
+          if (data.awards && data.awards.length > 0) {
+            setAwards(data.awards);
+          }
+          if (data.stories && data.stories.length > 0) {
+            setStories(data.stories.map(item => ({
+              ...item,
+              image: imageMap[item.image] || imageMap.facultyBg
+            })));
+          }
+        }
+      })
+      .catch(err => console.error('Error loading faculties:', err));
+  }, []);
+
   const scrollCards = (direction) => {
     if (!carouselRef.current) return;
     const firstCard = carouselRef.current.querySelector('.faculty-showcase__card');
@@ -124,8 +154,8 @@ export default function FacultyShowcase() {
     'Success Stories': { heading: 'Student', highlight: 'Success Stories', sub: 'Our students are building great careers at top companies across the world.' },
   };
 
-  const currentCards = activeTab === 'Top Faculties' ? facultyCards : activeTab === 'Awards & Achievements' ? awardsCards : storiesCards;
   const { heading, highlight, sub } = tabTitles[activeTab];
+
 
   return (
     <section className="faculty-showcase" id="faculty-showcase">
@@ -175,7 +205,7 @@ export default function FacultyShowcase() {
             <div className="faculty-showcase__grid">
 
               {/* Top Faculties Cards */}
-              {activeTab === 'Top Faculties' && facultyCards.map((faculty) => (
+              {activeTab === 'Top Faculties' && faculties.map((faculty) => (
                 <article className={`faculty-showcase__card faculty-showcase__card--${faculty.tone}`} key={faculty.name}>
                   <div className="faculty-showcase__portrait-wrap">
                     <img src={faculty.image} alt={faculty.name} className="faculty-showcase__portrait" loading="lazy" />
@@ -202,7 +232,7 @@ export default function FacultyShowcase() {
               ))}
 
               {/* Awards Cards */}
-              {activeTab === 'Awards & Achievements' && awardsCards.map((award) => (
+              {activeTab === 'Awards & Achievements' && awards.map((award) => (
                 <article className={`faculty-showcase__card faculty-showcase__card--${award.tone}`} key={award.title}>
                   <div className="faculty-showcase__portrait-wrap" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', background: `${toneAccent[award.tone]}15` }}>
                     <div style={{ width: '90px', height: '90px', borderRadius: '50%', background: `${toneAccent[award.tone]}25`, display: 'flex', alignItems: 'center', justifyContent: 'center', color: toneAccent[award.tone] }}>
@@ -230,7 +260,7 @@ export default function FacultyShowcase() {
               ))}
 
               {/* Success Stories Cards */}
-              {activeTab === 'Success Stories' && storiesCards.map((story) => (
+              {activeTab === 'Success Stories' && stories.map((story) => (
                 <article className={`faculty-showcase__card faculty-showcase__card--${story.tone}`} key={story.name}>
                   <div className="faculty-showcase__portrait-wrap">
                     <img src={story.image} alt={story.name} className="faculty-showcase__portrait" loading="lazy" />
@@ -259,6 +289,7 @@ export default function FacultyShowcase() {
                   </div>
                 </article>
               ))}
+
 
             </div>
           </div>
