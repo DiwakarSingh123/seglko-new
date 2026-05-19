@@ -150,50 +150,7 @@ const admissionHighlights = [
   { value: 'Join', title: 'SEG Family', desc: 'Shape your future with us', icon: 'cap' },
 ];
 
-const institutionsData = [
-  {
-    title: 'View All Institutions',
-    description: 'Browse every SEG campus and affiliated institute in one place.',
-    icon: 'building',
-    path: '/institutions',
-  },
-  {
-    title: 'Shivdan Singh Institute of Technology and Management',
-    description: 'Approved by AICTE and affiliated to AKTU, Lucknow, College Code: 007',
-    icon: 'institution',
-    url: 'https://ssitm.in/',
-  },
-  {
-    title: 'Saroj Institute of Technology and Management',
-    description: 'Approved by AICTE and affiliated to AKTU, Lucknow, College Code: 123',
-    icon: 'building',
-    url: 'https://sitmlko.org/',
-  },
-  {
-    title: 'Lucknow Institute of Pharmacy',
-    description: 'Approved by Pharmacy Council of India (PCI) and affiliated to AKTU',
-    icon: 'medical',
-    url: 'https://seglko.org/lip/',
-  },
-  {
-    title: 'Saroj College of Pharmacy',
-    description: 'Approved by Pharmacy Council of India and affiliated to AKTU, Lucknow, College Code: 2031',
-    icon: 'capsule',
-    url: 'https://seglko.org/scp/',
-  },
-  {
-    title: 'Saroj College of Engineering and Polytechnic',
-    description: 'Approved by AICTE and affiliated to AKTU',
-    icon: 'gear',
-    url: 'https://seglko.org/scep/',
-  },
-  {
-    title: 'Saroj College of Law',
-    description: 'Affiliated to Lucknow University',
-    icon: 'document',
-    url: 'https://seglko.org/scl/',
-  },
-];
+
 
 const studentZoneItems = [
   {
@@ -546,6 +503,44 @@ export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const navbarRef = useRef(null);
   const timeoutRef = useRef(null);
+
+  const [institutionsData, setInstitutionsData] = useState([
+    {
+      title: 'View All Institutions',
+      description: 'Browse every SEG campus and affiliated institute in one place.',
+      icon: 'building',
+      path: '/institutions',
+    }
+  ]);
+
+  useEffect(() => {
+    fetch('http://localhost:3000/api/institutions')
+      .then(res => res.json())
+      .then(data => {
+        if (data && data.length > 0) {
+          const mapped = data.map(item => ({
+            title: item.title,
+            description: item.approval || item.description,
+            icon: item.tag?.toLowerCase().includes('law') ? 'document' :
+                  item.tag?.toLowerCase().includes('pharm') ? 'capsule' :
+                  item.tag?.toLowerCase().includes('poly') ? 'gear' :
+                  item.tag?.toLowerCase().includes('engine') ? 'institution' : 'building',
+            url: item.url || '#',
+          }));
+          setInstitutionsData([
+            {
+              title: 'View All Institutions',
+              description: 'Browse every SEG campus and affiliated institute in one place.',
+              icon: 'building',
+              path: '/institutions',
+            },
+            ...mapped
+          ]);
+        }
+      })
+      .catch(err => console.error('Error fetching institutions for navbar:', err));
+  }, []);
+
 
   const handleMouseEnter = (label) => {
     if (window.innerWidth <= 1024) return;

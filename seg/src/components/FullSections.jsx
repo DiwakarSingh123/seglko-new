@@ -55,43 +55,28 @@ const CheckIcon = () => (
   </svg>
 );
 
-const institutions = [
-  {
-    title: 'Shivdan Singh Institute of Technology and Management',
-    code: '007',
-    approval: 'Approved by AICTE and affiliated to AKTU, Lucknow.',
-    image: heroBg,
-    icon: <BuildingIcon />,
-  },
-  {
-    title: 'Saroj Institute of Technology and Management',
-    code: '123',
-    approval: 'Approved by AICTE and affiliated to AKTU, Lucknow.',
-    image: aboutBg,
-    icon: <BuildingIcon />,
-  },
-  {
-    title: 'Saroj College of Law',
-    code: 'BCI Approved',
-    approval: 'Approved by Bar Council of India and affiliated to AKTU, Lucknow.',
-    image: institutionsBg,
-    icon: <LawIcon />,
-  },
-  {
-    title: 'Saroj College of Pharmacy',
-    code: '2031',
-    approval: 'Approved by Pharmacy Council of India and affiliated to AKTU, Lucknow.',
-    image: placementsBg,
-    icon: <PharmacyIcon />,
-  },
-];
+import { useState, useEffect } from 'react';
 
-const featuredInstitution = {
-  title: 'Saroj College of Engineering and Polytechnic',
-  approval: 'Approved by AICTE and affiliated to AKTU, Lucknow.',
-  image: campusBg,
-  icon: <GearIcon />,
+const imageMap = {
+  aboutBg,
+  campusBg,
+  heroBg,
+  institutionsBg,
+  placementsBg,
+  program1: heroBg,
+  program2: aboutBg,
+  program3: institutionsBg,
+  program4: placementsBg
 };
+
+const getIcon = (tag) => {
+  const t = (tag || '').toLowerCase();
+  if (t.includes('law')) return <LawIcon />;
+  if (t.includes('pharm')) return <PharmacyIcon />;
+  if (t.includes('poly') || t.includes('gear') || t.includes('engine')) return <GearIcon />;
+  return <BuildingIcon />;
+};
+
 
 function InstitutionCard({ institution }) {
   return (
@@ -133,6 +118,47 @@ function InstitutionCard({ institution }) {
 }
 
 export default function FullSections() {
+  const [institutions, setInstitutions] = useState([]);
+  const [featuredInstitution, setFeaturedInstitution] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch('http://localhost:3000/api/institutions')
+      .then(res => res.json())
+      .then(data => {
+        if (data && data.length > 0) {
+          // Find if there's a polytechnic one to feature, or fallback to the last item
+          const poly = data.find(i => (i.tag || '').toLowerCase().includes('poly'));
+          const featured = poly || data[data.length - 1];
+          const regulars = data.filter(i => i.id !== featured.id);
+
+          setFeaturedInstitution({
+            title: featured.title,
+            approval: featured.approval,
+            image: imageMap[featured.image] || imageMap.campusBg || campusBg,
+            icon: getIcon(featured.tag),
+          });
+
+          setInstitutions(regulars.map(item => ({
+            title: item.title,
+            code: item.code,
+            approval: item.approval,
+            image: imageMap[item.image] || imageMap.heroBg || heroBg,
+            icon: getIcon(item.tag),
+          })));
+        }
+        setLoading(false);
+      })
+      .catch(err => {
+        console.error('Error fetching institutions for homepage:', err);
+        setLoading(false);
+      });
+  }, []);
+
+  if (loading || !featuredInstitution) {
+    return <div style={{ padding: '50px', textAlign: 'center' }}>Loading Institutions...</div>;
+  }
+
   return (
     <section className="institutions-showcase" id="institutions-showcase">
       <div className="institutions-showcase__shell">
@@ -191,3 +217,4 @@ export default function FullSections() {
     </section>
   );
 }
+
