@@ -1,6 +1,6 @@
 {
   "general": {
-    "tollFree": "1800-180-7686",
+    "tollFree": "1800-180-7687",
     "hrEmail": "hr@seglko.org",
     "contactEmail": "admission.cell@seglko.org",
     "contactPhone": "09555699988",
@@ -10,10 +10,30 @@
     "headline": "The Legacy of Saroj Educational Group",
     "description": "A journey marked by dedication, growth, and a commitment to educational excellence that has shaped thousands of lives and continues to lead the way for future leaders.",
     "milestones": [
-      { "id": "1", "year": "1997", "title": "Humble Beginnings", "description": "The journey began in 1997 with the foundation of the Shivdan Singh Institute of Technology & Management (SSITM) in Algarh. Driven by a vision to provide quality technical education, this marked the inception of SEG's legacy." },
-      { "id": "2", "year": "2001", "title": "Expanding Horizons", "description": "In 2001, SEG expanded its influence with the establishment of the Saroj Institute of Management (SIMS) in Lucknow. This milestone amplified SEG's impact, attracting students from various regions seeking quality education." },
-      { "id": "3", "year": "2010", "title": "Growth & Excellence", "description": "Continued expansion and strengthening of academic programs, establishing SEG as a trusted name in technical and management education across Northern India." },
-      { "id": "4", "year": "Present", "title": "Leading Into Future", "description": "Today, SEG stands as a premier institution with multiple campuses, diverse programs, and a strong commitment to academic excellence and student success." }
+      {
+        "id": "1",
+        "year": "1997",
+        "title": "Humble Beginnings",
+        "description": "The journey began in 1997 with the foundation of the Shivdan Singh Institute of Technology & Management (SSITM) in Algarh. Driven by a vision to provide quality technical education, this marked the inception of SEG's legacy."
+      },
+      {
+        "id": "2",
+        "year": "2001",
+        "title": "Expanding Horizons",
+        "description": "In 2001, SEG expanded its influence with the establishment of the Saroj Institute of Management (SIMS) in Lucknow. This milestone amplified SEG's impact, attracting students from various regions seeking quality education."
+      },
+      {
+        "id": "3",
+        "year": "2010",
+        "title": "Growth & Excellence",
+        "description": "Continued expansion and strengthening of academic programs, establishing SEG as a trusted name in technical and management education across Northern India."
+      },
+      {
+        "id": "4",
+        "year": "Present",
+        "title": "Leading Into Future",
+        "description": "Today, SEG stands as a premier institution with multiple campuses, diverse programs, and a strong commitment to academic excellence and student success."
+      }
     ]
   },
   "aboutVisionMission": {
@@ -34,9 +54,21 @@
       "description": "SEG offers a unique combination of academic excellence, modern infrastructure, practical exposure, and a supportive campus environment designed to help students succeed in their careers and personal development."
     },
     "joinFeatures": [
-      { "id": "1", "title": "Academic Excellence", "description": "SEG prioritizes a robust academic foundation combined with practical application, guided by experienced faculty and current industry standards." },
-      { "id": "2", "title": "State-of-the-Art Infrastructure", "description": "Modern classrooms, advanced labs, and a digital library provide the ideal setting for innovation and growth." },
-      { "id": "3", "title": "Holistic Development", "description": "Extracurricular activities, clubs, and events help nurture leadership, teamwork and confidence." }
+      {
+        "id": "1",
+        "title": "Academic Excellence",
+        "description": "SEG prioritizes a robust academic foundation combined with practical application, guided by experienced faculty and current industry standards."
+      },
+      {
+        "id": "2",
+        "title": "State-of-the-Art Infrastructure",
+        "description": "Modern classrooms, advanced labs, and a digital library provide the ideal setting for innovation and growth."
+      },
+      {
+        "id": "3",
+        "title": "Holistic Development",
+        "description": "Extracurricular activities, clubs, and events help nurture leadership, teamwork and confidence."
+      }
     ]
   },
   "aboutChairman": {
@@ -152,10 +184,26 @@
   },
   "payFee": {
     "features": [
-      { "icon": "🛡️", "title": "Secure & Trusted", "desc": "Your payments are protected with bank-level security." },
-      { "icon": "⚡", "title": "Quick & Easy", "desc": "Pay your fees in just a few simple steps." },
-      { "icon": "🕐", "title": "24/7 Availability", "desc": "Make payments anytime, from anywhere." },
-      { "icon": "🧾", "title": "Instant Receipt", "desc": "Get instant payment confirmation & receipt." }
+      {
+        "icon": "🛡️",
+        "title": "Secure & Trusted",
+        "desc": "Your payments are protected with bank-level security."
+      },
+      {
+        "icon": "⚡",
+        "title": "Quick & Easy",
+        "desc": "Pay your fees in just a few simple steps."
+      },
+      {
+        "icon": "🕐",
+        "title": "24/7 Availability",
+        "desc": "Make payments anytime, from anywhere."
+      },
+      {
+        "icon": "🧾",
+        "title": "Instant Receipt",
+        "desc": "Get instant payment confirmation & receipt."
+      }
     ]
   },
   "careers": {
