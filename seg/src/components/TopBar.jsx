@@ -32,11 +32,11 @@ export default function TopBar() {
     <div className="top-bar">
       <div className="top-bar__left">
         <div className="top-bar__primary">
-          <a href="#" className="top-bar__link">Why SEG?</a>
+          <Link to="/why-join-seg" className="top-bar__link">Why SEG?</Link>
           <span className="top-bar__divider top-bar__divider--visible" />
           <Link to="/careers" className="top-bar__link">Career</Link>
           <span className="top-bar__divider top-bar__divider--visible" />
-          <a href="#" className="top-bar__link">Alumini</a>
+          <a href="https://sitmalumni.seglko.org/" target="_blank" rel="noopener noreferrer" className="top-bar__link">Alumini</a>
         </div>
         <div className="top-bar__utility">
           <span className="top-bar__link">Toll Free no: {general.tollFree}</span>

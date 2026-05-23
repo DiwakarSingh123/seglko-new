@@ -1,4 +1,30 @@
 {
+  "faqs": [
+    {
+      "q": "How long does it take to get a response?",
+      "a": "We respond to all queries within 24 hours."
+    },
+    {
+      "q": "How can I apply for admission?",
+      "a": "Visit our website and fill the online application form under the Admissions section."
+    },
+    {
+      "q": "Can I visit the campus before admission?",
+      "a": "Yes, you can book a campus visit through our website or call our admissions helpline."
+    },
+    {
+      "q": "Do you provide scholarship assistance?",
+      "a": "Yes, we offer merit-based and need-based scholarships. Contact admissions for details."
+    },
+    {
+      "q": "How can I track my application?",
+      "a": "Login to your student portal to track your application status in real-time."
+    },
+    {
+      "q": "Who can I contact for admission support?",
+      "a": "Call 09555699988 or email admission.cell@seglko.org for admission support."
+    }
+  ],
   "contactDetails": {
     "address": "L-5, First Floor, Lajpat Nagar - II, Delhi, Delhi, India, 110024",
     "phone": "09555699988, 09810054878",
@@ -35,32 +61,6 @@
       "label": "WhatsApp",
       "icon": "chat",
       "url": "https://wa.me/919555699988"
-    }
-  ],
-  "faqs": [
-    {
-      "q": "How long does it take to get a response?",
-      "a": "We respond to all queries within 24 hours."
-    },
-    {
-      "q": "How can I apply for admission?",
-      "a": "Visit our website and fill the online application form under the Admissions section."
-    },
-    {
-      "q": "Can I visit the campus before admission?",
-      "a": "Yes, you can book a campus visit through our website or call our admissions helpline."
-    },
-    {
-      "q": "Do you provide scholarship assistance?",
-      "a": "Yes, we offer merit-based and need-based scholarships. Contact admissions for details."
-    },
-    {
-      "q": "How can I track my application?",
-      "a": "Login to your student portal to track your application status in real-time."
-    },
-    {
-      "q": "Who can I contact for admission support?",
-      "a": "Call 09555699988 or email admission.cell@seglko.org for admission support."
     }
   ],
   "inquiries": [

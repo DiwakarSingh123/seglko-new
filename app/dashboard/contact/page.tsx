@@ -1,7 +1,5 @@
 "use client";
 import { useState, useEffect } from "react";
-import GalleryTab from "../components/GalleryTab";
-
 const statusStyle: Record<string, string> = {
   New: "bg-blue-100 text-blue-700",
   Replied: "bg-emerald-100 text-emerald-700",
@@ -10,7 +8,7 @@ const statusStyle: Record<string, string> = {
 
 export default function ContactPage() {
   type Faq = { q: string; a: string };
-  const [tab, setTab] = useState<"inquiries" | "info" | "faq" | "gallery">("inquiries");
+  const [tab, setTab] = useState<"inquiries" | "info" | "faq">("inquiries");
   const [faqs, setFaqs] = useState<Faq[]>([]);
   const [editingFaq, setEditingFaq] = useState<(Faq & { index: number }) | null>(null);
   const [filter, setFilter] = useState("All");
@@ -155,7 +153,6 @@ export default function ContactPage() {
           { id: "inquiries", label: "Inquiries", icon: "inbox" },
           { id: "info", label: "Contact Info", icon: "contact_phone" },
           { id: "faq", label: "FAQs", icon: "quiz" },
-          { id: "gallery", label: "Gallery", icon: "photo_library" },
         ].map((t) => (
           <button key={t.id} onClick={() => setTab(t.id as typeof tab)}
             className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-all ${tab === t.id ? "bg-indigo-600 text-white shadow-md shadow-indigo-200" : "text-slate-500 hover:bg-slate-50"}`}>
@@ -320,7 +317,7 @@ export default function ContactPage() {
           </div>
         </div>
       )}
-      {tab === "gallery" && <GalleryTab section="Contact" categories={["Campus", "Office", "Events", "General"]} />}
+
     </div>
   );
 }

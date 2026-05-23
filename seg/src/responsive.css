@@ -58,6 +58,9 @@ img { max-width: 100%; height: auto; }
   .stats-bar { width: calc(100% - 40px); margin-top: -40px; grid-template-columns: repeat(2, 1fr); padding: 20px; gap: 16px; }
   .programs { padding: 50px 0 30px; }
   .programs__shell { padding: 0 20px; }
+  .programs__card--marquee { height: 260px !important; }
+  .programs__card--wide { flex-basis: 62vw; }
+  .programs__card--small { flex-basis: 42vw; }
   .programs-spotlight__shell { padding: 34px 20px 20px !important; }
   .programs-spotlight__hero { grid-template-columns: 1fr; min-height: auto; }
   .programs-spotlight__actions { margin-top: 16px; }
@@ -129,6 +132,12 @@ img { max-width: 100%; height: auto; }
   .stats-bar__label { font-size: 14px; }
   .programs { padding: 40px 0 20px; }
   .programs__shell { padding: 0 14px; }
+  .programs__marquee { gap: 12px; }
+  .programs__marquee-row { gap: 0; }
+  .programs__marquee-group { gap: 12px; padding-right: 12px; }
+  .programs__card--marquee { height: 210px !important; }
+  .programs__card--wide { flex-basis: 78vw; }
+  .programs__card--small { flex-basis: 56vw; }
   .programs-spotlight { padding: 10px 0 40px; }
   .programs-spotlight__shell { padding: 24px 14px 16px !important; }
   .programs-spotlight__title { font-size: 2rem; }
@@ -227,7 +236,9 @@ img { max-width: 100%; height: auto; }
    ============================================ */
 @media (max-width: 480px) {
   .hero__heading { font-size: 20px; }
-  .stats-bar { margin: -20px auto 0; }
+  .stats-bar { margin: -20px auto 0; justify-items: start; }
+  .stats-bar__item { width: 100%; justify-content: flex-start; text-align: left; padding-left: 24px; }
+  .stats-bar__info { align-items: flex-start; }
   .placements-showcase__title, .faculty-showcase__title, .institutions-showcase__title, .happenings-showcase__title { font-size: 1.6rem; }
   .programs-spotlight__title { font-size: 1.7rem; }
   .footer__grid { grid-template-columns: 1fr; }
@@ -253,9 +264,13 @@ img { max-width: 100%; height: auto; }
   .hero__subtext { font-size: 13px; margin-bottom: 20px; }
   .hero__buttons .btn { font-size: 13px; height: 42px; padding: 8px 14px; }
   .stats-bar { width: calc(100% - 24px); padding: 14px 12px; gap: 10px; border-radius: 8px; margin: -18px auto 0; }
+  .stats-bar__item { padding-left: 18px; }
   .stats-bar__icon { width: 42px; height: 42px; }
   .stats-bar__number { font-size: 22px; }
   .stats-bar__label { font-size: 13px; }
+  .programs__card--marquee { height: 180px !important; }
+  .programs__card--wide { flex-basis: 82vw; }
+  .programs__card--small { flex-basis: 62vw; }
   .programs-spotlight__shell { padding: 20px 12px 14px !important; }
   .programs-spotlight__title { font-size: 1.5rem; }
   .programs-spotlight__description { font-size: 13px; }
@@ -296,6 +311,7 @@ img { max-width: 100%; height: auto; }
   .hero__subtext { font-size: 12px; }
   .hero__buttons .btn { font-size: 12px; height: 40px; }
   .stats-bar { padding: 12px 10px; }
+  .stats-bar__item { padding-left: 12px; }
   .stats-bar__number { font-size: 20px; }
   .stats-bar__label { font-size: 12px; }
   .placements-showcase__title, .faculty-showcase__title, .institutions-showcase__title, .happenings-showcase__title, .programs-spotlight__title { font-size: 1.4rem; }
@@ -305,6 +321,492 @@ img { max-width: 100%; height: auto; }
   .btn { font-size: 12px; height: 40px; padding: 6px 12px; }
   .happenings-showcase__announcement { grid-template-columns: 56px 40px 1fr; gap: 8px; }
   .happenings-showcase__announcement-arrow { display: none; }
+}
+
+/* ============================================
+   PROGRAMS SPOTLIGHT RESPONSIVE REFINEMENTS
+   ============================================ */
+@media (max-width: 1020px) {
+  .programs-spotlight {
+    padding: 24px 0 52px !important;
+    overflow-x: hidden;
+  }
+
+  .programs-spotlight__shell {
+    width: calc(100% - 32px);
+    margin: 0 auto !important;
+    padding: 34px 20px 22px !important;
+    overflow: hidden;
+  }
+
+  .programs-spotlight__hero {
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 18px;
+    min-height: 0 !important;
+  }
+
+  .programs-spotlight__intro {
+    max-width: 100%;
+  }
+
+  .programs-spotlight__title {
+    font-size: clamp(2rem, 6vw, 3rem) !important;
+    line-height: 1.12;
+  }
+
+  .programs-spotlight__title-line,
+  .programs-spotlight__title-line--lead,
+  .programs-spotlight__title-line:not(.programs-spotlight__title-line--lead) {
+    white-space: normal !important;
+  }
+
+  .programs-spotlight__description {
+    max-width: 680px;
+  }
+
+  .programs-spotlight__title-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+  }
+
+  .programs-spotlight__actions {
+    margin-top: 0 !important;
+    width: 100%;
+  }
+
+  .programs-spotlight__cta {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0 !important;
+    box-sizing: border-box;
+  }
+
+  .programs-spotlight__art {
+    position: relative !important;
+    inset: auto !important;
+    width: min(100%, 280px) !important;
+    height: 190px !important;
+    margin: 4px auto 0 !important;
+  }
+
+  .programs-spotlight__carousel {
+    margin-top: 20px !important;
+  }
+
+  .programs-spotlight__card-grid {
+    gap: 14px;
+    margin-top: 0 !important;
+  }
+
+  .programs-spotlight__card {
+    flex: 0 0 calc((100% - 14px) / 2) !important;
+    max-width: calc((100% - 14px) / 2);
+    min-height: 0;
+  }
+
+  .programs-spotlight__carousel-button {
+    top: 50% !important;
+    width: 42px !important;
+    height: 42px !important;
+  }
+
+  .programs-spotlight__carousel-button--prev {
+    left: 6px !important;
+  }
+
+  .programs-spotlight__carousel-button--next {
+    right: 6px !important;
+  }
+
+  .programs-spotlight__benefits {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+
+@media (max-width: 767px) {
+  .programs-spotlight {
+    padding: 18px 0 44px !important;
+    overflow-x: clip;
+  }
+
+  .programs-spotlight__shell {
+    width: calc(100% - 28px);
+    max-width: 100%;
+    padding: 26px 14px 16px !important;
+    padding-left: 14px !important;
+    padding-right: 14px !important;
+    border-radius: 12px;
+    box-sizing: border-box;
+  }
+
+  .programs-spotlight__hero {
+    margin-bottom: 24px !important;
+  }
+
+  .programs-spotlight__hero-top {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .programs-spotlight__accent-line {
+    margin: 6px 0 14px;
+    width: 40px;
+  }
+
+  .programs-spotlight__title-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 14px;
+  }
+
+  .programs-spotlight__title {
+    font-size: clamp(1.75rem, 8vw, 2.25rem) !important;
+    width: 100%;
+  }
+
+  .programs-spotlight__description {
+    margin-top: 12px;
+    font-size: 14px !important;
+    line-height: 1.6;
+    max-width: 100%;
+  }
+
+  .programs-spotlight__actions {
+    width: 100%;
+  }
+
+  .programs-spotlight__cta {
+    width: 100%;
+    min-width: 0 !important;
+    max-width: 100%;
+    justify-content: center;
+    padding-inline: 16px !important;
+    box-sizing: border-box;
+  }
+
+  .programs-spotlight__art {
+    display: none;
+  }
+
+  .programs-spotlight__card {
+    flex: 0 0 100% !important;
+    max-width: 100%;
+    padding: 14px 14px 18px !important;
+    border-radius: 14px;
+  }
+
+  .programs-spotlight__card::after {
+    border-radius: 14px;
+  }
+
+  .programs-spotlight__card-image {
+    height: 170px;
+  }
+
+  .programs-spotlight__card-icon {
+    width: 54px;
+    height: 54px;
+    border-width: 6px;
+  }
+
+  .programs-spotlight__card-title {
+    font-size: 18px !important;
+    line-height: 1.25;
+  }
+
+  .programs-spotlight__card-description {
+    min-height: 0 !important;
+    font-size: 14px;
+  }
+
+  .programs-spotlight__carousel-button {
+    width: 36px !important;
+    height: 36px !important;
+  }
+
+  .programs-spotlight__benefits {
+    grid-template-columns: 1fr !important;
+    padding: 10px 8px !important;
+    border-radius: 14px;
+  }
+
+  .programs-spotlight__benefit,
+  .programs-spotlight__benefit + .programs-spotlight__benefit,
+  .programs-spotlight__benefit:nth-child(3),
+  .programs-spotlight__benefit:nth-child(4) {
+    border-left: 0 !important;
+  }
+
+  .programs-spotlight__benefit + .programs-spotlight__benefit {
+    border-top: 1px solid rgba(255,255,255,0.16) !important;
+  }
+}
+
+@media (max-width: 425px) {
+  .programs-spotlight__shell {
+    width: calc(100% - 24px);
+    padding: 22px 12px 14px !important;
+  }
+
+  .programs-spotlight__title {
+    font-size: 1.65rem !important;
+  }
+
+  .programs-spotlight__card-image {
+    height: 150px;
+  }
+
+  .programs-spotlight__benefit {
+    padding: 12px 8px !important;
+  }
+}
+
+@media (max-width: 375px) {
+  .programs-spotlight__title {
+    font-size: 1.5rem !important;
+  }
+
+  .programs-spotlight__description,
+  .programs-spotlight__card-description,
+  .programs-spotlight__benefit-copy p {
+    font-size: 13px !important;
+  }
+
+  .programs-spotlight__card-image {
+    height: 138px;
+  }
+}
+
+@media (max-width: 320px) {
+  .programs-spotlight {
+    padding: 12px 0 36px !important;
+    overflow-x: clip;
+  }
+
+  .programs-spotlight__shell {
+    width: calc(100% - 16px) !important;
+    max-width: 100%;
+    margin: 0 auto !important;
+    padding: 18px 10px 12px !important;
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+    border-radius: 10px;
+    box-sizing: border-box;
+  }
+
+  .programs-spotlight__hero {
+    gap: 12px !important;
+    margin-bottom: 18px !important;
+  }
+
+  .programs-spotlight__hero-top {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .programs-spotlight__accent-line {
+    width: 36px;
+    height: 3px;
+    margin: 4px 0 10px;
+  }
+
+  .programs-spotlight__title-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .programs-spotlight__title {
+    font-size: 1.28rem !important;
+    line-height: 1.15 !important;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+  }
+
+  .programs-spotlight__title-line,
+  .programs-spotlight__title-line--lead,
+  .programs-spotlight__title-line:not(.programs-spotlight__title-line--lead) {
+    white-space: normal !important;
+  }
+
+  .programs-spotlight__description {
+    margin-top: 8px !important;
+    font-size: 12px !important;
+    line-height: 1.55 !important;
+  }
+
+  .programs-spotlight__actions {
+    width: 100%;
+  }
+
+  .programs-spotlight__cta {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100%;
+    padding: 0 12px !important;
+    height: 42px !important;
+    font-size: 12px !important;
+    gap: 8px !important;
+    box-sizing: border-box;
+  }
+
+  .programs-spotlight__cta .btn__arrow svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .programs-spotlight__carousel {
+    margin-top: 14px !important;
+  }
+
+  .programs-spotlight__card-viewport {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .programs-spotlight__card-grid {
+    gap: 10px;
+  }
+
+  .programs-spotlight__card {
+    flex: 0 0 100% !important;
+    max-width: 100%;
+    min-width: 0;
+    padding: 10px 10px 14px !important;
+    border-radius: 12px;
+    scroll-snap-align: center;
+  }
+
+  .programs-spotlight__card::after {
+    border-radius: 12px;
+    border-top-width: 6px;
+  }
+
+  .programs-spotlight__card-icon {
+    top: 10px;
+    left: 10px;
+    width: 44px;
+    height: 44px;
+    border-width: 4px;
+  }
+
+  .programs-spotlight__card-icon svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .programs-spotlight__card-image {
+    height: 118px;
+    border-radius: 10px;
+  }
+
+  .programs-spotlight__card-title {
+    margin-top: 10px;
+    font-size: 15px !important;
+    line-height: 1.2 !important;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+  }
+
+  .programs-spotlight__card-line {
+    width: 32px;
+    margin: 10px 0 12px;
+  }
+
+  .programs-spotlight__card-description {
+    font-size: 12px !important;
+    line-height: 1.5 !important;
+    min-height: 0 !important;
+  }
+
+  .programs-spotlight__card-link {
+    font-size: 12px !important;
+    gap: 6px;
+    margin-top: 6px;
+    flex-wrap: wrap;
+  }
+
+  .programs-spotlight__card-link-arrow {
+    width: 26px;
+    height: 26px;
+    flex-shrink: 0;
+  }
+
+  .programs-spotlight__card-link-arrow svg {
+    width: 12px;
+    height: 12px;
+  }
+
+  .programs-spotlight__carousel-button {
+    top: 50% !important;
+    width: 32px !important;
+    height: 32px !important;
+    box-shadow: 0 6px 14px rgba(16, 65, 198, 0.14);
+  }
+
+  .programs-spotlight__carousel-button svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .programs-spotlight__carousel-button--prev {
+    left: 2px !important;
+  }
+
+  .programs-spotlight__carousel-button--next {
+    right: 2px !important;
+  }
+
+  .programs-spotlight__benefits {
+    margin-top: 28px !important;
+    padding: 8px 6px !important;
+    border-radius: 12px;
+    gap: 0;
+  }
+
+  .programs-spotlight__benefit {
+    gap: 10px;
+    padding: 10px 8px !important;
+    align-items: flex-start;
+  }
+
+  .programs-spotlight__benefit-icon {
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
+  }
+
+  .programs-spotlight__benefit-icon svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  .programs-spotlight__benefit-copy {
+    min-width: 0;
+  }
+
+  .programs-spotlight__benefit-copy h3 {
+    font-size: 13px !important;
+    line-height: 1.25;
+    word-break: break-word;
+  }
+
+  .programs-spotlight__benefit-copy p {
+    font-size: 11px !important;
+    line-height: 1.45 !important;
+    margin-top: 4px !important;
+  }
+
+  .programs-spotlight__loading {
+    width: 100%;
+    min-width: 0;
+    padding: 28px 12px;
+    text-align: center;
+    font-size: 13px;
+    color: #1041c6;
+    box-sizing: border-box;
+  }
 }
 
 /* ============================================

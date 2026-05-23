@@ -1,7 +1,51 @@
-import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import institutionsBg from '../assets/images/institutions-bg.png';
+import institutionsBg from '../assets/images/seg.jpeg';
 import '../why-join-seg.css';
+
+const reasons = [
+  {
+    id: 'academic-excellence',
+    title: 'Academic Excellence',
+    icon: 'graduation',
+    text: 'At SEG, we prioritize a robust academic foundation that balances theoretical knowledge with practical application. Our experienced faculty members, many of whom are industry experts and researchers, guide students through a comprehensive curriculum designed to meet global standards. Regular workshops, seminars, and industry interactions ensure that students stay updated with the latest advancements.',
+  },
+  {
+    id: 'infrastructure',
+    title: 'State-of-the-Art Infrastructure',
+    icon: 'institution',
+    text: 'SEG is equipped with state-of-the-art infrastructure, including modern classrooms, advanced laboratories, a vast digital library, and high-speed internet access. Our technologically enabled campus creates a conducive environment for learning and research, empowering students to explore and innovate.',
+  },
+  {
+    id: 'holistic-development',
+    title: 'Holistic Development',
+    icon: 'people',
+    text: 'Beyond academics, SEG believes in nurturing well-rounded individuals. We offer a variety of extracurricular activities, clubs, and cultural events that enhance leadership skills, teamwork, and creativity. Our focus on personality development prepares students to face real-world challenges confidently.',
+  },
+  {
+    id: 'industry-connections',
+    title: 'Strong Industry Connections',
+    icon: 'briefcase',
+    text: 'SEG maintains strong ties with reputed industries and organizations, facilitating internships, guest lectures, and placement opportunities. Our dedicated placement cell works tirelessly to connect students with leading companies, ensuring successful career launches.',
+  },
+  {
+    id: 'global-exposure',
+    title: 'Global Exposure',
+    icon: 'globe',
+    text: 'SEG collaborates with international universities, enabling student exchange programs, global internships, and exposure to multicultural environments. These experiences broaden perspectives and prepare students for global opportunities.',
+  },
+  {
+    id: 'alumni-network',
+    title: 'Strong Alumni Network',
+    icon: 'alumni',
+    text: 'Our alumni network spans across the globe, holding significant positions in reputed organizations. They actively participate in mentoring current students, sharing experiences, and guiding them toward successful careers.',
+  },
+  {
+    id: 'safe-campus',
+    title: 'Safe and Inclusive Campus',
+    icon: 'shield',
+    text: 'SEG is committed to creating a safe, inclusive, and diverse environment where every student feels valued and respected. Our anti-ragging policies, counseling services, and dedicated staff ensure the well-being of our students.',
+  },
+];
 
 const ReasonIcon = ({ type }) => {
   const props = {
@@ -86,66 +130,24 @@ const ReasonIcon = ({ type }) => {
 };
 
 const WhyJoinSeg = () => {
-  const [data, setData] = useState({
-    heroTitle: "The Legacy of Saroj Educational Group",
-    heroSubtitle: "A journey marked by dedication, growth, and a commitment to educational excellence that has shaped thousands of lives and continues to lead the way for future leaders.",
-    reasons: [
-      {
-        id: 'academic-excellence',
-        title: 'Academic Excellence',
-        icon: 'graduation',
-        text: 'At SEG, we prioritize a robust academic foundation that balances theoretical knowledge with practical application. Our experienced faculty members, many of whom are industry experts and researchers, guide students through a comprehensive curriculum designed to meet global standards.'
-      },
-      {
-        id: 'infrastructure',
-        title: 'State-of-the-Art Infrastructure',
-        icon: 'institution',
-        text: 'SEG is equipped with state-of-the-art infrastructure, including modern classrooms, advanced laboratories, a vast digital library, and high-speed internet access. Our campus creates a conducive environment for learning and research.'
-      },
-      {
-        id: 'holistic-development',
-        title: 'Holistic Development',
-        icon: 'people',
-        text: 'Beyond academics, SEG believes in nurturing well-rounded individuals. We offer a variety of extracurricular activities, clubs, and cultural events that enhance leadership skills, teamwork, and creativity.'
-      },
-      {
-        id: 'industry-connections',
-        title: 'Strong Industry Connections',
-        icon: 'briefcase',
-        text: 'SEG maintains strong ties with reputed industries and organizations, facilitating internships, guest lectures, and placement opportunities. Our dedicated placement cell works tirelessly to connect students with leading companies.'
-      }
-    ]
-  });
-
-  useEffect(() => {
-    fetch('http://localhost:3000/api/settings')
-      .then(res => res.json())
-      .then(settings => {
-        if (settings && settings.whyJoinSeg) {
-          setData(settings.whyJoinSeg);
-        }
-      })
-      .catch(err => console.error("Error loading WhyJoinSeg settings:", err));
-  }, []);
-
   return (
     <div className="wjs-page">
-      {/* Hero Section */}
+      {/* Hero Section — identical to History page */}
       <section className="wjs-hero">
         <div className="wjs-hero__inner">
           <div className="wjs-hero__content">
-            <div className="wjs-hero__breadcrumbs">
-              <Link to="/">Home</Link>
-              <span className="separator">&gt;</span>
-              <span>About SEG</span>
-              <span className="separator">&gt;</span>
-              <span className="current">Why Join SEG</span>
-            </div>
 
-            <h1 className="wjs-hero__title" dangerouslySetInnerHTML={{ __html: data.heroTitle.replace("Educational Group", "<span className=\"text-blue\">Educational Group</span>") }} />
+
+            <h1 className="wjs-hero__title">
+              The Legacy of
+              <br />
+              Saroj <span className="text-blue">Educational Group</span>
+            </h1>
             <div className="wjs-hero__accent-line"></div>
 
-            <p className="wjs-hero__text">{data.heroSubtitle}</p>
+            <p className="wjs-hero__text">
+              A journey marked by dedication, growth, and a commitment to educational excellence that has shaped thousands of lives and continues to lead the way for future leaders.
+            </p>
           </div>
 
           <div className="wjs-hero__visual">
@@ -244,7 +246,7 @@ const WhyJoinSeg = () => {
 
         {/* Reason Cards */}
         <div className="wjs-list">
-          {data.reasons.map((reason) => (
+          {reasons.map((reason) => (
             <div className="wjs-card" key={reason.id} id={reason.id}>
               {/* Blue gradient icon box */}
               <div className="wjs-card__icon-box">

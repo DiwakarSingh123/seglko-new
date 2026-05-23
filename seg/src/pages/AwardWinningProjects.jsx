@@ -1,10 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import '../award-winning-projects.css';
+import trophyImg from '../assets/images/trophy for awards.jpeg';
 
 const AwardWinningProjects = () => {
-  const [activeIndex, setActiveIndex] = useState(1); // Dr. D.N. Mishra expanded by default
-
-  const facultyData = [
+  const [activeIndex, setActiveIndex] = useState(null);
+  const [facultyData, setFacultyData] = useState([
     {
       id: 0,
       name: 'Prof. (Dr.) S.N. Pandeya',
@@ -29,45 +29,54 @@ const AwardWinningProjects = () => {
       name: 'Dr. Pramod Kr. Pandey',
       projects: ['Sustainable Energy Solutions', 'AI in Predictive Healthcare']
     }
-  ];
+  ]);
+
+  useEffect(() => {
+    fetch('http://localhost:3000/api/research')
+      .then(res => res.json())
+      .then(data => {
+        if (data && data.awards && data.awards.length > 0) {
+          setFacultyData(data.awards.map((a, i) => ({
+            id: i,
+            name: a.faculty,
+            projects: a.projects || []
+          })));
+        }
+      })
+      .catch(err => console.error('Error loading award data:', err));
+  }, []);
 
   return (
     <div className="award-projects-page">
-      {/* Hero Section */}
-      <section className="aw-hero">
-        <div className="aw-hero__container">
-          <div className="aw-hero__content">
-            <h1 className="aw-hero__title">Award-Winning Projects</h1>
-            <p className="aw-hero__text">
-              At Saroj Educational Group (SEG), our researchers have successfully undertaken numerous prestigious projects.
-            </p>
-          </div>
-          <div className="aw-hero__visual">
-            <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M100 40V20M100 40C80 40 60 50 60 70V100C60 120 80 140 100 140C120 140 140 120 140 100V70C140 50 120 40 100 40ZM100 140V160M70 180H130M50 70C40 70 30 80 30 90V100C30 110 40 120 50 120M150 70C160 70 170 80 170 90V100C170 110 160 120 150 120" stroke="#2563eb" strokeWidth="6" strokeLinecap="round"/>
-              <path d="M100 15V25M155 45L145 55M175 100H185M155 155L145 145M100 185V175M45 155L55 145M25 100H15M45 45L55 55" stroke="#ffbe23" strokeWidth="4" strokeLinecap="round" opacity="0.6"/>
-            </svg>
-          </div>
-        </div>
-      </section>
+      <div className="aw-split">
 
-      {/* Main Content */}
-      <main className="aw-main">
-        <div className="aw-main__container">
-          {/* Left Column - Accordion */}
+        {/* LEFT PANEL */}
+        <div className="aw-split__left">
+          <div className="aw-hero__content">
+            <div className="aw-hero__top">
+              <div className="aw-hero__text-block">
+                <h1 className="aw-hero__title">Award-Winning Projects</h1>
+                <p className="aw-hero__text">
+                  At Saroj Educational Group (SEG), our researchers have successfully undertaken numerous prestigious projects.
+                </p>
+              </div>
+              <img src={trophyImg} alt="Trophy for Awards" className="aw-hero__trophy" />
+            </div>
+          </div>
+
           <div className="aw-accordion">
             {facultyData.map((faculty) => (
-              <div 
-                key={faculty.id} 
+              <div
+                key={faculty.id}
                 className={`aw-accordion__item ${activeIndex === faculty.id ? 'active' : ''}`}
               >
-                <div 
+                <div
                   className="aw-accordion__header"
                   onClick={() => setActiveIndex(activeIndex === faculty.id ? null : faculty.id)}
                 >
                   <div className="aw-accordion__header-left">
                     <div className="aw-accordion__icon">
-                       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                     </div>
                     <span className="aw-accordion__name">{faculty.name}</span>
                   </div>
@@ -75,26 +84,33 @@ const AwardWinningProjects = () => {
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
                   </div>
                 </div>
-                
                 <div className="aw-accordion__content">
                   <div className="aw-projects-list">
                     <span className="aw-projects-list__title">Projects under investigation:</span>
-                    {faculty.projects.map((project, pIdx) => (
-                      <div key={pIdx} className="aw-project-row">
-                        <div className="aw-project-row__check">
-                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                    {faculty.projects && faculty.projects.length > 0 ? (
+                      faculty.projects.map((project, pIdx) => (
+                        <div key={pIdx} className="aw-project-row">
+                          <div className="aw-project-row__check">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                          </div>
+                          {project}
                         </div>
-                        {project}
+                      ))
+                    ) : (
+                      <div className="aw-project-row-empty" style={{ padding: '0.75rem 0', color: '#8a9bbf', fontSize: '0.9rem', fontStyle: 'italic' }}>
+                        No active projects listed under this researcher at the moment.
                       </div>
-                    ))}
+                    )}
                   </div>
                 </div>
               </div>
             ))}
           </div>
+        </div>
 
-          {/* Right Column - Sidebar */}
-          <aside className="aw-sidebar">
+        {/* RIGHT PANEL */}
+      
+          <div className="aw-sidebar">
             <div className="aw-card--impact">
               <h3 className="aw-card__title">Our Research Impact</h3>
               <div className="aw-metrics">
@@ -105,7 +121,6 @@ const AwardWinningProjects = () => {
                   <span className="aw-metric__value">50+</span>
                   <span className="aw-metric__label">Research Projects</span>
                 </div>
-
                 <div className="aw-metric">
                   <div className="aw-metric__icon">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
@@ -113,7 +128,6 @@ const AwardWinningProjects = () => {
                   <span className="aw-metric__value">30+</span>
                   <span className="aw-metric__label">Expert Researchers</span>
                 </div>
-
                 <div className="aw-metric">
                   <div className="aw-metric__icon">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg>
@@ -123,7 +137,6 @@ const AwardWinningProjects = () => {
                 </div>
               </div>
             </div>
-
             <div className="aw-card--funding">
               <div className="aw-funding__header">
                 <div className="aw-funding__icon">
@@ -136,16 +149,15 @@ const AwardWinningProjects = () => {
               </p>
               <div className="aw-collab">
                 <div className="aw-collab__icon">
-                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
                 </div>
-                <p className="aw-collab__text">
-                  Global collaborations include Indo-Russian, Indo-Dutch, and DAAD-RISE initiatives.
-                </p>
+                <p className="aw-collab__text">Global collaborations include Indo-Russian, Indo-Dutch, and DAAD-RISE initiatives.</p>
               </div>
             </div>
-          </aside>
-        </div>
-      </main>
+          </div>
+       
+
+      </div>
 
       {/* Footer Bar */}
       <div className="aw-footer-bar">
@@ -157,10 +169,10 @@ const AwardWinningProjects = () => {
           <span className="aw-footer-bar__desc">Together, we build a better tomorrow.</span>
         </div>
         <div className="aw-footer-bar__visual">
-           <svg width="100" height="40" viewBox="0 0 100 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-             <path d="M10 30Q30 10 50 30T90 10" stroke="#2563eb" strokeWidth="2" strokeDasharray="4 4"/>
-             <path d="M90 10L82 12M90 10L88 18" stroke="#2563eb" strokeWidth="2" strokeLinecap="round"/>
-           </svg>
+          <svg width="100" height="40" viewBox="0 0 100 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M10 30Q30 10 50 30T90 10" stroke="#2563eb" strokeWidth="2" strokeDasharray="4 4"/>
+            <path d="M90 10L82 12M90 10L88 18" stroke="#2563eb" strokeWidth="2" strokeLinecap="round"/>
+          </svg>
         </div>
       </div>
     </div>

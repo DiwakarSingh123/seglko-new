@@ -1,7 +1,7 @@
 /* ===== R&D PROJECTS PAGE ===== */
 .rd-projects-page {
   width: 100%;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Poppins', sans-serif;
   background-color: #ffffff;
   overflow-x: hidden;
 }
@@ -82,14 +82,17 @@
 
 .rd-hero__features {
   display: flex;
+  flex-direction: row;
   gap: 2rem;
   margin-top: 2rem;
 }
 
 .rd-hero__feature {
   display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 1rem;
+  flex: 1;
 }
 
 .rd-hero__feature-icon {
@@ -118,6 +121,7 @@
   font-size: 0.9rem;
   opacity: 0.8;
   line-height: 1.4;
+  max-width: 140px;
 }
 
 .rd-hero__quote-card {
@@ -136,7 +140,7 @@
   color: #ffbe23;
   margin-bottom: 1rem;
   display: block;
-  font-family: serif;
+  font-family: 'Poppins', sans-serif;
 }
 
 .rd-hero__quote-text {

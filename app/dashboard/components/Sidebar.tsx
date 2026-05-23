@@ -1,9 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import Image from "next/image";
+import { clearAuthentication } from "@/lib/auth";
 
 const nav = [
   {
@@ -36,14 +37,20 @@ const nav = [
     section: "ACCOUNT",
     items: [
       { label: "Settings", icon: "settings", href: "/dashboard/settings" },
-      { label: "Logout", icon: "logout", href: "/" },
+      { label: "Logout", icon: "logout", href: "/login" },
     ],
   },
 ];
 
 export default function Sidebar() {
   const pathname = usePathname();
+  const router = useRouter();
   const [collapsed, setCollapsed] = useState<string[]>([]);
+
+  const handleLogout = () => {
+    clearAuthentication();
+    router.push("/login");
+  };
 
   const toggle = (section: string) => {
     setCollapsed((prev) =>
@@ -101,18 +108,32 @@ export default function Sidebar() {
                   {group.items.map((item) => {
                     const active = pathname === item.href;
                     const isLogout = item.label === "Logout";
+                    if (isLogout) {
+                      return (
+                        <button
+                          key={item.href}
+                          type="button"
+                          onClick={handleLogout}
+                          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all text-rose-500 hover:bg-rose-50"
+                        >
+                          <span className="material-symbols-outlined text-[20px] flex-shrink-0">
+                            {item.icon}
+                          </span>
+                          <span className="truncate">{item.label}</span>
+                        </button>
+                      );
+                    }
+
                     return (
                       <Link
                         key={item.href}
                         href={item.href}
                         className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${
-                          isLogout
-                            ? "text-rose-500 hover:bg-rose-50"
-                            : active
+                          active
                             ? "text-white shadow-md"
                             : "text-slate-500 hover:bg-slate-50 hover:text-slate-800"
                         }`}
-                        style={active && !isLogout ? { backgroundColor: "#151869" } : {}}
+                        style={active ? { backgroundColor: "#151869" } : {}}
                       >
                         <span className={`material-symbols-outlined text-[20px] flex-shrink-0 ${active ? "fill-icon" : ""}`}>
                           {item.icon}
@@ -128,22 +149,6 @@ export default function Sidebar() {
           );
         })}
       </nav>
-
-      {/* User */}
-      <div className="p-4 border-t border-slate-100">
-        <div className="flex items-center gap-3 px-2">
-          <div className="flex items-center justify-center flex-shrink-0 text-xs font-bold text-white rounded-full shadow-md h-9 w-9" style={{ background: "linear-gradient(135deg, #151869, #2d35a8)" }}>
-            AA
-          </div>
-          <div className="min-w-0">
-            <div className="text-sm font-bold truncate text-slate-800">Admin</div>
-            <div className="text-[10px] text-slate-400 truncate">admin@seglko.org</div>
-          </div>
-          <button className="flex items-center justify-center flex-shrink-0 ml-auto transition-colors rounded-lg h-7 w-7 hover:bg-slate-100">
-            <span className="text-lg material-symbols-outlined text-slate-400">more_vert</span>
-          </button>
-        </div>
-      </div>
     </aside>
   );
 }

@@ -1,8 +1,16 @@
+import { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import placementsBg from '../assets/images/placements-bg.png';
-import program1 from '../assets/images/program1.png';
-import program2 from '../assets/images/program2.png';
-import program3 from '../assets/images/program3.png';
+import program1 from '../assets/images/Harsh Dixit.jpeg';
+import program2 from '../assets/images/pr (2).jpeg';
+import program3 from '../assets/images/Pramudit Shukla.jpeg';
+import {
+  computePlacementStats,
+  formatPlacedCount,
+  getRecentPlacements,
+  mapToShowcaseCard,
+} from '../utils/placementStats';
+
+const imagePool = [program1, program2, program3];
 
 const ArrowRight = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -59,42 +67,6 @@ const BriefcaseIcon = () => (
   </svg>
 );
 
-const successCards = [
-  {
-    name: 'Umesh Mishra',
-    course: 'B.Tech CSE 4th Year',
-    packageLabel: '10.00 LPA',
-    company: 'Square IT Solutions Pvt. Ltd.',
-    role: 'Web Developer',
-    image: program1,
-    logo: 'SQUAREIT',
-  },
-  {
-    name: 'Shaloni Devi',
-    course: 'B.Pharm 4th Year',
-    packageLabel: '18.00 LPA',
-    company: 'Max Healthcare',
-    role: 'Executive',
-    image: program2,
-    logo: 'MAX',
-  },
-  {
-    name: 'Pramudit Shukla',
-    course: 'Diploma in CSE',
-    packageLabel: '12.00 LPA',
-    company: 'TechMech',
-    role: 'Full Stack Developer',
-    image: program3,
-    logo: 'TECHMECH',
-  },
-];
-
-const placementStats = [
-  { label: 'Students Placed', value: '1000+', icon: <PeopleIcon />, tone: 'gold' },
-  { label: 'Recruiting Partners', value: '250+', icon: <BuildingIcon />, tone: 'blue' },
-  { label: 'Placement Rate', value: 'High', icon: <GrowthIcon />, tone: 'green' },
-  { label: 'Top Industry Roles', value: 'Top', icon: <MedalIcon />, tone: 'violet' },
-];
 
 const CognizantLogo = () => (
   <svg viewBox="0 0 120 40" xmlns="http://www.w3.org/2000/svg" width="110" height="36">
@@ -234,6 +206,59 @@ function PlacementCard({ card }) {
 
 export default function PlacementsShowcase() {
   const navigate = useNavigate();
+  const [records, setRecords] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch('/api/placements')
+      .then((res) => res.json())
+      .then((data) => {
+        setRecords(Array.isArray(data) ? data : []);
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
+  }, []);
+
+  const stats = useMemo(() => computePlacementStats(records), [records]);
+
+  const successCards = useMemo(
+    () =>
+      getRecentPlacements(records, 3).map((record, index) =>
+        mapToShowcaseCard(record, imagePool[index % imagePool.length])
+      ),
+    [records]
+  );
+
+  const placementStats = useMemo(
+    () => [
+      {
+        label: 'Students Placed',
+        value: formatPlacedCount(stats.totalPlaced),
+        icon: <PeopleIcon />,
+        tone: 'gold',
+      },
+      {
+        label: 'Recruiting Partners',
+        value: stats.recruiters,
+        icon: <BuildingIcon />,
+        tone: 'blue',
+      },
+      {
+        label: 'Highest Package',
+        value: stats.highestPackage === '—' ? '—' : stats.highestPackage.replace(' LPA', ''),
+        icon: <GrowthIcon />,
+        tone: 'green',
+      },
+      {
+        label: 'Average Package',
+        value: stats.avgPackage === '—' ? '—' : stats.avgPackage.replace(' LPA', ''),
+        icon: <MedalIcon />,
+        tone: 'violet',
+      },
+    ],
+    [stats]
+  );
+
   return (
     <section className="placements-showcase" id="placements-showcase">
       <div className="placements-showcase__shell">
@@ -247,7 +272,6 @@ export default function PlacementsShowcase() {
               Celebrating the success of our students who are building great careers with top companies.
             </p>
           </div>
-
           <button className="btn btn--primary placements-showcase__cta" onClick={() => { navigate('/placements'); window.scrollTo(0, 0); }}>
             View More Success Stories
             <span className="btn__arrow">
@@ -257,9 +281,20 @@ export default function PlacementsShowcase() {
         </div>
 
         <div className="placements-showcase__grid">
-          <PlacementCard card={successCards[0]} />
-          <PlacementCard card={successCards[1]} />
-          <PlacementCard card={successCards[2]} />
+          {loading && (
+            <p className="placements-showcase__loading" style={{ gridColumn: '1 / -1', textAlign: 'center', color: '#64748b' }}>
+              Loading recent placements...
+            </p>
+          )}
+          {!loading && successCards.length === 0 && (
+            <p className="placements-showcase__empty" style={{ gridColumn: '1 / -1', textAlign: 'center', color: '#64748b' }}>
+              No placement records yet. Add records from the admin Placements dashboard.
+            </p>
+          )}
+          {!loading &&
+            successCards.map((card) => (
+              <PlacementCard key={`${card.name}-${card.company}`} card={card} />
+            ))}
 
           <section className="placements-showcase__stats-card">
             <div

@@ -1,7 +1,7 @@
 /* EXPLORE MORE (LIFE @ SEG) PAGE STYLES */
 
 .explore-more {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Poppins', sans-serif;
   color: #1e293b;
   background-color: #ffffff;
   padding: 8rem 0 6rem;
@@ -32,7 +32,7 @@
 .explore-title span {
   color: #f97316;
   margin: 0 0.5rem;
-  font-family: serif;
+  font-family: 'Poppins', sans-serif;
   font-style: italic;
 }
 
@@ -111,6 +111,15 @@
   grid-auto-rows: 250px;
   gap: 1.5rem;
   margin-bottom: 5rem;
+}
+
+.explore-gallery-status {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 3rem 1rem;
+  color: #64748b;
+  font-size: 0.95rem;
+  font-weight: 600;
 }
 
 .gallery-item {
@@ -273,6 +282,7 @@
 }
 
 @media (max-width: 992px) {
+  .explore-more { padding: 4rem 0 5rem; }
   .explore-gallery {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -289,6 +299,7 @@
 }
 
 @media (max-width: 768px) {
+  .explore-more { padding: 3rem 0 4rem; }
   .explore-title {
     font-size: 2.5rem;
   }
@@ -316,4 +327,28 @@
   .stat-item {
     min-width: 100%;
   }
+}
+
+@media (max-width: 425px) {
+  .explore-more { padding: 2rem 0 4rem; }
+  .explore-title { font-size: 2rem; }
+  .explore-subtitle { font-size: 1rem; }
+  .explore-header { margin-bottom: 2rem; }
+}
+
+@media (max-width: 375px) {
+  .explore-more { padding: 1.5rem 0 3rem; }
+  .explore-title { font-size: 1.8rem; }
+  .explore-subtitle { font-size: 0.95rem; }
+  .explore-header { margin-bottom: 1.5rem; }
+  .filter-btn { padding: 0.6rem 1rem; font-size: 0.85rem; }
+}
+
+@media (max-width: 320px) {
+  .explore-more { padding: 1rem 0 2.5rem; }
+  .explore-title { font-size: 1.6rem; }
+  .explore-subtitle { font-size: 0.875rem; }
+  .explore-header { margin-bottom: 1.2rem; }
+  .filter-btn { padding: 0.5rem 0.8rem; font-size: 0.8rem; gap: 0.4rem; }
+  .explore-container { padding: 0 4%; }
 }

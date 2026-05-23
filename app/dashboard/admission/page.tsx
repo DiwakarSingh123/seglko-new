@@ -1,15 +1,42 @@
 "use client";
-import { useState } from "react";
-import GalleryTab from "../components/GalleryTab";
+import { useState, useEffect, useMemo } from "react";
 
-const admissionCycles = [
-  { id: 1, session: "2024-25", program: "B.Tech CSE", institution: "SIET", openDate: "Mar 1, 2024", closeDate: "Jul 31, 2024", totalSeats: 120, filled: 98, status: "Open" },
-  { id: 2, session: "2024-25", program: "MBA", institution: "SIMS", openDate: "Mar 1, 2024", closeDate: "Jul 31, 2024", totalSeats: 60, filled: 55, status: "Open" },
-  { id: 3, session: "2024-25", program: "B.Pharm", institution: "SCP", openDate: "Mar 1, 2024", closeDate: "Jul 31, 2024", totalSeats: 60, filled: 60, status: "Full" },
-  { id: 4, session: "2024-25", program: "B.Ed", institution: "SCOE", openDate: "Apr 1, 2024", closeDate: "Aug 31, 2024", totalSeats: 100, filled: 42, status: "Open" },
-  { id: 5, session: "2023-24", program: "B.Tech ECE", institution: "SIET", openDate: "Mar 1, 2023", closeDate: "Jul 31, 2023", totalSeats: 60, filled: 60, status: "Closed" },
-  { id: 6, session: "2023-24", program: "MCA", institution: "SIET", openDate: "Mar 1, 2023", closeDate: "Jul 31, 2023", totalSeats: 60, filled: 58, status: "Closed" },
-];
+type AdmissionCycle = {
+  id: number;
+  session: string;
+  program: string;
+  institution: string;
+  openDate: string;
+  closeDate: string;
+  totalSeats: number;
+  filled: number;
+  status: string;
+};
+
+const CURRENT_YEAR = new Date().getFullYear();
+const SESSION_LOOKBACK = 10;
+
+const getDefaultSession = () => `${CURRENT_YEAR}-${String(CURRENT_YEAR + 1).slice(-2)}`;
+
+function buildSessionOptions(cycles: AdmissionCycle[]): string[] {
+  const recent = Array.from({ length: SESSION_LOOKBACK + 1 }, (_, i) => {
+    const start = CURRENT_YEAR - i;
+    return `${start}-${String(start + 1).slice(-2)}`;
+  });
+  const fromCycles = cycles.map((c) => c.session).filter(Boolean);
+  return Array.from(new Set([...recent, ...fromCycles])).sort((a, b) => b.localeCompare(a));
+}
+
+const emptyCycle = {
+  session: getDefaultSession(),
+  program: "",
+  institution: "SIET",
+  openDate: "",
+  closeDate: "",
+  totalSeats: 0,
+  filled: 0,
+  status: "Open",
+};
 
 type Step = { step: number; title: string; desc: string; icon: string };
 
@@ -31,8 +58,14 @@ type EligibilityCategory = "undergraduate" | "postgraduate" | "diploma";
 type EligibilityItem = { title: string; content: string[] };
 
 export default function AdmissionPage() {
-  const [tab, setTab] = useState<"cycles" | "process" | "eligibility" | "gallery">("cycles");
+  const [tab, setTab] = useState<"cycles" | "process" | "eligibility">("cycles");
   const [session, setSession] = useState("All");
+  const [cycles, setCycles] = useState<AdmissionCycle[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [showAddForm, setShowAddForm] = useState(false);
+  const [editingCycle, setEditingCycle] = useState<AdmissionCycle | null>(null);
+  const [form, setForm] = useState(emptyCycle);
+  const [formError, setFormError] = useState("");
   const [steps, setSteps] = useState<Step[]>(initialSteps);
   const [editingStep, setEditingStep] = useState<Step | null>(null);
   const [eligibilityCategory, setEligibilityCategory] = useState<EligibilityCategory>("undergraduate");
@@ -56,11 +89,176 @@ export default function AdmissionPage() {
 
   const [editingEligibility, setEditingEligibility] = useState<{ idx: number; item: EligibilityItem } | null>(null);
 
+  useEffect(() => {
+    fetchCycles();
+  }, []);
+
+  const fetchCycles = async () => {
+    setIsLoading(true);
+    try {
+      const res = await fetch("/api/admission");
+      if (res.ok) setCycles(await res.json());
+    } catch (e) {
+      console.error(e);
+    }
+    setIsLoading(false);
+  };
+
+  const resetForm = () => setForm({ ...emptyCycle, session: getDefaultSession() });
+
+  const handleSaveNew = async () => {
+    if (!form.program.trim() || !form.session.trim()) {
+      setFormError("Session and program are required.");
+      return;
+    }
+    try {
+      const res = await fetch("/api/admission", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+      if (res.ok) {
+        const saved = await res.json();
+        setCycles((prev) => [...prev, saved]);
+        setFormError("");
+        setShowAddForm(false);
+        resetForm();
+        setSession(saved.session);
+        alert(`Added "${saved.program}" cycle successfully!`);
+      }
+    } catch (e) {
+      console.error(e);
+      setFormError("Failed to save cycle.");
+    }
+  };
+
+  const handleEditSave = async () => {
+    if (!editingCycle) return;
+    try {
+      const res = await fetch("/api/admission", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(editingCycle),
+      });
+      if (res.ok) {
+        const saved = await res.json();
+        setCycles((prev) => prev.map((c) => (c.id === saved.id ? saved : c)));
+        setEditingCycle(null);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const handleDelete = async (id: number) => {
+    if (!confirm("Delete this admission cycle?")) return;
+    try {
+      const res = await fetch(`/api/admission?id=${id}`, { method: "DELETE" });
+      if (res.ok) setCycles((prev) => prev.filter((c) => c.id !== id));
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  // Load steps from settings on mount
+  useEffect(() => {
+    fetch('/api/settings')
+      .then(res => res.json())
+      .then(data => {
+        if (data?.admissionProcess?.steps) {
+          setSteps(data.admissionProcess.steps.map((s: any, i: number) => ({
+            step: i + 1,
+            title: s.title,
+            desc: s.text,
+            icon: initialSteps[i]?.icon || 'person_add'
+          })));
+        }
+        if (data?.eligibilityCriteria) {
+          const ec = data.eligibilityCriteria;
+          const toItems = (obj: Record<string, string[]>): EligibilityItem[] => [
+            { title: 'Academic Requirements', content: obj.academic || [] },
+            { title: 'Age Limit', content: obj.age || [] },
+            { title: 'Additional Information', content: obj.additional || [] },
+          ].filter(i => i.content.length > 0);
+          setEligibilityData({
+            undergraduate: toItems(ec.undergraduate || {}),
+            postgraduate: toItems(ec.postgraduate || {}),
+            diploma: toItems(ec.diploma || {}),
+          });
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  const saveSteps = () => {
+    fetch('/api/settings')
+      .then(res => res.json())
+      .then(current => {
+        const updated = {
+          ...current,
+          admissionProcess: {
+            ...(current.admissionProcess || {}),
+            steps: steps.map((s, i) => ({
+              number: String(i + 1).padStart(2, '0'),
+              title: s.title,
+              text: s.desc
+            }))
+          }
+        };
+        return fetch('/api/settings', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(updated)
+        });
+      })
+      .then(res => res.json())
+      .then(res => { if (res.success) alert('Steps saved successfully!'); })
+      .catch(() => alert('Failed to save'));
+  };
+
   const updateEligibility = (cat: EligibilityCategory, items: EligibilityItem[]) =>
     setEligibilityData((prev) => ({ ...prev, [cat]: items }));
 
-  const sessions = ["All", ...Array.from(new Set(admissionCycles.map((a) => a.session)))];
-  const filtered = admissionCycles.filter((a) => session === "All" || a.session === session);
+  const saveEligibility = () => {
+    // Convert dashboard format to frontend format
+    const toFrontend = (items: EligibilityItem[]) => {
+      const result: Record<string, string[]> = {};
+      items.forEach(item => {
+        const key = item.title.toLowerCase().includes('academic') ? 'academic'
+          : item.title.toLowerCase().includes('age') ? 'age'
+          : 'additional';
+        result[key] = item.content;
+      });
+      return result;
+    };
+
+    fetch('/api/settings')
+      .then(res => res.json())
+      .then(current => {
+        const updated = {
+          ...current,
+          eligibilityCriteria: {
+            undergraduate: toFrontend(eligibilityData.undergraduate),
+            postgraduate: toFrontend(eligibilityData.postgraduate),
+            diploma: toFrontend(eligibilityData.diploma),
+          }
+        };
+        return fetch('/api/settings', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(updated)
+        });
+      })
+      .then(res => res.json())
+      .then(res => { if (res.success) alert('Eligibility criteria saved!'); })
+      .catch(() => alert('Failed to save'));
+  };
+
+  const sessionOptions = useMemo(() => buildSessionOptions(cycles), [cycles]);
+  const filtered = cycles.filter((a) => session === "All" || a.session === session);
+
+  const totalSeats = cycles.reduce((a, c) => a + c.totalSeats, 0);
+  const totalFilled = cycles.reduce((a, c) => a + c.filled, 0);
 
   return (
     <div className="space-y-5">
@@ -100,6 +298,61 @@ export default function AdmissionPage() {
         </div>
       )}
 
+      {editingCycle && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30">
+          <div className="bg-white rounded-2xl shadow-xl p-6 w-full max-w-lg space-y-4">
+            <div className="flex items-center justify-between">
+              <h2 className="text-base font-black text-slate-800">Edit Admission Cycle</h2>
+              <button onClick={() => setEditingCycle(null)} className="h-8 w-8 flex items-center justify-center rounded-lg hover:bg-slate-100">
+                <span className="material-symbols-outlined text-slate-500">close</span>
+              </button>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <div>
+                <label className="text-xs font-bold text-slate-500 mb-1 block">Session</label>
+                <select value={editingCycle.session} onChange={(e) => setEditingCycle({ ...editingCycle, session: e.target.value })} className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-indigo-200">
+                  {buildSessionOptions(cycles).map((s) => <option key={s} value={s}>{s}</option>)}
+                </select>
+              </div>
+              <div>
+                <label className="text-xs font-bold text-slate-500 mb-1 block">Program</label>
+                <input value={editingCycle.program} onChange={(e) => setEditingCycle({ ...editingCycle, program: e.target.value })} className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-indigo-200" />
+              </div>
+              <div>
+                <label className="text-xs font-bold text-slate-500 mb-1 block">Institution</label>
+                <input value={editingCycle.institution} onChange={(e) => setEditingCycle({ ...editingCycle, institution: e.target.value })} className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-indigo-200" />
+              </div>
+              <div>
+                <label className="text-xs font-bold text-slate-500 mb-1 block">Status</label>
+                <select value={editingCycle.status} onChange={(e) => setEditingCycle({ ...editingCycle, status: e.target.value })} className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-indigo-200">
+                  {["Open", "Full", "Closed"].map((s) => <option key={s}>{s}</option>)}
+                </select>
+              </div>
+              <div>
+                <label className="text-xs font-bold text-slate-500 mb-1 block">Open Date</label>
+                <input value={editingCycle.openDate} onChange={(e) => setEditingCycle({ ...editingCycle, openDate: e.target.value })} className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-indigo-200" />
+              </div>
+              <div>
+                <label className="text-xs font-bold text-slate-500 mb-1 block">Close Date</label>
+                <input value={editingCycle.closeDate} onChange={(e) => setEditingCycle({ ...editingCycle, closeDate: e.target.value })} className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-indigo-200" />
+              </div>
+              <div>
+                <label className="text-xs font-bold text-slate-500 mb-1 block">Total Seats</label>
+                <input type="number" value={editingCycle.totalSeats} onChange={(e) => setEditingCycle({ ...editingCycle, totalSeats: parseInt(e.target.value) || 0 })} className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-indigo-200" />
+              </div>
+              <div>
+                <label className="text-xs font-bold text-slate-500 mb-1 block">Filled</label>
+                <input type="number" value={editingCycle.filled} onChange={(e) => setEditingCycle({ ...editingCycle, filled: parseInt(e.target.value) || 0 })} className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-indigo-200" />
+              </div>
+            </div>
+            <div className="flex justify-end gap-3">
+              <button onClick={() => setEditingCycle(null)} className="px-5 py-2.5 rounded-2xl border border-slate-200 text-sm font-semibold text-slate-700 hover:bg-slate-50">Cancel</button>
+              <button onClick={handleEditSave} className="px-5 py-2.5 rounded-2xl bg-indigo-600 text-sm font-semibold text-white hover:bg-indigo-700">Save Changes</button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {editingStep && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30">
           <div className="bg-white rounded-2xl shadow-xl p-6 w-full max-w-lg space-y-4">
@@ -124,7 +377,10 @@ export default function AdmissionPage() {
           <h1 className="text-xl font-black text-slate-800">Admission</h1>
           <p className="text-sm text-slate-400 mt-0.5">Manage admission cycles and process content</p>
         </div>
-        <button className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-xl text-sm font-semibold hover:bg-indigo-700 transition-colors shadow-md shadow-indigo-200">
+        <button
+          onClick={() => { setShowAddForm(true); setFormError(""); }}
+          className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-xl text-sm font-semibold hover:bg-indigo-700 transition-colors shadow-md shadow-indigo-200"
+        >
           <span className="material-symbols-outlined text-lg">add</span>New Cycle
         </button>
       </div>
@@ -132,16 +388,16 @@ export default function AdmissionPage() {
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {[
-          { label: "Open Cycles", value: admissionCycles.filter(a => a.status === "Open").length, icon: "how_to_reg", color: "bg-emerald-500" },
-          { label: "Total Seats", value: admissionCycles.reduce((a, c) => a + c.totalSeats, 0), icon: "chair", color: "bg-indigo-500" },
-          { label: "Seats Filled", value: admissionCycles.reduce((a, c) => a + c.filled, 0), icon: "group", color: "bg-blue-500" },
-          { label: "Fill Rate", value: Math.round(admissionCycles.reduce((a, c) => a + c.filled, 0) / admissionCycles.reduce((a, c) => a + c.totalSeats, 0) * 100) + "%", icon: "percent", color: "bg-purple-500" },
+          { label: "Open Cycles", value: cycles.filter(a => a.status === "Open").length, icon: "how_to_reg", color: "bg-emerald-500" },
+          { label: "Total Seats", value: totalSeats, icon: "chair", color: "bg-indigo-500" },
+          { label: "Seats Filled", value: totalFilled, icon: "group", color: "bg-blue-500" },
+          { label: "Fill Rate", value: totalSeats ? Math.round((totalFilled / totalSeats) * 100) + "%" : "0%", icon: "percent", color: "bg-purple-500" },
         ].map((s) => (
           <div key={s.label} className="bg-white rounded-2xl border border-slate-100 p-4 shadow-sm">
             <div className={`h-9 w-9 rounded-xl ${s.color} flex items-center justify-center text-white mb-3 shadow-md`}>
               <span className="material-symbols-outlined text-lg">{s.icon}</span>
             </div>
-            <div className="text-2xl font-black text-slate-800">{s.value}</div>
+            <div className="text-2xl font-black text-slate-800">{isLoading ? "..." : s.value}</div>
             <div className="text-xs text-slate-400 mt-0.5">{s.label}</div>
           </div>
         ))}
@@ -153,7 +409,6 @@ export default function AdmissionPage() {
           { id: "cycles", label: "Admission Cycles", icon: "calendar_month" },
           { id: "process", label: "Admission Process", icon: "account_tree" },
           { id: "eligibility", label: "Eligibility Criteria", icon: "verified" },
-          { id: "gallery", label: "Gallery", icon: "photo_library" },
         ].map((t) => (
           <button key={t.id} onClick={() => setTab(t.id as typeof tab)}
             className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-all ${tab === t.id ? "bg-indigo-600 text-white shadow-md shadow-indigo-200" : "text-slate-500 hover:bg-slate-50"}`}>
@@ -163,15 +418,88 @@ export default function AdmissionPage() {
       </div>
 
       {tab === "cycles" && (
+        <div className="space-y-4">
+          {showAddForm && (
+            <div className="bg-white rounded-2xl border border-indigo-100 shadow-sm p-5 space-y-4">
+              <div className="flex items-center justify-between">
+                <h2 className="text-base font-black text-slate-800">New Admission Cycle</h2>
+                <button onClick={() => { setShowAddForm(false); setFormError(""); resetForm(); }} className="h-8 w-8 flex items-center justify-center rounded-lg hover:bg-slate-100">
+                  <span className="material-symbols-outlined text-slate-500">close</span>
+                </button>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div>
+                  <label className="text-xs font-bold text-slate-500 mb-1 block">Session</label>
+                  <select value={form.session} onChange={(e) => setForm({ ...form, session: e.target.value })} className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-indigo-200">
+                    {sessionOptions.map((s) => (
+                      <option key={s} value={s}>{s}{s === getDefaultSession() ? " (Current)" : ""}</option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label className="text-xs font-bold text-slate-500 mb-1 block">Program</label>
+                  <input value={form.program} onChange={(e) => setForm({ ...form, program: e.target.value })} placeholder="e.g. B.Tech CSE" className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-indigo-200" />
+                </div>
+                <div>
+                  <label className="text-xs font-bold text-slate-500 mb-1 block">Institution</label>
+                  <input value={form.institution} onChange={(e) => setForm({ ...form, institution: e.target.value })} className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-indigo-200" />
+                </div>
+                <div>
+                  <label className="text-xs font-bold text-slate-500 mb-1 block">Status</label>
+                  <select value={form.status} onChange={(e) => setForm({ ...form, status: e.target.value })} className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-indigo-200">
+                    {["Open", "Full", "Closed"].map((s) => <option key={s}>{s}</option>)}
+                  </select>
+                </div>
+                <div>
+                  <label className="text-xs font-bold text-slate-500 mb-1 block">Open Date</label>
+                  <input value={form.openDate} onChange={(e) => setForm({ ...form, openDate: e.target.value })} placeholder="e.g. Mar 1, 2025" className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-indigo-200" />
+                </div>
+                <div>
+                  <label className="text-xs font-bold text-slate-500 mb-1 block">Close Date</label>
+                  <input value={form.closeDate} onChange={(e) => setForm({ ...form, closeDate: e.target.value })} placeholder="e.g. Jul 31, 2025" className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-indigo-200" />
+                </div>
+                <div>
+                  <label className="text-xs font-bold text-slate-500 mb-1 block">Total Seats</label>
+                  <input type="number" value={form.totalSeats} onChange={(e) => setForm({ ...form, totalSeats: parseInt(e.target.value) || 0 })} className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-indigo-200" />
+                </div>
+                <div>
+                  <label className="text-xs font-bold text-slate-500 mb-1 block">Filled</label>
+                  <input type="number" value={form.filled} onChange={(e) => setForm({ ...form, filled: parseInt(e.target.value) || 0 })} className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-indigo-200" />
+                </div>
+              </div>
+              {formError && <p className="text-sm text-rose-600">{formError}</p>}
+              <div className="flex justify-end gap-3">
+                <button onClick={() => { setShowAddForm(false); setFormError(""); resetForm(); }} className="px-5 py-2.5 rounded-2xl border border-slate-200 text-sm font-semibold text-slate-700 hover:bg-slate-50">Cancel</button>
+                <button onClick={handleSaveNew} className="px-5 py-2.5 rounded-2xl bg-indigo-600 text-sm font-semibold text-white hover:bg-indigo-700">Save Cycle</button>
+              </div>
+            </div>
+          )}
+
         <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
-          <div className="p-5 border-b border-slate-100 flex gap-2">
-            {sessions.map((s) => (
-              <button key={s} onClick={() => setSession(s)}
-                className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${session === s ? "bg-indigo-600 text-white" : "bg-slate-100 text-slate-500 hover:bg-slate-200"}`}>
-                {s}
-              </button>
-            ))}
+          <div className="p-5 border-b border-slate-100">
+            <div className="flex flex-wrap items-center gap-3">
+              <span className="material-symbols-outlined text-slate-400 text-lg">calendar_month</span>
+              <label className="text-xs font-bold text-slate-500">Search Cycle Year</label>
+              <select
+                value={session}
+                onChange={(e) => setSession(e.target.value)}
+                className="px-4 py-2.5 rounded-xl border border-slate-200 text-sm font-semibold text-slate-700 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-300 min-w-[180px]"
+              >
+                <option value="All">All Sessions</option>
+                {sessionOptions.map((s) => (
+                  <option key={s} value={s}>
+                    {s}{s === getDefaultSession() ? " (Current)" : ""}
+                  </option>
+                ))}
+              </select>
+              <span className="text-xs text-slate-400">
+                {filtered.length} cycle{filtered.length !== 1 ? "s" : ""} shown
+              </span>
+            </div>
           </div>
+          {isLoading ? (
+            <p className="p-5 text-slate-500 text-sm">Loading admission cycles...</p>
+          ) : (
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
@@ -200,15 +528,22 @@ export default function AdmissionPage() {
                     </td>
                     <td className="px-5 py-3.5"><span className={`px-2.5 py-1 rounded-full text-[10px] font-bold ${statusStyle[a.status]}`}>{a.status}</span></td>
                     <td className="px-5 py-3.5">
-                      <button className="h-7 w-7 flex items-center justify-center rounded-lg bg-indigo-50 text-indigo-600 hover:bg-indigo-100 transition-colors">
-                        <span className="material-symbols-outlined text-sm">edit</span>
-                      </button>
+                      <div className="flex gap-1.5">
+                        <button onClick={() => setEditingCycle(a)} className="h-7 w-7 flex items-center justify-center rounded-lg bg-indigo-50 text-indigo-600 hover:bg-indigo-100 transition-colors">
+                          <span className="material-symbols-outlined text-sm">edit</span>
+                        </button>
+                        <button onClick={() => handleDelete(a.id)} className="h-7 w-7 flex items-center justify-center rounded-lg bg-rose-50 text-rose-500 hover:bg-rose-100 transition-colors">
+                          <span className="material-symbols-outlined text-sm">delete</span>
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
+          )}
+        </div>
         </div>
       )}
 
@@ -227,7 +562,12 @@ export default function AdmissionPage() {
             ))}
           </div>
 
-          <div className="flex justify-end">
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={saveEligibility}
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-600 text-white rounded-xl text-xs font-semibold hover:bg-emerald-700 transition-colors">
+              <span className="material-symbols-outlined text-sm">save</span>Save Criteria
+            </button>
             <button
               onClick={() => updateEligibility(eligibilityCategory, [...eligibilityData[eligibilityCategory], { title: "New Section", content: ["Add point here"] }])}
               className="flex items-center gap-1.5 px-3 py-1.5 bg-indigo-600 text-white rounded-xl text-xs font-semibold hover:bg-indigo-700 transition-colors">
@@ -274,9 +614,14 @@ export default function AdmissionPage() {
         <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
           <div className="flex items-center justify-between mb-5">
             <h2 className="text-sm font-black text-slate-800">Admission Process Steps</h2>
-            <button className="flex items-center gap-1.5 px-3 py-1.5 bg-indigo-600 text-white rounded-xl text-xs font-semibold hover:bg-indigo-700 transition-colors">
-              <span className="material-symbols-outlined text-sm">add</span>Add Step
-            </button>
+            <div className="flex gap-2">
+              <button onClick={saveSteps} className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-600 text-white rounded-xl text-xs font-semibold hover:bg-emerald-700 transition-colors">
+                <span className="material-symbols-outlined text-sm">save</span>Save Steps
+              </button>
+              <button onClick={() => setSteps(prev => [...prev, { step: prev.length + 1, title: "New Step", desc: "Step description here.", icon: "person_add" }])} className="flex items-center gap-1.5 px-3 py-1.5 bg-indigo-600 text-white rounded-xl text-xs font-semibold hover:bg-indigo-700 transition-colors">
+                <span className="material-symbols-outlined text-sm">add</span>Add Step
+              </button>
+            </div>
           </div>
           <div className="space-y-3">
             {steps.map((s) => (
@@ -301,7 +646,7 @@ export default function AdmissionPage() {
           </div>
         </div>
       )}
-      {tab === "gallery" && <GalleryTab section="Admission" categories={["Campus Tour", "Orientation", "Registration", "General"]} />}
+
     </div>
   );
 }

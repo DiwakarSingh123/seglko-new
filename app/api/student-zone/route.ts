@@ -13,11 +13,11 @@ const initializeDataFile = () => {
   if (!fs.existsSync(dataFilePath)) {
     const defaultData = {
       notices: [
-        { id: 1, title: "Examination Schedule - Even Semester 2024", category: "Exam", date: "May 10, 2024", institution: "SIET", pinned: true },
-        { id: 2, title: "Scholarship Application Form 2024-25", category: "Scholarship", date: "May 8, 2024", institution: "All", pinned: true },
-        { id: 3, title: "Annual Sports Meet Registration Open", category: "Event", date: "May 5, 2024", institution: "All", pinned: false },
-        { id: 4, title: "Library Timing Change Notice", category: "General", date: "May 3, 2024", institution: "SIET", pinned: false },
-        { id: 5, title: "Industrial Visit to NTPC Lucknow", category: "Event", date: "Apr 28, 2024", institution: "SIET", pinned: false },
+        { id: 1, title: "Examination Schedule - Even Semester 2024", category: "Exam", date: "May 10, 2024", institution: "SIET", pinned: true, image: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?q=80&w=1000" },
+        { id: 2, title: "Scholarship Application Form 2024-25", category: "Scholarship", date: "May 8, 2024", institution: "All", pinned: true, image: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=1000" },
+        { id: 3, title: "Annual Sports Meet Registration Open", category: "Event", date: "May 5, 2024", institution: "All", pinned: false, image: "https://images.unsplash.com/photo-1502086223501-7ea6ecd79368?q=80&w=1000" },
+        { id: 4, title: "Library Timing Change Notice", category: "General", date: "May 3, 2024", institution: "SIET", pinned: false, image: "https://images.unsplash.com/photo-1521587760476-6c12a4b040da?q=80&w=1000" },
+        { id: 5, title: "Industrial Visit to NTPC Lucknow", category: "Event", date: "Apr 28, 2024", institution: "SIET", pinned: false, image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=1000" },
       ],
       resources: [
         { name: "Student Handbook 2024-25", type: "PDF", size: "2.4 MB", downloads: 1240 },

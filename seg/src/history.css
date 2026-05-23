@@ -33,7 +33,7 @@
   display: flex;
   align-items: center;
   width: 100%;
-  padding: 80px 5%;
+  padding: 80px 45px;
   flex: 1;
   position: relative;
   z-index: 1;
@@ -44,6 +44,7 @@
   min-width: 0;
   max-width: 560px;
   padding-right: 0;
+  padding-top: 60px;
 }
 
 .history-hero__breadcrumbs {
@@ -101,6 +102,17 @@
   z-index: 0;
 }
 
+.history-hero__visual::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(to right, rgba(255,255,255,1) 0%, rgba(255,255,255,0.6) 40%, rgba(255,255,255,0) 100%);
+  z-index: 1;
+}
+
 .history-hero__image {
   width: 100%;
   height: 100%;
@@ -113,12 +125,14 @@
 .history-stats-bar {
   position: relative;
   z-index: 10;
-  width: 100%;
+  width: calc(100% - 90px);
+  margin: -50px 45px 0;
+  border-radius: 12px;
   background: linear-gradient(90deg, #021a52 0%, #062b80 100%);
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   align-items: center;
-  padding: 50px 5%;
+  padding: 40px 45px;
   gap: 0;
   box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.1);
 }
@@ -403,7 +417,10 @@
   }
 
   .history-hero__visual {
-    width: 100%;
+    position: relative !important;
+    width: 100% !important;
+    height: auto !important;
+    margin-top: 20px !important;
   }
 
   .history-hero__image {
@@ -496,5 +513,135 @@
 
   .timeline-item__title {
     font-size: 20px;
+  }
+}
+
+/* ============================================
+   LARGE/MEDIUM/SMALL MOBILE VIEWS (425px, 375px, 320px)
+   ============================================ */
+@media (max-width: 425px) {
+  .history-hero {
+    padding: 10px 4% 30px !important;
+  }
+
+  .history-hero__inner {
+    padding: 15px 10px 10px !important;
+    gap: 20px !important;
+  }
+
+  .history-hero__content {
+    padding-top: 10px !important;
+  }
+
+  .history-hero__title {
+    font-size: 24px !important;
+    line-height: 1.25 !important;
+  }
+
+  .history-hero__text {
+    font-size: 14px !important;
+    line-height: 1.5 !important;
+  }
+
+  .history-hero__image {
+    height: 200px !important;
+  }
+
+  .history-stats-bar {
+    margin: -30px 10px 0 !important;
+    padding: 16px 12px !important;
+    border-radius: 10px !important;
+    gap: 12px !important;
+  }
+
+  .history-stats-bar__icon {
+    width: 44px !important;
+    height: 44px !important;
+  }
+
+  .history-stats-bar__icon svg {
+    width: 22px !important;
+    height: 22px !important;
+  }
+
+  .history-stats-bar__value {
+    font-size: 22px !important;
+  }
+
+  .history-stats-bar__label {
+    font-size: 11px !important;
+  }
+
+  .history-content {
+    padding: 40px 12px !important;
+  }
+
+  .history-content__title {
+    font-size: 22px !important;
+    line-height: 1.3 !important;
+  }
+
+  .history-content__intro {
+    font-size: 13.5px !important;
+    line-height: 1.6 !important;
+  }
+
+  .timeline-item {
+    padding: 16px !important;
+    border-radius: 12px !important;
+    margin-bottom: 24px !important;
+  }
+
+  .timeline-item__year {
+    font-size: 20px !important;
+  }
+
+  .timeline-item__title {
+    font-size: 18px !important;
+  }
+
+  .timeline-item__text {
+    font-size: 13px !important;
+    line-height: 1.55 !important;
+  }
+}
+
+@media (max-width: 375px) {
+  .history-hero__title {
+    font-size: 22px !important;
+  }
+
+  .history-stats-bar__value {
+    font-size: 20px !important;
+  }
+
+  .history-content__title {
+    font-size: 20px !important;
+  }
+
+  .timeline-item__title {
+    font-size: 17px !important;
+  }
+}
+
+@media (max-width: 320px) {
+  .history-hero__title {
+    font-size: 20px !important;
+  }
+
+  .history-hero__text {
+    font-size: 13px !important;
+  }
+
+  .history-stats-bar__value {
+    font-size: 18px !important;
+  }
+
+  .history-content__title {
+    font-size: 18px !important;
+  }
+
+  .timeline-item__title {
+    font-size: 16px !important;
   }
 }

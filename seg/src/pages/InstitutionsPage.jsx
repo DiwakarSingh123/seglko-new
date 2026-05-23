@@ -34,7 +34,7 @@ export default function InstitutionsPage() {
       .then(data => {
         const mapped = data.map(inst => ({
           ...inst,
-          image: imageMap[inst.image] || imageMap.program1
+          image: inst.customImage && inst.customImage.trim() !== '' ? inst.customImage : (imageMap[inst.image] || imageMap.program1)
         }))
         setInstitutions(mapped)
         setLoading(false)

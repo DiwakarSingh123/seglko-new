@@ -4,6 +4,7 @@ import aboutBg from '../assets/images/about-bg.png';
 import campusBg from '../assets/images/campus-bg.png';
 import facultyBg from '../assets/images/faculty-bg.png';
 import heroBg from '../assets/images/hero-bg.png';
+import logoImg from '../assets/images/logo.png';
 
 const parseDateString = (dateStr) => {
   try {
@@ -25,6 +26,14 @@ const parseDateString = (dateStr) => {
     return { day: '15', month: 'May', year: '2026' };
   }
 };
+
+const createSlug = (value) => (
+  (value || 'event')
+    .toLowerCase()
+    .replace(/&/g, 'and')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+);
 
 
 const ArrowRight = () => (
@@ -103,6 +112,7 @@ const CapIcon = () => (
 const eventCards = [
   {
     title: 'Enhancing Research Practices: SSHSS Hosts FDP on Data Analysis and AI-Driven Insights',
+    slug: 'enhancing-research-practices',
     day: '17',
     month: 'Apr',
     year: '2026',
@@ -111,6 +121,7 @@ const eventCards = [
   },
   {
     title: 'Jashn-e-Riwayat: A Heartfelt Farewell Celebration Honoring Tradition and Legacy',
+    slug: 'jashn-e-riwayat',
     day: '17',
     month: 'Apr',
     year: '2026',
@@ -119,6 +130,7 @@ const eventCards = [
   },
   {
     title: 'INNOVATE BHARAT 2026: National Hackathon for Real-World Innovation',
+    slug: 'innovate-bharat-2026',
     day: '10',
     month: 'Apr',
     year: '2026',
@@ -127,6 +139,7 @@ const eventCards = [
   },
   {
     title: 'Belliatus Cultura 2026 - 9th Northeast Cultural Fest',
+    slug: 'belliatus-cultura-2026',
     day: '18',
     month: 'Mar',
     year: '2026',
@@ -219,6 +232,7 @@ export default function HappeningsShowcase() {
               year: dateObj.year,
               color: colors[idx % 4],
               image: images[idx % 4],
+              slug: n.slug || createSlug(n.title),
             };
           });
 
@@ -327,7 +341,7 @@ export default function HappeningsShowcase() {
           </div>
 
           <Link to="/institutions" className="btn btn--primary happenings-showcase__cta" id="happenings-showcase-btn">
-            View all Institutions
+            View more
             <span className="btn__arrow">
               <ArrowRight />
             </span>
@@ -348,9 +362,9 @@ export default function HappeningsShowcase() {
 
               <div className="happenings-showcase__event-body">
                 <h3 className="happenings-showcase__event-title">{event.title}</h3>
-                <a href="#happenings-showcase" className="happenings-showcase__event-link" aria-label={event.title}>
+                <Link to={`/events/${event.slug || createSlug(event.title)}`} className="happenings-showcase__event-link" aria-label={event.title}>
                   <ArrowRight />
-                </a>
+                </Link>
               </div>
             </article>
           ))}
@@ -368,12 +382,7 @@ export default function HappeningsShowcase() {
               </div>
             </div>
 
-            <a href="#happenings-showcase" className="happenings-showcase__announcements-link">
-              View All Announcements
-              <span className="happenings-showcase__announcements-link-arrow">
-                <ArrowRight />
-              </span>
-            </a>
+            
           </div>
 
           <div className="happenings-showcase__announcement-list">
@@ -413,48 +422,54 @@ export default function HappeningsShowcase() {
             ))}
           </div>
 
-          <article className="happenings-showcase__cta-panel">
-            <span className="happenings-showcase__cta-rail happenings-showcase__cta-rail--left" aria-hidden="true" />
-            <span className="happenings-showcase__cta-rail happenings-showcase__cta-rail--right" aria-hidden="true" />
-            <span className="happenings-showcase__cta-dots happenings-showcase__cta-dots--left" aria-hidden="true" />
-            <span className="happenings-showcase__cta-dots happenings-showcase__cta-dots--right" aria-hidden="true" />
-
-            <div className="happenings-showcase__cta-visual">
-              <div className="happenings-showcase__cta-orbit">
-                <CapIcon />
-              </div>
-            </div>
-
-            <div className="happenings-showcase__cta-content">
-              <h3 className="happenings-showcase__cta-title">
-                <span className="happenings-showcase__cta-title-line">Start Your Journey with</span>
-                <span className="happenings-showcase__cta-title-highlight">Saroj Education Group</span>
-              </h3>
-
-              <div className="happenings-showcase__cta-actions">
-                <a href="#happenings-showcase" className="btn btn--primary happenings-showcase__cta-button">
-                  Apply now
-                  <span className="btn__arrow">
-                    <ArrowRight />
-                  </span>
-                </a>
-
-                <a href="#happenings-showcase" className="btn btn--secondary happenings-showcase__cta-button happenings-showcase__cta-button--light">
-                  Speak with Expert
-                  <span className="btn__arrow">
-                    <ArrowRight />
-                  </span>
-                </a>
-              </div>
-            </div>
-
-            <div className="happenings-showcase__cta-building" aria-hidden="true">
-              <span className="happenings-showcase__building-block happenings-showcase__building-block--left" />
-              <span className="happenings-showcase__building-block happenings-showcase__building-block--center" />
-              <span className="happenings-showcase__building-block happenings-showcase__building-block--right" />
-            </div>
-          </article>
         </section>
+
+        <article className="happenings-showcase__cta-panel">
+          <span className="happenings-showcase__cta-rail happenings-showcase__cta-rail--left" aria-hidden="true" />
+          <span className="happenings-showcase__cta-rail happenings-showcase__cta-rail--right" aria-hidden="true" />
+          <span className="happenings-showcase__cta-dots happenings-showcase__cta-dots--left" aria-hidden="true" />
+          <span className="happenings-showcase__cta-dots happenings-showcase__cta-dots--right" aria-hidden="true" />
+
+          <div className="happenings-showcase__cta-visual">
+            <div className="happenings-showcase__cta-orbit">
+              <CapIcon />
+            </div>
+          </div>
+
+          <div className="happenings-showcase__cta-content">
+            <h3 className="happenings-showcase__cta-title">
+              <span className="happenings-showcase__cta-title-line">Start Your Journey with</span>
+              <span className="happenings-showcase__cta-title-highlight">Saroj Education Group</span>
+            </h3>
+
+            <div className="happenings-showcase__cta-actions">
+              <a href="#happenings-showcase" className="btn btn--primary happenings-showcase__cta-button">
+                Apply now
+                <span className="btn__arrow">
+                  <ArrowRight />
+                </span>
+              </a>
+
+              <a href="#happenings-showcase" className="btn btn--secondary happenings-showcase__cta-button happenings-showcase__cta-button--light">
+                Speak with Expert
+                <span className="btn__arrow">
+                  <ArrowRight />
+                </span>
+              </a>
+            </div>
+          </div>
+
+          <div className="happenings-showcase__cta-building" aria-hidden="true">
+            <div className="happenings-showcase__admission-badge">
+              <span>Admission</span>
+              <span>open</span>
+              <img src={logoImg} alt="" />
+            </div>
+            <span className="happenings-showcase__building-block happenings-showcase__building-block--left" />
+            <span className="happenings-showcase__building-block happenings-showcase__building-block--center" />
+            <span className="happenings-showcase__building-block happenings-showcase__building-block--right" />
+          </div>
+        </article>
       </div>
     </section>
   );

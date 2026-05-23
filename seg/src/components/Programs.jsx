@@ -6,33 +6,25 @@ import program4 from '../assets/images/program4.png';
 const topRow = [
   { image: program1, title: 'Engineering & Technology' },
   { image: program2, title: 'Medical & Health Sciences' },
-  { image: program1, title: 'Engineering & Technology' },
-  { image: program2, title: 'Medical & Health Sciences' },
 ];
 
 const bottomRow = [
   { image: program3, title: 'Business & Management' },
   { image: program4, title: 'Arts & Humanities' },
-  { image: program3, title: 'Business & Management' },
-  { image: program4, title: 'Arts & Humanities' },
 ];
 
-const cardStyle = {
-  flex: '0 0 calc(50vw - 52px)',
-  height: '295px',
-  borderRadius: '5px',
-  overflow: 'hidden',
-  boxShadow: '0 0 11px rgba(0,0,0,0.25)',
-  position: 'relative',
-};
-
-const overlayStyle = {
-  position: 'absolute',
-  bottom: 0, left: 0, right: 0,
-  padding: '20px',
-  background: 'linear-gradient(transparent, rgba(0,0,0,0.6))',
-  color: 'white',
-};
+const renderProgramCards = (items, groupIndex) => (
+  <div className="programs__marquee-group" key={groupIndex} aria-hidden={groupIndex > 0}>
+    {items.map((p, i) => (
+      <div
+        key={`${groupIndex}-${p.title}-${i}`}
+        className={`programs__card programs__card--marquee ${i % 2 === 0 ? 'programs__card--wide' : 'programs__card--small'}`}
+      >
+        <img src={p.image} alt={groupIndex === 0 ? p.title : ''} />
+      </div>
+    ))}
+  </div>
+);
 
 export default function Programs() {
   return (
@@ -47,30 +39,16 @@ export default function Programs() {
           100% { transform: translateX(0); }
         }
       `}</style>
-      <div style={{ overflow: 'hidden', padding: '0 0', display: 'flex', flexDirection: 'column', gap: '15px' }}>
+      <div className="programs__marquee">
 
         {/* Top row — slides RIGHT */}
-        <div style={{ display: 'flex', gap: '15px', animation: 'slideRight 18s linear infinite', width: 'max-content' }}>
-          {topRow.map((p, i) => (
-            <div key={i} style={cardStyle}>
-              <img src={p.image} alt={p.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-              <div style={overlayStyle}>
-                <span style={{ fontSize: '18px', fontWeight: 600 }}>{p.title}</span>
-              </div>
-            </div>
-          ))}
+        <div className="programs__marquee-row programs__marquee-row--right">
+          {[0, 1].map((groupIndex) => renderProgramCards(topRow, groupIndex))}
         </div>
 
         {/* Bottom row — slides LEFT */}
-        <div style={{ display: 'flex', gap: '15px', animation: 'slideLeft 18s linear infinite', width: 'max-content' }}>
-          {bottomRow.map((p, i) => (
-            <div key={i} style={cardStyle}>
-              <img src={p.image} alt={p.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-              <div style={overlayStyle}>
-                <span style={{ fontSize: '18px', fontWeight: 600 }}>{p.title}</span>
-              </div>
-            </div>
-          ))}
+        <div className="programs__marquee-row programs__marquee-row--left">
+          {[0, 1].map((groupIndex) => renderProgramCards(bottomRow, groupIndex))}
         </div>
 
       </div>

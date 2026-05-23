@@ -13,7 +13,7 @@ module.exports = {
         seg: "#151869",
       },
       fontFamily: {
-        sans: ["Inter", "sans-serif"],
+        sans: ["Poppins", "sans-serif"],
       },
     },
   },

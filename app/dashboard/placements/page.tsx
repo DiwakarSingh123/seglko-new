@@ -1,11 +1,15 @@
 "use client";
-import { useState, useEffect, Fragment } from "react";
-import GalleryTab from "../components/GalleryTab";
+import { useState, useEffect, useMemo, Fragment } from "react";
+import { computePlacementStats, type PlacementRecord } from "@/lib/placement-stats";
 
-type PlacementRecord = {
-  id: number; student: string; program: string; company: string;
-  pkg: string; role: string; year: string; institution: string; color: string;
-};
+const CURRENT_YEAR = new Date().getFullYear();
+const YEARS_LOOKBACK = 10;
+
+function buildYearOptions(records: PlacementRecord[]): string[] {
+  const fromRecords = records.map((r) => r.year).filter((y) => y && y !== "All");
+  const recent = Array.from({ length: YEARS_LOOKBACK + 1 }, (_, i) => String(CURRENT_YEAR - i));
+  return Array.from(new Set([...recent, ...fromRecords])).sort((a, b) => Number(b) - Number(a));
+}
 
 const recruiters = [
   { name: "TCS", logo: "T", color: "bg-blue-600", count: 45 },
@@ -17,18 +21,34 @@ const recruiters = [
 ];
 
 export default function PlacementsPage() {
-  const [tab, setTab] = useState<"records" | "recruiters" | "stats" | "gallery">("records");
-  const [session, setSession] = useState("All");
+  const [tab, setTab] = useState<"records" | "recruiters" | "stats">("records");
+  const [search, setSearch] = useState("");
   const [records, setRecords] = useState<PlacementRecord[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [editingRecord, setEditingRecord] = useState<PlacementRecord | null>(null);
   const [showAddRecord, setShowAddRecord] = useState(false);
   const [expandedRecordId, setExpandedRecordId] = useState<number | null>(null);
-  const [newRecord, setNewRecord] = useState({ student: "", program: "", company: "", role: "", pkg: "" });
+  const [newRecord, setNewRecord] = useState({
+    student: "", program: "", company: "", role: "", pkg: "", customImage: "", year: String(CURRENT_YEAR),
+  });
   const [formError, setFormError] = useState("");
 
-  const sessions = ["All", "2024", "2023"];
-  const filtered = records.filter(p => session === "All" || p.year === session);
+  const yearOptions = useMemo(() => buildYearOptions(records), [records]);
+  const filtered = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    if (!q) return records;
+    return records.filter(
+      (p) =>
+        p.student.toLowerCase().includes(q) ||
+        p.program.toLowerCase().includes(q) ||
+        p.company.toLowerCase().includes(q) ||
+        p.role.toLowerCase().includes(q) ||
+        p.pkg.toLowerCase().includes(q) ||
+        p.year.includes(q)
+    );
+  }, [records, search]);
+
+  const placementStats = useMemo(() => computePlacementStats(records), [records]);
 
   useEffect(() => { fetchData(); }, []);
 
@@ -54,18 +74,22 @@ export default function PlacementsPage() {
   };
 
   const handleSaveRecord = async () => {
-    if (session === "All") { setFormError("Please choose a specific session before saving."); return; }
     if (!newRecord.student || !newRecord.program || !newRecord.company || !newRecord.role || !newRecord.pkg) {
       setFormError("Please fill in all required fields."); return;
     }
-    const payload = { ...newRecord, year: session, institution: "SIET", color: "from-indigo-400 to-indigo-600" };
+    const payload = {
+      ...newRecord,
+      year: newRecord.year || String(CURRENT_YEAR),
+      institution: "SIET",
+      color: "from-indigo-400 to-indigo-600",
+    };
     const res = await fetch("/api/placements", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
     if (res.ok) {
       const saved = await res.json();
-      setRecords(prev => [...prev, saved]);
+      setRecords((prev) => [...prev, saved]);
     }
     setFormError(""); setShowAddRecord(false);
-    setNewRecord({ student: "", program: "", company: "", role: "", pkg: "" });
+    setNewRecord({ student: "", program: "", company: "", role: "", pkg: "", customImage: "", year: String(CURRENT_YEAR) });
   };
 
   return (
@@ -80,11 +104,27 @@ export default function PlacementsPage() {
               </button>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              {(["student", "program", "company", "role", "pkg", "year"] as const).map(field => (
-                <input key={field} value={editingRecord[field]} onChange={e => setEditingRecord({ ...editingRecord, [field]: e.target.value })}
+              {(["student", "program", "company", "role", "pkg"] as const).map((field) => (
+                <input
+                  key={field}
+                  value={editingRecord[field]}
+                  onChange={(e) => setEditingRecord({ ...editingRecord, [field]: e.target.value })}
                   placeholder={field.charAt(0).toUpperCase() + field.slice(1)}
-                  className="w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-indigo-200" />
+                  className="w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-indigo-200"
+                />
               ))}
+              <div>
+                <label className="text-xs font-bold text-slate-500 mb-1.5 block">Placement Year</label>
+                <select
+                  value={editingRecord.year}
+                  onChange={(e) => setEditingRecord({ ...editingRecord, year: e.target.value })}
+                  className="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300"
+                >
+                  {buildYearOptions(records).map((y) => (
+                    <option key={y} value={y}>{y}</option>
+                  ))}
+                </select>
+              </div>
             </div>
             <div className="flex justify-end gap-3">
               <button onClick={() => setEditingRecord(null)} className="px-5 py-2.5 rounded-2xl border border-slate-200 text-sm font-semibold text-slate-700 hover:bg-slate-50">Cancel</button>
@@ -112,15 +152,49 @@ export default function PlacementsPage() {
               <span className="material-symbols-outlined text-slate-500">close</span>
             </button>
           </div>
-          <div className="flex flex-wrap gap-2">
-            {sessions.map(s => <button key={s} onClick={() => setSession(s)}
-              className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${session === s ? "bg-indigo-600 text-white" : "bg-slate-100 text-slate-500"}`}>{s}</button>)}
+          <div>
+            <label className="text-xs font-bold text-slate-600 mb-1.5 block">Placement Year</label>
+            <select
+              value={newRecord.year}
+              onChange={(e) => setNewRecord({ ...newRecord, year: e.target.value })}
+              className="w-full max-w-xs px-4 py-2.5 rounded-xl border border-slate-200 text-sm font-semibold text-slate-700 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-300"
+            >
+              {yearOptions.map((y) => (
+                <option key={y} value={y}>
+                  {y}{y === String(CURRENT_YEAR) ? " (Current)" : ""}
+                </option>
+              ))}
+            </select>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            {[["student", "Student Name"], ["program", "Program"], ["company", "Company"], ["role", "Role"], ["pkg", "Package (e.g. ₹6.5 LPA)"]].map(([key, label]) => (
+            {([["student", "Student Name"], ["program", "Program"], ["company", "Company"], ["role", "Role"], ["pkg", "Package (e.g. ₹6.5 LPA)"]] as [string, string][]).map(([key, label]) => (
               <input key={key} value={(newRecord as any)[key]} onChange={e => setNewRecord({ ...newRecord, [key]: e.target.value })}
                 placeholder={label} className="w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-indigo-200" />
             ))}
+          </div>
+          <div>
+            <label className="text-xs font-bold text-slate-600 mb-1.5 block">Student Image</label>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={e => {
+                const file = e.target.files?.[0];
+                if (file) {
+                  const reader = new FileReader();
+                  reader.onloadend = () => setNewRecord(prev => ({ ...prev, customImage: reader.result as string }));
+                  reader.readAsDataURL(file);
+                }
+              }}
+              className="block w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
+            />
+            {newRecord.customImage && (
+              <div className="relative mt-2">
+                <img src={newRecord.customImage} alt="Preview" className="object-cover w-full h-28 border rounded-xl border-slate-200" />
+                <button onClick={() => setNewRecord(prev => ({ ...prev, customImage: "" }))} className="absolute p-1 text-white bg-red-500 rounded-full top-1 right-1 hover:bg-red-600">
+                  <span className="text-sm material-symbols-outlined">close</span>
+                </button>
+              </div>
+            )}
           </div>
           {formError && <p className="text-sm text-rose-600">{formError}</p>}
           <div className="flex justify-end gap-3">
@@ -132,10 +206,10 @@ export default function PlacementsPage() {
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {[
-          { label: "Students Placed", value: records.length, icon: "work", color: "bg-indigo-500" },
-          { label: "Avg Package", value: "₹6.8 LPA", icon: "payments", color: "bg-emerald-500" },
-          { label: "Highest Package", value: "₹24 LPA", icon: "trending_up", color: "bg-amber-500" },
-          { label: "Recruiters", value: recruiters.length + "+", icon: "business", color: "bg-purple-500" },
+          { label: "Students Placed", value: placementStats.totalPlaced, icon: "work", color: "bg-indigo-500" },
+          { label: "Avg Package", value: placementStats.avgPackage, icon: "payments", color: "bg-emerald-500" },
+          { label: "Highest Package", value: placementStats.highestPackage, icon: "trending_up", color: "bg-amber-500" },
+          { label: "Recruiters", value: placementStats.recruiters, icon: "business", color: "bg-purple-500" },
         ].map(s => (
           <div key={s.label} className="bg-white rounded-2xl border border-slate-100 p-4 shadow-sm">
             <div className={`h-9 w-9 rounded-xl ${s.color} flex items-center justify-center text-white mb-3 shadow-md`}>
@@ -148,7 +222,7 @@ export default function PlacementsPage() {
       </div>
 
       <div className="flex gap-2 bg-white border border-slate-100 rounded-2xl p-1.5 shadow-sm w-fit">
-        {[{ id: "records", label: "Records", icon: "work_history" }, { id: "recruiters", label: "Recruiters", icon: "business" }, { id: "stats", label: "Statistics", icon: "bar_chart" }, { id: "gallery", label: "Gallery", icon: "photo_library" }].map(t => (
+        {[{ id: "records", label: "Records", icon: "work_history" }, { id: "recruiters", label: "Recruiters", icon: "business" }, { id: "stats", label: "Statistics", icon: "bar_chart" }].map(t => (
           <button key={t.id} onClick={() => setTab(t.id as typeof tab)}
             className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-all ${tab === t.id ? "bg-indigo-600 text-white shadow-md shadow-indigo-200" : "text-slate-500 hover:bg-slate-50"}`}>
             <span className="material-symbols-outlined text-lg">{t.icon}</span>{t.label}
@@ -159,9 +233,15 @@ export default function PlacementsPage() {
       {tab === "records" && (
         <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
           <div className="p-5 border-b border-slate-100">
-            <div className="flex flex-wrap gap-2">
-              {sessions.map(s => <button key={s} onClick={() => setSession(s)}
-                className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${session === s ? "bg-indigo-600 text-white" : "bg-slate-100 text-slate-500"}`}>{s}</button>)}
+            <div className="relative max-w-md">
+              <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</span>
+              <input
+                type="text"
+                placeholder="Search all years..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2 pl-10 pr-4 text-sm outline-none focus:ring-2 focus:ring-indigo-200 transition-all"
+              />
             </div>
           </div>
           {isLoading ? <p className="p-5 text-slate-500">Loading placement records...</p> : (
@@ -262,7 +342,6 @@ export default function PlacementsPage() {
         </div>
       )}
 
-      {tab === "gallery" && <GalleryTab section="Placements" categories={["Placement Drive", "Award Ceremony", "Company Visit", "General"]} />}
     </div>
   );
 }

@@ -4,6 +4,7 @@ import program1 from '../assets/images/program1.png';
 import program2 from '../assets/images/program2.png';
 import program3 from '../assets/images/program3.png';
 import program4 from '../assets/images/program4.png';
+import programsHero from '../assets/images/programs-page image.jpeg';
 
 const ArrowRight = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
@@ -23,7 +24,7 @@ export default function ProgramsPage() {
           ...p,
           title: p.name,
           subtitle: p.subtitle || `(${p.level})`,
-          image: imageMap[p.image] || program1,
+          image: p.customImage && p.customImage.trim() !== '' ? p.customImage : (imageMap[p.image] || program1),
           color: p.color || '#1f63db',
           duration: p.duration,
           seats: `${p.seats} Seats`
@@ -40,12 +41,14 @@ export default function ProgramsPage() {
   return (
     <div style={{ background: '#f5f8fe', minHeight: '100vh', paddingBottom: '60px' }}>
 
-      <div style={{ background: 'linear-gradient(135deg, #0a275d 0%, #1041c6 100%)', padding: '60px 45px 50px' }}>
-        <p style={{ color: '#ffbe23', fontWeight: 700, fontSize: '13px', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '14px' }}>Our Programs</p>
-        <h1 style={{ fontSize: '2.8rem', fontWeight: 700, color: '#fff', marginBottom: '14px', lineHeight: 1.2 }}>
+      <div style={{ position: 'relative', overflow: 'hidden', padding: '60px 45px 50px', minHeight: '280px' }}>
+        <img src={programsHero} alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center', zIndex: 0, display: 'block' }} />
+        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg, rgba(10,39,93,0.92) 0%, rgba(16,65,198,0.85) 100%)', zIndex: 1 }} />
+        <p style={{ position: 'relative', zIndex: 2, color: '#ffbe23', fontWeight: 700, fontSize: '13px', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '14px' }}>Our Programs</p>
+        <h1 style={{ position: 'relative', zIndex: 2, fontSize: '2.8rem', fontWeight: 700, color: '#fff', marginBottom: '14px', lineHeight: 1.2 }}>
           Programs Designed for a <span style={{ color: '#ffbe23' }}>Successful Future</span>
         </h1>
-        <p style={{ fontSize: '1.05rem', color: 'rgba(255,255,255,0.82)', maxWidth: '520px', lineHeight: 1.7 }}>
+        <p style={{ position: 'relative', zIndex: 2, fontSize: '1.05rem', color: 'rgba(255,255,255,0.82)', maxWidth: '520px', lineHeight: 1.7 }}>
           Discover a wide range of programs designed to build your skills, expand your knowledge, and shape your future.
         </p>
       </div>

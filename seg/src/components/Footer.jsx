@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom';
+
 const PhoneIcon = () => (
   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path d="M7.5 4.5H5.8C4.8 4.5 4 5.3 4 6.3C4 13.6 10 19.6 17.3 19.6C18.3 19.6 19.1 18.8 19.1 17.8V16.1L15.9 14.7L14.1 16.5C11.3 15.2 8.9 12.8 7.6 10L9.4 8.2L8 5L7.5 4.5Z" fill="currentColor" />
@@ -75,31 +77,64 @@ const YoutubeIcon = () => (
 const footerGroups = [
   {
     title: 'PROGRAMS',
-    links: ['UG', 'PG', 'Diploma', 'Ph.D.', 'Online Programs', 'All Programs'],
+    links: [
+      { label: 'UG', to: '/all-programs' },
+      { label: 'PG', to: '/all-programs' },
+      { label: 'Diploma', to: '/programs/diploma' },
+      { label: 'Ph.D.', to: '/all-programs' },
+      { label: 'Online Programs', to: '/all-programs' },
+      { label: 'All Programs', to: '/all-programs' },
+    ],
   },
   {
     title: 'ADMISSIONS',
-    links: ['Apply Now', 'Admission Process', 'Fee Structure', 'Scholarships', 'Important Dates', 'FAQs'],
+    links: [
+      { label: 'Apply Now', to: '/admission-process' },
+      { label: 'Admission Process', to: '/admission-process' },
+      { label: 'Fee Structure', to: '/fee-structure' },
+      
+    ],
   },
   {
     title: 'CAMPUS LIFE',
-    links: ['Life @ Saroj', 'Clubs & Committees', 'Events', 'News & Media', 'Student Support'],
+    links: [
+      { label: 'Life @ Saroj', to: '/explore-more' },
+    
+      { label: 'Events', to: '/explore-more' },
+      { label: 'News & Media', to: '/explore-more' },
+      { label: 'Student Support', to: '/student-notice' },
+    ],
   },
   {
     title: 'ABOUT US',
-    links: ['About SEG', 'Leadership', 'Our Institutions', 'Accreditations', 'Careers', 'Contact Us'],
+    links: [
+      { label: 'About SEG', to: '/history-of-seg' },
+      { label: 'Leadership', to: '/chairmans-message' },
+      { label: 'Our Institutions', to: '/institutions' },
+  
+      { label: 'Careers', to: '/careers' },
+      { label: 'Contact Us', to: '/contact-us' },
+    ],
   },
   {
     title: 'QUICK LINKS',
-    links: ['NIRF', 'Mandatory Disclosure', 'Anti Ragging & Grievance Redressal', 'Internal Quality Assurance Cell', 'Placement & Training', 'RTI', 'Downloads'],
+    links: [
+      
+      { label: 'Saroj Institute of Technology & Management', to: 'https://sitmlko.org/', external: true },
+      { label: 'Shivdan Singh Institute of Technology & Management', to: 'https://ssitm.in/', external: true },
+      { label: 'Saroj College of Pharmacy', to: 'https://seglko.org/scp/', external: true },
+      { label: 'Saroj College of Engineering and Polytechnic', to: 'https://seglko.org/scep/', external: true },
+      { label: 'Lucknow Institute of Pharmacy', to: 'https://seglko.org/lip/', external: true },
+      { label: 'Saroj College of Law', to: 'https://seglko.org/scl/', external: true },
+    ],
   },
 ];
 
 const socialLinks = [
-  { label: 'Facebook', icon: <FacebookIcon />, tone: 'facebook' },
-  { label: 'Instagram', icon: <InstagramIcon />, tone: 'instagram' },
-  { label: 'LinkedIn', icon: <LinkedinIcon />, tone: 'linkedin' },
-  { label: 'YouTube', icon: <YoutubeIcon />, tone: 'youtube' },
+  { label: 'Facebook', icon: <FacebookIcon />, tone: 'facebook', href: 'https://www.facebook.com/SEGofficial' },
+  { label: 'Instagram', icon: <InstagramIcon />, tone: 'instagram', href: 'https://www.instagram.com/segindia/' },
+  { label: 'LinkedIn', icon: <LinkedinIcon />, tone: 'linkedin', href: 'https://www.linkedin.com/company/saroj-educational-group/' },
+  { label: 'YouTube', icon: <YoutubeIcon />, tone: 'youtube', href: 'https://www.youtube.com/@sarojeducationalgroup1018' },
 ];
 
 export default function Footer() {
@@ -115,7 +150,8 @@ export default function Footer() {
                 </span>
                 <div>
                   <p className="footer__contact-label">Call Us</p>
-                  <a href="tel:+911234567890" className="footer__contact-value">+91 123 456 7890</a>
+                  <a href="tel:+911234567890" className="footer__contact-value">09555699988</a>
+                   <a href="tel:+911234567890" className="footer__contact-value">09810054878</a>
                 </div>
               </div>
 
@@ -125,7 +161,7 @@ export default function Footer() {
                 </span>
                 <div>
                   <p className="footer__contact-label">Email Us</p>
-                  <a href="mailto:info@sarojeducation.com" className="footer__contact-value">info@sarojeducation.com</a>
+                  <a href="mailto:info@sarojeducation.com" className="footer__contact-value">admission.cell@seglko.org</a>
                 </div>
               </div>
 
@@ -136,11 +172,9 @@ export default function Footer() {
                 <div>
                   <p className="footer__contact-label">Saroj Education Group</p>
                   <p className="footer__contact-copy">
-                    Campus: NH-24, Delhi Hapur Road,
+                   L-5, First Floor, Lajpat Nagar - II -  110024
                     <br />
-                    Pilkhwa, Hapur - 245304
-                    <br />
-                    Uttar Pradesh, India
+                    Delhi, India,
                   </p>
                 </div>
               </div>
@@ -151,7 +185,9 @@ export default function Footer() {
               <div className="footer__social-list">
                 {socialLinks.map((item) => (
                   <a
-                    href="#footer"
+                    href={item.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className={`footer__social-link footer__social-link--${item.tone}`}
                     key={item.label}
                     aria-label={item.label}
@@ -170,12 +206,12 @@ export default function Footer() {
                 <span className="footer__col-accent" />
                 <div className="footer__links">
                   {group.links.map((link) => (
-                    <a href="#footer" className="footer__link" key={link}>
+                    <Link to={link.to} className="footer__link" key={link.label} onClick={() => window.scrollTo(0,0)}>
                       <span className="footer__link-icon">
                         <ChevronIcon />
                       </span>
-                      <span>{link}</span>
-                    </a>
+                      <span>{link.label}</span>
+                    </Link>
                   ))}
                 </div>
               </div>
@@ -217,8 +253,8 @@ export default function Footer() {
       <div className="footer__bottom">
         <p>&copy; {new Date().getFullYear()} Saroj Education Group. All Rights Reserved.</p>
         <div className="footer__bottom-links">
-          <a href="#footer">Privacy Policy</a>
-          <a href="#footer">Terms &amp; Conditions</a>
+          <Link to="/privacy-policy">Privacy Policy</Link>
+          <Link to="/terms-and-conditions">Terms &amp; Conditions</Link>
         </div>
       </div>
     </footer>

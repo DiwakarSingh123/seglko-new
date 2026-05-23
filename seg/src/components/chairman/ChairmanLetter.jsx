@@ -37,15 +37,7 @@ export default function ChairmanLetter() {
             <img src={chairmanData.image || facultyBgImg} alt={chairmanData.author} className="chairman-letter__photo" />
           </div>
 
-          <div className="chairman-letter__nameplate">
-            <span className="chairman-letter__nameplate-icon">
-              <UserIcon />
-            </span>
-            <div className="chairman-letter__nameplate-copy">
-              <strong>{chairmanData.author}</strong>
-              <span>{chairmanData.designation}</span>
-            </div>
-          </div>
+      
         </article>
 
         <article className="chairman-letter__content">

@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import aboutBgImg from '../../assets/images/about-bg.png';
 import campusBgImg from '../../assets/images/campus-bg.png';
 
+const defaultImages = [aboutBgImg, campusBgImg];
+
 const milestoneIcons = [
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
@@ -86,7 +88,7 @@ export default function HistoryTimeline() {
                 </div>
               </div>
               <div className="timeline-item__visual">
-                <img src={index % 2 === 0 ? aboutBgImg : campusBgImg} alt={item.title} className="timeline-item__image" />
+                <img src={item.image && item.image.trim() !== '' ? item.image : defaultImages[index % defaultImages.length]} alt={item.title} className="timeline-item__image" />
               </div>
             </div>
           </div>

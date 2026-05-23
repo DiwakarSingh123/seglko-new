@@ -186,7 +186,6 @@ export default function FacultyShowcase() {
             <p className="faculty-showcase__subtitle">{sub}</p>
           </div>
           <div className="faculty-showcase__actions">
-            <span className="faculty-showcase__dots" aria-hidden="true" />
             <button className="btn btn--primary faculty-showcase__cta" onClick={() => navigate('/faculty')}>
               <span className="faculty-showcase__cta-icon"><PeopleIcon /></span>
               View all Faculties
@@ -222,11 +221,6 @@ export default function FacultyShowcase() {
                       <span className="faculty-showcase__info-icon"><BuildingIcon /></span>
                       <div><span>{faculty.school}</span></div>
                     </div>
-                  </div>
-                  <div className="faculty-showcase__card-footer">
-                    <a href="#faculty-showcase" className="faculty-showcase__card-arrow" aria-label={`View ${faculty.name}`}>
-                      <ArrowRight />
-                    </a>
                   </div>
                 </article>
               ))}
@@ -283,9 +277,6 @@ export default function FacultyShowcase() {
                   </div>
                   <div className="faculty-showcase__card-footer" style={{ justifyContent: 'space-between', alignItems: 'center' }}>
                     <span style={{ fontWeight: 700, fontSize: '16px', color: toneAccent[story.tone] }}>{story.package}</span>
-                    <a href="#faculty-showcase" className="faculty-showcase__card-arrow" aria-label={`View ${story.name}`}>
-                      <ArrowRight />
-                    </a>
                   </div>
                 </article>
               ))}

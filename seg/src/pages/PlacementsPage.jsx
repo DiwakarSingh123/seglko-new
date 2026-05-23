@@ -1,18 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import '../PlacementsPage.css';
-import logoImg from '../assets/images/logo.png';
-
 import program1 from '../assets/images/program1.png';
 import program2 from '../assets/images/program2.png';
 import program3 from '../assets/images/program3.png';
 import heroBg from '../assets/images/placementsimg.jpeg';
+import { computePlacementStats, formatPlacedCount } from '../utils/placementStats';
 
 const imagePool = [program1, program2, program3];
 
 const PlacementsPage = () => {
   const [studentsData, setStudentsData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const CARDS_PER_PAGE = 8;
 
   useEffect(() => {
     fetch('/api/placements')
@@ -25,7 +26,7 @@ const PlacementsPage = () => {
           date: p.year,
           course: p.program,
           package: p.pkg,
-          image: imagePool[i % imagePool.length],
+          image: p.customImage && p.customImage.trim() !== '' ? p.customImage : imagePool[i % imagePool.length],
           logoText: p.company.substring(0, 6).toUpperCase(),
         }));
         setStudentsData(mapped);
@@ -33,6 +34,17 @@ const PlacementsPage = () => {
       })
       .catch(err => { console.error(err); setLoading(false); });
   }, []);
+
+  const stats = useMemo(() => computePlacementStats(
+    studentsData.map((s) => ({
+      student: s.name,
+      company: s.company,
+      pkg: s.package,
+      program: s.course,
+      role: s.role,
+      year: s.date,
+    }))
+  ), [studentsData]);
 
   return (
     <div className="placements-page">
@@ -62,7 +74,7 @@ const PlacementsPage = () => {
                 </svg>
               </div>
               <div className="placements-hero__stat-info">
-                <strong>2000+</strong>
+                <strong>{loading ? '...' : formatPlacedCount(stats.totalPlaced)}</strong>
                 <span>Students Placed</span>
               </div>
             </div>
@@ -75,7 +87,7 @@ const PlacementsPage = () => {
                 </svg>
               </div>
               <div className="placements-hero__stat-info">
-                <strong>150+</strong>
+                <strong>{loading ? '...' : stats.recruiters}</strong>
                 <span>Top Recruiters</span>
               </div>
             </div>
@@ -99,7 +111,7 @@ const PlacementsPage = () => {
             </div>
           ) : (
             <div className="placements-grid">
-              {studentsData.map((student, index) => (
+              {studentsData.slice((page - 1) * CARDS_PER_PAGE, page * CARDS_PER_PAGE).map((student, index) => (
               <div className="placement-card" key={index}>
                 <div className="placement-card__image-container">
                   <img src={student.image} alt={student.name} className="placement-card__image" />
@@ -142,7 +154,7 @@ const PlacementsPage = () => {
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
               </div>
               <div className="placements-stat-item__content">
-                <h4>₹ 6 LPA</h4>
+                <h4>{loading ? '...' : stats.highestPackage}</h4>
                 <p>Highest Package</p>
               </div>
             </div>
@@ -151,7 +163,7 @@ const PlacementsPage = () => {
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg>
               </div>
               <div className="placements-stat-item__content">
-                <h4>₹ 3.5 LPA</h4>
+                <h4>{loading ? '...' : stats.avgPackage}</h4>
                 <p>Average Package</p>
               </div>
             </div>
@@ -160,7 +172,7 @@ const PlacementsPage = () => {
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect><rect x="9" y="9" width="6" height="6"></rect><line x1="9" y1="1" x2="9" y2="4"></line><line x1="15" y1="1" x2="15" y2="4"></line><line x1="9" y1="20" x2="9" y2="23"></line><line x1="15" y1="20" x2="15" y2="23"></line><line x1="20" y1="9" x2="23" y2="9"></line><line x1="20" y1="14" x2="23" y2="14"></line><line x1="1" y1="9" x2="4" y2="9"></line><line x1="1" y1="14" x2="4" y2="14"></line></svg>
               </div>
               <div className="placements-stat-item__content">
-                <h4>150+</h4>
+                <h4>{loading ? '...' : stats.recruiters}</h4>
                 <p>Top Recruiters</p>
               </div>
             </div>
@@ -169,19 +181,27 @@ const PlacementsPage = () => {
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
               </div>
               <div className="placements-stat-item__content">
-                <h4>98%</h4>
-                <p>Placement Rate</p>
+                <h4>{loading ? '...' : formatPlacedCount(stats.totalPlaced)}</h4>
+                <p>Students Placed</p>
               </div>
             </div>
           </div>
 
           {/* PAGINATION */}
           <div className="placements-pagination">
-            <button className="placements-pagination__btn placements-pagination__btn--prev">
+            <button
+              className="placements-pagination__btn placements-pagination__btn--prev"
+              onClick={() => setPage(p => Math.max(1, p - 1))}
+              disabled={page === 1}
+            >
               &lt; Prev
             </button>
-            <span className="placements-pagination__text">1 / 3</span>
-            <button className="placements-pagination__btn placements-pagination__btn--next">
+            <span className="placements-pagination__text">{page} / {Math.ceil(studentsData.length / CARDS_PER_PAGE) || 1}</span>
+            <button
+              className="placements-pagination__btn placements-pagination__btn--next"
+              onClick={() => setPage(p => Math.min(Math.ceil(studentsData.length / CARDS_PER_PAGE), p + 1))}
+              disabled={page === Math.ceil(studentsData.length / CARDS_PER_PAGE)}
+            >
               Next &gt;
             </button>
           </div>

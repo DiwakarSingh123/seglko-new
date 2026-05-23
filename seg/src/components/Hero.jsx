@@ -1,4 +1,5 @@
 import heroBg from '../assets/images/hero-bg.png';
+import { Link } from 'react-router-dom';
 
 const ArrowRight = ({ color = 'currentColor' }) => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -23,18 +24,18 @@ export default function Hero() {
           At Saroj Educational Group, we nurture talent, encourage innovation, and empower students to achieve excellence in every sphere.
         </p>
         <div className="hero__buttons animate-fade-in" style={{ animationDelay: '0.4s' }}>
-          <button className="btn btn--primary" id="explore-programs-btn">
+          <Link to="/all-programs" className="btn btn--primary" id="explore-programs-btn">
             Explore Programs
             <span className="btn__arrow">
               <ArrowRight color="#fff" />
             </span>
-          </button>
-          <button className="btn btn--secondary" id="campus-tour-btn">
+          </Link>
+          <Link to="/explore-more" className="btn btn--secondary" id="campus-tour-btn">
             Take Campus Tour
             <span className="btn__arrow">
               <ArrowRight color="#1041C6" />
             </span>
-          </button>
+          </Link>
         </div>
       </div>
     </section>

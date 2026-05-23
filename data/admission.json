@@ -1,0 +1,68 @@
+[
+  {
+    "id": 1,
+    "session": "2024-25",
+    "program": "B.Tech CSE",
+    "institution": "SIET",
+    "openDate": "Mar 1, 2024",
+    "closeDate": "Jul 31, 2024",
+    "totalSeats": 120,
+    "filled": 98,
+    "status": "Open"
+  },
+  {
+    "id": 2,
+    "session": "2024-25",
+    "program": "MBA",
+    "institution": "SIMS",
+    "openDate": "Mar 1, 2024",
+    "closeDate": "Jul 31, 2024",
+    "totalSeats": 60,
+    "filled": 55,
+    "status": "Open"
+  },
+  {
+    "id": 3,
+    "session": "2024-25",
+    "program": "B.Pharm",
+    "institution": "SCP",
+    "openDate": "Mar 1, 2024",
+    "closeDate": "Jul 31, 2024",
+    "totalSeats": 60,
+    "filled": 60,
+    "status": "Full"
+  },
+  {
+    "id": 4,
+    "session": "2024-25",
+    "program": "B.Ed",
+    "institution": "SCOE",
+    "openDate": "Apr 1, 2024",
+    "closeDate": "Aug 31, 2024",
+    "totalSeats": 100,
+    "filled": 42,
+    "status": "Open"
+  },
+  {
+    "id": 5,
+    "session": "2023-24",
+    "program": "B.Tech ECE",
+    "institution": "SIET",
+    "openDate": "Mar 1, 2023",
+    "closeDate": "Jul 31, 2023",
+    "totalSeats": 60,
+    "filled": 60,
+    "status": "Closed"
+  },
+  {
+    "id": 6,
+    "session": "2023-24",
+    "program": "MCA",
+    "institution": "SIET",
+    "openDate": "Mar 1, 2023",
+    "closeDate": "Jul 31, 2023",
+    "totalSeats": 60,
+    "filled": 58,
+    "status": "Closed"
+  }
+]

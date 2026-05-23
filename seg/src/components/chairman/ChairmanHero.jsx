@@ -1,19 +1,13 @@
 import { Link } from 'react-router-dom'
 import heroBgImg from '../../assets/images/seg.jpeg'
-import facultyBgImg from '../../assets/images/faculty-bg.png'
+import facultyBgImg from '../../assets/images/chairmansimage.jpeg'
 
 export default function ChairmanHero() {
   return (
     <section className="chairman-hero">
       <div className="chairman-hero__shell">
         <div className="chairman-hero__copy">
-          <div className="chairman-hero__breadcrumbs">
-            <Link to="/">Home</Link>
-            <span className="separator">&gt;</span>
-            <span>About SEG</span>
-            <span className="separator">&gt;</span>
-            <span className="current">Chairman&apos;s Message</span>
-          </div>
+          
 
           <span className="chairman-hero__dots" aria-hidden="true" />
 
@@ -30,10 +24,6 @@ export default function ChairmanHero() {
         </div>
 
         <div className="chairman-hero__visual">
-          <div className="chairman-hero__campus-wrap">
-            <img src={heroBgImg} alt="Saroj Institute of Technology & Management campus" className="chairman-hero__campus" />
-          </div>
-
           <div className="chairman-hero__portrait-blob" aria-hidden="true" />
           <div className="chairman-hero__portrait-wrap">
             <img src={facultyBgImg} alt="Chairman portrait" className="chairman-hero__portrait" />

@@ -55,11 +55,11 @@ export default function FacultyPage() {
             Choose from industry-focused undergraduate, postgraduate, diploma, and professional programs designed to build future-ready careers.
           </p>
           <div style={{ display: 'flex', gap: '14px', flexWrap: 'wrap' }}>
-            <button onClick={() => navigate('/programs')} style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '13px 28px', background: '#1041c6', color: '#fff', border: 'none', borderRadius: '8px', fontSize: '15px', fontWeight: 600, cursor: 'pointer' }}>
-              Explore Programs <ArrowRight />
+            <button onClick={() => navigate('/contact-us')} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', padding: '13px 32px', minWidth: '180px', background: '#1041c6', color: '#fff', border: 'none', borderRadius: '8px', fontSize: '15px', fontWeight: 600, cursor: 'pointer', transition: 'all 0.2s ease' }}>
+              Talk to Counselor <ArrowRight />
             </button>
-            <button style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '13px 28px', background: '#fff', color: '#1041c6', border: '2px solid #1041c6', borderRadius: '8px', fontSize: '15px', fontWeight: 600, cursor: 'pointer' }}>
-              Talk to Counselor
+            <button onClick={() => navigate('/faculty-new')} style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '13px 28px', background: '#fff', color: '#1041c6', border: '2px solid #1041c6', borderRadius: '8px', fontSize: '15px', fontWeight: 600, cursor: 'pointer' }}>
+              View Faculty <ArrowRight />
             </button>
           </div>
         </div>

@@ -136,6 +136,7 @@ export default function PayFeePage() {
       <style>{`
         /* Hero */
         .pf-hero { background: linear-gradient(120deg,#0a1a4e 0%,#0d2b8a 55%,#1041c6 100%); padding:60px 5% 50px; display:grid; grid-template-columns:1fr 1fr; gap:40px; align-items:center; position:relative; overflow:hidden; }
+        .pf-hero__content { margin-top: 60px; }
         .pf-hero__title { font-size:4.2rem; font-weight:900; color:#fff; line-height:1; margin-bottom:14px; letter-spacing:-1px; }
         .pf-hero__title span { color:#ffbe23; }
         .pf-hero__sub { font-size:1.1rem; color:rgba(255,255,255,0.82); margin-bottom:6px; }
@@ -205,6 +206,7 @@ export default function PayFeePage() {
         @media (max-width:1023px) {
           .pf-hero { grid-template-columns:1fr; padding:48px 5% 36px; }
           .pf-hero__title { font-size:3rem; }
+          .pf-hero__content { margin-top: 0; }
           .pf-hero__mockup { max-width:100%; margin-left:0; }
           .pf-cards { grid-template-columns:1fr; max-width:460px; margin:0 auto 40px; }
           .pf-features { grid-template-columns:repeat(2,1fr); }
@@ -234,7 +236,7 @@ export default function PayFeePage() {
 
       {/* ── Hero ── */}
       <div className="pf-hero">
-        <div style={{ position: 'relative', zIndex: 1 }}>
+        <div className="pf-hero__content" style={{ position: 'relative', zIndex: 1 }}>
           <h1 className="pf-hero__title"><span>FEE</span> PORTAL</h1>
           <p className="pf-hero__sub">A secure, fast & convenient way to pay your fees</p>
           <p className="pf-hero__accent">anytime, anywhere.</p>
@@ -256,11 +258,7 @@ export default function PayFeePage() {
         </div>
       </div>
 
-      {/* ── Breadcrumb ── */}
-      <div className="pf-bc">
-        <Link to="/">Home</Link> &nbsp;›&nbsp;
-        <span style={{ color: '#1041c6', fontWeight: 600 }}>Fees Payment</span>
-      </div>
+    
 
       {/* ── Main ── */}
       <div className="pf-main">

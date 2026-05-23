@@ -3,6 +3,7 @@ import campusBg from '../assets/images/campus-bg.png';
 import heroBg from '../assets/images/hero-bg.png';
 import institutionsBg from '../assets/images/institutions-bg.png';
 import placementsBg from '../assets/images/placements-bg.png';
+import { useState, useEffect } from 'react';
 
 const ArrowRight = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -55,8 +56,6 @@ const CheckIcon = () => (
   </svg>
 );
 
-import { useState, useEffect } from 'react';
-
 const imageMap = {
   aboutBg,
   campusBg,
@@ -77,6 +76,14 @@ const getIcon = (tag) => {
   return <BuildingIcon />;
 };
 
+const getUrl = (title = '', code = '') => {
+  const t = (title + ' ' + code).toLowerCase();
+  if (t.includes('lip') || t.includes('law')) return 'https://seglko.org/lip/';
+  if (t.includes('scp') || t.includes('pharm')) return 'https://seglko.org/scp/';
+  if (t.includes('sitmlko') || (t.includes('sitm') && t.includes('lko'))) return 'https://sitmlko.org/';
+  if (t.includes('ssitm') || t.includes('sitm')) return 'https://ssitm.in/';
+  return '#';
+};
 
 function InstitutionCard({ institution }) {
   return (
@@ -90,27 +97,19 @@ function InstitutionCard({ institution }) {
       <div className="institutions-showcase__card-badge">{institution.icon}</div>
       <div className="institutions-showcase__card-body">
         <h3 className="institutions-showcase__card-title">{institution.title}</h3>
-
         <div className="institutions-showcase__meta">
           <div className="institutions-showcase__meta-row institutions-showcase__meta-row--gold">
-            <span className="institutions-showcase__meta-icon">
-              <InfoIcon />
-            </span>
+            <span className="institutions-showcase__meta-icon"><InfoIcon /></span>
             <span>College Code: {institution.code}</span>
           </div>
           <div className="institutions-showcase__meta-row institutions-showcase__meta-row--blue">
-            <span className="institutions-showcase__meta-icon">
-              <CheckIcon />
-            </span>
+            <span className="institutions-showcase__meta-icon"><CheckIcon /></span>
             <span>{institution.approval}</span>
           </div>
         </div>
-
-        <a href="#institutions-showcase" className="institutions-showcase__link">
+        <a href={institution.url} target="_blank" rel="noopener noreferrer" className="institutions-showcase__link">
           Explore Institute
-          <span className="institutions-showcase__link-arrow">
-            <ArrowRight />
-          </span>
+          <span className="institutions-showcase__link-arrow"><ArrowRight /></span>
         </a>
       </div>
     </article>
@@ -119,7 +118,6 @@ function InstitutionCard({ institution }) {
 
 export default function FullSections() {
   const [institutions, setInstitutions] = useState([]);
-  const [featuredInstitution, setFeaturedInstitution] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -127,35 +125,26 @@ export default function FullSections() {
       .then(res => res.json())
       .then(data => {
         if (data && data.length > 0) {
-          // Find if there's a polytechnic one to feature, or fallback to the last item
-          const poly = data.find(i => (i.tag || '').toLowerCase().includes('poly'));
-          const featured = poly || data[data.length - 1];
-          const regulars = data.filter(i => i.id !== featured.id);
-
-          setFeaturedInstitution({
-            title: featured.title,
-            approval: featured.approval,
-            image: imageMap[featured.image] || imageMap.campusBg || campusBg,
-            icon: getIcon(featured.tag),
-          });
-
-          setInstitutions(regulars.map(item => ({
+          setInstitutions(data.map(item => ({
             title: item.title,
             code: item.code,
             approval: item.approval,
-            image: imageMap[item.image] || imageMap.heroBg || heroBg,
+            image: item.customImage && item.customImage.trim() !== ''
+              ? item.customImage
+              : (imageMap[item.image] || heroBg),
             icon: getIcon(item.tag),
+            url: getUrl(item.title, item.code),
           })));
         }
         setLoading(false);
       })
       .catch(err => {
-        console.error('Error fetching institutions for homepage:', err);
+        console.error('Error fetching institutions:', err);
         setLoading(false);
       });
   }, []);
 
-  if (loading || !featuredInstitution) {
+  if (loading) {
     return <div style={{ padding: '50px', textAlign: 'center' }}>Loading Institutions...</div>;
   }
 
@@ -165,9 +154,7 @@ export default function FullSections() {
         <div className="institutions-showcase__header">
           <div className="institutions-showcase__intro">
             <div className="institutions-showcase__title-row">
-              <span className="institutions-showcase__title-icon">
-                <BuildingIcon />
-              </span>
+              <span className="institutions-showcase__title-icon"><BuildingIcon /></span>
               <h2 className="institutions-showcase__title">Our Institutions</h2>
             </div>
             <span className="institutions-showcase__accent" />
@@ -175,46 +162,14 @@ export default function FullSections() {
               A legacy of excellence across diverse disciplines, shaping future leaders and innovators.
             </p>
           </div>
-
         </div>
 
         <div className="institutions-showcase__grid">
-          {institutions.map((institution) => (
-            <InstitutionCard key={institution.title} institution={institution} />
+          {institutions.map((institution, idx) => (
+            <InstitutionCard key={idx} institution={institution} />
           ))}
         </div>
-
-        <article className="institutions-showcase__featured">
-          <img
-            src={featuredInstitution.image}
-            alt={featuredInstitution.title}
-            className="institutions-showcase__featured-image"
-            loading="lazy"
-          />
-
-          <div className="institutions-showcase__featured-content">
-            <span className="institutions-showcase__featured-badge">{featuredInstitution.icon}</span>
-            <h3 className="institutions-showcase__featured-title">{featuredInstitution.title}</h3>
-
-            <div className="institutions-showcase__meta-row institutions-showcase__meta-row--gold">
-              <span className="institutions-showcase__meta-icon">
-                <InfoIcon />
-              </span>
-              <span>{featuredInstitution.approval}</span>
-            </div>
-
-            <a href="#institutions-showcase" className="institutions-showcase__link institutions-showcase__link--featured">
-              Explore Institute
-              <span className="institutions-showcase__link-arrow">
-                <ArrowRight />
-              </span>
-            </a>
-          </div>
-
-          <span className="institutions-showcase__dots" aria-hidden="true" />
-        </article>
       </div>
     </section>
   );
 }
-

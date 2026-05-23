@@ -504,14 +504,7 @@ export default function Navbar() {
   const navbarRef = useRef(null);
   const timeoutRef = useRef(null);
 
-  const [institutionsData, setInstitutionsData] = useState([
-    {
-      title: 'View All Institutions',
-      description: 'Browse every SEG campus and affiliated institute in one place.',
-      icon: 'building',
-      path: '/institutions',
-    }
-  ]);
+  const [institutionsData, setInstitutionsData] = useState([]);
 
   useEffect(() => {
     fetch('http://localhost:3000/api/institutions')
@@ -527,15 +520,7 @@ export default function Navbar() {
                   item.tag?.toLowerCase().includes('engine') ? 'institution' : 'building',
             url: item.url || '#',
           }));
-          setInstitutionsData([
-            {
-              title: 'View All Institutions',
-              description: 'Browse every SEG campus and affiliated institute in one place.',
-              icon: 'building',
-              path: '/institutions',
-            },
-            ...mapped
-          ]);
+          setInstitutionsData(mapped);
         }
       })
       .catch(err => console.error('Error fetching institutions for navbar:', err));
@@ -836,12 +821,12 @@ export default function Navbar() {
                 ))}
               </div>
 
-              <button type="button" className="about-panel__cta">
+              <Link to="/why-join-seg" className="about-panel__cta" onClick={() => setActiveDropdown(null)}>
                 Know More About SEG
                 <span className="about-panel__cta-arrow">
                   <ChevronRight />
                 </span>
-              </button>
+              </Link>
             </div>
 
             <div className="about-panel__visual">
@@ -1135,7 +1120,7 @@ export default function Navbar() {
       )}
       {activeDropdown === 'R & D' && (
         <div
-          className="navbar__dropdown-shell navbar__dropdown-shell--full"
+          className="navbar__dropdown-shell"
           onMouseEnter={() => handleMouseEnter('R & D')}
           onMouseLeave={handleMouseLeave}
         >

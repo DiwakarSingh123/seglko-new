@@ -5,6 +5,7 @@ import program1 from '../assets/images/program1.png';
 import program2 from '../assets/images/program2.png';
 import program3 from '../assets/images/program3.png';
 import program4 from '../assets/images/program4.png';
+import booksImg from '../assets/images/booksimg.jpeg';
 
 const ArrowRight = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -183,7 +184,7 @@ export default function ProgramsSpotlight() {
         const mapped = data.map(p => ({
           title: p.name,
           description: p.description,
-          image: imageMap[p.image] || program1,
+          image: p.customImage && p.customImage.trim() !== '' ? p.customImage : (imageMap[p.image] || program1),
           color: p.color || 'blue',
           slug: p.slug || 'mtech',
           icon: iconMap[p.icon] || <GearIcon />
@@ -198,63 +199,46 @@ export default function ProgramsSpotlight() {
   }, []);
 
   const scrollCards = (direction) => {
-    if (!carouselRef.current) {
-      return;
-    }
-
+    if (!carouselRef.current) return;
     const firstCard = carouselRef.current.querySelector('.programs-spotlight__card');
     const cardGap = 12;
     const scrollAmount = firstCard ? firstCard.getBoundingClientRect().width + cardGap : carouselRef.current.clientWidth;
-
-    carouselRef.current.scrollBy({
-      left: direction * scrollAmount,
-      behavior: 'smooth',
-    });
+    carouselRef.current.scrollBy({ left: direction * scrollAmount, behavior: 'smooth' });
   };
 
   return (
-    <section className="programs-spotlight" id="programs-spotlight" style={{ background: '#ffffff' }}>
+    <section className="programs-spotlight" id="programs-spotlight">
       <div className="programs-spotlight__shell">
         <div className="programs-spotlight__hero">
-          <div className="programs-spotlight__intro">
-
+          <div className="programs-spotlight__hero-top">
             <span className="programs-spotlight__accent-line" />
-            <h2 className="programs-spotlight__title">
-              <span className="programs-spotlight__title-line programs-spotlight__title-line--lead">
-                Programs Designed for
-              </span>
-              <span className="programs-spotlight__title-line">
-                a <span className="programs-spotlight__title-highlight">Successful Future</span>
-              </span>
-            </h2>
+            <div className="programs-spotlight__title-row">
+              <h2 className="programs-spotlight__title">
+                <span className="programs-spotlight__title-line programs-spotlight__title-line--lead">
+                  Programs Designed for
+                </span>
+                <span className="programs-spotlight__title-line">
+                  a <span className="programs-spotlight__title-highlight">Successful Future</span>
+                </span>
+              </h2>
+              <div className="programs-spotlight__actions">
+                <button
+                  className="btn btn--primary programs-spotlight__cta"
+                  onClick={() => navigate('/all-programs')}
+                >
+                  View All Programs
+                  <span className="btn__arrow"><ArrowRight /></span>
+                </button>
+              </div>
+            </div>
             <p className="programs-spotlight__description">
               Industry-focused programs crafted to equip you with the skills, knowledge and
               experience to lead tomorrow.
             </p>
           </div>
 
-          <div className="programs-spotlight__actions">
-            <button
-              className="btn btn--primary programs-spotlight__cta"
-              onClick={() => navigate('/programs')}
-            >
-              View All Programs
-              <span className="btn__arrow"><ArrowRight /></span>
-            </button>
-          </div>
-
           <div className="programs-spotlight__art" aria-hidden="true">
-            <span className="programs-spotlight__orb programs-spotlight__orb--gold" />
-            <span className="programs-spotlight__dots" />
-            <div className="programs-spotlight__book-stack">
-              <div className="programs-spotlight__cap">
-                <span className="programs-spotlight__cap-top" />
-                <span className="programs-spotlight__cap-tassel" />
-              </div>
-              <div className="programs-spotlight__book programs-spotlight__book--gold" />
-              <div className="programs-spotlight__book programs-spotlight__book--white" />
-              <div className="programs-spotlight__book programs-spotlight__book--blue" />
-            </div>
+            <img src={booksImg} alt="" className="programs-spotlight__art-image" />
           </div>
         </div>
 
@@ -271,7 +255,7 @@ export default function ProgramsSpotlight() {
           <div className="programs-spotlight__card-viewport" ref={carouselRef}>
             <div className="programs-spotlight__card-grid">
               {loading ? (
-                <div style={{ padding: '40px', width: '100%', textAlign: 'center', color: '#1041C6' }}>
+                <div className="programs-spotlight__loading">
                   Loading latest programs...
                 </div>
               ) : programs.map((card) => (
@@ -279,7 +263,7 @@ export default function ProgramsSpotlight() {
                   className={`programs-spotlight__card programs-spotlight__card--${card.color}`}
                   key={card.title}
                   onClick={() => navigate(`/programs/${card.slug}`)}
-                  style={{ cursor: 'pointer', boxShadow: '0 16px 40px rgba(20,35,90,0.15)', border: 'none', position: 'relative', overflow: 'hidden', background: '#ffffff' }}
+                  style={{ cursor: 'pointer', position: 'relative', overflow: 'hidden', background: '#ffffff' }}
                 >
                   <div className="programs-spotlight__card-icon">{card.icon}</div>
                   <img

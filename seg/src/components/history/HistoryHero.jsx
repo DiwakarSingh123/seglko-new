@@ -6,13 +6,7 @@ const HistoryHero = () => {
     <section className="history-hero">
       <div className="history-hero__inner">
         <div className="history-hero__content">
-          <div className="history-hero__breadcrumbs">
-            <Link to="/">Home</Link>
-            <span className="separator">&gt;</span>
-            <span>About SEG</span>
-            <span className="separator">&gt;</span>
-            <span className="current">History of SEG</span>
-          </div>
+
 
           <h1 className="history-hero__title">
             The Legacy of

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './CareersPage.css';
-import careerHeroImg from '../assets/images/faculty-bg.png';
+import careerHeroImg from '../assets/images/seg.jpeg';
 import logoImg from '../assets/images/logo.png';
 
 const jobCategories = [
@@ -97,7 +97,7 @@ export default function CareersPage() {
               <div className="info-card__body">
                 <h4>Why Join SEG?</h4>
                 <p>Be part of an institution that values excellence, innovation and integrity.</p>
-                <a href="#" className="info-card__link" onClick={(e) => { e.preventDefault(); alert("Culture video is a placeholder."); }}>Watch Our Culture Video <span>▶</span></a>
+                <a href="https://www.youtube.com/@sarojeducationalgroup1018" target="_blank" rel="noopener noreferrer" className="info-card__link">Watch Our Culture Video <span>▶</span></a>
               </div>
             </div>
           </div>
@@ -180,7 +180,7 @@ export default function CareersPage() {
       <section className="careers-cta">
         <div className="cta-content">
           <div className="cta-text">
-            <h3>Don&apos;t see the right role?</h3>
+            <h3>Don&apos;t see the <span>right role?</span></h3>
             <p>We are always looking for passionate people. Send us your resume and we&apos;ll keep you in mind.</p>
           </div>
           <button className="btn-submit-resume" onClick={() => alert("Resume submission is active.")}>

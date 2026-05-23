@@ -2,7 +2,7 @@
   "papers": [
     {
       "id": 1,
-      "faculty": "Dr. Shivi Chaturvedi",
+      "faculty": "Dr. Shivi Chaturvedi000000000000000",
       "type": "International",
       "title": "Digital Signal Processors (DSP) for 3G Mobile Communication Systems",
       "journal": "International Journal on Emerging Technologies",
@@ -76,7 +76,7 @@
   "projects": [
     {
       "id": 1,
-      "name": "Automatic Street Lighting system using IoT",
+      "name": "Automatic Street Lighting system using IoT000000000",
       "dept": "Electronics Department"
     },
     {
@@ -193,9 +193,12 @@
   "awards": [
     {
       "id": 1,
-      "faculty": "Prof. (Dr) S.N. Pandeya",
-      "projects": [],
-      "dept": "Computer Science and Engineering (CSE)"
+      "faculty": "Prof. (Dr.) S.N. Pandeya",
+      "projects": [
+        "Potential anti HIV Agent-Man rich",
+        "Fubeceh Agentc Anti Technology"
+      ],
+      "dept": "Pharmacy"
     },
     {
       "id": 2,
@@ -210,20 +213,26 @@
     {
       "id": 3,
       "faculty": "Er. D. K. Singh",
-      "projects": [],
+      "projects": [
+        "Advanced IoT Framework for Smart Cities",
+        "Blockchain in Supply Chain Management"
+      ],
       "dept": "Electrical Engineering (EE)"
     },
     {
       "id": 4,
       "faculty": "Dr. Pramod Kr. Pandey",
-      "projects": [],
+      "projects": [
+        "Sustainable Energy Solutions",
+        "AI in Predictive Healthcare"
+      ],
       "dept": "Mechanical Engineering (ME)"
     }
   ],
   "innovations": [
     {
       "id": 1,
-      "title": "Generation of Concrete Surfaces with GUI",
+      "title": "Generation of Concrete Surfaces with GUI0000000000000",
       "faculty": "Dr. Suraj Singh",
       "dept": "Mathematics"
     },

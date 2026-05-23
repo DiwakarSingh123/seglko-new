@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import { resolveInstitutionName, type InstitutionRecord } from "@/lib/institution-utils";
 
 const statusStyle: Record<string, string> = {
   Accepted: "bg-emerald-100 text-emerald-700",
@@ -12,19 +13,28 @@ export default function ApplicationsPage() {
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("All");
   const [applications, setApplications] = useState<any[]>([]);
+  const [institutions, setInstitutions] = useState<InstitutionRecord[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch('/api/applications')
-      .then(res => res.json())
-      .then(data => {
-        if (data) setApplications(data);
-        setLoading(false);
-      });
+    Promise.all([
+      fetch("/api/applications").then((res) => res.json()),
+      fetch("/api/institutions").then((res) => res.json()),
+    ]).then(([apps, insts]) => {
+      if (Array.isArray(apps)) setApplications(apps);
+      if (Array.isArray(insts)) setInstitutions(insts);
+      setLoading(false);
+    });
   }, []);
 
+  const getInstitutionLabel = (university: string) =>
+    resolveInstitutionName(university, institutions);
+
   const filtered = applications.filter((a) => {
-    const s = a.student.toLowerCase().includes(search.toLowerCase()) || a.university.toLowerCase().includes(search.toLowerCase());
+    const institutionLabel = getInstitutionLabel(a.university).toLowerCase();
+    const s =
+      a.student.toLowerCase().includes(search.toLowerCase()) ||
+      institutionLabel.includes(search.toLowerCase());
     const f = filter === "All" || a.status === filter;
     return s && f;
   });
@@ -45,7 +55,7 @@ export default function ApplicationsPage() {
         <div className="p-5 border-b border-slate-100 flex flex-col md:flex-row gap-3">
           <div className="relative flex-1">
             <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</span>
-            <input type="text" placeholder="Search student or university..." value={search} onChange={(e) => setSearch(e.target.value)}
+            <input type="text" placeholder="Search student or institution..." value={search} onChange={(e) => setSearch(e.target.value)}
               className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2 pl-10 pr-4 text-sm outline-none focus:ring-2 focus:ring-indigo-200 transition-all" />
           </div>
           <div className="flex gap-2 flex-wrap">
@@ -62,7 +72,7 @@ export default function ApplicationsPage() {
           <table className="w-full">
             <thead>
               <tr className="border-b border-slate-100">
-                {["Student", "University", "Course", "Status", "Date", "Fee", ""].map((h) => (
+                {["Student", "Institution", "Course", "Status", "Date", "Fee", ""].map((h) => (
                   <th key={h} className="px-5 py-3 text-left text-[10px] font-bold text-slate-400 uppercase tracking-wider">{h}</th>
                 ))}
               </tr>
@@ -81,7 +91,9 @@ export default function ApplicationsPage() {
                       </div>
                     </div>
                   </td>
-                  <td className="px-5 py-3.5 text-sm text-slate-500">{a.university}</td>
+                  <td className="px-5 py-3.5 text-sm text-slate-500 max-w-[220px]">
+                    <span className="line-clamp-2">{getInstitutionLabel(a.university)}</span>
+                  </td>
                   <td className="px-5 py-3.5"><span className="px-2 py-1 bg-indigo-50 text-indigo-600 text-[10px] font-bold rounded-lg">{a.course}</span></td>
                   <td className="px-5 py-3.5"><span className={`px-2.5 py-1 rounded-full text-[10px] font-bold ${statusStyle[a.status]}`}>{a.status}</span></td>
                   <td className="px-5 py-3.5 text-sm text-slate-400">{a.date}</td>

@@ -2,34 +2,49 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { clearAuthentication } from "@/lib/auth";
+import {
+  getAdminProfile,
+  getAdminInitials,
+  type AdminProfile,
+  defaultAdminProfile,
+} from "@/lib/admin-profile";
 
 export default function Header() {
   const router = useRouter();
   const [search, setSearch] = useState("");
   const [inquiries, setInquiries] = useState<any[]>([]);
   const [applications, setApplications] = useState<any[]>([]);
-  
+  const [adminProfile, setAdminProfile] = useState<AdminProfile>(defaultAdminProfile);
+
   const [showNotif, setShowNotif] = useState(false);
   const [showMessages, setShowMessages] = useState(false);
+  const [showProfile, setShowProfile] = useState(false);
   
   const [readInqs, setReadInqs] = useState<string[]>([]);
   const [readApps, setReadApps] = useState<string[]>([]);
 
   // Fetch notifications data
-  const fetchHeaderData = () => {
-    fetch('/api/contact')
-      .then(res => res.json())
-      .then(data => {
+  const fetchHeaderData = async () => {
+    try {
+      const res = await fetch('/api/contact', { cache: 'no-store' });
+      if (res.ok) {
+        const data = await res.json();
         if (data && data.inquiries) setInquiries(data.inquiries);
-      })
-      .catch(err => console.error("Error fetching header inquiries:", err));
+      }
+    } catch {
+      // silently ignore — server may not be ready yet
+    }
 
-    fetch('/api/applications')
-      .then(res => res.json())
-      .then(data => {
+    try {
+      const res = await fetch('/api/applications', { cache: 'no-store' });
+      if (res.ok) {
+        const data = await res.json();
         if (data) setApplications(data);
-      })
-      .catch(err => console.error("Error fetching header applications:", err));
+      }
+    } catch {
+      // silently ignore — server may not be ready yet
+    }
   };
 
   useEffect(() => {
@@ -39,12 +54,17 @@ export default function Header() {
     return () => clearInterval(interval);
   }, []);
 
-  // Load read states from local storage
+  // Load read states and admin profile from local storage
   useEffect(() => {
     const savedInqs = localStorage.getItem("read_inquiries");
     const savedApps = localStorage.getItem("read_applications");
     if (savedInqs) setReadInqs(JSON.parse(savedInqs));
     if (savedApps) setReadApps(JSON.parse(savedApps));
+    setAdminProfile(getAdminProfile());
+
+    const onProfileUpdate = () => setAdminProfile(getAdminProfile());
+    window.addEventListener("admin-profile-updated", onProfileUpdate);
+    return () => window.removeEventListener("admin-profile-updated", onProfileUpdate);
   }, []);
 
   // Click outside to close dropdowns
@@ -54,11 +74,18 @@ export default function Header() {
       if (!target.closest(".header-dropdown-container")) {
         setShowNotif(false);
         setShowMessages(false);
+        setShowProfile(false);
       }
     };
     document.addEventListener("click", handleOutsideClick);
     return () => document.removeEventListener("click", handleOutsideClick);
   }, []);
+
+  const handleLogout = () => {
+    clearAuthentication();
+    setShowProfile(false);
+    router.push("/login");
+  };
 
   // Filter unread items
   const unreadInquiries = inquiries.filter(i => i.status === "New" && !readInqs.includes(i.id));
@@ -274,19 +301,106 @@ export default function Header() {
           )}
         </div>
 
-        {/* User Account Info */}
-        <div className="flex items-center gap-2.5 ml-2 pl-3 border-l border-slate-200">
-          <div
-            className="h-9 w-9 rounded-full flex items-center justify-center text-white text-xs font-bold shadow-md"
-            style={{ background: "linear-gradient(135deg, #151869, #2d35a8)" }}
+        {/* User Account Dropdown */}
+        <div className="relative ml-2 pl-3 border-l border-slate-200">
+          <button
+            type="button"
+            onClick={() => {
+              setShowProfile(!showProfile);
+              setShowNotif(false);
+              setShowMessages(false);
+            }}
+            className={`flex items-center gap-2.5 rounded-xl py-1 pr-1 transition-all ${
+              showProfile ? "bg-indigo-50" : "hover:bg-slate-50"
+            }`}
           >
-            AA
-          </div>
-          <div className="hidden md:block">
-            <div className="text-sm font-bold text-slate-800 leading-none">Admin</div>
-            <div className="text-[10px] text-slate-400 mt-0.5">Super Admin</div>
-          </div>
-          <span className="material-symbols-outlined text-slate-400 text-lg">expand_more</span>
+            <div
+              className="h-9 w-9 rounded-full flex items-center justify-center text-white text-xs font-bold shadow-md"
+              style={{ background: "linear-gradient(135deg, #151869, #2d35a8)" }}
+            >
+              {getAdminInitials(adminProfile.name)}
+            </div>
+            <div className="hidden md:block text-left">
+              <div className="text-sm font-bold text-slate-800 leading-none">
+                {adminProfile.name.split(" ")[0] || "Admin"}
+              </div>
+              <div className="text-[10px] text-slate-400 mt-0.5">{adminProfile.role}</div>
+            </div>
+            <span
+              className={`material-symbols-outlined text-slate-400 text-lg transition-transform ${
+                showProfile ? "rotate-180" : ""
+              }`}
+            >
+              expand_more
+            </span>
+          </button>
+
+          {showProfile && (
+            <div className="absolute right-0 top-12 w-72 bg-white border border-slate-100 rounded-2xl shadow-xl z-50 overflow-hidden">
+              <div className="px-4 py-4 border-b border-slate-100 bg-slate-50/50">
+                <div className="flex items-center gap-3">
+                  <div
+                    className="h-11 w-11 rounded-full flex items-center justify-center text-white text-sm font-bold shadow-md flex-shrink-0"
+                    style={{ background: "linear-gradient(135deg, #151869, #2d35a8)" }}
+                  >
+                    {getAdminInitials(adminProfile.name)}
+                  </div>
+                  <div className="min-w-0">
+                    <div className="text-sm font-black text-slate-800 truncate">{adminProfile.name}</div>
+                    <div className="text-[10px] font-semibold text-indigo-600 mt-0.5">{adminProfile.role}</div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="px-4 py-3 space-y-2.5">
+                <div className="flex items-start gap-2.5">
+                  <span className="material-symbols-outlined text-slate-400 text-base mt-0.5">mail</span>
+                  <div className="min-w-0">
+                    <div className="text-[10px] font-bold text-slate-400 uppercase">Email</div>
+                    <div className="text-xs font-semibold text-slate-700 truncate">{adminProfile.email}</div>
+                  </div>
+                </div>
+                {adminProfile.phone && (
+                  <div className="flex items-start gap-2.5">
+                    <span className="material-symbols-outlined text-slate-400 text-base mt-0.5">call</span>
+                    <div className="min-w-0">
+                      <div className="text-[10px] font-bold text-slate-400 uppercase">Phone</div>
+                      <div className="text-xs font-semibold text-slate-700">{adminProfile.phone}</div>
+                    </div>
+                  </div>
+                )}
+                <div className="flex items-start gap-2.5">
+                  <span className="material-symbols-outlined text-slate-400 text-base mt-0.5">badge</span>
+                  <div className="min-w-0">
+                    <div className="text-[10px] font-bold text-slate-400 uppercase">Account Type</div>
+                    <div className="text-xs font-semibold text-slate-700">{adminProfile.role}</div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="border-t border-slate-100 p-2 space-y-0.5">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowProfile(false);
+                    router.push("/dashboard/settings");
+                  }}
+                  className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-50 transition-colors"
+                >
+                  <span className="material-symbols-outlined text-lg text-slate-500">settings</span>
+                  Edit Profile
+                </button>
+                <button
+                  type="button"
+                  onClick={handleLogout}
+                  className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-semibold text-rose-600 hover:bg-rose-50 transition-colors"
+                >
+                  <span className="material-symbols-outlined text-lg">logout</span>
+                  Logout
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </header>

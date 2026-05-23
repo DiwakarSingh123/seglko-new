@@ -36,7 +36,7 @@ interface JoinFeature {
 }
 
 export default function AboutPage() {
-  const [tab, setTab] = useState<"history" | "vision" | "join" | "message" | "leadership" | "gallery" | "faculties">("history");
+  const [tab, setTab] = useState<"history" | "vision" | "join" | "message" | "leadership" | "faculties">("history");
   const [faculties, setFaculties] = useState<any[]>([]);
   const [awards, setAwards] = useState<any[]>([]);
   const [stories, setStories] = useState<any[]>([]);
@@ -103,7 +103,7 @@ export default function AboutPage() {
   const [savedChairmanAuthor, setSavedChairmanAuthor] = useState(chairmanAuthor);
   const [savedChairmanDesignation, setSavedChairmanDesignation] = useState(chairmanDesignation);
   const [savedChairmanImage, setSavedChairmanImage] = useState(chairmanImage);
-  const [previewSection, setPreviewSection] = useState<"history" | "vision" | "join" | "message" | "leadership" | "gallery" | "faculties" | null>(null);
+  const [previewSection, setPreviewSection] = useState<"history" | "vision" | "join" | "message" | "leadership" | "faculties" | null>(null);
 
   // Fetch dynamic page customizer settings on mount
   useEffect(() => {
@@ -228,9 +228,8 @@ export default function AboutPage() {
   };
 
   const addMilestone = () => {
-    const newId = (milestones.length + 1).toString();
+    const newId = Date.now().toString();
     setMilestones([
-      ...milestones,
       {
         id: newId,
         year: "",
@@ -238,6 +237,7 @@ export default function AboutPage() {
         description: "",
         image: "",
       },
+      ...milestones,
     ]);
   };
 
@@ -273,7 +273,6 @@ export default function AboutPage() {
           { id: "join", label: "Why Join SEG", icon: "group" },
           { id: "message", label: "Chairman's Message", icon: "chat" },
           { id: "faculties", label: "Top Faculties (Learn from the Best)", icon: "school" },
-          { id: "gallery", label: "Gallery", icon: "photo_library" },
         ].map((t) => (
           <button key={t.id} onClick={() => setTab(t.id as typeof tab)}
             className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-all ${tab === t.id ? "bg-indigo-600 text-white shadow-md shadow-indigo-200" : "text-slate-500 hover:bg-slate-50"}`}>
@@ -982,7 +981,7 @@ export default function AboutPage() {
         </div>
       )}
 
-      {tab === "gallery" && <GalleryTab section="About SEG" categories={["History", "Campus", "Events", "Leadership", "General"]} />}
+
 
       {previewSection && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60">

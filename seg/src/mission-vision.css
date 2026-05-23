@@ -9,9 +9,11 @@
 /* --- Hero Section (Matches History Page) --- */
 .mv-hero {
   position: relative;
-  padding: 40px 5% 100px;
-  background: linear-gradient(135deg, #f7faff 0%, #ffffff 40%, #ffffff 100%);
+  min-height: 700px;
+  background: white;
   width: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .mv-hero::before {
@@ -31,9 +33,8 @@
   display: flex;
   align-items: center;
   width: 100%;
-  max-width: none;
-  margin: 0 auto;
-  gap: 48px;
+  padding: 80px 45px;
+  flex: 1;
   position: relative;
   z-index: 1;
 }
@@ -43,6 +44,7 @@
   min-width: 0;
   max-width: 560px;
   padding-right: 0;
+  padding-top: 60px;
 }
 
 .mv-hero__breadcrumbs {
@@ -101,33 +103,46 @@
 }
 
 .mv-hero__visual {
-  flex: 1;
-  min-width: 0;
-  position: relative;
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 60%;
+  height: 100%;
+  z-index: 0;
+}
+
+.mv-hero__visual::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(to right, rgba(255,255,255,1) 0%, rgba(255,255,255,0.6) 40%, rgba(255,255,255,0) 100%);
   z-index: 1;
 }
 
 .mv-hero__image {
   width: 100%;
-  height: 650px;
+  height: 100%;
   object-fit: cover;
-  border-radius: 18px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  border-radius: 0;
+  display: block;
+  box-shadow: none;
 }
 
 /* --- Stats Bar --- */
 .mv-stats-bar {
   position: relative;
   z-index: 10;
-  width: 100%;
-  max-width: 100%;
-  margin: -80px auto 0;
+  width: calc(100% - 90px);
+  margin: -50px 45px 0;
+  border-radius: 12px;
   background: linear-gradient(90deg, #021a52 0%, #062b80 100%);
-  border-radius: 16px;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   align-items: center;
-  padding: 50px 5%;
+  padding: 40px 45px;
   gap: 0;
   box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
 }
@@ -192,7 +207,6 @@
   position: relative;
 }
 
-/* Two-column header layout */
 .mv-content__header {
   display: flex;
   align-items: flex-start;
@@ -240,7 +254,6 @@
   color: #475569;
 }
 
-/* Decorative dot patterns */
 .mv-content__dots--top-right {
   position: absolute;
   top: 80px;
@@ -256,7 +269,7 @@
 /* --- Mission & Vision Cards --- */
 .mv-card {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 0.6fr 1.4fr;
   gap: 0;
   align-items: stretch;
   background: #ffffff;
@@ -270,6 +283,7 @@
 
 .mv-card--reverse {
   direction: rtl;
+  grid-template-columns: 1.4fr 0.6fr;
 }
 
 .mv-card--reverse>* {
@@ -281,20 +295,21 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 30px;
-  min-height: 320px;
+  padding: 0;
+  min-height: 200px;
+  overflow: hidden;
 }
 
 .mv-card__image {
   width: 100%;
-  max-width: 420px;
-  height: auto;
-  object-fit: contain;
-  border-radius: 12px;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 0;
+  display: block;
 }
 
 .mv-card__body {
-  padding: 30px 50px;
+  padding: 24px 40px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -346,7 +361,6 @@
   color: #475569;
 }
 
-/* Dot patterns on cards */
 .mv-card__dots--right {
   position: absolute;
   top: 20px;
@@ -373,7 +387,6 @@
   pointer-events: none;
 }
 
-/* Small decorative elements */
 .mv-content::before {
   content: '';
   position: absolute;
@@ -401,7 +414,7 @@
 /* --- Responsive Styles --- */
 @media (max-width: 1024px) {
   .mv-hero {
-    padding: 40px 20px 100px;
+    padding: 60px 5% 100px;
   }
 
   .mv-hero__inner {
@@ -411,23 +424,30 @@
   }
 
   .mv-hero__content {
-    padding-right: 0;
+    max-width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
   }
 
+  .mv-hero__visual {
+    position: relative !important;
+    width: 100% !important;
+    height: auto !important;
+    margin-top: 20px !important;
+  }
+
+  .mv-hero__image {
+    height: 400px;
+  }
+
   .mv-stats-bar {
-    margin: -50px 20px 0;
+    margin: -50px 5% 0;
     width: auto;
     padding: 24px;
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 20px;
-  }
-
-  .mv-stats-bar__item {
-    padding: 0 10px;
   }
 
   .mv-stats-bar__item:nth-child(even) {
@@ -483,16 +503,6 @@
 }
 
 @media (max-width: 768px) {
-  .mv-hero {
-    padding: 30px 14px 88px;
-  }
-
-  .mv-hero__breadcrumbs {
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 8px;
-  }
-
   .mv-hero__title {
     font-size: clamp(2rem, 9vw, 2.7rem);
   }
@@ -549,3 +559,148 @@
     display: none;
   }
 }
+
+/* ============================================
+   LARGE/MEDIUM/SMALL MOBILE VIEWS (425px, 375px, 320px)
+   ============================================ */
+@media (max-width: 425px) {
+  .mv-hero {
+    padding: 10px 4% 30px !important;
+  }
+
+  .mv-hero__inner {
+    padding: 15px 10px 10px !important;
+    gap: 20px !important;
+  }
+
+  .mv-hero__content {
+    padding-top: 10px !important;
+  }
+
+  .mv-hero__title {
+    font-size: 24px !important;
+    line-height: 1.25 !important;
+  }
+
+  .mv-hero__text {
+    font-size: 14px !important;
+    line-height: 1.5 !important;
+  }
+
+  .mv-hero__image {
+    height: 200px !important;
+  }
+
+  .mv-stats-bar {
+    margin: -30px 10px 0 !important;
+    padding: 16px 12px !important;
+    border-radius: 10px !important;
+    gap: 12px !important;
+  }
+
+  .mv-stats-bar__icon {
+    width: 44px !important;
+    height: 44px !important;
+  }
+
+  .mv-stats-bar__icon svg {
+    width: 22px !important;
+    height: 22px !important;
+  }
+
+  .mv-stats-bar__value {
+    font-size: 22px !important;
+  }
+
+  .mv-stats-bar__label {
+    font-size: 11px !important;
+  }
+
+  .mv-content {
+    padding: 40px 12px !important;
+  }
+
+  .mv-content__title {
+    font-size: 22px !important;
+    line-height: 1.3 !important;
+  }
+
+  .mv-content__intro {
+    font-size: 13.5px !important;
+    line-height: 1.6 !important;
+  }
+
+  .mv-card {
+    border-radius: 12px !important;
+    margin-bottom: 30px !important;
+  }
+
+  .mv-card__visual {
+    min-height: 180px !important;
+    padding: 12px !important;
+  }
+
+  .mv-card__body {
+    padding: 20px 16px !important;
+  }
+
+  .mv-card__icon {
+    width: 48px !important;
+    height: 48px !important;
+  }
+
+  .mv-card__icon svg {
+    width: 22px !important;
+    height: 22px !important;
+  }
+
+  .mv-card__title {
+    font-size: 20px !important;
+  }
+
+  .mv-card__text {
+    font-size: 13.5px !important;
+    line-height: 1.6 !important;
+  }
+}
+
+@media (max-width: 375px) {
+  .mv-hero__title {
+    font-size: 22px !important;
+  }
+
+  .mv-stats-bar__value {
+    font-size: 20px !important;
+  }
+
+  .mv-content__title {
+    font-size: 20px !important;
+  }
+
+  .mv-card__title {
+    font-size: 18px !important;
+  }
+}
+
+@media (max-width: 320px) {
+  .mv-hero__title {
+    font-size: 20px !important;
+  }
+
+  .mv-hero__text {
+    font-size: 13px !important;
+  }
+
+  .mv-stats-bar__value {
+    font-size: 18px !important;
+  }
+
+  .mv-content__title {
+    font-size: 18px !important;
+  }
+
+  .mv-card__title {
+    font-size: 17px !important;
+  }
+}
+
