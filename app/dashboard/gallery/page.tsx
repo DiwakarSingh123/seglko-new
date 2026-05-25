@@ -26,11 +26,13 @@ const uploadCategories = categories.filter((c) => c !== ALL_MOMENTS);
 export default function GalleryPage() {
   const [images, setImages] = useState<GalleryImage[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [selectedCategory, setSelectedCategory] = useState<string>(ALL_MOMENTS);
+  const [selectedCategory, setSelectedCategory] = useState<(typeof categories)[number]>(ALL_MOMENTS);
   const [showAddForm, setShowAddForm] = useState(false);
   const [editingImg, setEditingImg] = useState<GalleryImage | null>(null);
   const [formError, setFormError] = useState("");
-  const [form, setForm] = useState({ title: "", category: uploadCategories[0], url: "", description: "" });
+  const [form, setForm] = useState<{ title: string; category: (typeof uploadCategories)[number]; url: string; description: string }>(
+    { title: "", category: uploadCategories[0], url: "", description: "" }
+  );
   const fileRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -51,7 +53,7 @@ export default function GalleryPage() {
     setIsLoading(false);
   };
 
-  const countFor = (cat: string) =>
+  const countFor = (cat: (typeof categories)[number]) =>
     cat === ALL_MOMENTS ? images.length : images.filter((i) => i.category === cat).length;
 
   const filtered =
@@ -141,8 +143,10 @@ export default function GalleryPage() {
   const openAddForm = () => {
     setShowAddForm(true);
     setFormError("");
+
     if (selectedCategory !== ALL_MOMENTS) {
-      setForm((f) => ({ ...f, category: selectedCategory }));
+      const cat = selectedCategory as (typeof uploadCategories)[number];
+      setForm((f) => ({ ...f, category: cat }));
     }
   };
 
@@ -271,7 +275,7 @@ export default function GalleryPage() {
                 <label className="text-xs font-bold text-slate-500 mb-1.5 block">Category</label>
                 <select
                   value={form.category}
-                  onChange={(e) => setForm({ ...form, category: e.target.value })}
+                  onChange={(e) => setForm({ ...form, category: e.target.value as (typeof uploadCategories)[number] })}
                   className="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-300"
                 >
                   {uploadCategories.map((c) => (

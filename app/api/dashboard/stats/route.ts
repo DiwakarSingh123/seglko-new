@@ -20,10 +20,22 @@ export async function GET() {
     const applications = readJson<unknown[]>("applications.json", []);
     const institutions = readJson<unknown[]>("institutions.json", []);
 
-    const stats = computeDashboardStats(
-      Array.isArray(applications) ? applications : [],
-      Array.isArray(institutions) ? institutions : []
-    );
+    // computeDashboardStats expects typed Application[] / Institution[].
+    // JSON parsing gives unknown[], so we filter out non-object entries.
+    // Keep these as `unknown[]` filtered to objects, then cast to the expected shapes.
+    // This avoids passing `unknown[]` directly into the typed compute function.
+    const typedApplications = (Array.isArray(applications)
+      ? applications.filter((x): x is Record<string, unknown> => typeof x === "object" && x !== null)
+      : []) as unknown[];
+
+    const typedInstitutions = (Array.isArray(institutions)
+      ? institutions.filter((x): x is Record<string, unknown> => typeof x === "object" && x !== null)
+      : []) as unknown[];
+
+    const appsTyped = typedApplications as any; // Application[]
+    const institutionsTyped = typedInstitutions as any; // Institution[]
+
+    const stats = computeDashboardStats(appsTyped, institutionsTyped);
 
     return NextResponse.json(stats);
   } catch {
