@@ -22,6 +22,7 @@ const nav = [
       { label: "R & D", icon: "science", href: "/dashboard/research" },
       { label: "Our Institutions", icon: "account_balance", href: "/dashboard/institutions" },
       { label: "Student Zone", icon: "school", href: "/dashboard/student-zone" },
+      { label: "What's Happening", icon: "event_note", href: "/dashboard/happenings" },
       { label: "Placements", icon: "work", href: "/dashboard/placements" },
       { label: "Gallery", icon: "photo_library", href: "/dashboard/gallery" },
       { label: "Contact Us", icon: "contact_mail", href: "/dashboard/contact" },

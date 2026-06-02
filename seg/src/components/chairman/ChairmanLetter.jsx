@@ -1,43 +1,27 @@
-import { useState, useEffect } from 'react';
-import facultyBgImg from '../../assets/images/chairman.jpeg';
+import facultyBgImg from '../../assets/images/chairman.jpeg'
+
+const messagePoints = [
+  'Education lays the foundation for building a better tomorrow and shaping ground for future leaders. Since our inception, SEG has remained steadfast in its mission to impart quality education, develop practical skills, and instill a sense of responsibility in our students.',
+  'Education at SEG is not just about obtaining degrees; it is about shaping character, developing critical thinking, and preparing individuals for real-world challenges. Our dedicated faculty, state-of-the-art facilities, and industry-driven curriculum aim to provide a holistic learning experience that prepares students for a successful future.',
+  'I firmly believe that education is the key to empowerment, and at SEG, we strive to ignite the spark of curiosity, creativity, and courage in every learner. I invite you to be a part of this remarkable journey of knowledge, growth, and transformation.',
+]
 
 const UserIcon = () => (
   <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none">
     <circle cx="12" cy="8" r="3.5" stroke="currentColor" strokeWidth="1.9" />
     <path d="M5 19C5 15.9 8 13.8 12 13.8C16 13.8 19 15.9 19 19" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" />
   </svg>
-);
+)
 
 export default function ChairmanLetter() {
-  const [chairmanData, setChairmanData] = useState({
-    message: "Education lays the foundation for building a better tomorrow and shaping ground for future leaders. Since our inception, SEG has remained steadfast in its mission to impart quality education, develop practical skills, and instill a sense of responsibility in our students.\n\nEducation at SEG is not just about obtaining degrees; it is about character shaping, developing critical thinking, and preparing individuals for real-world challenges. Our dedicated faculty, state-of-the-art facilities, and industry-driven curriculum aim to provide a holistic learning experience that prepares students for a successful future.\n\nI firmly believe that education is the key to empowerment, and at SEG, we strive to ignite the spark of curiosity, creativity, and courage in every learner. I invite you to be a part of this remarkable journey of knowledge, growth, and transformation.",
-    author: "Mr. Sunil Singh",
-    designation: "Chairman, Saroj Educational Group",
-    image: ""
-  });
-
-  useEffect(() => {
-    fetch('http://localhost:3000/api/settings')
-      .then(res => res.json())
-      .then(settings => {
-        if (settings && settings.aboutChairman) {
-          setChairmanData(settings.aboutChairman);
-        }
-      })
-      .catch(err => console.error("Error loading chairman message:", err));
-  }, []);
-
-  const messagePoints = chairmanData.message.split("\n\n").filter(p => p.trim().length > 0);
-
   return (
     <section className="chairman-letter">
       <div className="chairman-letter__shell">
         <article className="chairman-letter__profile">
           <div className="chairman-letter__photo-wrap">
-            <img src={chairmanData.image || facultyBgImg} alt={chairmanData.author} className="chairman-letter__photo" />
+            <img src={facultyBgImg} alt="Mr. Sunil Singh" className="chairman-letter__photo" />
           </div>
 
-      
         </article>
 
         <article className="chairman-letter__content">
@@ -51,8 +35,8 @@ export default function ChairmanLetter() {
           </div>
 
           <div className="chairman-letter__body">
-            {messagePoints.map((item, idx) => (
-              <div className="chairman-letter__point" key={idx}>
+            {messagePoints.map((item) => (
+              <div className="chairman-letter__point" key={item}>
                 <p>{item}</p>
               </div>
             ))}
@@ -60,8 +44,8 @@ export default function ChairmanLetter() {
             <div className="chairman-letter__signoff">
               <span className="chairman-letter__signoff-line" />
               <p>Warm Regards,</p>
-              <strong>{chairmanData.author}</strong>
-              <span>{chairmanData.designation}</span>
+              <strong>Mr. Sunil Singh</strong>
+              <span>Chairman, Saroj Educational Group</span>
             </div>
           </div>
 
@@ -69,5 +53,5 @@ export default function ChairmanLetter() {
         </article>
       </div>
     </section>
-  );
+  )
 }

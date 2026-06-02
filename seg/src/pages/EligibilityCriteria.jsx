@@ -1,74 +1,75 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import '../EligibilityCriteria.css';
 
-export default function EligibilityCriteria() {
+const eligibilityContent = {
+  undergraduate: {
+    academic: [
+      'Must have passed 10+2 examination with Physics and Mathematics as compulsory subjects.',
+      'Minimum aggregate marks of 45% (40% for reserved category) in the qualifying examination.',
+    ],
+    age: [
+      'Candidates must be at least 17 years of age on or before 31st December of the admission year.',
+    ],
+    additional: [
+      'All candidates must submit original documents for verification',
+      'International students must have equivalent qualifications',
+      '5% relaxation in marks for reserved category candidates',
+      'Admission subject to availability of seats',
+    ],
+  },
+  postgraduate: {
+    academic: [
+      'Must have completed a bachelor degree in the relevant discipline from a recognized university.',
+      'Minimum aggregate marks of 50% (45% for reserved category) in the qualifying degree.',
+      'Entrance test or interview may be required for selected postgraduate programs.',
+    ],
+    age: [
+      'There is no upper age limit for most postgraduate programs unless specified by the regulatory body.',
+    ],
+    additional: [
+      'Final year graduation students may apply subject to submission of final mark sheets',
+      'Work experience may be preferred for selected professional programs',
+      'Reserved category relaxation will be applied as per applicable norms',
+      'Admission subject to document verification and availability of seats',
+    ],
+  },
+  diploma: {
+    academic: [
+      'Must have passed Class 10 or equivalent examination from a recognized board.',
+      'Science and Mathematics are required for engineering and polytechnic diploma programs.',
+      'Minimum marks will be considered as per program and regulatory requirements.',
+    ],
+    age: [
+      'Candidates should meet the age criteria prescribed by the relevant board or regulatory authority.',
+    ],
+    additional: [
+      'Original Class 10 marksheet and certificates are required for verification',
+      'Lateral entry candidates must meet the required intermediate or ITI qualification',
+      'Reserved category relaxation will be applied as per applicable norms',
+      'Admission subject to eligibility verification and availability of seats',
+    ],
+  },
+};
+
+const CheckIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+    <polyline points="20 6 9 17 4 12"></polyline>
+  </svg>
+);
+
+const EligibilityCriteria = () => {
   const [activeTab, setActiveTab] = useState('undergraduate');
-  const [openAccordion, setOpenAccordion] = useState('academic');
-
-  const [criteria, setCriteria] = useState({
-    undergraduate: {
-      academic: [
-        "Must have passed 10+2 examination with Physics and Mathematics as compulsory subjects.",
-        "Minimum aggregate marks of 45% (40% for reserved category) in the qualifying examination."
-      ],
-      age: [
-        "Candidates must be at least 17 years of age on or before 31st December of the admission year."
-      ],
-      additional: [
-        "All candidates must submit original documents for verification",
-        "International students must have equivalent qualifications",
-        "5% relaxation in marks for reserved category candidates",
-        "Admission subject to availability of seats"
-      ]
-    },
-    postgraduate: {
-      academic: [
-        "Must hold a recognized Bachelor's degree in the relevant field.",
-        "Minimum aggregate marks of 50% (45% for reserved category) in the qualifying examination."
-      ],
-      age: [
-        "No specific upper age limit is set for postgraduate admissions."
-      ],
-      additional: [
-        "Entrance exam scorecard must be submitted at counseling.",
-        "Equivalence certificates are required for degrees from foreign institutions."
-      ]
-    },
-    diploma: {
-      academic: [
-        "Must have passed the 10th standard or equivalent from a recognized board.",
-        "Minimum 35% marks required in the qualifying exam."
-      ],
-      age: [
-        "Minimum age should be 14 years as of 1st July of the admission year."
-      ],
-      additional: [
-        "Subject choices are allocated based on polytechnic entrance scores."
-      ]
-    }
-  });
-
-  useEffect(() => {
-    fetch('http://localhost:3000/api/settings')
-      .then(res => res.json())
-      .then(settings => {
-        if (settings && settings.eligibilityCriteria) {
-          setCriteria(settings.eligibilityCriteria);
-        }
-      })
-      .catch(err => console.error("Error loading eligibility criteria settings:", err));
-  }, []);
+  const [openAccordion, setOpenAccordion] = useState('additional');
+  const currentEligibility = eligibilityContent[activeTab];
 
   const toggleAccordion = (id) => {
     if (openAccordion === id) {
-      setOpenAccordion("");
+      setOpenAccordion(null);
     } else {
       setOpenAccordion(id);
     }
   };
-
-  const currentCriteria = criteria[activeTab] || criteria['undergraduate'];
 
   return (
     <div className="eligibility-page">
@@ -79,24 +80,19 @@ export default function EligibilityCriteria() {
           <h1 className="eligibility-hero__title">Eligibility Criteria</h1>
           <div className="eligibility-hero__line"></div>
           <p className="eligibility-hero__subtitle">
-            Check the eligibility requirements for your desired program<br/>
+            Check the eligibility requirements for your desired program<br />
             and take the first step toward your future.
           </p>
         </div>
       </section>
-      
-      {/* BREADCRUMB */}
-      <div className="eligibility-breadcrumb-wrapper">
-        <div className="eligibility-breadcrumb">
-          <Link to="/">HOME</Link> &gt; <Link to="#">ADMISSION</Link> &gt; <span>ELIGIBILITY</span>
-        </div>
-      </div>
+
+
 
       {/* MAIN CONTENT SECTION */}
       <section className="eligibility-main">
         <div className="eligibility-container">
           <div className="eligibility-layout">
-            
+
             {/* LEFT SIDEBAR */}
             <aside className="eligibility-sidebar">
               <div className="eligibility-card">
@@ -106,8 +102,8 @@ export default function EligibilityCriteria() {
                   <div className="eligibility-card__icon-ring">
                     <div className="eligibility-card__icon">
                       <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M12 3L1 9L12 15L21 10.09V17H23V9L12 3Z" fill="white"/>
-                        <path d="M5 13.18V17.18L12 21L19 17.18V13.18L12 17L5 13.18Z" fill="white"/>
+                        <path d="M12 3L1 9L12 15L21 10.09V17H23V9L12 3Z" fill="white" />
+                        <path d="M5 13.18V17.18L12 21L19 17.18V13.18L12 17L5 13.18Z" fill="white" />
                       </svg>
                     </div>
                   </div>
@@ -135,22 +131,24 @@ export default function EligibilityCriteria() {
             {/* RIGHT CONTENT */}
             <div className="eligibility-content">
               <h2 className="eligibility-content__title">Admission Eligibility Criteria</h2>
-              
+
               {/* TABS */}
               <div className="eligibility-tabs">
-                <button 
+                <button
                   className={`eligibility-tab ${activeTab === 'undergraduate' ? 'active' : ''}`}
                   onClick={() => setActiveTab('undergraduate')}
+                  aria-pressed={activeTab === 'undergraduate'}
                 >
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
-                    <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+                    <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
+                    <path d="M6 12v5c3 3 9 3 12 0v-5" />
                   </svg>
                   Undergraduate
                 </button>
-                <button 
+                <button
                   className={`eligibility-tab ${activeTab === 'postgraduate' ? 'active' : ''}`}
                   onClick={() => setActiveTab('postgraduate')}
+                  aria-pressed={activeTab === 'postgraduate'}
                 >
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
@@ -160,9 +158,10 @@ export default function EligibilityCriteria() {
                   </svg>
                   Postgraduate
                 </button>
-                <button 
+                <button
                   className={`eligibility-tab ${activeTab === 'diploma' ? 'active' : ''}`}
                   onClick={() => setActiveTab('diploma')}
+                  aria-pressed={activeTab === 'diploma'}
                 >
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
@@ -176,14 +175,14 @@ export default function EligibilityCriteria() {
 
               {/* ACCORDION */}
               <div className="eligibility-accordion">
-                {/* Item 1 - Academic */}
+                {/* Item 1 */}
                 <div className={`eligibility-accordion-item ${openAccordion === 'academic' ? 'open' : ''}`}>
                   <button className="eligibility-accordion-header" onClick={() => toggleAccordion('academic')}>
                     <div className="eligibility-accordion-header-left">
                       <div className="eligibility-accordion-icon eligibility-accordion-icon--blue">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                          <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
-                          <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+                          <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
+                          <path d="M6 12v5c3 3 9 3 12 0v-5" />
                         </svg>
                       </div>
                       <span className="eligibility-accordion-title">Academic Requirements</span>
@@ -197,10 +196,10 @@ export default function EligibilityCriteria() {
                   {openAccordion === 'academic' && (
                     <div className="eligibility-accordion-body">
                       <div className="eligibility-checklist">
-                        {currentCriteria.academic.map((text, i) => (
-                          <div className="eligibility-check-item" key={i}>
-                            <span className="eligibility-check-icon">✓</span>
-                            {text}
+                        {currentEligibility.academic.map((item) => (
+                          <div className="eligibility-check-item" key={item}>
+                            <span className="eligibility-check-icon"><CheckIcon /></span>
+                            {item}
                           </div>
                         ))}
                       </div>
@@ -208,7 +207,7 @@ export default function EligibilityCriteria() {
                   )}
                 </div>
 
-                {/* Item 2 - Age */}
+                {/* Item 2 */}
                 <div className={`eligibility-accordion-item ${openAccordion === 'age' ? 'open' : ''}`}>
                   <button className="eligibility-accordion-header" onClick={() => toggleAccordion('age')}>
                     <div className="eligibility-accordion-header-left">
@@ -231,10 +230,10 @@ export default function EligibilityCriteria() {
                   {openAccordion === 'age' && (
                     <div className="eligibility-accordion-body">
                       <div className="eligibility-checklist">
-                        {currentCriteria.age.map((text, i) => (
-                          <div className="eligibility-check-item" key={i}>
-                            <span className="eligibility-check-icon">✓</span>
-                            {text}
+                        {currentEligibility.age.map((item) => (
+                          <div className="eligibility-check-item" key={item}>
+                            <span className="eligibility-check-icon"><CheckIcon /></span>
+                            {item}
                           </div>
                         ))}
                       </div>
@@ -242,7 +241,7 @@ export default function EligibilityCriteria() {
                   )}
                 </div>
 
-                {/* Item 3 - Additional */}
+                {/* Item 3 */}
                 <div className={`eligibility-accordion-item ${openAccordion === 'additional' ? 'open' : ''}`}>
                   <button className="eligibility-accordion-header" onClick={() => toggleAccordion('additional')}>
                     <div className="eligibility-accordion-header-left">
@@ -257,22 +256,26 @@ export default function EligibilityCriteria() {
                     </div>
                     <span className="eligibility-accordion-arrow">
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <polyline points="6 9 12 15 18 9"></polyline>
+                        {openAccordion === 'additional' ? (
+                          <polyline points="18 15 12 9 6 15"></polyline>
+                        ) : (
+                          <polyline points="6 9 12 15 18 9"></polyline>
+                        )}
                       </svg>
                     </span>
                   </button>
                   {openAccordion === 'additional' && (
                     <div className="eligibility-accordion-body eligibility-accordion-body--purple">
                       <div className="eligibility-checklist">
-                        {currentCriteria.additional.map((text, i) => (
-                          <React.Fragment key={i}>
+                        {currentEligibility.additional.map((item, index) => (
+                          <React.Fragment key={item}>
                             <div className="eligibility-check-item">
                               <span className="eligibility-check-icon">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                <CheckIcon />
                               </span>
-                              {text}
+                              {item}
                             </div>
-                            {i < currentCriteria.additional.length - 1 && <div className="eligibility-check-line"></div>}
+                            {index < currentEligibility.additional.length - 1 && <div className="eligibility-check-line"></div>}
                           </React.Fragment>
                         ))}
                       </div>
@@ -291,7 +294,7 @@ export default function EligibilityCriteria() {
         <div className="eligibility-features">
           <div className="eligibility-feature">
             <div className="eligibility-feature__icon eligibility-feature__icon--blue">
-               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
                 <polyline points="14 2 14 8 20 8"></polyline>
                 <line x1="16" y1="13" x2="8" y2="13"></line>
@@ -335,7 +338,7 @@ export default function EligibilityCriteria() {
 
           <div className="eligibility-feature">
             <div className="eligibility-feature__icon eligibility-feature__icon--purple">
-               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
                 <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
               </svg>
@@ -350,4 +353,6 @@ export default function EligibilityCriteria() {
 
     </div>
   );
-}
+};
+
+export default EligibilityCriteria;

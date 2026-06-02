@@ -2,7 +2,7 @@ import React from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { programsData } from '../data/programsData';
 import '../ProgramPage.css';
-import heroImage from '../assets/images/program1.png'; // Fallback
+import heroImage from '../assets/images/programsimg.jpeg'; // Fallback
 import ctaBg from '../assets/images/about-bg.png'; // Fallback
 
 // Shared Icon component for all program icons
@@ -218,21 +218,9 @@ const Icon = ({ name }) => {
 
 const ProgramPage = () => {
   const { programId } = useParams();
-  const [apiProgram, setApiProgram] = React.useState(null);
   const data = programsData[programId];
 
-  React.useEffect(() => {
-    fetch('/api/programs')
-      .then(res => res.json())
-      .then(programs => {
-        const found = programs.find(p => p.slug === programId);
-        if (found) setApiProgram(found);
-      })
-      .catch(() => {});
-  }, [programId]);
-
-  const heroImg = apiProgram?.customImage && apiProgram.customImage.trim() !== '' ? apiProgram.customImage : heroImage;
-
+  // Provide a fallback if programId doesn't exist
   if (!data) {
     return (
       <div className="program-page" style={{ padding: '10rem 5%', textAlign: 'center' }}>
@@ -256,7 +244,7 @@ const ProgramPage = () => {
         </div>
         <div className="program-hero__image-wrap">
           <div className="program-hero__image-inner">
-            <img src={heroImg} alt={hero.title.replace('\n', ' ')} className="program-hero__image" />
+            <img src={heroImage} alt={hero.title.replace('\n', ' ')} className="program-hero__image" />
           </div>
         </div>
       </section>
@@ -343,7 +331,7 @@ const ProgramPage = () => {
         <img src={ctaBg} alt="" className="program-cta__bg" />
         <div className="program-cta__image-wrap">
           {/* Using a placeholder if a specific cap image isn't available, or the hero image */}
-          <img src={heroImg} alt="Graduation Cap" className="program-cta__image" />
+          <img src={heroImage} alt="Graduation Cap" className="program-cta__image" />
         </div>
         <div className="program-cta__content">
           <h2 className="program-cta__title">{cta.title}</h2>

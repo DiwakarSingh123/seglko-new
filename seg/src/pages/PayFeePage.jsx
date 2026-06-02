@@ -1,8 +1,21 @@
-import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import institutionsBg from '../assets/images/institutions-bg.png';
 import aboutBg from '../assets/images/about-bg.png';
 import campusBg from '../assets/images/campus-bg.png';
+
+const institutions = [
+  { name: 'Saroj Institute of Technology & Management', city: 'Lucknow', code: '123', image: institutionsBg, color: '#1041c6', payUrl: 'https://seglko.org/' },
+  { name: 'Shivdan Singh Institute of Technology & Management', city: 'Aligarh', code: '007', image: aboutBg, color: '#16a34a', payUrl: 'https://ssitm.in/' },
+  { name: 'Lucknow Institute of Pharmacy', city: 'Lucknow', code: '572', image: campusBg, color: '#e31e24', payUrl: 'https://seglko.org/lip/' },
+];
+
+const features = [
+  { icon: '🛡️', title: 'Secure & Trusted', desc: 'Your payments are protected with bank-level security.' },
+  { icon: '⚡', title: 'Quick & Easy', desc: 'Pay your fees in just a few simple steps.' },
+  { icon: '🕐', title: '24/7 Availability', desc: 'Make payments anytime, from anywhere.' },
+  { icon: '🧾', title: 'Instant Receipt', desc: 'Get instant payment confirmation & receipt.' },
+  { icon: '🎧', title: 'Need Help?', desc: 'Our support team is always here to assist you.' },
+];
 
 /* Real-looking QR SVG */
 const QRCode = ({ color }) => (
@@ -72,71 +85,11 @@ const LockIcon = () => (
 );
 
 export default function PayFeePage() {
-  const [institutions, setInstitutions] = useState([
-    { name: 'Saroj Institute of Technology & Management', city: 'Lucknow', code: '123', image: institutionsBg, color: '#1041c6', payUrl: 'https://seglko.org/' },
-    { name: 'Shivdan Singh Institute of Technology & Management', city: 'Aligarh', code: '007', image: aboutBg, color: '#16a34a', payUrl: 'https://ssitm.in/' },
-    { name: 'Lucknow Institute of Pharmacy', city: 'Lucknow', code: '572', image: campusBg, color: '#e31e24', payUrl: 'https://seglko.org/lip/' },
-  ]);
-
-  const [features, setFeatures] = useState([
-    { icon: '🛡️', title: 'Secure & Trusted', desc: 'Your payments are protected with bank-level security.' },
-    { icon: '⚡', title: 'Quick & Easy', desc: 'Pay your fees in just a few simple steps.' },
-    { icon: '🕐', title: '24/7 Availability', desc: 'Make payments anytime, from anywhere.' },
-    { icon: '🧾', title: 'Instant Receipt', desc: 'Get instant payment confirmation & receipt.' },
-    { icon: '🎧', title: 'Need Help?', desc: 'Our support team is always here to assist you.' },
-  ]);
-
-  const [general, setGeneral] = useState({
-    tollFree: "1800-180-7686",
-    hrEmail: "hr@seglko.org",
-    contactEmail: "admission.cell@seglko.org",
-    contactPhone: "09555699988",
-  });
-
-  useEffect(() => {
-    // Load institutions
-    fetch('http://localhost:3000/api/institutions')
-      .then(res => res.json())
-      .then(data => {
-        if (data && data.length > 0) {
-          const mapped = data.map(item => ({
-            name: item.title,
-            city: item.location || 'Lucknow',
-            code: item.code || '123',
-            image: item.tag?.toLowerCase().includes('pharm') ? campusBg :
-                   item.tag?.toLowerCase().includes('poly') ? aboutBg : institutionsBg,
-            color: item.tag?.toLowerCase().includes('law') ? '#7c3aed' :
-                   item.tag?.toLowerCase().includes('pharm') ? '#e31e24' :
-                   item.tag?.toLowerCase().includes('poly') ? '#16a34a' : '#1041c6',
-            payUrl: item.url || 'https://seglko.org/'
-          }));
-          setInstitutions(mapped);
-        }
-      })
-      .catch(err => console.error("Error loading institutions:", err));
-
-    // Load settings
-    fetch('http://localhost:3000/api/settings')
-      .then(res => res.json())
-      .then(settings => {
-        if (settings) {
-          if (settings.payFee && settings.payFee.features) {
-            setFeatures(settings.payFee.features);
-          }
-          if (settings.general) {
-            setGeneral(settings.general);
-          }
-        }
-      })
-      .catch(err => console.error("Error loading settings:", err));
-  }, []);
-
   return (
     <div style={{ background: '#f0f4ff', minHeight: '100vh' }}>
       <style>{`
         /* Hero */
-        .pf-hero { background: linear-gradient(120deg,#0a1a4e 0%,#0d2b8a 55%,#1041c6 100%); padding:60px 5% 50px; display:grid; grid-template-columns:1fr 1fr; gap:40px; align-items:center; position:relative; overflow:hidden; }
-        .pf-hero__content { margin-top: 60px; }
+        .pf-hero { background: linear-gradient(120deg,#0a1a4e 0%,#0d2b8a 55%,#1041c6 100%); padding:100px 5% 50px; display:grid; grid-template-columns:1fr 1fr; gap:40px; align-items:center; position:relative; overflow:hidden; }
         .pf-hero__title { font-size:4.2rem; font-weight:900; color:#fff; line-height:1; margin-bottom:14px; letter-spacing:-1px; }
         .pf-hero__title span { color:#ffbe23; }
         .pf-hero__sub { font-size:1.1rem; color:rgba(255,255,255,0.82); margin-bottom:6px; }
@@ -206,7 +159,6 @@ export default function PayFeePage() {
         @media (max-width:1023px) {
           .pf-hero { grid-template-columns:1fr; padding:48px 5% 36px; }
           .pf-hero__title { font-size:3rem; }
-          .pf-hero__content { margin-top: 0; }
           .pf-hero__mockup { max-width:100%; margin-left:0; }
           .pf-cards { grid-template-columns:1fr; max-width:460px; margin:0 auto 40px; }
           .pf-features { grid-template-columns:repeat(2,1fr); }
@@ -227,16 +179,76 @@ export default function PayFeePage() {
           .pf-feat { border-right:none !important; }
           .pf-feat:not(:last-child) { border-bottom:1px solid #eef2ff; }
         }
+        @media (max-width:475px) {
+          .pf-hero { padding:28px 14px 24px; gap:18px; }
+          .pf-hero__title { font-size:2rem; line-height:1.05; }
+          .pf-hero__sub { font-size:0.95rem; line-height:1.45; }
+          .pf-hero__accent { font-size:1rem; margin-bottom:20px; }
+          .pf-hero__mockup { padding:16px; border-radius:14px; }
+          .pf-bc { padding:10px 14px; font-size:12px; }
+          .pf-main { padding:24px 14px 32px; }
+          .pf-dot { margin-bottom:22px; }
+          .pf-cards { gap:18px; margin-bottom:28px; }
+          .pf-card__head { padding:15px 13px; gap:10px; align-items:flex-start; }
+          .pf-card__corner { border-width:0 68px 68px 0; }
+          .pf-card__hex,
+          .pf-card__hex-inner { width:58px; height:58px; }
+          .pf-card__name { font-size:13.5px; }
+          .pf-card__meta { font-size:11px; flex-wrap:wrap; }
+          .pf-card__body { padding:14px; gap:14px; }
+          .pf-card__qr-box svg { width:104px; height:104px; }
+          .pf-card__foot { align-items:flex-start; flex-wrap:wrap; font-size:11px; line-height:1.45; }
+          .pf-card__foot strong { overflow-wrap:anywhere; }
+          .pf-feat { padding:16px 14px; }
+        }
         @media (max-width:375px) {
           .pf-hero__title { font-size:1.8rem; }
           .pf-hero__badges { flex-direction:column; }
           .pf-main__title { font-size:1.2rem; }
+          .pf-hero { padding:24px 12px 22px; }
+          .pf-hero__badge { width:100%; }
+          .pf-hero__mockup { padding:14px; }
+          .pf-main { padding:22px 12px 30px; }
+          .pf-card__head { padding:14px 12px; }
+          .pf-card__body { padding:12px; }
+          .pf-card__pay-btn,
+          .pf-pay-btn-hero { font-size:12px; }
+          .pf-feat__title { font-size:12.5px; }
+          .pf-feat__desc { font-size:10.5px; }
+        }
+        @media (max-width:320px) {
+          .pf-hero { padding:20px 10px 20px; gap:16px; }
+          .pf-hero__title { font-size:1.55rem; letter-spacing:-0.5px; }
+          .pf-hero__sub { font-size:0.85rem; }
+          .pf-hero__accent { font-size:0.9rem; margin-bottom:16px; }
+          .pf-hero__badge { font-size:10px; padding:7px 9px; }
+          .pf-hero__mockup h4 { font-size:13px; }
+          .pf-hero__mockup p,
+          .pf-field { font-size:10.5px; }
+          .pf-bc { padding:9px 10px; font-size:11px; }
+          .pf-main { padding:20px 10px 28px; }
+          .pf-main__title { font-size:1.05rem; }
+          .pf-main__sub { font-size:12px; line-height:1.45; }
+          .pf-card { border-radius:12px; }
+          .pf-card__head { gap:8px; }
+          .pf-card__corner { border-width:0 56px 56px 0; }
+          .pf-card__corner-icon { top:7px; right:7px; }
+          .pf-card__hex,
+          .pf-card__hex-inner { width:50px; height:50px; }
+          .pf-card__name { font-size:12.5px; }
+          .pf-card__meta,
+          .pf-card__dl,
+          .pf-card__foot { font-size:10.5px; }
+          .pf-card__qr-box svg { width:96px; height:96px; }
+          .pf-card__opt { font-size:12px; }
+          .pf-feat { padding:14px 12px; gap:10px; }
+          .pf-feat__icon { font-size:20px; }
         }
       `}</style>
 
       {/* ── Hero ── */}
       <div className="pf-hero">
-        <div className="pf-hero__content" style={{ position: 'relative', zIndex: 1 }}>
+        <div style={{ position: 'relative', zIndex: 1 }}>
           <h1 className="pf-hero__title"><span>FEE</span> PORTAL</h1>
           <p className="pf-hero__sub">A secure, fast & convenient way to pay your fees</p>
           <p className="pf-hero__accent">anytime, anywhere.</p>
@@ -258,8 +270,8 @@ export default function PayFeePage() {
         </div>
       </div>
 
-    
-
+      {/* ── Breadcrumb ── */}
+     
       {/* ── Main ── */}
       <div className="pf-main">
         <h2 className="pf-main__title">Colleges Fee Payment Portal</h2>
@@ -307,7 +319,7 @@ export default function PayFeePage() {
                   <div className="pf-card__qr-box">
                     <QRCode color={inst.color} />
                   </div>
-                  <a href="#" className="pf-card__dl" style={{ color: inst.color }} onClick={(e) => { e.preventDefault(); alert("Downloading QR code is not active in sandbox simulation."); }}>
+                  <a href="#" className="pf-card__dl" style={{ color: inst.color }}>
                     Download QR Code 📥
                   </a>
                 </div>
@@ -332,7 +344,7 @@ export default function PayFeePage() {
               {/* Footer */}
               <div className="pf-card__foot" style={{ background: `${inst.color}08`, borderTop: `1px solid ${inst.color}20` }}>
                 <MailIcon />
-                For payment issues, contact: <strong>{general.contactEmail || "admission.cell@seglko.org"}</strong>
+                For payment issues, contact: <strong>admission.cell@seglko.org</strong>
               </div>
             </div>
           ))}

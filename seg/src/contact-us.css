@@ -1,7 +1,7 @@
 /* ===== CONTACT US PAGE ===== */
 .cu-page {
   width: 100%;
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Inter', sans-serif;
   color: #1e293b;
   background-color: #fafbfc;
   overflow-x: hidden;
@@ -16,7 +16,7 @@
   display: flex;
   align-items: center;
   overflow: hidden;
-  padding: 2rem 2.5rem 4rem 2.5rem;
+  padding: 2rem 5% 4rem;
   background-color: #ffffff;
 }
 
@@ -29,19 +29,22 @@
   z-index: 1;
 }
 
+.cu-hero__bg::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(to right, rgba(255,255,255,1) 0%, rgba(255,255,255,0.8) 50%, rgba(255,255,255,0) 100%);
+  z-index: 2;
+}
+
 .cu-hero__bg img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center;
-}
-
-.cu-hero__bg::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: transparent;
-  z-index: 2;
+  object-position: right center;
 }
 
 .cu-hero__logo-card {
@@ -76,13 +79,14 @@
 
 .cu-hero__container {
   max-width: 100%;
-  margin: 0;
+  margin: 0 auto;
   display: flex;
   align-items: center;
   justify-content: space-between;
   position: relative;
   z-index: 5;
   width: 100%;
+  padding: 0;
 }
 
 .cu-hero__left {
@@ -190,13 +194,14 @@
 }
 
 .cu-hero__right {
-  flex: 0 0 340px;
-  width: 340px;
+  flex: 0.2;
+  max-width: 320px;
   display: flex;
   flex-direction: column;
   gap: 1rem;
   z-index: 6;
-  align-self: center;
+  margin-left: auto;
+  transform: translateX(0) translateY(-80px);
 }
 
 .cu-feature-card {
@@ -262,7 +267,7 @@
 
 .cu-quickbar {
   max-width: 100%;
-  width: 96%;
+  width: 100%;
   margin: 0 auto;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -420,6 +425,11 @@
 .cu-input select {
   cursor: pointer;
   appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 1.25em;
+  padding-right: 2.5rem;
 }
 
 .cu-input--full {
@@ -907,29 +917,64 @@
   .cu-hero__title {
     font-size: 4rem;
   }
+
+  .cu-hero__right {
+    transform: translateX(60px);
+    /* Reduce shift for smaller laptops */
+  }
 }
 
 @media (max-width: 1200px) {
   .cu-hero {
     min-height: auto;
-    padding: 5rem 3% 4rem;
+    padding: 8rem 5% 6rem;
+    flex-direction: column;
+  }
+
+  .cu-hero__bg::after {
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.95);
   }
 
   .cu-hero__container {
-    gap: 2rem;
+    flex-direction: column;
+    text-align: center;
+    gap: 3rem;
   }
 
   .cu-hero__left {
-    max-width: 55%;
+    max-width: 100%;
   }
 
   .cu-hero__title {
     font-size: 3.5rem;
   }
 
+  .cu-hero__sub {
+    margin: 0 auto 2rem;
+    max-width: 600px;
+  }
+
+  .cu-hero__actions,
+  .cu-hero__secure {
+    justify-content: center;
+  }
+
   .cu-hero__right {
-    flex: 0 0 280px;
-    width: 280px;
+    max-width: 100%;
+    transform: none;
+    /* Remove shift */
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1.5rem;
+  }
+
+  .cu-feature-card {
+    flex: 1;
+    min-width: 280px;
+    max-width: 350px;
   }
 
   .cu-quickbar-section {
@@ -946,37 +991,8 @@
 }
 
 @media (max-width: 992px) {
-  .cu-hero {
-    padding: 5rem 2% 4rem;
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .cu-hero__container {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 2rem;
-  }
-
-  .cu-hero__left {
-    max-width: 100%;
-  }
-
   .cu-hero__title {
     font-size: 3rem;
-  }
-
-  .cu-hero__right {
-    flex: unset;
-    width: 100%;
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: 1rem;
-  }
-
-  .cu-feature-card {
-    flex: 1;
-    min-width: 240px;
   }
 
   .cu-quickbar {
@@ -992,23 +1008,22 @@
     border-right: none;
     border-bottom: 1px solid #e2e8f0;
   }
+
+  .cu-trust-item:last-child {
+    border-bottom: none;
+  }
 }
 
 @media (max-width: 768px) {
   .cu-hero {
-    padding: 5rem 1rem 3rem;
-    align-items: center;
+    padding-top: 7rem;
+    padding-bottom: 4rem;
   }
 
-  .cu-hero__bg img {
-    object-position: center top;
-  }
-
-  .cu-hero__container {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    gap: 2rem;
+  .cu-hero__logo-card {
+    top: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
   }
 
   .cu-hero__title {
@@ -1018,19 +1033,14 @@
 
   .cu-hero__sub {
     font-size: 1.1rem;
-    margin: 0 auto 2rem;
   }
 
   .cu-hero__actions {
     flex-direction: column;
-    align-items: center;
     width: 100%;
     max-width: 320px;
-    margin: 0 auto 2rem;
-  }
-
-  .cu-hero__secure {
-    justify-content: center;
+    margin-left: auto;
+    margin-right: auto;
   }
 
   .cu-btn {
@@ -1039,21 +1049,17 @@
   }
 
   .cu-hero__right {
-    flex: unset;
-    width: 100%;
     flex-direction: column;
-    align-items: stretch;
-    gap: 0.75rem;
+    align-items: center;
   }
 
   .cu-feature-card {
-    max-width: 100%;
-    min-width: unset;
+    max-width: 400px;
   }
 
   .cu-quickbar-section {
-    margin-top: 1.5rem;
-    padding: 0 1rem;
+    margin-top: 2rem;
+    padding: 0 1.5rem;
   }
 
   .cu-quickbar {
@@ -1073,8 +1079,21 @@
     grid-template-columns: 1fr;
   }
 
+  .cu-campus__floating-card {
+    position: static;
+    width: 100%;
+    box-shadow: none;
+    padding: 1.5rem;
+    border-radius: 0;
+  }
+
   .cu-campus__details {
     flex-direction: column;
+  }
+
+  .cu-map {
+    margin-top: 0;
+    min-height: 280px;
   }
 
   .cu-faq__title {
@@ -1089,6 +1108,7 @@
     padding: 2rem;
     flex-direction: column;
     text-align: center;
+    gap: 2rem;
   }
 
   .cu-cta-banner__left {
@@ -1107,177 +1127,312 @@
 
 @media (max-width: 480px) {
   .cu-hero {
-    padding: 5rem 1rem 3rem;
-    min-height: auto;
-  }
-
-  .cu-hero__bg::after {
-    background: rgba(255, 255, 255, 0.72);
-  }
-
-
-
-  .cu-hero__container {
-    flex-direction: column;
-    gap: 2rem;
-    text-align: center;
-  }
-
-  .cu-hero__left {
-    max-width: 100%;
+    padding-top: 6rem;
+    padding-bottom: 3rem;
   }
 
   .cu-hero__title {
     font-size: 2rem;
-    letter-spacing: -1px;
+    letter-spacing: -0.5px;
   }
 
   .cu-hero__sub {
     font-size: 0.95rem;
-    margin: 0 auto 1.5rem;
-  }
-
-  .cu-hero__actions {
-    flex-direction: column;
-    align-items: center;
-    gap: 0.75rem;
     margin-bottom: 1.5rem;
   }
 
-  .cu-btn {
-    width: 100%;
-    justify-content: center;
-    font-size: 0.95rem;
-    padding: 0.85rem 1.25rem;
-  }
-
-  .cu-hero__secure {
-    justify-content: center;
-    font-size: 0.85rem;
-  }
-
-  .cu-hero__right {
-    flex: unset;
-    width: 100%;
-    flex-direction: column;
-    align-items: stretch;
-    gap: 0.75rem;
-  }
-
-  .cu-feature-card {
-    max-width: 100%;
-    padding: 1rem;
+  .cu-hero__actions {
     gap: 1rem;
   }
 
-  .cu-feature-card__icon {
-    width: 44px;
-    height: 44px;
-    flex-shrink: 0;
+  .cu-feature-card {
+    padding: 1rem;
+    gap: 1rem;
+    max-width: 100%;
   }
 
   .cu-feature-card__title {
-    font-size: 0.95rem;
+    font-size: 1rem;
   }
 
   .cu-feature-card__desc {
     font-size: 0.8rem;
   }
 
-  .cu-quickbar-section {
-    margin-top: 1.5rem;
-    padding: 0 1rem;
-  }
-
-  .cu-quickbar {
-    grid-template-columns: 1fr;
-    width: 100%;
-    gap: 0.75rem;
-  }
-
-  .cu-quickbar__item {
-    padding: 1rem;
-    gap: 0.75rem;
-  }
-
-  .cu-quickbar__icon {
-    width: 44px;
-    height: 44px;
-    flex-shrink: 0;
-  }
-
   .cu-quickbar__label {
-    font-size: 0.95rem;
+    font-size: 1rem;
   }
 
   .cu-quickbar__detail {
-    font-size: 0.78rem;
-  }
-
-  .cu-main {
-    padding: 2rem 1rem;
-  }
-
-  .cu-main__container {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
+    font-size: 0.8rem;
   }
 
   .cu-form-card {
     padding: 1.25rem;
   }
+}
 
-  .cu-form-card h2 {
-    font-size: 1.35rem;
+/* Targeted responsive polish for contact page */
+.cu-page *,
+.cu-page *::before,
+.cu-page *::after {
+  box-sizing: border-box;
+}
+
+@media (max-width: 768px) {
+  .cu-hero {
+    min-height: auto !important;
+    padding: 4.75rem 16px 2rem !important;
+    align-items: flex-start;
   }
 
-  .cu-form__row {
-    grid-template-columns: 1fr;
-    gap: 0.75rem;
+  .cu-hero__container {
+    gap: 1.5rem;
   }
 
-  .cu-form {
-    gap: 0.75rem;
+  .cu-hero__title {
+    font-size: 2.4rem !important;
+    line-height: 1.12;
+    margin-bottom: 0.75rem;
   }
 
-  .cu-submit {
+  .cu-hero__sub {
     font-size: 1rem;
-    padding: 1rem;
+    line-height: 1.5;
+    margin-bottom: 1.25rem;
+  }
+
+  .cu-hero__actions {
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+  }
+
+  .cu-btn {
+    min-height: 46px;
+    padding: 0.75rem 1rem;
+    font-size: 0.95rem;
+  }
+
+  .cu-hero__secure {
+    justify-content: center;
+    font-size: 0.85rem;
+    line-height: 1.4;
+  }
+
+  .cu-feature-card {
+    width: 100%;
+    min-width: 0;
+    max-width: 420px;
+    border-radius: 1rem;
+  }
+
+  .cu-quickbar-section {
+    margin-top: 0 !important;
+    padding: 1.25rem 16px 0;
+  }
+
+  .cu-quickbar {
+    width: 100%;
+  }
+
+  .cu-main,
+  .cu-faq-section {
+    padding: 2rem 16px !important;
+  }
+
+  .cu-form-card,
+  .cu-campus,
+  .cu-faq__card,
+  .cu-trust-bar,
+  .cu-cta-banner {
+    border-radius: 0.875rem;
+  }
+
+  .cu-input input,
+  .cu-input select,
+  .cu-input textarea {
+    min-width: 0;
   }
 
   .cu-campus__image {
-    height: 180px;
+    height: 220px;
+  }
+
+  .cu-campus__office-addr,
+  .cu-campus__detail-val,
+  .cu-quickbar__detail,
+  .cu-trust-desc {
+    overflow-wrap: anywhere;
+  }
+}
+
+@media (max-width: 425px) {
+  .cu-hero {
+    padding: 3.75rem 12px 1.5rem !important;
+  }
+
+  .cu-hero__container {
+    gap: 1.25rem;
+  }
+
+  .cu-hero__title {
+    font-size: 2rem !important;
+    letter-spacing: -0.5px;
+  }
+
+  .cu-hero__sub {
+    font-size: 0.92rem;
+  }
+
+  .cu-hero__actions {
+    max-width: 100%;
+  }
+
+  .cu-hero__secure {
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  .cu-hero__right {
+    gap: 0.75rem;
+    width: 100%;
+  }
+
+  .cu-feature-card {
+    padding: 0.9rem;
+    gap: 0.8rem;
+  }
+
+  .cu-feature-card__icon {
+    width: 44px;
+    height: 44px;
+  }
+
+  .cu-feature-card__icon svg {
+    width: 21px;
+    height: 21px;
+  }
+
+  .cu-quickbar-section {
+    padding: 1rem 12px 0;
+  }
+
+  .cu-quickbar__item {
+    gap: 0.8rem;
+    padding: 1rem;
+    border-radius: 1rem;
+  }
+
+  .cu-quickbar__icon {
+    width: 44px;
+    height: 44px;
+  }
+
+  .cu-quickbar__icon svg {
+    width: 21px;
+    height: 21px;
+  }
+
+  .cu-quickbar__arrow {
+    display: none;
+  }
+
+  .cu-main,
+  .cu-faq-section {
+    padding: 1.5rem 12px !important;
+  }
+
+  .cu-form-card {
+    padding: 1rem;
+  }
+
+  .cu-form-card h2,
+  .cu-faq__title {
+    font-size: 1.55rem;
+  }
+
+  .cu-form {
+    gap: 0.9rem;
+  }
+
+  .cu-input {
+    gap: 0.55rem;
+    padding: 0 0.75rem;
+  }
+
+  .cu-input svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .cu-input input,
+  .cu-input select,
+  .cu-input textarea {
+    font-size: 0.9rem;
+    padding: 0.82rem 0;
+  }
+
+  .cu-input select {
+    background-position: right 0.25rem center;
+    padding-right: 1.75rem;
+  }
+
+  .cu-submit {
+    min-height: 46px;
+    padding: 0.85rem;
+    font-size: 0.95rem;
+  }
+
+  .cu-form__privacy {
+    align-items: flex-start;
+    text-align: left;
+    font-size: 0.75rem;
+  }
+
+  .cu-campus__image {
+    height: 190px;
+  }
+
+  .cu-campus__header {
+    top: 1rem;
+    left: 1rem;
+  }
+
+  .cu-campus__header-title {
+    font-size: 1.4rem;
   }
 
   .cu-campus__floating-card {
-    position: static;
-    width: 100%;
-    left: unset;
-    border-radius: 0;
-    box-shadow: none;
-    border-top: 1px solid #f1f5f9;
+    padding: 1rem;
   }
 
-  .cu-map {
-    margin-top: 0;
+  .cu-campus__office,
+  .cu-campus__detail {
+    gap: 0.7rem;
   }
 
   .cu-campus__details {
-    flex-direction: column;
-    gap: 0.75rem;
+    gap: 0.8rem;
   }
 
-  .cu-faq-section {
-    padding: 2rem 1rem;
+  .cu-map,
+  .cu-map iframe {
+    min-height: 230px;
   }
 
-  .cu-faq__title {
-    font-size: 1.5rem;
+  .cu-map__open {
+    top: 0.75rem;
+    right: 0.75rem;
+    padding: 0.45rem 0.7rem;
+    font-size: 0.78rem;
+  }
+
+  .cu-faq__line {
+    margin-bottom: 1.5rem;
   }
 
   .cu-faq__grid {
-    grid-template-columns: 1fr;
-    gap: 0.75rem;
+    gap: 1rem;
     margin-bottom: 2rem;
   }
 
@@ -1285,219 +1440,195 @@
     padding: 1rem;
   }
 
+  .cu-faq__card-header {
+    gap: 0.75rem;
+  }
+
+  .cu-faq__card-icon {
+    width: 34px;
+    height: 34px;
+  }
+
+  .cu-faq__card-icon svg {
+    width: 17px;
+    height: 17px;
+  }
+
   .cu-faq__card-q {
-    font-size: 0.9rem;
+    font-size: 0.92rem;
   }
 
   .cu-faq__card-body {
     padding-left: 0;
-    font-size: 0.875rem;
+    font-size: 0.85rem;
   }
 
   .cu-trust-bar {
-    flex-direction: column;
     margin-bottom: 2rem;
   }
 
   .cu-trust-item {
     padding: 1rem;
-    border-right: none;
-    border-bottom: 1px solid #e2e8f0;
+    gap: 0.75rem;
+  }
+
+  .cu-trust-icon {
+    width: 38px;
+    height: 38px;
+  }
+
+  .cu-trust-icon svg {
+    width: 19px;
+    height: 19px;
   }
 
   .cu-cta-banner {
     padding: 1.25rem;
-    flex-direction: column;
-    text-align: center;
-    gap: 1rem;
-  }
-
-  .cu-cta-banner__left {
-    flex-direction: column;
-    align-items: center;
+    gap: 1.25rem;
   }
 
   .cu-cta-banner__icon {
-    width: 56px;
-    height: 56px;
+    width: 54px;
+    height: 54px;
+  }
+
+  .cu-cta-banner__icon svg {
+    width: 27px;
+    height: 27px;
   }
 
   .cu-cta-banner__title {
-    font-size: 1.25rem;
+    font-size: 1.35rem;
   }
 
-  .cu-cta-banner__actions {
-    flex-direction: column;
-    width: 100%;
-  }
-
-  .cu-cta-banner__actions .cu-btn {
-    width: 100%;
-    justify-content: center;
+  .cu-cta-banner__desc {
+    font-size: 0.9rem;
   }
 }
 
 @media (max-width: 375px) {
   .cu-hero {
-    padding: 4.5rem 0.875rem 2.5rem;
+    padding-top: 3.25rem !important;
   }
 
   .cu-hero__title {
-    font-size: 1.75rem;
+    font-size: 1.8rem !important;
   }
 
   .cu-hero__sub {
-    font-size: 0.875rem;
+    font-size: 0.86rem;
   }
 
   .cu-btn {
-    font-size: 0.875rem;
-    padding: 0.75rem 1rem;
+    min-height: 42px;
+    font-size: 0.86rem;
+    padding: 0.65rem 0.8rem;
   }
 
-  .cu-quickbar__item {
-    padding: 0.875rem;
+  .cu-feature-card__title,
+  .cu-quickbar__label,
+  .cu-trust-title {
+    font-size: 0.92rem;
   }
 
-  .cu-quickbar__label {
-    font-size: 0.875rem;
+  .cu-feature-card__desc,
+  .cu-quickbar__detail,
+  .cu-campus__office-addr,
+  .cu-campus__detail-val,
+  .cu-trust-desc {
+    font-size: 0.78rem;
   }
 
-  .cu-quickbar__detail {
-    font-size: 0.75rem;
-  }
-
-  .cu-form-card {
-    padding: 1rem;
-  }
-
-  .cu-form-card h2 {
-    font-size: 1.2rem;
-  }
-
+  .cu-form-card h2,
   .cu-faq__title {
-    font-size: 1.35rem;
+    font-size: 1.4rem;
   }
 
-  .cu-cta-banner__title {
-    font-size: 1.1rem;
+  .cu-campus__office-title {
+    font-size: 1rem;
   }
 
-  .cu-feature-card__title {
-    font-size: 0.9rem;
+  .cu-campus__detail-label {
+    font-size: 0.68rem;
   }
 
-  .cu-feature-card__desc {
-    font-size: 0.75rem;
+  .cu-page .cu-cta-banner__actions .cu-btn {
+    font-size: 0.8rem;
   }
 }
 
 @media (max-width: 320px) {
-  /* ── Hero ── */
-  .cu-hero__bg::after {
-    background: rgba(255, 255, 255, 0.72);
-  }
   .cu-hero {
-    min-height: unset;
-    padding: 3.5rem 0.75rem 2rem;
-    align-items: flex-start;
-  }
-
-  .cu-hero__container {
-    flex-direction: column;
-    align-items: flex-start;
-    text-align: left;
-    gap: 1.25rem;
-    width: 100%;
-  }
-
-  .cu-hero__left {
-    width: 100%;
-    max-width: 100%;
+    padding: 2.75rem 10px 1.25rem !important;
   }
 
   .cu-hero__title {
-    font-size: 1.5rem;
-    letter-spacing: -0.5px;
-    margin-bottom: 0.75rem;
-    word-break: break-word;
+    font-size: 1.55rem !important;
   }
 
   .cu-hero__sub {
     font-size: 0.8rem;
-    max-width: 100%;
-    margin: 0 0 1rem;
-    line-height: 1.5;
-  }
-
-  .cu-hero__actions {
-    flex-direction: column;
-    width: 100%;
-    gap: 0.5rem;
-    margin-bottom: 1rem;
-  }
-
-  .cu-btn {
-    width: 100%;
-    justify-content: center;
-    font-size: 0.8rem;
-    padding: 0.7rem 0.75rem;
-    gap: 0.4rem;
-    border-radius: 0.5rem;
-  }
-
-  .cu-btn svg {
-    width: 15px;
-    height: 15px;
-    flex-shrink: 0;
   }
 
   .cu-hero__secure {
-    font-size: 0.72rem;
-    gap: 0.4rem;
-    flex-wrap: wrap;
+    font-size: 0.75rem;
   }
 
-  .cu-hero__secure svg {
-    width: 14px;
-    height: 14px;
-    flex-shrink: 0;
+  .cu-feature-card,
+  .cu-quickbar__item,
+  .cu-form-card,
+  .cu-faq__card,
+  .cu-trust-item,
+  .cu-cta-banner {
+    padding: 0.85rem;
   }
 
-  .cu-hero__right {
-    flex: unset;
-    width: 100%;
-    flex-direction: column;
-    align-items: stretch;
-    gap: 0.5rem;
+  .cu-feature-card__icon,
+  .cu-quickbar__icon {
+    width: 38px;
+    height: 38px;
   }
 
-  .cu-feature-card {
-    width: 100%;
-    max-width: 100%;
-    padding: 0.65rem 0.75rem;
-    gap: 0.65rem;
-    border-radius: 0.75rem;
-  }
-
-  .cu-feature-card__icon {
-    width: 34px;
-    height: 34px;
-    flex-shrink: 0;
-  }
-
-  .cu-feature-card__icon svg {
+  .cu-feature-card__icon svg,
+  .cu-quickbar__icon svg {
     width: 18px;
     height: 18px;
   }
 
-  .cu-feature-card__title {
-    font-size: 0.82rem;
-    margin-bottom: 0.1rem;
+  .cu-main,
+  .cu-faq-section {
+    padding: 1.25rem 10px !important;
   }
 
-  .cu-feature-card__desc {
-    font-size: 0.7rem;
-    line-height: 1.3;
+  .cu-input {
+    padding: 0 0.6rem;
+  }
+
+  .cu-input input,
+  .cu-input select,
+  .cu-input textarea {
+    font-size: 0.82rem;
+  }
+
+  .cu-campus__image {
+    height: 165px;
+  }
+
+  .cu-map,
+  .cu-map iframe {
+    min-height: 210px;
+  }
+
+  .cu-map__open {
+    left: 0.75rem;
+    right: auto;
+  }
+
+  .cu-faq__card-q {
+    font-size: 0.84rem;
+  }
+
+  .cu-cta-banner__title {
+    font-size: 1.15rem;
   }
 }

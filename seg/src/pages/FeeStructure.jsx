@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import '../FeeStructure.css';
-import institutionsBg from '../assets/images/institutions-bg.png';
+import institutionsBg from '../assets/images/seg.jpeg';
 
 const btechFees = [
   { branch: 'Computer Science & Engineering', duration: '4 Years', firstYear: '₹ 85,000', secondYear: '₹ 85,000', total: '₹ 3,40,000' },
@@ -23,13 +23,7 @@ const FeeStructure = () => {
       <section className="fee-hero">
         <div className="fee-hero__inner">
           <div className="fee-hero__content">
-            <div className="fee-hero__breadcrumbs">
-              <Link to="/">Home</Link>
-              <span className="separator">&gt;</span>
-              <span>Admission</span>
-              <span className="separator">&gt;</span>
-              <span className="current">Fee Structure</span>
-            </div>
+
             <h1 className="fee-hero__title">Transparent <br />Fee Structure</h1>
             <div className="fee-hero__accent-line"></div>
             <p className="fee-hero__text">
@@ -46,7 +40,7 @@ const FeeStructure = () => {
       <section className="fee-stats-bar">
         <div className="fee-stat-item">
           <div className="fee-stat-icon">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="16" /><line x1="8" y1="12" x2="16" y2="12" /></svg>
           </div>
           <div className="fee-stat-info">
             <span className="fee-stat-value">Flexible</span>
@@ -55,7 +49,7 @@ const FeeStructure = () => {
         </div>
         <div className="fee-stat-item">
           <div className="fee-stat-icon">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" /></svg>
           </div>
           <div className="fee-stat-info">
             <span className="fee-stat-value">Merit</span>
@@ -64,7 +58,7 @@ const FeeStructure = () => {
         </div>
         <div className="fee-stat-item">
           <div className="fee-stat-icon">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg>
           </div>
           <div className="fee-stat-info">
             <span className="fee-stat-value">Secure</span>
@@ -73,7 +67,7 @@ const FeeStructure = () => {
         </div>
         <div className="fee-stat-item">
           <div className="fee-stat-icon">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v6c0 6 8 10 8 10z"/></svg>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v6c0 6 8 10 8 10z" /></svg>
           </div>
           <div className="fee-stat-info">
             <span className="fee-stat-value">No Hidden</span>

@@ -1,9 +1,20 @@
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import aboutBg from '../assets/images/about-bg.png';
-import facultyBg from '../assets/images/faculty-bg.png';
+import faculty1 from '../assets/images/1776318734242.jpg';
+import faculty2 from '../assets/images/M_1722920383.jpg';
+import faculty3 from '../assets/images/1568080358490.jpg';
+import faculty4 from '../assets/images/Dr.-Hrishikesh-Pai.png';
+import faculty5 from '../assets/images/images (39).jpg';
+
+
+import placement1 from '../assets/images/surender pratap.jpeg';
+import placement2 from '../assets/images/mansi sahu.jpeg';
+import placement3 from '../assets/images/Harsh dixit.jpeg';
+import placement4 from '../assets/images/surender pratap.jpeg';
 import institutionsBg from '../assets/images/institutions-bg.png';
 import campusBg from '../assets/images/campus-bg.png';
+import facultyBg from '../assets/images/faculty-bg.png';
 
 const ArrowRight = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -17,11 +28,20 @@ const ArrowLeft = () => (
   </svg>
 );
 
-const PeopleIcon = () => (
-  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <circle cx="9" cy="8" r="3" stroke="currentColor" strokeWidth="1.8" />
-    <path d="M4 18C4 15.8 6.2 14 9 14C11.8 14 14 15.8 14 18" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-    <circle cx="17" cy="9" r="2.5" stroke="currentColor" strokeWidth="1.8" />
+const UserStarIcon = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+    <circle cx="9" cy="7" r="4" />
+    <path d="m14 11 1.7 3.5 3.8.6-2.7 2.6.6 3.8-3.4-1.8-3.4 1.8.6-3.8-2.7-2.6 3.8-.6Z" />
+  </svg>
+);
+
+const UsersIcon = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+    <circle cx="9" cy="7" r="4" />
+    <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
   </svg>
 );
 
@@ -36,10 +56,9 @@ const TrophyIcon = () => (
 );
 
 const StoryIcon = () => (
-  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M5 5H19V15H8L5 18V5Z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" />
-    <path d="M9 9H15" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-    <path d="M9 12H13" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <polyline points="22 7 13.5 15.5 8.5 10.5 2 17" />
+    <polyline points="16 7 22 7 22 13" />
   </svg>
 );
 
@@ -76,16 +95,17 @@ const StarIcon = () => (
 );
 
 const tabs = [
-  { label: 'Top Faculties', icon: <PeopleIcon /> },
+  { label: 'Top Faculties', icon: <UserStarIcon /> },
   { label: 'Awards & Achievements', icon: <TrophyIcon /> },
   { label: 'Success Stories', icon: <StoryIcon /> },
 ];
 
 const facultyCards = [
-  { name: 'Prof. (Dr.) Anviti Gupta', role: 'Professor & Dean', school: 'Sharda School of Humanities & Social Sciences', image: facultyBg, tone: 'cyan' },
-  { name: 'Prof. Prem Kumar Malhotra', role: 'Professor', school: 'Sharda School of Law', image: aboutBg, tone: 'gold' },
-  { name: 'Prof. (Dr.) Debasis Mallik', role: 'Dean', school: 'Sharda School of Business Studies', image: institutionsBg, tone: 'blue' },
-  { name: 'Prof. (Dr.) Hrishikesh Dave', role: 'Dean', school: 'Sharda School of Law', image: campusBg, tone: 'violet' },
+  { id: 1, name: 'Prof. (Dr.) Anviti Gupta', role: 'Professor & Dean', school: 'Shivdan Singh Institute of Technology and Management', image: faculty1, tone: 'cyan' },
+  { id: 2, name: 'Prof. Prem Kumar Malhotra', role: 'Professor', school: 'Saroj Institute of Technology and Management', image: faculty2, tone: 'gold' },
+  { id: 3, name: 'Prof. (Dr.) Debasis Mallik', role: 'Dean', school: 'Saroj College of Law', image: faculty3, tone: 'blue' },
+  { id: 4, name: 'Prof. (Dr.) Hrishikesh Dave', role: 'Dean', school: 'Saroj College of Law', image: faculty4, tone: 'violet' },
+  { id: 5, name: 'Prof. (Dr.) Rajeev Kumar', role: 'Professor & Dean', school: 'Saroj College of Pharmacy', image: faculty5, tone: 'cyan' },
 ];
 
 const awardsCards = [
@@ -93,13 +113,15 @@ const awardsCards = [
   { title: 'NAAC A+ Accreditation', body: 'National Assessment and Accreditation Council', desc: 'Highest grade awarded for quality education, infrastructure and student outcomes.', tone: 'blue' },
   { title: 'Top 100 Universities', body: 'NIRF Rankings 2023', desc: 'Ranked among top 100 universities in India by National Institutional Ranking Framework.', tone: 'cyan' },
   { title: 'Research Excellence Award', body: 'UGC India', desc: 'Awarded for outstanding research output and publications in international journals.', tone: 'violet' },
+  { title: 'Innovation Leadership Award', body: 'Academic Excellence Forum', desc: 'Honored for nurturing entrepreneurship, practical learning and student-led innovation initiatives.', tone: 'gold' },
 ];
 
 const storiesCards = [
-  { name: 'Rahul Sharma', batch: 'B.Tech CSE 2020', company: 'Google', role: 'Software Engineer', package: '32 LPA', image: facultyBg, tone: 'cyan' },
-  { name: 'Priya Singh', batch: 'MBA 2021', company: 'McKinsey & Co.', role: 'Business Analyst', package: '28 LPA', image: aboutBg, tone: 'gold' },
-  { name: 'Amit Kumar', batch: 'B.Pharm 2019', company: 'Sun Pharma', role: 'Research Scientist', package: '18 LPA', image: institutionsBg, tone: 'blue' },
-  { name: 'Neha Gupta', batch: 'LLB 2022', company: 'Cyril Amarchand', role: 'Associate Lawyer', package: '22 LPA', image: campusBg, tone: 'violet' },
+  { name: 'surender pratap', batch: 'B.Tech CSE 2020', company: 'Black Apple Technologies', role: 'Software Engineer', package: '6 LPA', image: placement1, tone: 'cyan' },
+  { name: 'Mansi Sahu', batch: 'MBA 2021', company: 'McKinsey & Co.', role: 'Business Analyst', package: '28 LPA', image: placement2, tone: 'gold' },
+  { name: 'Harsh Dixit', batch: 'B.Pharm 2019', company: 'Sun Pharma', role: 'Research Scientist', package: '18 LPA', image: placement3, tone: 'blue' },
+  { name: 'Surender pratap', batch: 'LLB 2022', company: 'Cyril Amarchand', role: 'Associate Lawyer', package: '22 LPA', image: placement4, tone: 'violet' },
+  { name: 'Pramudit Shukla', batch: 'Diploma CSE 2022', company: 'TechMech', role: 'Full Stack Developer', package: '12 LPA', image: facultyBg, tone: 'cyan' },
 ];
 
 const toneAccent = { cyan: '#1fb7e2', gold: '#ffbe23', blue: '#1f63db', violet: '#9a43f0' };
@@ -108,36 +130,6 @@ export default function FacultyShowcase() {
   const carouselRef = useRef(null);
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('Top Faculties');
-
-  const [faculties, setFaculties] = useState(facultyCards);
-  const [awards, setAwards] = useState(awardsCards);
-  const [stories, setStories] = useState(storiesCards);
-
-  useEffect(() => {
-    fetch('http://localhost:3000/api/faculty')
-      .then(res => res.json())
-      .then(data => {
-        if (data) {
-          const imageMap = { facultyBg, aboutBg, institutionsBg, campusBg };
-          if (data.faculties && data.faculties.length > 0) {
-            setFaculties(data.faculties.map(item => ({
-              ...item,
-              image: imageMap[item.image] || imageMap.facultyBg
-            })));
-          }
-          if (data.awards && data.awards.length > 0) {
-            setAwards(data.awards);
-          }
-          if (data.stories && data.stories.length > 0) {
-            setStories(data.stories.map(item => ({
-              ...item,
-              image: imageMap[item.image] || imageMap.facultyBg
-            })));
-          }
-        }
-      })
-      .catch(err => console.error('Error loading faculties:', err));
-  }, []);
 
   const scrollCards = (direction) => {
     if (!carouselRef.current) return;
@@ -154,8 +146,8 @@ export default function FacultyShowcase() {
     'Success Stories': { heading: 'Student', highlight: 'Success Stories', sub: 'Our students are building great careers at top companies across the world.' },
   };
 
+  const currentCards = activeTab === 'Top Faculties' ? facultyCards : activeTab === 'Awards & Achievements' ? awardsCards : storiesCards;
   const { heading, highlight, sub } = tabTitles[activeTab];
-
 
   return (
     <section className="faculty-showcase" id="faculty-showcase">
@@ -186,11 +178,20 @@ export default function FacultyShowcase() {
             <p className="faculty-showcase__subtitle">{sub}</p>
           </div>
           <div className="faculty-showcase__actions">
-            <button className="btn btn--primary faculty-showcase__cta" onClick={() => navigate('/faculty')}>
-              <span className="faculty-showcase__cta-icon"><PeopleIcon /></span>
-              View all Faculties
-              <span className="btn__arrow"><ArrowRight /></span>
-            </button>
+            <span className="faculty-showcase__dots" aria-hidden="true" />
+            {activeTab === 'Top Faculties' && (
+              <button className="btn btn--primary faculty-showcase__cta" onClick={() => navigate('/faculty-new')}>
+                <span className="faculty-showcase__cta-icon"><UsersIcon /></span>
+                View all Faculties
+                <ArrowRight />
+              </button>
+            )}
+            {activeTab === 'Success Stories' && (
+              <button className="btn btn--primary faculty-showcase__cta" onClick={() => { navigate('/placements'); window.scrollTo(0, 0); }}>
+                View More Success Stories
+                <ArrowRight />
+              </button>
+            )}
           </div>
         </div>
 
@@ -204,7 +205,7 @@ export default function FacultyShowcase() {
             <div className="faculty-showcase__grid">
 
               {/* Top Faculties Cards */}
-              {activeTab === 'Top Faculties' && faculties.map((faculty) => (
+              {activeTab === 'Top Faculties' && facultyCards.map((faculty) => (
                 <article className={`faculty-showcase__card faculty-showcase__card--${faculty.tone}`} key={faculty.name}>
                   <div className="faculty-showcase__portrait-wrap">
                     <img src={faculty.image} alt={faculty.name} className="faculty-showcase__portrait" loading="lazy" />
@@ -222,11 +223,16 @@ export default function FacultyShowcase() {
                       <div><span>{faculty.school}</span></div>
                     </div>
                   </div>
+                  <div className="faculty-showcase__card-footer">
+                    <span className="faculty-showcase__card-arrow" style={{ cursor: 'pointer' }} onClick={() => navigate(`/faculty/${faculty.id}`)}>
+                      <ArrowRight />
+                    </span>
+                  </div>
                 </article>
               ))}
 
               {/* Awards Cards */}
-              {activeTab === 'Awards & Achievements' && awards.map((award) => (
+              {activeTab === 'Awards & Achievements' && awardsCards.map((award) => (
                 <article className={`faculty-showcase__card faculty-showcase__card--${award.tone}`} key={award.title}>
                   <div className="faculty-showcase__portrait-wrap" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', background: `${toneAccent[award.tone]}15` }}>
                     <div style={{ width: '90px', height: '90px', borderRadius: '50%', background: `${toneAccent[award.tone]}25`, display: 'flex', alignItems: 'center', justifyContent: 'center', color: toneAccent[award.tone] }}>
@@ -247,14 +253,14 @@ export default function FacultyShowcase() {
                   </div>
                   <div className="faculty-showcase__card-footer">
                     <div style={{ display: 'flex', gap: '2px' }}>
-                      {[1,2,3,4,5].map(i => <StarIcon key={i} />)}
+                      {[1, 2, 3, 4, 5].map(i => <StarIcon key={i} />)}
                     </div>
                   </div>
                 </article>
               ))}
 
               {/* Success Stories Cards */}
-              {activeTab === 'Success Stories' && stories.map((story) => (
+              {activeTab === 'Success Stories' && storiesCards.map((story) => (
                 <article className={`faculty-showcase__card faculty-showcase__card--${story.tone}`} key={story.name}>
                   <div className="faculty-showcase__portrait-wrap">
                     <img src={story.image} alt={story.name} className="faculty-showcase__portrait" loading="lazy" />
@@ -280,7 +286,6 @@ export default function FacultyShowcase() {
                   </div>
                 </article>
               ))}
-
 
             </div>
           </div>

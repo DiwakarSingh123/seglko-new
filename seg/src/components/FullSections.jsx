@@ -1,9 +1,8 @@
-import aboutBg from '../assets/images/about-bg.png';
-import campusBg from '../assets/images/campus-bg.png';
-import heroBg from '../assets/images/hero-bg.png';
-import institutionsBg from '../assets/images/institutions-bg.png';
-import placementsBg from '../assets/images/placements-bg.png';
-import { useState, useEffect } from 'react';
+import aboutBg from '../assets/images/saroj institue.jpeg';
+import campusBg from '../assets/images/seg.jpeg';
+import heroBg from '../assets/images/ssitm.jpeg';
+import institutionsBg from '../assets/images/college of law.avif';
+import placementsBg from '../assets/images/pharmacy.jpg';
 
 const ArrowRight = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -12,9 +11,11 @@ const ArrowRight = () => (
 );
 
 const BuildingIcon = () => (
-  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M4 21V7.5L12 3L20 7.5V21" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" />
-    <path d="M9 10H9.01M15 10H15.01M9 14H9.01M15 14H15.01" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" />
+  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M12 2L4 5V11C4 16.5 7.5 21.5 12 23C16.5 21.5 20 16.5 20 11V5L12 2Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    <path d="M9 14V17M12 14V17M15 14V17" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    <path d="M8 10H16V12H8V10Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    <path d="M10 7H14V9H10V7Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
   </svg>
 );
 
@@ -44,8 +45,10 @@ const GearIcon = () => (
 );
 
 const InfoIcon = () => (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M4 21V8.5L12 4L20 8.5V21" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" />
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="2" y="7" width="20" height="14" rx="3" stroke="currentColor" strokeWidth="1.8" />
+    <path d="M7 7V5C7 3.9 7.9 3 9 3H15C16.1 3 17 3.9 17 5V7" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+    <path d="M8 12H16M8 16H13" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
   </svg>
 );
 
@@ -56,33 +59,47 @@ const CheckIcon = () => (
   </svg>
 );
 
-const imageMap = {
-  aboutBg,
-  campusBg,
-  heroBg,
-  institutionsBg,
-  placementsBg,
-  program1: heroBg,
-  program2: aboutBg,
-  program3: institutionsBg,
-  program4: placementsBg
-};
+const institutions = [
+  {
+    title: 'Shivdan Singh Institute of Technology and Management',
+    code: '007',
+    approval: 'Approved by AICTE and affiliated to AKTU, Lucknow.',
+    image: heroBg,
+    icon: <BuildingIcon />,
+    url: 'https://ssitm.in/',
+  },
+  {
+    title: 'Saroj Institute of Technology and Management',
+    code: '123',
+    approval: 'Approved by AICTE and affiliated to AKTU, Lucknow.',
+    image: aboutBg,
+    icon: <BuildingIcon />,
+    url: 'https://sitmlko.org/',
+  },
+  {
+    title: 'Saroj College of Law',
+    code: 'BCI Approved',
+    approval: 'Approved by Bar Council of India and affiliated to AKTU, Lucknow.',
+    image: institutionsBg,
+    icon: <LawIcon />,
+    url: 'https://seglko.org/scl/',
+  },
+  {
+    title: 'Saroj College of Pharmacy',
+    code: '2031',
+    approval: 'Approved by Pharmacy Council of India and affiliated to AKTU, Lucknow.',
+    image: placementsBg,
+    icon: <PharmacyIcon />,
+    url: 'https://seglko.org/scp/',
+  },
+];
 
-const getIcon = (tag) => {
-  const t = (tag || '').toLowerCase();
-  if (t.includes('law')) return <LawIcon />;
-  if (t.includes('pharm')) return <PharmacyIcon />;
-  if (t.includes('poly') || t.includes('gear') || t.includes('engine')) return <GearIcon />;
-  return <BuildingIcon />;
-};
-
-const getUrl = (title = '', code = '') => {
-  const t = (title + ' ' + code).toLowerCase();
-  if (t.includes('lip') || t.includes('law')) return 'https://seglko.org/lip/';
-  if (t.includes('scp') || t.includes('pharm')) return 'https://seglko.org/scp/';
-  if (t.includes('sitmlko') || (t.includes('sitm') && t.includes('lko'))) return 'https://sitmlko.org/';
-  if (t.includes('ssitm') || t.includes('sitm')) return 'https://ssitm.in/';
-  return '#';
+const featuredInstitution = {
+  title: 'Saroj College of Engineering and Polytechnic',
+  approval: 'Approved by AICTE and affiliated to AKTU, Lucknow.',
+  image: campusBg,
+  icon: <GearIcon />,
+  url: 'https://seglko.org/scep/',
 };
 
 function InstitutionCard({ institution }) {
@@ -97,19 +114,32 @@ function InstitutionCard({ institution }) {
       <div className="institutions-showcase__card-badge">{institution.icon}</div>
       <div className="institutions-showcase__card-body">
         <h3 className="institutions-showcase__card-title">{institution.title}</h3>
+
         <div className="institutions-showcase__meta">
           <div className="institutions-showcase__meta-row institutions-showcase__meta-row--gold">
-            <span className="institutions-showcase__meta-icon"><InfoIcon /></span>
+            <span className="institutions-showcase__meta-icon">
+              <InfoIcon />
+            </span>
             <span>College Code: {institution.code}</span>
           </div>
           <div className="institutions-showcase__meta-row institutions-showcase__meta-row--blue">
-            <span className="institutions-showcase__meta-icon"><CheckIcon /></span>
+            <span className="institutions-showcase__meta-icon">
+              <CheckIcon />
+            </span>
             <span>{institution.approval}</span>
           </div>
         </div>
-        <a href={institution.url} target="_blank" rel="noopener noreferrer" className="institutions-showcase__link">
+
+        <a
+          href={institution.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="institutions-showcase__link"
+        >
           Explore Institute
-          <span className="institutions-showcase__link-arrow"><ArrowRight /></span>
+          <span className="institutions-showcase__link-arrow">
+            <ArrowRight />
+          </span>
         </a>
       </div>
     </article>
@@ -117,44 +147,15 @@ function InstitutionCard({ institution }) {
 }
 
 export default function FullSections() {
-  const [institutions, setInstitutions] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    fetch('http://localhost:3000/api/institutions')
-      .then(res => res.json())
-      .then(data => {
-        if (data && data.length > 0) {
-          setInstitutions(data.map(item => ({
-            title: item.title,
-            code: item.code,
-            approval: item.approval,
-            image: item.customImage && item.customImage.trim() !== ''
-              ? item.customImage
-              : (imageMap[item.image] || heroBg),
-            icon: getIcon(item.tag),
-            url: getUrl(item.title, item.code),
-          })));
-        }
-        setLoading(false);
-      })
-      .catch(err => {
-        console.error('Error fetching institutions:', err);
-        setLoading(false);
-      });
-  }, []);
-
-  if (loading) {
-    return <div style={{ padding: '50px', textAlign: 'center' }}>Loading Institutions...</div>;
-  }
-
   return (
     <section className="institutions-showcase" id="institutions-showcase">
       <div className="institutions-showcase__shell">
         <div className="institutions-showcase__header">
           <div className="institutions-showcase__intro">
             <div className="institutions-showcase__title-row">
-              <span className="institutions-showcase__title-icon"><BuildingIcon /></span>
+              <span className="institutions-showcase__title-icon">
+                <BuildingIcon />
+              </span>
               <h2 className="institutions-showcase__title">Our Institutions</h2>
             </div>
             <span className="institutions-showcase__accent" />
@@ -162,13 +163,51 @@ export default function FullSections() {
               A legacy of excellence across diverse disciplines, shaping future leaders and innovators.
             </p>
           </div>
+
         </div>
 
         <div className="institutions-showcase__grid">
-          {institutions.map((institution, idx) => (
-            <InstitutionCard key={idx} institution={institution} />
+          {institutions.map((institution) => (
+            <InstitutionCard key={institution.title} institution={institution} />
           ))}
         </div>
+
+        <article className="institutions-showcase__featured">
+          <div className="institutions-showcase__featured-image-wrap">
+            <img
+              src={featuredInstitution.image}
+              alt={featuredInstitution.title}
+              className="institutions-showcase__featured-image"
+              loading="lazy"
+            />
+            <span className="institutions-showcase__featured-badge">{featuredInstitution.icon}</span>
+          </div>
+
+          <div className="institutions-showcase__featured-content">
+            <h3 className="institutions-showcase__featured-title">{featuredInstitution.title}</h3>
+
+            <div className="institutions-showcase__meta-row institutions-showcase__meta-row--gold">
+              <span className="institutions-showcase__meta-icon">
+                <InfoIcon />
+              </span>
+              <span>{featuredInstitution.approval}</span>
+            </div>
+
+            <a
+              href={featuredInstitution.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="institutions-showcase__link institutions-showcase__link--featured"
+            >
+              Explore Institute
+              <span className="institutions-showcase__link-arrow">
+                <ArrowRight />
+              </span>
+            </a>
+          </div>
+
+          <span className="institutions-showcase__dots" aria-hidden="true" />
+        </article>
       </div>
     </section>
   );

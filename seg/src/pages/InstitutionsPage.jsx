@@ -1,13 +1,80 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import './InstitutionsPage.css'
 import program1 from '../assets/images/program1.png'
 import program2 from '../assets/images/program2.png'
 import program3 from '../assets/images/program3.png'
 import program4 from '../assets/images/program4.png'
+import program5 from '../assets/images/programsimg.jpeg'
+import program6 from '../assets/images/seg.jpeg'
 
-const imageMap = { program1, program2, program3, program4 }
-
-
+const institutions = [
+  {
+    title: 'Shivdan Singh Institute of Technology and Management',
+    code: '007',
+    tag: 'ENGINEERING',
+    date: { day: '12', month: 'MAY', year: '2026' },
+    approval: 'Approved by AICTE and affiliated to AKTU, Lucknow.',
+    description: 'Engineering, management and computer applications programs with strong industry tie-ups and research focus.',
+    url: 'https://ssitm.in/',
+    image: program1,
+    category: 'Engineering',
+  },
+  {
+    title: 'Saroj Institute of Technology and Management',
+    code: '123',
+    tag: 'ENGINEERING',
+    date: { day: '29', month: 'APR', year: '2026' },
+    approval: 'Approved by AICTE and affiliated to AKTU, Lucknow.',
+    description: 'Modern campus offering B.Tech, BBA, BCA and more with a focus on practical learning and innovation.',
+    url: 'https://sitmlko.org/',
+    image: program2,
+    category: 'Engineering',
+  },
+  {
+    title: 'Lucknow Institute of Pharmacy',
+    code: 'LIP',
+    tag: 'PHARMACY',
+    date: { day: '28', month: 'APR', year: '2026' },
+    approval: 'Approved by Pharmacy Council of India (PCI) and affiliated to AKTU.',
+    description: 'Premier pharmacy education with advanced laboratories and professional training for healthcare excellence.',
+    url: 'https://seglko.org/lip/',
+    image: program3,
+    category: 'Pharmacy',
+  },
+  {
+    title: 'Saroj College of Pharmacy',
+    code: '2031',
+    tag: 'PHARMACY',
+    date: { day: '17', month: 'APR', year: '2026' },
+    approval: 'Approved by Pharmacy Council of India and affiliated to AKTU, Lucknow.',
+    description: 'B.Pharm and D.Pharm programs designed for strong clinical exposure and cutting-edge pharmaceutical research.',
+    url: 'https://seglko.org/scp/',
+    image: program4,
+    category: 'Pharmacy',
+  },
+  {
+    title: 'Saroj College of Engineering and Polytechnic',
+    code: 'SCEP',
+    tag: 'POLYTECHNIC',
+    date: { day: '17', month: 'APR', year: '2026' },
+    approval: 'Approved by AICTE and affiliated to AKTU.',
+    description: 'Integrated engineering and diploma programs with world-class infrastructure and industry-standard labs.',
+    url: 'https://seglko.org/scep/',
+    image: program5,
+    category: 'Polytechnic',
+  },
+  {
+    title: 'Saroj College of Law',
+    code: 'SCL',
+    tag: 'LAW',
+    date: { day: '10', month: 'APR', year: '2026' },
+    approval: 'Affiliated to Lucknow University.',
+    description: 'Comprehensive law programs focusing on advocacy, legal ethics, and practical courtroom skills for future leaders.',
+    url: 'https://seglko.org/scl/',
+    image: program6,
+    category: 'Law',
+  },
+]
 
 const sidebarItems = [
   { label: "What's Happening", icon: "🌐", active: true },
@@ -25,22 +92,6 @@ const sidebarItems = [
 
 export default function InstitutionsPage() {
   const [activeFilter, setActiveFilter] = useState('All')
-  const [institutions, setInstitutions] = useState([])
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    fetch('http://localhost:3000/api/institutions')
-      .then(res => res.json())
-      .then(data => {
-        const mapped = data.map(inst => ({
-          ...inst,
-          image: inst.customImage && inst.customImage.trim() !== '' ? inst.customImage : (imageMap[inst.image] || imageMap.program1)
-        }))
-        setInstitutions(mapped)
-        setLoading(false)
-      })
-      .catch(err => { console.error(err); setLoading(false) })
-  }, [])
 
   const filteredInstitutions = activeFilter === 'All'
     ? institutions

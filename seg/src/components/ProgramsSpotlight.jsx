@@ -1,10 +1,11 @@
-import { useRef, useState, useEffect } from 'react';
+import { useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import program1 from '../assets/images/program1.png';
-import program2 from '../assets/images/program2.png';
-import program3 from '../assets/images/program3.png';
-import program4 from '../assets/images/program4.png';
+import program1 from '../assets/images/engineerging.webp';
+import program2 from '../assets/images/management.jpg';
+import program3 from '../assets/images/computer.webp';
+import program4 from '../assets/images/diploma.jpg';
+import program5 from '../assets/images/pharmacy copy.jpg';
 import booksImg from '../assets/images/booksimg.jpeg';
 
 const ArrowRight = () => (
@@ -49,6 +50,16 @@ const DiplomaIcon = () => (
   </svg>
 );
 
+const LawIcon = () => (
+  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M12 5V19" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+    <path d="M7 8H17" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+    <path d="M7 8L4 13H10L7 8Z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" />
+    <path d="M17 8L14 13H20L17 8Z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" />
+    <path d="M5 19H19" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+  </svg>
+);
+
 const FlaskIcon = () => (
   <svg width="26" height="26" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path d="M10 3H14" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
@@ -87,6 +98,74 @@ const MedalIcon = () => (
     <path d="M9.5 13L8 21L12 18.8L16 21L14.5 13" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" />
   </svg>
 );
+const WatermarkEngineering = () => (
+  <svg width="100%" height="100%" viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M50 10 L50 90" />
+    <path d="M25 90 L50 10 L75 90" />
+    <path d="M35 50 L65 50" />
+    <path d="M42 30 L58 30" />
+    <path d="M20 70 L80 70" />
+    <path d="M15 70 L25 90" />
+    <path d="M85 70 L75 90" />
+    <circle cx="80" cy="40" r="12" />
+    <path d="M80 24 L80 28 M80 52 L80 56 M64 40 L68 40 M92 40 L96 40" />
+    <path d="M71 31 L74 34 M86 46 L89 49 M71 49 L74 46 M86 34 L89 31" />
+  </svg>
+);
+
+const WatermarkManagement = () => (
+  <svg width="100%" height="100%" viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M10 90 L90 90" />
+    <rect x="20" y="60" width="15" height="30" />
+    <rect x="45" y="40" width="15" height="50" />
+    <rect x="70" y="20" width="15" height="70" />
+    <path d="M20 40 L45 20 L70 10 L90 0" />
+    <path d="M75 0 L90 0 L90 15" />
+  </svg>
+);
+
+const WatermarkComputer = () => (
+  <svg width="100%" height="100%" viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <rect x="15" y="25" width="70" height="45" rx="2" />
+    <path d="M5 70 L95 70" strokeWidth="3" />
+    <path d="M40 70 L45 75 L55 75 L60 70" />
+    <path d="M35 42 L42 35 M35 42 L42 49" />
+    <path d="M65 42 L58 35 M65 42 L58 49" />
+    <path d="M48 55 L52 30" />
+  </svg>
+);
+
+const WatermarkDiploma = () => (
+  <svg width="100%" height="100%" viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <rect x="15" y="20" width="70" height="60" />
+    <rect x="22" y="27" width="56" height="46" />
+    <circle cx="70" cy="70" r="10" fill="none" />
+    <path d="M65 78 L60 90 L70 85 L80 90 L75 78" />
+    <path d="M30 40 L60 40" />
+    <path d="M30 55 L50 55" />
+  </svg>
+);
+
+const WatermarkPharmacy = () => (
+  <svg width="100%" height="100%" viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M20 40 C20 70, 40 85, 50 85 C60 85, 80 70, 80 40 Z" />
+    <path d="M15 40 L85 40" />
+    <path d="M50 85 L40 95 L60 95 Z" />
+    <path d="M70 10 L55 45" strokeWidth="2.5" />
+    <path d="M35 55 L55 55 M45 45 L45 65" />
+  </svg>
+);
+
+const WatermarkLaw = () => (
+  <svg width="100%" height="100%" viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M50 15 L50 90" />
+    <path d="M30 90 L70 90" />
+    <path d="M20 30 L80 30" />
+    <path d="M50 15 L45 20 M50 15 L55 20" />
+    <path d="M20 30 L10 60 C10 70, 30 70, 30 60 L20 30" />
+    <path d="M80 30 L70 60 C70 70, 90 70, 90 60 L80 30" />
+  </svg>
+);
 
 const programCards = [
   {
@@ -97,6 +176,7 @@ const programCards = [
     accentColor: '#1f63db',
     slug: 'mtech',
     icon: <GearIcon />,
+    watermark: <WatermarkEngineering />,
   },
   {
     title: 'Management Programs',
@@ -106,6 +186,7 @@ const programCards = [
     accentColor: '#6cbf46',
     slug: 'mba',
     icon: <BagIcon />,
+    watermark: <WatermarkManagement />,
   },
   {
     title: 'Computer Applications',
@@ -115,6 +196,7 @@ const programCards = [
     accentColor: '#6a32df',
     slug: 'bca',
     icon: <CodeIcon />,
+    watermark: <WatermarkComputer />,
   },
   {
     title: 'Diploma Programs',
@@ -124,15 +206,27 @@ const programCards = [
     accentColor: '#ff8b1a',
     slug: 'diploma',
     icon: <DiplomaIcon />,
+    watermark: <WatermarkDiploma />,
   },
   {
     title: 'Pharmacy Programs',
     description: 'D.Pharm & B.Pharm programs for a bright career in healthcare.',
-    image: program2,
+    image: program5,
     color: 'cyan',
     accentColor: '#27c6d8',
     slug: 'bpharm',
     icon: <FlaskIcon />,
+    watermark: <WatermarkPharmacy />,
+  },
+  {
+    title: 'Law Programs',
+    description: 'LLB programs to build legal expertise and professional excellence.',
+    image: program3,
+    color: 'rose',
+    accentColor: '#e11d48',
+    slug: 'law',
+    icon: <LawIcon />,
+    watermark: <WatermarkLaw />,
   },
 ];
 
@@ -162,83 +256,56 @@ const programBenefits = [
 export default function ProgramsSpotlight() {
   const carouselRef = useRef(null);
   const navigate = useNavigate();
-  const [programs, setPrograms] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    fetch('/api/programs')
-      .then(res => res.json())
-      .then(data => {
-        const imageMap = { program1, program2, program3, program4 };
-        const iconMap = {
-          GearIcon: <GearIcon />,
-          BagIcon: <BagIcon />,
-          CodeIcon: <CodeIcon />,
-          DiplomaIcon: <DiplomaIcon />,
-          FlaskIcon: <FlaskIcon />,
-          ShieldIcon: <ShieldIcon />,
-          FacultyIcon: <FacultyIcon />,
-          GrowthIcon: <GrowthIcon />,
-          MedalIcon: <MedalIcon />
-        };
-        const mapped = data.map(p => ({
-          title: p.name,
-          description: p.description,
-          image: p.customImage && p.customImage.trim() !== '' ? p.customImage : (imageMap[p.image] || program1),
-          color: p.color || 'blue',
-          slug: p.slug || 'mtech',
-          icon: iconMap[p.icon] || <GearIcon />
-        }));
-        setPrograms(mapped);
-        setLoading(false);
-      })
-      .catch(err => {
-        console.error("Failed to fetch programs:", err);
-        setLoading(false);
-      });
-  }, []);
 
   const scrollCards = (direction) => {
-    if (!carouselRef.current) return;
+    if (!carouselRef.current) {
+      return;
+    }
+
     const firstCard = carouselRef.current.querySelector('.programs-spotlight__card');
     const cardGap = 12;
     const scrollAmount = firstCard ? firstCard.getBoundingClientRect().width + cardGap : carouselRef.current.clientWidth;
-    carouselRef.current.scrollBy({ left: direction * scrollAmount, behavior: 'smooth' });
+
+    carouselRef.current.scrollBy({
+      left: direction * scrollAmount,
+      behavior: 'smooth',
+    });
   };
 
   return (
-    <section className="programs-spotlight" id="programs-spotlight">
+    <section className="programs-spotlight" id="programs-spotlight" style={{ background: '#ffffff' }}>
       <div className="programs-spotlight__shell">
         <div className="programs-spotlight__hero">
-          <div className="programs-spotlight__hero-top">
+          <div className="programs-spotlight__intro">
+
             <span className="programs-spotlight__accent-line" />
-            <div className="programs-spotlight__title-row">
-              <h2 className="programs-spotlight__title">
-                <span className="programs-spotlight__title-line programs-spotlight__title-line--lead">
-                  Programs Designed for
-                </span>
-                <span className="programs-spotlight__title-line">
-                  a <span className="programs-spotlight__title-highlight">Successful Future</span>
-                </span>
-              </h2>
-              <div className="programs-spotlight__actions">
-                <button
-                  className="btn btn--primary programs-spotlight__cta"
-                  onClick={() => navigate('/all-programs')}
-                >
-                  View All Programs
-                  <span className="btn__arrow"><ArrowRight /></span>
-                </button>
-              </div>
-            </div>
+            <h2 className="programs-spotlight__title">
+              <span className="programs-spotlight__title-line programs-spotlight__title-line--lead">
+                Programs Designed for
+              </span>
+              <span className="programs-spotlight__title-line">
+                a <span className="programs-spotlight__title-highlight">Successful Future</span>
+              </span>
+            </h2>
             <p className="programs-spotlight__description">
               Industry-focused programs crafted to equip you with the skills, knowledge and
               experience to lead tomorrow.
             </p>
           </div>
 
+          <div className="programs-spotlight__actions">
+            <button
+              className="btn btn--primary programs-spotlight__cta"
+              onClick={() => navigate('/all-programs')}
+            >
+              View All Programs
+              <span className="btn__arrow"><ArrowRight /></span>
+            </button>
+          </div>
+
           <div className="programs-spotlight__art" aria-hidden="true">
-            <img src={booksImg} alt="" className="programs-spotlight__art-image" />
+            <span className="programs-spotlight__orb programs-spotlight__orb--gold" />
+            <img src={booksImg} alt="Academic Books" className="programs-spotlight__art-img" />
           </div>
         </div>
 
@@ -254,28 +321,26 @@ export default function ProgramsSpotlight() {
 
           <div className="programs-spotlight__card-viewport" ref={carouselRef}>
             <div className="programs-spotlight__card-grid">
-              {loading ? (
-                <div className="programs-spotlight__loading">
-                  Loading latest programs...
-                </div>
-              ) : programs.map((card) => (
+              {programCards.map((card) => (
                 <article
                   className={`programs-spotlight__card programs-spotlight__card--${card.color}`}
                   key={card.title}
                   onClick={() => navigate(`/programs/${card.slug}`)}
-                  style={{ cursor: 'pointer', position: 'relative', overflow: 'hidden', background: '#ffffff' }}
+                  style={{ cursor: 'pointer', overflow: 'hidden' }}
                 >
+                  <div className="programs-spotlight__card-watermark">{card.watermark}</div>
                   <div className="programs-spotlight__card-icon">{card.icon}</div>
                   <img
                     src={card.image}
                     alt={card.title}
                     className="programs-spotlight__card-image"
                     loading="lazy"
+                    style={{ position: 'relative', zIndex: 1 }}
                   />
-                  <h3 className="programs-spotlight__card-title">{card.title}</h3>
-                  <span className="programs-spotlight__card-line" />
-                  <p className="programs-spotlight__card-description">{card.description}</p>
-                  <span className="programs-spotlight__card-link">
+                  <h3 className="programs-spotlight__card-title" style={{ position: 'relative', zIndex: 1 }}>{card.title}</h3>
+                  <span className="programs-spotlight__card-line" style={{ position: 'relative', zIndex: 1 }} />
+                  <p className="programs-spotlight__card-description" style={{ position: 'relative', zIndex: 1 }}>{card.description}</p>
+                  <span className="programs-spotlight__card-link" style={{ position: 'relative', zIndex: 1 }}>
                     Explore
                     <span className="programs-spotlight__card-link-arrow">
                       <ArrowRight />

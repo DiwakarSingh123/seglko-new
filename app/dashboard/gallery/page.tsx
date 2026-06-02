@@ -2,9 +2,10 @@
 import { useState, useRef, useEffect } from "react";
 
 type GalleryImage = {
-  id: number;
+  _id: string;
   title: string;
   url: string;
+  publicId?: string;
   category: string;
   description?: string;
 };
@@ -26,90 +27,110 @@ const uploadCategories = categories.filter((c) => c !== ALL_MOMENTS);
 export default function GalleryPage() {
   const [images, setImages] = useState<GalleryImage[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [uploading, setUploading] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<(typeof categories)[number]>(ALL_MOMENTS);
   const [showAddForm, setShowAddForm] = useState(false);
   const [editingImg, setEditingImg] = useState<GalleryImage | null>(null);
   const [formError, setFormError] = useState("");
-  const [form, setForm] = useState<{ title: string; category: (typeof uploadCategories)[number]; url: string; description: string }>(
-    { title: "", category: uploadCategories[0], url: "", description: "" }
-  );
+  const [previewUrl, setPreviewUrl] = useState("");
+  const [base64Image, setBase64Image] = useState("");
+  const [form, setForm] = useState<{
+    title: string;
+    category: (typeof uploadCategories)[number];
+    description: string;
+  }>({ title: "", category: uploadCategories[0], description: "" });
   const fileRef = useRef<HTMLInputElement>(null);
 
-  useEffect(() => {
-    fetchImages();
-  }, []);
+  useEffect(() => { fetchImages(); }, []);
 
   const fetchImages = async () => {
     setIsLoading(true);
     try {
       const res = await fetch("/api/gallery");
-      if (res.ok) {
-        const data = await res.json();
-        setImages(data);
-      }
-    } catch (e) {
-      console.error(e);
-    }
+      if (res.ok) setImages(await res.json());
+    } catch (e) { console.error(e); }
     setIsLoading(false);
   };
 
   const countFor = (cat: (typeof categories)[number]) =>
     cat === ALL_MOMENTS ? images.length : images.filter((i) => i.category === cat).length;
 
-  const filtered =
-    selectedCategory === ALL_MOMENTS
-      ? images
-      : images.filter((img) => img.category === selectedCategory);
+  const filtered = selectedCategory === ALL_MOMENTS
+    ? images
+    : images.filter((img) => img.category === selectedCategory);
 
   const resetForm = () => {
-    setForm({ title: "", category: uploadCategories[0], url: "", description: "" });
+    setForm({ title: "", category: uploadCategories[0], description: "" });
+    setPreviewUrl("");
+    setBase64Image("");
     if (fileRef.current) fileRef.current.value = "";
   };
 
-  const handleFile = (e: React.ChangeEvent<HTMLInputElement>, isEdit = false) => {
+  const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
     const reader = new FileReader();
     reader.onloadend = () => {
-      const url = reader.result as string;
-      if (isEdit && editingImg) setEditingImg({ ...editingImg, url });
-      else setForm((f) => ({ ...f, url }));
+      const result = reader.result as string;
+      setPreviewUrl(result);
+      setBase64Image(result);
     };
     reader.readAsDataURL(file);
   };
 
   const handleAdd = async () => {
-    if (!form.title.trim()) {
-      setFormError("Image title is required.");
-      return;
-    }
-    if (!form.url) {
-      setFormError("Please upload an image.");
-      return;
-    }
+    setFormError("");
+    if (!form.title.trim()) { setFormError("Image title is required."); return; }
+    if (!base64Image) { setFormError("Please upload an image."); return; }
+
+    setUploading(true);
     try {
+      // Step 1: Upload to Cloudinary
+      const uploadRes = await fetch("/api/upload", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ image: base64Image, folder: "seglko-gallery" }),
+      });
+
+      if (!uploadRes.ok) { setFormError("Image upload failed. Try again."); setUploading(false); return; }
+
+      const { url, publicId } = await uploadRes.json();
+
+      // Step 2: Save to MongoDB
       const res = await fetch("/api/gallery", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           title: form.title.trim(),
           category: form.category,
-          url: form.url,
+          url,
+          publicId,
           description: form.description.trim(),
         }),
       });
+
       if (res.ok) {
         const saved = await res.json();
-        setImages((prev) => [...prev, saved]);
-        setFormError("");
+        setImages((prev) => [saved, ...prev]);
         setShowAddForm(false);
         resetForm();
         setSelectedCategory(form.category);
+      } else {
+        setFormError("Failed to save image.");
       }
     } catch (e) {
       console.error(e);
-      setFormError("Failed to save image. Please try again.");
+      setFormError("Something went wrong. Try again.");
     }
+    setUploading(false);
+  };
+
+  const handleDelete = async (_id: string) => {
+    if (!confirm("Delete this image?")) return;
+    try {
+      const res = await fetch(`/api/gallery?id=${_id}`, { method: "DELETE" });
+      if (res.ok) setImages((prev) => prev.filter((x) => x._id !== _id));
+    } catch (e) { console.error(e); }
   };
 
   const handleEditSave = async () => {
@@ -122,36 +143,15 @@ export default function GalleryPage() {
       });
       if (res.ok) {
         const saved = await res.json();
-        setImages((prev) => prev.map((x) => (x.id === saved.id ? saved : x)));
+        setImages((prev) => prev.map((x) => (x._id === saved._id ? saved : x)));
         setEditingImg(null);
       }
-    } catch (e) {
-      console.error(e);
-    }
-  };
-
-  const handleDelete = async (id: number) => {
-    if (!confirm("Are you sure you want to delete this image?")) return;
-    try {
-      const res = await fetch(`/api/gallery?id=${id}`, { method: "DELETE" });
-      if (res.ok) setImages((prev) => prev.filter((x) => x.id !== id));
-    } catch (e) {
-      console.error(e);
-    }
-  };
-
-  const openAddForm = () => {
-    setShowAddForm(true);
-    setFormError("");
-
-    if (selectedCategory !== ALL_MOMENTS) {
-      const cat = selectedCategory as (typeof uploadCategories)[number];
-      setForm((f) => ({ ...f, category: cat }));
-    }
+    } catch (e) { console.error(e); }
   };
 
   return (
     <div className="space-y-5">
+      {/* Edit Modal */}
       {editingImg && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30">
           <div className="bg-white rounded-2xl shadow-xl p-6 w-full max-w-md space-y-4">
@@ -168,9 +168,7 @@ export default function GalleryPage() {
                 onChange={(e) => setEditingImg({ ...editingImg, category: e.target.value })}
                 className="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300"
               >
-                {uploadCategories.map((c) => (
-                  <option key={c}>{c}</option>
-                ))}
+                {uploadCategories.map((c) => <option key={c}>{c}</option>)}
               </select>
             </div>
             <input
@@ -182,35 +180,28 @@ export default function GalleryPage() {
             <input
               value={editingImg.description || ""}
               onChange={(e) => setEditingImg({ ...editingImg, description: e.target.value })}
-              placeholder="Short description (optional)"
+              placeholder="Description (optional)"
               className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-indigo-200"
             />
-            <div>
-              <label className="text-xs font-bold text-slate-500 mb-1.5 block">Replace Image</label>
-              <input type="file" accept="image/*" onChange={(e) => handleFile(e, true)} className="w-full text-sm text-slate-600" />
-            </div>
             {editingImg.url && (
               <img src={editingImg.url} alt="preview" className="w-full h-40 object-cover rounded-xl border border-slate-200" />
             )}
             <div className="flex justify-end gap-3">
-              <button onClick={() => setEditingImg(null)} className="px-5 py-2.5 rounded-xl border border-slate-200 text-sm font-semibold text-slate-700 hover:bg-slate-50">
-                Cancel
-              </button>
-              <button onClick={handleEditSave} className="px-5 py-2.5 rounded-xl bg-indigo-600 text-sm font-semibold text-white hover:bg-indigo-700">
-                Save
-              </button>
+              <button onClick={() => setEditingImg(null)} className="px-5 py-2.5 rounded-xl border border-slate-200 text-sm font-semibold text-slate-700 hover:bg-slate-50">Cancel</button>
+              <button onClick={handleEditSave} className="px-5 py-2.5 rounded-xl bg-indigo-600 text-sm font-semibold text-white hover:bg-indigo-700">Save</button>
             </div>
           </div>
         </div>
       )}
 
+      {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-xl font-black text-slate-800">Gallery</h1>
           <p className="text-sm text-slate-400 mt-0.5">Manage campus gallery images by category</p>
         </div>
         <button
-          onClick={openAddForm}
+          onClick={() => { setShowAddForm(true); setFormError(""); if (selectedCategory !== ALL_MOMENTS) setForm(f => ({ ...f, category: selectedCategory as any })); }}
           className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-xl text-sm font-semibold hover:bg-indigo-700 transition-colors shadow-md shadow-indigo-200"
         >
           <span className="material-symbols-outlined text-lg">add_photo_alternate</span>
@@ -218,6 +209,7 @@ export default function GalleryPage() {
         </button>
       </div>
 
+      {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {[
           { label: "Total Images", value: images.length, icon: "photo_library", color: "bg-indigo-500" },
@@ -236,6 +228,7 @@ export default function GalleryPage() {
       </div>
 
       <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5 space-y-4">
+        {/* Category Tabs */}
         <div>
           <label className="text-xs font-bold text-slate-500 mb-2 block">Category</label>
           <div className="flex flex-wrap gap-2">
@@ -255,18 +248,12 @@ export default function GalleryPage() {
           </div>
         </div>
 
+        {/* Add Form */}
         {showAddForm && (
           <div className="rounded-2xl border border-indigo-100 bg-indigo-50/30 p-5 space-y-4">
             <div className="flex items-center justify-between">
               <h2 className="text-base font-black text-slate-800">Add New Image</h2>
-              <button
-                onClick={() => {
-                  setShowAddForm(false);
-                  setFormError("");
-                  resetForm();
-                }}
-                className="h-8 w-8 flex items-center justify-center rounded-lg hover:bg-white"
-              >
+              <button onClick={() => { setShowAddForm(false); setFormError(""); resetForm(); }} className="h-8 w-8 flex items-center justify-center rounded-lg hover:bg-white">
                 <span className="material-symbols-outlined text-slate-500">close</span>
               </button>
             </div>
@@ -275,12 +262,10 @@ export default function GalleryPage() {
                 <label className="text-xs font-bold text-slate-500 mb-1.5 block">Category</label>
                 <select
                   value={form.category}
-                  onChange={(e) => setForm({ ...form, category: e.target.value as (typeof uploadCategories)[number] })}
+                  onChange={(e) => setForm({ ...form, category: e.target.value as any })}
                   className="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-300"
                 >
-                  {uploadCategories.map((c) => (
-                    <option key={c}>{c}</option>
-                  ))}
+                  {uploadCategories.map((c) => <option key={c}>{c}</option>)}
                 </select>
               </div>
               <div>
@@ -288,7 +273,7 @@ export default function GalleryPage() {
                 <input
                   value={form.title}
                   onChange={(e) => setForm({ ...form, title: e.target.value })}
-                  placeholder="e.g. Welcome to SEG"
+                  placeholder="e.g. Main Campus Block"
                   className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm bg-white outline-none focus:ring-2 focus:ring-indigo-200"
                 />
               </div>
@@ -297,7 +282,7 @@ export default function GalleryPage() {
                 <input
                   value={form.description}
                   onChange={(e) => setForm({ ...form, description: e.target.value })}
-                  placeholder="Short caption for this image"
+                  placeholder="Short caption"
                   className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm bg-white outline-none focus:ring-2 focus:ring-indigo-200"
                 />
               </div>
@@ -307,33 +292,32 @@ export default function GalleryPage() {
                   ref={fileRef}
                   type="file"
                   accept="image/*"
-                  onChange={(e) => handleFile(e)}
+                  onChange={handleFile}
                   className="block w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
                 />
               </div>
             </div>
-            {form.url && (
-              <img src={form.url} alt="preview" className="w-full max-h-48 object-cover rounded-xl border border-slate-200" />
+            {previewUrl && (
+              <img src={previewUrl} alt="preview" className="w-full max-h-48 object-cover rounded-xl border border-slate-200" />
             )}
             {formError && <p className="text-sm text-rose-600">{formError}</p>}
             <div className="flex justify-end gap-3">
-              <button
-                onClick={() => {
-                  setShowAddForm(false);
-                  setFormError("");
-                  resetForm();
-                }}
-                className="px-5 py-2.5 rounded-xl border border-slate-200 text-sm font-semibold text-slate-700 hover:bg-white"
-              >
+              <button onClick={() => { setShowAddForm(false); setFormError(""); resetForm(); }} className="px-5 py-2.5 rounded-xl border border-slate-200 text-sm font-semibold text-slate-700 hover:bg-white">
                 Cancel
               </button>
-              <button onClick={handleAdd} className="px-5 py-2.5 rounded-xl bg-indigo-600 text-sm font-semibold text-white hover:bg-indigo-700">
-                Save Image
+              <button
+                onClick={handleAdd}
+                disabled={uploading}
+                className="px-5 py-2.5 rounded-xl bg-indigo-600 text-sm font-semibold text-white hover:bg-indigo-700 disabled:opacity-60 flex items-center gap-2"
+              >
+                {uploading && <span className="animate-spin material-symbols-outlined text-sm">progress_activity</span>}
+                {uploading ? "Uploading..." : "Save Image"}
               </button>
             </div>
           </div>
         )}
 
+        {/* Gallery Grid */}
         {isLoading ? (
           <p className="text-slate-500 py-8 text-center text-sm">Loading gallery...</p>
         ) : filtered.length === 0 ? (
@@ -345,7 +329,7 @@ export default function GalleryPage() {
         ) : (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {filtered.map((img) => (
-              <div key={img.id} className="rounded-xl overflow-hidden border border-slate-100 bg-slate-50">
+              <div key={img._id} className="rounded-xl overflow-hidden border border-slate-100 bg-slate-50">
                 <div className="aspect-square relative">
                   <img src={img.url} alt={img.title} className="w-full h-full object-cover" />
                   <span className="absolute top-2 left-2 px-2 py-0.5 rounded-lg bg-black/50 text-white text-[10px] font-bold">
@@ -360,17 +344,15 @@ export default function GalleryPage() {
                   <div className="flex gap-1.5 mt-2">
                     <button
                       onClick={() => setEditingImg(img)}
-                      className="flex-1 flex items-center justify-center gap-1 py-1.5 rounded-lg bg-indigo-50 text-indigo-600 hover:bg-indigo-100 transition-colors text-xs font-semibold"
+                      className="flex-1 flex items-center justify-center gap-1 py-1.5 rounded-lg bg-indigo-50 text-indigo-600 hover:bg-indigo-100 text-xs font-semibold"
                     >
-                      <span className="material-symbols-outlined text-sm">edit</span>
-                      Edit
+                      <span className="material-symbols-outlined text-sm">edit</span>Edit
                     </button>
                     <button
-                      onClick={() => handleDelete(img.id)}
-                      className="flex-1 flex items-center justify-center gap-1 py-1.5 rounded-lg bg-rose-50 text-rose-500 hover:bg-rose-100 transition-colors text-xs font-semibold"
+                      onClick={() => handleDelete(img._id)}
+                      className="flex-1 flex items-center justify-center gap-1 py-1.5 rounded-lg bg-rose-50 text-rose-500 hover:bg-rose-100 text-xs font-semibold"
                     >
-                      <span className="material-symbols-outlined text-sm">delete</span>
-                      Delete
+                      <span className="material-symbols-outlined text-sm">delete</span>Delete
                     </button>
                   </div>
                 </div>
@@ -378,7 +360,6 @@ export default function GalleryPage() {
             ))}
           </div>
         )}
-
         <div className="text-xs text-slate-400">
           {filtered.length} image{filtered.length !== 1 ? "s" : ""} in &quot;{selectedCategory}&quot;
         </div>

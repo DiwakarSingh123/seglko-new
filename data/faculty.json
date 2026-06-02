@@ -103,6 +103,16 @@
       "package": "22 LPA",
       "image": "campusBg",
       "tone": "violet"
+    },
+    {
+      "id": 1779698921210,
+      "name": "Student Name",
+      "batch": "Batch Name",
+      "company": "Company Name",
+      "role": "Role",
+      "package": "Package LPA",
+      "image": "facultyBg",
+      "tone": "blue"
     }
   ]
 }

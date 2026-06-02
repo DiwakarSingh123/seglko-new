@@ -1,41 +1,10 @@
-import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import aboutBg from '../assets/images/about-bg.png';
-import campusBg from '../assets/images/campus-bg.png';
-import facultyBg from '../assets/images/faculty-bg.png';
-import heroBg from '../assets/images/hero-bg.png';
+import aboutBg from '../assets/images/hapen2.jpeg';
+import campusBg from '../assets/images/eventImg9.jpeg';
+import facultyBg from '../assets/images/hapen1.jpeg';
+import heroBg from '../assets/images/HappeningsImage1.jpg';
+import event from '../assets/images/sports-meet-10.jpeg';
 import logoImg from '../assets/images/logo.png';
-
-const parseDateString = (dateStr) => {
-  try {
-    const d = new Date(dateStr);
-    if (isNaN(d.getTime())) {
-      const parts = (dateStr || '').split(/[ ,-]+/);
-      if (parts.length >= 3) {
-        return { day: parts[1] || '15', month: parts[0] || 'May', year: parts[2] || '2026' };
-      }
-      return { day: '15', month: 'May', year: '2026' };
-    }
-    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    return {
-      day: String(d.getDate()).padStart(2, '0'),
-      month: months[d.getMonth()],
-      year: String(d.getFullYear())
-    };
-  } catch (e) {
-    return { day: '15', month: 'May', year: '2026' };
-  }
-};
-
-const createSlug = (value) => (
-  (value || 'event')
-    .toLowerCase()
-    .replace(/&/g, 'and')
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '')
-);
-
-
 const ArrowRight = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
@@ -112,39 +81,48 @@ const CapIcon = () => (
 const eventCards = [
   {
     title: 'Enhancing Research Practices: SSHSS Hosts FDP on Data Analysis and AI-Driven Insights',
-    slug: 'enhancing-research-practices',
     day: '17',
     month: 'Apr',
     year: '2026',
     color: 'coral',
     image: facultyBg,
+    slug: 'enhancing-research-practices',
   },
   {
     title: 'Jashn-e-Riwayat: A Heartfelt Farewell Celebration Honoring Tradition and Legacy',
-    slug: 'jashn-e-riwayat',
     day: '17',
     month: 'Apr',
     year: '2026',
     color: 'mint',
     image: aboutBg,
+    slug: 'jashn-e-riwayat',
   },
   {
     title: 'INNOVATE BHARAT 2026: National Hackathon for Real-World Innovation',
-    slug: 'innovate-bharat-2026',
     day: '10',
     month: 'Apr',
     year: '2026',
     color: 'blue',
     image: heroBg,
+    slug: 'innovate-bharat-2026',
   },
   {
     title: 'Belliatus Cultura 2026 - 9th Northeast Cultural Fest',
-    slug: 'belliatus-cultura-2026',
     day: '18',
     month: 'Mar',
     year: '2026',
     color: 'gold',
     image: campusBg,
+    slug: 'belliatus-cultura-2026',
+  },
+  {
+    title: 'Annual Sports Meet 2026 - Celebrating Excellence in Athletics',
+    day: '05',
+    month: 'Mar',
+    year: '2026',
+    color: 'coral',
+    image: event,
+    slug: 'annual-sports-meet-2026',
   },
 ];
 
@@ -154,6 +132,8 @@ const announcements = [
     month: 'May',
     year: '2026',
     title: 'Notification no. 24 Regulations for the Award of the Chancellors Gold Medal (Be...',
+    downloadTitle: 'Notification no. 24 Regulations for the Award of the Chancellors Gold Medal',
+    fileName: 'notification-24-chancellors-gold-medal.txt',
     color: 'coral',
     icon: <DocIcon />,
   },
@@ -162,6 +142,8 @@ const announcements = [
     month: 'May',
     year: '2026',
     title: 'OFFICE ORDER No. 29 Appointment of Head of Department of Biotechnology, SSBT- ...',
+    downloadTitle: 'OFFICE ORDER No. 29 Appointment of Head of Department of Biotechnology, SSBT',
+    fileName: 'office-order-29-biotechnology-head-appointment.txt',
     color: 'mint',
     icon: <DocIcon />,
   },
@@ -170,10 +152,23 @@ const announcements = [
     month: 'May',
     year: '2026',
     title: 'Appointment of Chief Vigilance Officer (CVO) - Prof. (Dr.) Shajee Mohan, SSCSE',
+    downloadTitle: 'Appointment of Chief Vigilance Officer (CVO) - Prof. (Dr.) Shajee Mohan, SSCSE',
+    fileName: 'chief-vigilance-officer-appointment.txt',
     color: 'blue',
     icon: <UserIcon />,
   },
 ];
+
+const getAnnouncementDownloadHref = (item) => {
+  const content = [
+    'Saroj Educational Group',
+    '',
+    item.downloadTitle || item.title,
+    `Date: ${item.day} ${item.month} ${item.year}`,
+  ].join('\n');
+
+  return `data:text/plain;charset=utf-8,${encodeURIComponent(content)}`;
+};
 
 const announcementStats = [
   {
@@ -207,125 +202,6 @@ const announcementStats = [
 ];
 
 export default function HappeningsShowcase() {
-  const [events, setEvents] = useState([]);
-  const [notices, setNotices] = useState([]);
-  const [stats, setStats] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    fetch('http://localhost:3000/api/student-zone')
-      .then(res => res.json())
-      .then(data => {
-        if (data && data.notices && data.notices.length > 0) {
-          const allNotices = data.notices;
-
-          // Event cards: filter notices with category === 'Event'
-          const eventNotices = allNotices.filter(n => n.category === 'Event');
-          const mappedEvents = eventNotices.map((n, idx) => {
-            const dateObj = parseDateString(n.date);
-            const images = [facultyBg, aboutBg, heroBg, campusBg];
-            const colors = ['coral', 'mint', 'blue', 'gold'];
-            return {
-              title: n.title,
-              day: dateObj.day,
-              month: dateObj.month,
-              year: dateObj.year,
-              color: colors[idx % 4],
-              image: images[idx % 4],
-              slug: n.slug || createSlug(n.title),
-            };
-          });
-
-          const combinedEvents = [...mappedEvents];
-          if (combinedEvents.length < 4) {
-            eventCards.slice(combinedEvents.length).forEach(fallback => {
-              combinedEvents.push(fallback);
-            });
-          }
-          setEvents(combinedEvents.slice(0, 4));
-
-          // Announcements: take general notices (excluding Event)
-          const generalNotices = allNotices.filter(n => n.category !== 'Event');
-          const mappedAnnouncements = generalNotices.map((n, idx) => {
-            const dateObj = parseDateString(n.date);
-            const colors = ['coral', 'mint', 'blue'];
-            const icons = [
-              n.category === 'Exam' ? <DocIcon /> : <UserIcon />,
-              n.category === 'Scholarship' ? <UserIcon /> : <DocIcon />,
-              <DocIcon />
-            ];
-            return {
-              day: dateObj.day,
-              month: dateObj.month,
-              year: dateObj.year,
-              title: n.title,
-              color: colors[idx % 3],
-              icon: icons[idx % 3],
-            };
-          });
-
-          const combinedAnnouncements = [...mappedAnnouncements];
-          if (combinedAnnouncements.length < 3) {
-            announcements.slice(combinedAnnouncements.length).forEach(fallback => {
-              combinedAnnouncements.push(fallback);
-            });
-          }
-          setNotices(combinedAnnouncements.slice(0, 3));
-
-          // Update stats dynamically
-          const eventCount = allNotices.filter(n => n.category === 'Event').length + 25;
-          const noticeCount = allNotices.length + 30;
-          const mappedStats = [
-            {
-              value: `${eventCount}+`,
-              label: 'Events Organized',
-              sublabel: 'This Month',
-              color: 'blue',
-              icon: <CalendarIcon />,
-            },
-            {
-              value: '1200+',
-              label: 'Students',
-              sublabel: 'Participated',
-              color: 'gold',
-              icon: <GroupIcon />,
-            },
-            {
-              value: '15+',
-              label: 'Achievements &',
-              sublabel: 'Recognitions',
-              color: 'mint',
-              icon: <TrophyIcon />,
-            },
-            {
-              value: `${noticeCount}+`,
-              label: 'Announcements',
-              sublabel: 'This Month',
-              color: 'violet',
-              icon: <NotesIcon />,
-            },
-          ];
-          setStats(mappedStats);
-        } else {
-          setEvents(eventCards);
-          setNotices(announcements);
-          setStats(announcementStats);
-        }
-        setLoading(false);
-      })
-      .catch(err => {
-        console.error('Error fetching happenings:', err);
-        setEvents(eventCards);
-        setNotices(announcements);
-        setStats(announcementStats);
-        setLoading(false);
-      });
-  }, []);
-
-  if (loading) {
-    return <div style={{ padding: '50px', textAlign: 'center' }}>Loading Happenings...</div>;
-  }
-
   return (
     <section className="happenings-showcase" id="happenings-showcase">
       <div className="happenings-showcase__shell">
@@ -349,7 +225,7 @@ export default function HappeningsShowcase() {
         </div>
 
         <div className="happenings-showcase__events">
-          {events.map((event) => (
+          {eventCards.map((event) => (
             <article className="happenings-showcase__event-card" key={event.title}>
               <div className="happenings-showcase__event-media">
                 <img src={event.image} alt={event.title} className="happenings-showcase__event-image" loading="lazy" />
@@ -362,7 +238,7 @@ export default function HappeningsShowcase() {
 
               <div className="happenings-showcase__event-body">
                 <h3 className="happenings-showcase__event-title">{event.title}</h3>
-                <Link to={`/events/${event.slug || createSlug(event.title)}`} className="happenings-showcase__event-link" aria-label={event.title}>
+                <Link to={`/events/${event.slug}`} className="happenings-showcase__event-link" aria-label={event.title}>
                   <ArrowRight />
                 </Link>
               </div>
@@ -382,11 +258,11 @@ export default function HappeningsShowcase() {
               </div>
             </div>
 
-            
+           
           </div>
 
           <div className="happenings-showcase__announcement-list">
-            {notices.map((item) => (
+            {announcements.map((item) => (
               <article className="happenings-showcase__announcement" key={`${item.day}-${item.title}`}>
                 <div className={`happenings-showcase__announcement-date happenings-showcase__announcement-date--${item.color}`}>
                   <strong>{item.day}</strong>
@@ -400,7 +276,12 @@ export default function HappeningsShowcase() {
 
                 <p className="happenings-showcase__announcement-text">{item.title}</p>
 
-                <a href="#happenings-showcase" className="happenings-showcase__announcement-arrow" aria-label={item.title}>
+                <a
+                  href={getAnnouncementDownloadHref(item)}
+                  download={item.fileName}
+                  className="happenings-showcase__announcement-arrow"
+                  aria-label={`Download ${item.downloadTitle || item.title}`}
+                >
                   <ArrowRight />
                 </a>
               </article>
@@ -408,7 +289,7 @@ export default function HappeningsShowcase() {
           </div>
 
           <div className="happenings-showcase__stats-strip">
-            {stats.map((item) => (
+            {announcementStats.map((item) => (
               <article className="happenings-showcase__stat" key={`${item.value}-${item.label}`}>
                 <span className={`happenings-showcase__stat-icon happenings-showcase__stat-icon--${item.color}`}>
                   {item.icon}
@@ -421,57 +302,57 @@ export default function HappeningsShowcase() {
               </article>
             ))}
           </div>
-
         </section>
 
-        <article className="happenings-showcase__cta-panel">
-          <span className="happenings-showcase__cta-rail happenings-showcase__cta-rail--left" aria-hidden="true" />
-          <span className="happenings-showcase__cta-rail happenings-showcase__cta-rail--right" aria-hidden="true" />
-          <span className="happenings-showcase__cta-dots happenings-showcase__cta-dots--left" aria-hidden="true" />
-          <span className="happenings-showcase__cta-dots happenings-showcase__cta-dots--right" aria-hidden="true" />
+        <section className="happenings-showcase__cta-section">
+          <article className="happenings-showcase__cta-panel">
+            <span className="happenings-showcase__cta-rail happenings-showcase__cta-rail--left" aria-hidden="true" />
+            <span className="happenings-showcase__cta-rail happenings-showcase__cta-rail--right" aria-hidden="true" />
+            <span className="happenings-showcase__cta-dots happenings-showcase__cta-dots--left" aria-hidden="true" />
+            <span className="happenings-showcase__cta-dots happenings-showcase__cta-dots--right" aria-hidden="true" />
 
-          <div className="happenings-showcase__cta-visual">
-            <div className="happenings-showcase__cta-orbit">
-              <CapIcon />
+            <div className="happenings-showcase__cta-visual">
+              <div className="happenings-showcase__cta-orbit">
+                <CapIcon />
+              </div>
             </div>
-          </div>
 
-          <div className="happenings-showcase__cta-content">
-            <h3 className="happenings-showcase__cta-title">
-              <span className="happenings-showcase__cta-title-line">Start Your Journey with</span>
-              <span className="happenings-showcase__cta-title-highlight">Saroj Education Group</span>
-            </h3>
+            <div className="happenings-showcase__cta-content">
+              <h3 className="happenings-showcase__cta-title">
+                <span className="happenings-showcase__cta-title-line">Start Your Journey with</span>
+                <span className="happenings-showcase__cta-title-highlight">Saroj Education Group</span>
+              </h3>
 
-            <div className="happenings-showcase__cta-actions">
-              <a href="#happenings-showcase" className="btn btn--primary happenings-showcase__cta-button">
-                Apply now
-                <span className="btn__arrow">
-                  <ArrowRight />
-                </span>
-              </a>
+              <div className="happenings-showcase__cta-actions">
+                <a href="https://ssitm.in/" target="_blank" rel="noopener noreferrer" className="btn btn--primary happenings-showcase__cta-button">
+                  Apply now
+                  <span className="btn__arrow">
+                    <ArrowRight />
+                  </span>
+                </a>
 
-              <a href="#happenings-showcase" className="btn btn--secondary happenings-showcase__cta-button happenings-showcase__cta-button--light">
-                Speak with Expert
-                <span className="btn__arrow">
-                  <ArrowRight />
-                </span>
-              </a>
+                <a href="#happenings-showcase" className="btn btn--secondary happenings-showcase__cta-button happenings-showcase__cta-button--light">
+                  Speak with Expert
+                  <span className="btn__arrow">
+                    <ArrowRight />
+                  </span>
+                </a>
+              </div>
             </div>
-          </div>
 
-          <div className="happenings-showcase__cta-building" aria-hidden="true">
-            <div className="happenings-showcase__admission-badge">
-              <span>Admission</span>
-              <span>open</span>
-              <img src={logoImg} alt="" />
+            <div className="happenings-showcase__cta-building" aria-hidden="true">
+              <span className="happenings-showcase__building-block happenings-showcase__building-block--left" />
+              <span className="happenings-showcase__building-block happenings-showcase__building-block--center" />
+              <span className="happenings-showcase__building-block happenings-showcase__building-block--right" />
             </div>
-            <span className="happenings-showcase__building-block happenings-showcase__building-block--left" />
-            <span className="happenings-showcase__building-block happenings-showcase__building-block--center" />
-            <span className="happenings-showcase__building-block happenings-showcase__building-block--right" />
-          </div>
-        </article>
+
+            <div className="happenings-showcase__cta-badge">
+              <span className="happenings-showcase__cta-badge-text">Admission<br />open</span>
+              <img src={logoImg} alt="SEG Logo" className="happenings-showcase__cta-badge-logo" />
+            </div>
+          </article>
+        </section>
       </div>
     </section>
   );
 }
-

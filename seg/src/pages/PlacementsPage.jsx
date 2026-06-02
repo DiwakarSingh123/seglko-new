@@ -1,50 +1,47 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { Link } from 'react-router-dom';
+import React from 'react';
 import '../PlacementsPage.css';
-import program1 from '../assets/images/program1.png';
-import program2 from '../assets/images/program2.png';
-import program3 from '../assets/images/program3.png';
 import heroBg from '../assets/images/placementsimg.jpeg';
-import { computePlacementStats, formatPlacedCount } from '../utils/placementStats';
-
-const imagePool = [program1, program2, program3];
 
 const PlacementsPage = () => {
-  const [studentsData, setStudentsData] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [page, setPage] = useState(1);
-  const CARDS_PER_PAGE = 8;
+  const [studentsData, setStudentsData] = React.useState([]);
+  const [loading, setLoading] = React.useState(true);
+  const [currentPage, setCurrentPage] = React.useState(1);
+  const cardsPerPage = 8;
 
-  useEffect(() => {
+  React.useEffect(() => {
     fetch('/api/placements')
       .then(res => res.json())
       .then(data => {
-        const mapped = data.map((p, i) => ({
-          name: p.student,
-          company: p.company,
-          role: p.role,
-          date: p.year,
-          course: p.program,
-          package: p.pkg,
-          image: p.customImage && p.customImage.trim() !== '' ? p.customImage : imagePool[i % imagePool.length],
-          logoText: p.company.substring(0, 6).toUpperCase(),
-        }));
-        setStudentsData(mapped);
+        setStudentsData(Array.isArray(data) ? data : []);
         setLoading(false);
       })
-      .catch(err => { console.error(err); setLoading(false); });
+      .catch(() => setLoading(false));
   }, []);
 
-  const stats = useMemo(() => computePlacementStats(
-    studentsData.map((s) => ({
-      student: s.name,
-      company: s.company,
-      pkg: s.package,
-      program: s.course,
-      role: s.role,
-      year: s.date,
-    }))
-  ), [studentsData]);
+  const totalPages = Math.ceil(studentsData.length / cardsPerPage);
+  const indexOfLastCard = currentPage * cardsPerPage;
+  const indexOfFirstCard = indexOfLastCard - cardsPerPage;
+  const currentCards = studentsData.slice(indexOfFirstCard, indexOfLastCard);
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+      const section = document.querySelector('.placements-breadcrumb-wrapper');
+      if (section) {
+        section.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  };
+
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+      const section = document.querySelector('.placements-breadcrumb-wrapper');
+      if (section) {
+        section.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  };
 
   return (
     <div className="placements-page">
@@ -74,7 +71,7 @@ const PlacementsPage = () => {
                 </svg>
               </div>
               <div className="placements-hero__stat-info">
-                <strong>{loading ? '...' : formatPlacedCount(stats.totalPlaced)}</strong>
+                <strong>2000+</strong>
                 <span>Students Placed</span>
               </div>
             </div>
@@ -87,7 +84,7 @@ const PlacementsPage = () => {
                 </svg>
               </div>
               <div className="placements-hero__stat-info">
-                <strong>{loading ? '...' : stats.recruiters}</strong>
+                <strong>150+</strong>
                 <span>Top Recruiters</span>
               </div>
             </div>
@@ -96,30 +93,30 @@ const PlacementsPage = () => {
       </section>
 
       {/* BREADCRUMB */}
-      <div className="placements-breadcrumb-wrapper">
-        <div className="placements-breadcrumb">
-          <Link to="/">HOME</Link> &gt; <span>PLACEMENTS</span>
-        </div>
-      </div>
+     
 
       {/* MAIN CARDS SECTION */}
       <section className="placements-main">
         <div className="placements-container">
           {loading ? (
-            <div style={{ textAlign: 'center', padding: '50px', color: '#1041c6', fontSize: '1.2rem', fontWeight: '600' }}>
-              Loading placement records...
-            </div>
+            <div style={{ textAlign: 'center', padding: '60px', fontSize: '18px', color: '#666' }}>Loading placements...</div>
+          ) : studentsData.length === 0 ? (
+            <div style={{ textAlign: 'center', padding: '60px', fontSize: '18px', color: '#666' }}>No placements data found.</div>
           ) : (
-            <div className="placements-grid">
-              {studentsData.slice((page - 1) * CARDS_PER_PAGE, page * CARDS_PER_PAGE).map((student, index) => (
-              <div className="placement-card" key={index}>
+          <div className="placements-grid">
+            {currentCards.map((student, index) => (
+              <div className="placement-card" key={student._id || index}>
                 <div className="placement-card__image-container">
-                  <img src={student.image} alt={student.name} className="placement-card__image" />
+                  {student.customImage ? (
+                    <img src={student.customImage} alt={student.student} className="placement-card__image" />
+                  ) : (
+                    <div className="placement-card__image" style={{ background: '#e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '32px' }}>👤</div>
+                  )}
                   <div className="placement-card__quote-icon">“</div>
                 </div>
                 <div className="placement-card__details">
-                  <div className="placement-card__logo-placeholder">{student.logoText}</div>
-                  <h3 className="placement-card__name">{student.name}</h3>
+                  <div className="placement-card__logo-placeholder">{student.company}</div>
+                  <h3 className="placement-card__name">{student.student}</h3>
                   <ul className="placement-card__info-list">
                     <li>
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 21v-14l8-4 8 4v14"></path><path d="M13 13h4"></path><path d="M13 17h4"></path></svg>
@@ -130,21 +127,17 @@ const PlacementsPage = () => {
                       {student.role}
                     </li>
                     <li>
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-                      {student.date}
-                    </li>
-                    <li>
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2l10 6.5-10 6.5-10-6.5z"></path><path d="M22 8.5v7l-10 6.5-10-6.5v-7"></path></svg>
-                      {student.course}
+                      {student.program}
                     </li>
                   </ul>
                   <div className="placement-card__package">
-                    Package Offer: {student.package}
+                    Package Offer: {student.pkg}
                   </div>
                 </div>
               </div>
             ))}
-            </div>
+          </div>
           )}
 
           {/* STATS BAR */}
@@ -154,7 +147,7 @@ const PlacementsPage = () => {
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
               </div>
               <div className="placements-stat-item__content">
-                <h4>{loading ? '...' : stats.highestPackage}</h4>
+                <h4>₹ 6 LPA</h4>
                 <p>Highest Package</p>
               </div>
             </div>
@@ -163,7 +156,7 @@ const PlacementsPage = () => {
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg>
               </div>
               <div className="placements-stat-item__content">
-                <h4>{loading ? '...' : stats.avgPackage}</h4>
+                <h4>₹ 3.5 LPA</h4>
                 <p>Average Package</p>
               </div>
             </div>
@@ -172,7 +165,7 @@ const PlacementsPage = () => {
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect><rect x="9" y="9" width="6" height="6"></rect><line x1="9" y1="1" x2="9" y2="4"></line><line x1="15" y1="1" x2="15" y2="4"></line><line x1="9" y1="20" x2="9" y2="23"></line><line x1="15" y1="20" x2="15" y2="23"></line><line x1="20" y1="9" x2="23" y2="9"></line><line x1="20" y1="14" x2="23" y2="14"></line><line x1="1" y1="9" x2="4" y2="9"></line><line x1="1" y1="14" x2="4" y2="14"></line></svg>
               </div>
               <div className="placements-stat-item__content">
-                <h4>{loading ? '...' : stats.recruiters}</h4>
+                <h4>150+</h4>
                 <p>Top Recruiters</p>
               </div>
             </div>
@@ -181,30 +174,32 @@ const PlacementsPage = () => {
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
               </div>
               <div className="placements-stat-item__content">
-                <h4>{loading ? '...' : formatPlacedCount(stats.totalPlaced)}</h4>
-                <p>Students Placed</p>
+                <h4>98%</h4>
+                <p>Placement Rate</p>
               </div>
             </div>
           </div>
 
           {/* PAGINATION */}
-          <div className="placements-pagination">
-            <button
-              className="placements-pagination__btn placements-pagination__btn--prev"
-              onClick={() => setPage(p => Math.max(1, p - 1))}
-              disabled={page === 1}
-            >
-              &lt; Prev
-            </button>
-            <span className="placements-pagination__text">{page} / {Math.ceil(studentsData.length / CARDS_PER_PAGE) || 1}</span>
-            <button
-              className="placements-pagination__btn placements-pagination__btn--next"
-              onClick={() => setPage(p => Math.min(Math.ceil(studentsData.length / CARDS_PER_PAGE), p + 1))}
-              disabled={page === Math.ceil(studentsData.length / CARDS_PER_PAGE)}
-            >
-              Next &gt;
-            </button>
-          </div>
+          {totalPages > 1 && (
+            <div className="placements-pagination">
+              <button 
+                className="placements-pagination__btn placements-pagination__btn--prev"
+                onClick={handlePrevPage}
+                disabled={currentPage === 1}
+              >
+                &lt; Prev
+              </button>
+              <span className="placements-pagination__text">{currentPage} / {totalPages}</span>
+              <button 
+                className="placements-pagination__btn placements-pagination__btn--next"
+                onClick={handleNextPage}
+                disabled={currentPage === totalPages}
+              >
+                Next &gt;
+              </button>
+            </div>
+          )}
         </div>
       </section>
     </div>

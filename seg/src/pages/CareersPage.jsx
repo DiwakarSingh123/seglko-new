@@ -1,76 +1,106 @@
-import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import './CareersPage.css';
 import careerHeroImg from '../assets/images/seg.jpeg';
 import logoImg from '../assets/images/logo.png';
 
+function JobModal({ job, onClose }) {
+  if (!job) return null;
+  return (
+    <div className="job-modal-overlay" onClick={onClose}>
+      <div className="job-modal" onClick={e => e.stopPropagation()}>
+        <button className="job-modal__close" onClick={onClose}>✕</button>
+        <div className="job-modal__header">
+          <div className={`job-icon bg-${job.color}`} style={{ width: 56, height: 56, fontSize: 24, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+            {job.category === 'teaching' ? '🎓' : job.category === 'technical' ? '💻' : '👤'}
+          </div>
+          <div>
+            <h2 className="job-modal__title">{job.title}</h2>
+            <span className={`job-tag tag-${job.color}`}>{job.tag}</span>
+          </div>
+        </div>
+        <div className="job-modal__grid">
+          {[['Department', job.dept], ['Location', job.location], ['Experience', job.experience], ['Job Type', job.type], ['Posted On', job.posted], ['Category', job.tag]].map(([label, value]) => (
+            <div className="job-modal__item" key={label}>
+              <span className="meta-label">{label}</span>
+              <span className="meta-value">{value}</span>
+            </div>
+          ))}
+        </div>
+        <div className="job-modal__footer">
+          <button className={`btn-apply bg-${job.color}`} style={{ width: '100%', justifyContent: 'center' }}>Apply Now →</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 const jobCategories = [
-  { id: 'all', label: 'All Openings', icon: '💼' },
-  { id: 'teaching', label: 'Teaching', icon: '🎓' },
-  { id: 'administration', label: 'Administration', icon: '🏛️' },
-  { id: 'technical', label: 'Technical', icon: '💻' },
-  { id: 'support', label: 'Support Staff', icon: '🎧' },
+  { id: 'all', label: 'All Openings', count: 12, icon: '💼' },
+  { id: 'teaching', label: 'Teaching', count: 6, icon: '🎓' },
+  { id: 'administration', label: 'Administration', count: 3, icon: '🏛️' },
+  { id: 'technical', label: 'Technical', count: 2, icon: '💻' },
+  { id: 'support', label: 'Support Staff', count: 1, icon: '🎧' },
+];
+
+const jobs = [
+  {
+    id: 1,
+    title: 'Chairman PS',
+    category: 'administration',
+    tag: 'Administration',
+    dept: 'Secretariat',
+    location: 'Lucknow',
+    experience: '5-8 Years',
+    type: 'Full Time',
+    posted: '05 June 2025',
+    color: 'blue',
+  },
+  {
+    id: 2,
+    title: 'Admission Counsellor',
+    category: 'administration',
+    tag: 'Admissions',
+    dept: 'Counselling',
+    location: 'Lucknow',
+    experience: '1-3 Years',
+    type: 'Full Time',
+    posted: '05 June 2025',
+    color: 'violet',
+  },
+  {
+    id: 3,
+    title: 'Assistant Professor',
+    category: 'teaching',
+    tag: 'Teaching',
+    dept: 'Pharmacy',
+    location: 'Lucknow',
+    experience: '2-5 Years',
+    type: 'Full Time',
+    posted: '05 June 2025',
+    color: 'green',
+  },
+  {
+    id: 4,
+    title: 'Field Officers',
+    category: 'administration',
+    tag: 'Administration',
+    dept: 'Field Officer',
+    location: 'Uttar Pradesh',
+    experience: '1-4 Years',
+    type: 'Full Time',
+    posted: '05 June 2025',
+    color: 'orange',
+  },
 ];
 
 export default function CareersPage() {
   const [activeCategory, setActiveCategory] = useState('all');
-  const [jobs, setJobs] = useState([
-    {
-      id: 1,
-      title: 'Chairman PS',
-      category: 'administration',
-      tag: 'Administration',
-      dept: 'Secretariat',
-      location: 'Lucknow',
-      experience: '5-8 Years',
-      type: 'Full Time',
-      posted: '05 June 2025',
-      color: 'blue',
-    },
-    {
-      id: 2,
-      title: 'Admission Counsellor',
-      category: 'administration',
-      tag: 'Admissions',
-      dept: 'Counselling',
-      location: 'Lucknow',
-      experience: '1-3 Years',
-      type: 'Full Time',
-      posted: '05 June 2025',
-      color: 'violet',
-    },
-    {
-      id: 3,
-      title: 'Assistant Professor',
-      category: 'teaching',
-      tag: 'Teaching',
-      dept: 'Pharmacy',
-      location: 'Lucknow',
-      experience: '2-5 Years',
-      type: 'Full Time',
-      posted: '05 June 2025',
-      color: 'green',
-    },
-  ]);
+  const [selectedJob, setSelectedJob] = useState(null);
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    fetch('http://localhost:3000/api/settings')
-      .then(res => res.json())
-      .then(settings => {
-        if (settings && settings.careers && settings.careers.jobs) {
-          setJobs(settings.careers.jobs);
-        }
-      })
-      .catch(err => console.error("Error loading career jobs settings:", err));
-  }, []);
-
-  const getCategoryCount = (catId) => {
-    if (catId === 'all') return jobs.length;
-    return jobs.filter(job => job.category === catId).length;
-  };
-
-  const filteredJobs = activeCategory === 'all' 
-    ? jobs 
+  const filteredJobs = activeCategory === 'all'
+    ? jobs
     : jobs.filter(job => job.category === activeCategory);
 
   return (
@@ -89,7 +119,7 @@ export default function CareersPage() {
               Join a dynamic team of educators, innovators, and professionals working together to empower the next generation.
             </p>
           </div>
-          
+
           <div className="careers-hero__image-wrap">
             <img src={careerHeroImg} alt="Join SEG" className="careers-hero__image" />
             <div className="careers-hero__info-card">
@@ -97,7 +127,7 @@ export default function CareersPage() {
               <div className="info-card__body">
                 <h4>Why Join SEG?</h4>
                 <p>Be part of an institution that values excellence, innovation and integrity.</p>
-                <a href="https://www.youtube.com/@sarojeducationalgroup1018" target="_blank" rel="noopener noreferrer" className="info-card__link">Watch Our Culture Video <span>▶</span></a>
+                <a href="#" className="info-card__link">Watch Our Culture Video <span>▶</span></a>
               </div>
             </div>
           </div>
@@ -108,15 +138,15 @@ export default function CareersPage() {
       <section className="careers-categories">
         <div className="categories-grid">
           {jobCategories.map(cat => (
-            <button 
-              key={cat.id} 
+            <button
+              key={cat.id}
               className={`category-card ${activeCategory === cat.id ? 'active' : ''}`}
               onClick={() => setActiveCategory(cat.id)}
             >
               <span className="category-icon">{cat.icon}</span>
               <div className="category-info">
                 <span className="category-label">{cat.label}</span>
-                <span className="category-count">{getCategoryCount(cat.id)} Open Positions</span>
+                <span className="category-count">{cat.count} Open Positions</span>
               </div>
             </button>
           ))}
@@ -132,15 +162,15 @@ export default function CareersPage() {
 
         <div className="jobs-container">
           {filteredJobs.map(job => (
-            <div key={job.id} className={`job-card border-${job.color || 'blue'}`}>
+            <div key={job.id} className={`job-card border-${job.color}`}>
               <div className="job-card__main">
-                <div className={`job-icon bg-${job.color || 'blue'}`}>
+                <div className={`job-icon bg-${job.color}`}>
                   {job.category === 'teaching' ? '🎓' : job.category === 'technical' ? '💻' : '👤'}
                 </div>
                 <div className="job-info">
                   <div className="job-title-row">
                     <h3>{job.title}</h3>
-                    <span className={`job-tag tag-${job.color || 'blue'}`}>{job.tag || job.category}</span>
+                    <span className={`job-tag tag-${job.color}`}>{job.tag}</span>
                   </div>
                   <div className="job-meta">
                     <div className="meta-item">
@@ -167,9 +197,8 @@ export default function CareersPage() {
                 </div>
               </div>
               <div className="job-actions">
-                <button className="btn-details" onClick={() => alert(`Details for position: ${job.title}`)}>View Details</button>
-                <button className={`btn-apply bg-${job.color || 'blue'}`} onClick={() => alert(`Apply form for ${job.title} has been initialized.`)}>Apply Now <span>→</span></button>
-                <button className="btn-bookmark" onClick={() => alert("Position bookmarked.")}>🔖</button>
+                <button className="btn-details" onClick={() => setSelectedJob(job)}>View Details</button>
+                <button className={`btn-apply bg-${job.color || 'blue'}`} onClick={() => navigate('/careers/apply', { state: { jobTitle: job.title } })}>Apply Now <span>→</span></button>
               </div>
             </div>
           ))}
@@ -180,10 +209,10 @@ export default function CareersPage() {
       <section className="careers-cta">
         <div className="cta-content">
           <div className="cta-text">
-            <h3>Don&apos;t see the <span>right role?</span></h3>
+            <h3>Don&apos;t see the right role?</h3>
             <p>We are always looking for passionate people. Send us your resume and we&apos;ll keep you in mind.</p>
           </div>
-          <button className="btn-submit-resume" onClick={() => alert("Resume submission is active.")}>
+          <button className="btn-submit-resume">
             <span className="icon">📄</span>
             Submit Your Resume
           </button>
@@ -192,6 +221,8 @@ export default function CareersPage() {
           </div>
         </div>
       </section>
+
+      <JobModal job={selectedJob} onClose={() => setSelectedJob(null)} />
     </div>
   );
 }

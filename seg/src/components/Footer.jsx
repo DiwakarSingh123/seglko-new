@@ -78,63 +78,62 @@ const footerGroups = [
   {
     title: 'PROGRAMS',
     links: [
-      { label: 'UG', to: '/all-programs' },
-      { label: 'PG', to: '/all-programs' },
-      { label: 'Diploma', to: '/programs/diploma' },
-      { label: 'Ph.D.', to: '/all-programs' },
-      { label: 'Online Programs', to: '/all-programs' },
-      { label: 'All Programs', to: '/all-programs' },
+      { label: 'UG', path: '/all-programs' },
+      { label: 'PG', path: '/all-programs' },
+      { label: 'Diploma', path: '/all-programs' },
+      { label: 'Ph.D.', path: '/all-rograms' },
+      { label: 'Online Programs', path: '/all-programs' },
+      { label: 'All Programs', path: '/all-programs' },
     ],
   },
   {
     title: 'ADMISSIONS',
     links: [
-      { label: 'Apply Now', to: '/admission-process' },
-      { label: 'Admission Process', to: '/admission-process' },
-      { label: 'Fee Structure', to: '/fee-structure' },
-      
+      { label: 'Apply Now', path: '/admission-process' },
+      { label: 'Admission Process', path: '/admission-process' },
+      { label: 'Fee Structure', path: '/fee-structure' },
+
+
+      { label: 'FAQs', path: '/contact-us' },
     ],
   },
   {
     title: 'CAMPUS LIFE',
     links: [
-      { label: 'Life @ Saroj', to: '/explore-more' },
-    
-      { label: 'Events', to: '/explore-more' },
-      { label: 'News & Media', to: '/explore-more' },
-      { label: 'Student Support', to: '/student-notice' },
+      { label: 'Life @ Saroj', path: '/explore-more' },
+      { label: 'Events', path: '/explore-more' },
+      { label: 'News & Media', path: '/student-notice' },
+      { label: 'Student Support', path: '/student-notice' },
     ],
   },
   {
     title: 'ABOUT US',
     links: [
-      { label: 'About SEG', to: '/history-of-seg' },
-      { label: 'Leadership', to: '/chairmans-message' },
-      { label: 'Our Institutions', to: '/institutions' },
-  
-      { label: 'Careers', to: '/careers' },
-      { label: 'Contact Us', to: '/contact-us' },
+      { label: 'About SEG', path: '/history-of-seg' },
+      { label: 'Leadership', path: '/chairmans-message' },
+      { label: 'Our Institutions', path: '/institutions' },
+
+      { label: 'Careers', path: '/careers' },
+      { label: 'Contact Us', path: '/contact-us' },
     ],
   },
   {
     title: 'QUICK LINKS',
     links: [
-      
-      { label: 'Saroj Institute of Technology & Management', to: 'https://sitmlko.org/', external: true },
-      { label: 'Shivdan Singh Institute of Technology & Management', to: 'https://ssitm.in/', external: true },
-      { label: 'Saroj College of Pharmacy', to: 'https://seglko.org/scp/', external: true },
-      { label: 'Saroj College of Engineering and Polytechnic', to: 'https://seglko.org/scep/', external: true },
-      { label: 'Lucknow Institute of Pharmacy', to: 'https://seglko.org/lip/', external: true },
-      { label: 'Saroj College of Law', to: 'https://seglko.org/scl/', external: true },
+      { label: 'Shivdan Singh Institute of Technology and Management', url: 'https://ssitm.in/' },
+      { label: 'Saroj Institute of Technology and Management', url: 'https://sitmlko.org/' },
+      { label: 'Saroj College of Law', url: 'https://seglko.org/scl/' },
+      { label: 'Saroj College of Pharmacy', url: 'https://seglko.org/scp/' },
+      { label: 'Saroj College of Engineering and Polytechnic', url: 'https://seglko.org/scep/' },
     ],
   },
 ];
 
 const socialLinks = [
-  { label: 'Facebook', icon: <FacebookIcon />, tone: 'facebook', href: 'https://www.facebook.com/SEGofficial' },
-  { label: 'Instagram', icon: <InstagramIcon />, tone: 'instagram', href: 'https://www.instagram.com/segindia/' },
-  { label: 'LinkedIn', icon: <LinkedinIcon />, tone: 'linkedin', href: 'https://www.linkedin.com/company/saroj-educational-group/' },
-  { label: 'YouTube', icon: <YoutubeIcon />, tone: 'youtube', href: 'https://www.youtube.com/@sarojeducationalgroup1018' },
+  { label: 'Facebook', icon: <FacebookIcon />, tone: 'facebook', url: 'https://www.facebook.com/SEGofficial' },
+  { label: 'Instagram', icon: <InstagramIcon />, tone: 'instagram', url: 'https://www.instagram.com/segindia/' },
+  { label: 'LinkedIn', icon: <LinkedinIcon />, tone: 'linkedin', url: 'https://www.linkedin.com/company/saroj-educational-group/' },
+  { label: 'YouTube', icon: <YoutubeIcon />, tone: 'youtube', url: 'https://www.youtube.com/@sarojeducationalgroup1018' },
 ];
 
 export default function Footer() {
@@ -150,8 +149,10 @@ export default function Footer() {
                 </span>
                 <div>
                   <p className="footer__contact-label">Call Us</p>
-                  <a href="tel:+911234567890" className="footer__contact-value">09555699988</a>
-                   <a href="tel:+911234567890" className="footer__contact-value">09810054878</a>
+                  <a href="tel:+911234567890" className="footer__contact-value">09555699988
+                  </a>
+                  <a href="tel:+911234567890" className="footer__contact-value">
+                    09810054878</a>
                 </div>
               </div>
 
@@ -161,7 +162,12 @@ export default function Footer() {
                 </span>
                 <div>
                   <p className="footer__contact-label">Email Us</p>
-                  <a href="mailto:info@sarojeducation.com" className="footer__contact-value">admission.cell@seglko.org</a>
+                  <a href="mailto:info@sarojeducation.com" className="footer__contact-value">
+                    admission.cell@seglko.org
+                  </a>
+                   <a href="mailto:info@sarojeducation.com" className="footer__contact-value">
+                    hr@seglko.org
+                  </a>
                 </div>
               </div>
 
@@ -172,9 +178,10 @@ export default function Footer() {
                 <div>
                   <p className="footer__contact-label">Saroj Education Group</p>
                   <p className="footer__contact-copy">
-                   L-5, First Floor, Lajpat Nagar - II -  110024
+                    L-5, First Floor, Lajpat Nagar - II, 110024
+                   
                     <br />
-                    Delhi, India,
+                Delhi, India,
                   </p>
                 </div>
               </div>
@@ -185,12 +192,12 @@ export default function Footer() {
               <div className="footer__social-list">
                 {socialLinks.map((item) => (
                   <a
-                    href={item.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    href={item.url}
                     className={`footer__social-link footer__social-link--${item.tone}`}
                     key={item.label}
                     aria-label={item.label}
+                    target="_blank"
+                    rel="noopener noreferrer"
                   >
                     {item.icon}
                   </a>
@@ -205,14 +212,32 @@ export default function Footer() {
                 <h4 className="footer__col-title">{group.title}</h4>
                 <span className="footer__col-accent" />
                 <div className="footer__links">
-                  {group.links.map((link) => (
-                    <Link to={link.to} className="footer__link" key={link.label} onClick={() => window.scrollTo(0,0)}>
-                      <span className="footer__link-icon">
-                        <ChevronIcon />
-                      </span>
-                      <span>{link.label}</span>
-                    </Link>
-                  ))}
+                  {group.links.map((link) => {
+                    const content = (
+                      <>
+                        <span className="footer__link-icon">
+                          <ChevronIcon />
+                        </span>
+                        <span>{link.label}</span>
+                      </>
+                    );
+
+                    return link.url ? (
+                      <a
+                        href={link.url}
+                        className="footer__link"
+                        key={link.label}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {content}
+                      </a>
+                    ) : (
+                      <Link to={link.path} className="footer__link" key={link.label}>
+                        {content}
+                      </Link>
+                    );
+                  })}
                 </div>
               </div>
             ))}
@@ -252,7 +277,7 @@ export default function Footer() {
 
       <div className="footer__bottom">
         <p>&copy; {new Date().getFullYear()} Saroj Education Group. All Rights Reserved.</p>
-        <div className="footer__bottom-links">
+         <div className="footer__bottom-links">
           <Link to="/privacy-policy">Privacy Policy</Link>
           <Link to="/terms-and-conditions">Terms &amp; Conditions</Link>
         </div>

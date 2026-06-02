@@ -521,9 +521,8 @@
     position: relative;
     top: 0;
     width: 100%;
-    min-height: 0;
-    height: auto;
-    padding: 0;
+    min-height: 480px;
+    padding-left: 0;
     margin-top: 20px;
   }
 
@@ -532,35 +531,27 @@
     border-radius: 28px;
   }
 
-  .chairman-hero__portrait-blob { display: none; }
-
-  .chairman-hero__portrait-wrap {
-    position: relative;
-    left: auto;
-    bottom: auto;
-    top: auto;
-    transform: none;
-    width: 100%;
-    height: 420px;
-    border-radius: 18px;
-    overflow: hidden;
+  .chairman-hero__portrait-blob {
+    left: 50%;
+    top: 18px;
+    width: 280px;
+    height: 360px;
+    transform: translateX(-50%);
   }
 
-  .chairman-hero__portrait {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center top;
+  .chairman-hero__portrait-wrap {
+    left: 50%;
+    bottom: 40px;
+    width: 360px;
+    height: 430px;
+    transform: translateX(-50%);
   }
 
   .chairman-hero__quote {
-    position: relative;
-    left: auto;
-    right: auto;
-    bottom: auto;
-    margin-top: 14px;
+    left: 20px;
+    right: 20px;
+    bottom: 10px;
     max-width: none;
-    border-radius: 10px;
   }
 
   .chairman-letter {
@@ -573,33 +564,7 @@
   }
 
   .chairman-letter__profile {
-    min-height: 0;
-    height: auto;
-    padding: 16px 16px 0;
-  }
-
-  .chairman-letter__photo-wrap {
-    position: relative;
-    inset: auto;
-    width: 100%;
-    height: 480px;
-    border-radius: 14px;
-  }
-
-  .chairman-letter__photo {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center top;
-  }
-
-  .chairman-letter__nameplate {
-    position: relative;
-    left: auto;
-    right: auto;
-    bottom: auto;
-    margin-top: 12px;
-    border-radius: 12px;
+    min-height: 500px;
   }
 
   .chairman-letter__content {
@@ -630,8 +595,7 @@
   }
 
   .chairman-hero__visual {
-    min-height: 0;
-    height: auto;
+    min-height: 400px;
   }
 
   .chairman-hero__campus-wrap {
@@ -639,38 +603,31 @@
     border-radius: 18px;
   }
 
-  .chairman-hero__portrait-blob { display: none; }
-
-  .chairman-hero__portrait-wrap {
-    position: relative;
-    left: auto;
-    bottom: auto;
-    top: auto;
-    transform: none;
-    width: 100%;
-    height: 360px;
-    border-radius: 14px;
-    overflow: hidden;
+  .chairman-hero__portrait-blob {
+    width: 180px;
+    height: 240px;
   }
 
-  .chairman-hero__portrait {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center top;
+  .chairman-hero__portrait-wrap {
+    width: 220px;
+    height: 280px;
+    bottom: 74px;
   }
 
   .chairman-hero__quote {
-    position: relative;
-    left: auto;
-    right: auto;
-    bottom: auto;
-    margin-top: 12px;
-    max-width: none;
-    border-radius: 10px;
-    font-size: 13px;
+    position: relative !important;
+    left: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+    margin: 280px auto 0 !important;
+    width: calc(100% - 20px) !important;
+    max-width: 440px !important;
+    gap: 10px;
     padding: 12px 14px;
+    font-size: 13px;
     line-height: 1.4;
+    border-radius: 10px;
+    z-index: 10;
   }
 
   .chairman-hero__quote-mark {
@@ -682,33 +639,17 @@
   }
 
   .chairman-letter__profile {
-    min-height: 0;
-    height: auto;
-    padding: 14px 14px 0;
+    min-height: 400px;
   }
 
   .chairman-letter__photo-wrap {
-    position: relative;
-    inset: auto;
-    width: 100%;
-    height: 420px;
-    border-radius: 14px;
-  }
-
-  .chairman-letter__photo {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center top;
+    inset: 20px 20px 92px;
   }
 
   .chairman-letter__nameplate {
-    position: relative;
-    left: auto;
-    right: auto;
-    bottom: auto;
-    margin-top: 10px;
-    border-radius: 10px;
+    left: 20px;
+    right: 20px;
+    bottom: 20px;
     padding: 14px 16px;
   }
 
@@ -771,102 +712,46 @@
   .chairman-hero__title {
     font-size: clamp(1.8rem, 10vw, 2.8rem);
   }
-  .chairman-hero__visual { position: relative; width: 100%; min-height: 0; height: auto; padding: 0; margin-top: 16px; }
-  .chairman-hero__portrait-blob { display: none; }
-  .chairman-hero__portrait-wrap { position: relative; left: auto; bottom: auto; top: auto; transform: none; width: 100%; height: 280px; border-radius: 14px; overflow: hidden; }
-  .chairman-hero__portrait { width: 100%; height: 100%; object-fit: cover; object-position: center top; }
-  .chairman-hero__quote { display: none; }
+  .chairman-hero__visual { min-height: 320px; }
+  .chairman-hero__portrait-blob { width: 150px; height: 200px; }
+  .chairman-hero__portrait-wrap { width: 180px; height: 230px; bottom: 60px; }
+  .chairman-hero__quote { font-size: 12px; padding: 10px 12px; margin-top: 240px !important; }
   .chairman-letter { padding: 0 12px 36px; }
-  .chairman-letter__profile { min-height: 0; height: auto; padding-bottom: 0; }
-  .chairman-letter__photo-wrap { position: relative; inset: auto; width: 100%; height: 320px; border-radius: 14px; }
-  .chairman-letter__photo { width: 100%; height: 100%; object-fit: cover; object-position: center top; }
-  .chairman-letter__nameplate { position: relative; left: auto; right: auto; bottom: auto; margin-top: 10px; border-radius: 10px; }
+  .chairman-letter__profile { min-height: 300px; }
   .chairman-letter__nameplate-copy strong { font-size: 15px; }
   .chairman-letter__point p { font-size: 14px; }
 }
 
-@media (max-width: 420px) {
+@media (max-width: 375px) {
   .chairman-hero { padding: 16px 10px 30px; }
-  .chairman-hero__title { font-size: clamp(1.7rem, 9.5vw, 2.5rem); }
-  .chairman-hero__breadcrumbs { font-size: 12px; gap: 6px; margin-bottom: 16px; }
-  .chairman-hero__signature { font-size: clamp(1.5rem, 7vw, 2rem); }
-  .chairman-hero__visual { position: relative; width: 100%; min-height: 0; height: auto; padding: 0; margin-top: 16px; }
-  .chairman-hero__portrait-blob { display: none; }
-  .chairman-hero__portrait-wrap { position: relative; left: auto; bottom: auto; top: auto; transform: none; width: 100%; height: 260px; border-radius: 14px; overflow: hidden; }
-  .chairman-hero__portrait { width: 100%; height: 100%; object-fit: cover; object-position: center top; }
-  .chairman-hero__quote { display: none; }
+  .chairman-hero__title { font-size: clamp(1.6rem, 9vw, 2.4rem); }
+  .chairman-hero__visual { min-height: 280px; }
+  .chairman-hero__portrait-blob { width: 130px; height: 170px; }
+  .chairman-hero__portrait-wrap { width: 160px; height: 200px; bottom: 50px; }
+  .chairman-hero__quote { font-size: 11px; padding: 8px 10px; gap: 6px; margin-top: 210px !important; }
+  .chairman-hero__quote-mark { font-size: 32px; }
   .chairman-letter { padding: 0 10px 28px; }
-  .chairman-letter__shell { border-radius: 14px; }
-  .chairman-letter__profile { min-height: 0; height: auto; padding-bottom: 0; }
-  .chairman-letter__photo-wrap { position: relative; inset: auto; width: 100%; height: 300px; border-radius: 12px; }
-  .chairman-letter__photo { width: 100%; height: 100%; object-fit: cover; object-position: center top; }
-  .chairman-letter__nameplate { position: relative; left: auto; right: auto; bottom: auto; margin-top: 10px; border-radius: 10px; padding: 10px 12px; gap: 10px; }
+  .chairman-letter__profile { min-height: 260px; }
+  .chairman-letter__photo-wrap { inset: 14px 14px 80px; }
+  .chairman-letter__nameplate { left: 14px; right: 14px; bottom: 14px; padding: 10px 12px; }
   .chairman-letter__nameplate-icon { width: 40px; height: 40px; flex-basis: 40px; }
-  .chairman-letter__nameplate-icon svg { width: 22px; height: 22px; }
   .chairman-letter__nameplate-copy strong { font-size: 14px; }
   .chairman-letter__nameplate-copy span { font-size: 11px; }
-  .chairman-letter__content { padding: 16px 12px; gap: 8px; }
-  .chairman-letter__point p { font-size: 13px; line-height: 1.65; }
-  .chairman-letter__signoff strong { font-size: 16px; }
-  .chairman-letter__signoff span { font-size: 12px; }
-  .chairman-letter__signoff p { font-size: 14px; }
-  .chairman-letter__dots { display: none; }
-  .chairman-letter__quote-mark { font-size: 60px; }
-}
-
-@media (max-width: 375px) {
-  .chairman-hero { padding: 14px 10px 26px; }
-  .chairman-hero__title { font-size: clamp(1.5rem, 9vw, 2.2rem); }
-  .chairman-hero__breadcrumbs { font-size: 11px; gap: 5px; margin-bottom: 14px; }
-  .chairman-hero__signature { font-size: clamp(1.3rem, 6.5vw, 1.8rem); }
-  .chairman-hero__signature-row { margin-top: 16px; gap: 10px; }
-  .chairman-hero__visual { position: relative; width: 100%; min-height: 0; height: auto; padding: 0; margin-top: 16px; }
-  .chairman-hero__portrait-blob { display: none; }
-  .chairman-hero__portrait-wrap { position: relative; left: auto; bottom: auto; top: auto; transform: none; width: 100%; height: 240px; border-radius: 12px; overflow: hidden; }
-  .chairman-hero__portrait { width: 100%; height: 100%; object-fit: cover; object-position: center top; }
-  .chairman-hero__quote { display: none; }
-  .chairman-letter { padding: 0 10px 24px; }
-  .chairman-letter__profile { min-height: 0; height: auto; padding-bottom: 0; }
-  .chairman-letter__photo-wrap { position: relative; inset: auto; width: 100%; height: 280px; border-radius: 12px; }
-  .chairman-letter__photo { width: 100%; height: 100%; object-fit: cover; object-position: center top; }
-  .chairman-letter__nameplate { position: relative; left: auto; right: auto; bottom: auto; margin-top: 10px; border-radius: 10px; padding: 8px 10px; gap: 8px; }
-  .chairman-letter__nameplate-icon { width: 36px; height: 36px; flex-basis: 36px; }
-  .chairman-letter__nameplate-icon svg { width: 20px; height: 20px; }
-  .chairman-letter__nameplate-copy strong { font-size: 13px; }
-  .chairman-letter__nameplate-copy span { font-size: 10px; }
-  .chairman-letter__content { padding: 14px 10px; }
-  .chairman-letter__point p { font-size: 13px; line-height: 1.6; }
+  .chairman-letter__content { padding: 16px 12px; }
+  .chairman-letter__point p { font-size: 13px; }
   .chairman-letter__signoff strong { font-size: 15px; }
-  .chairman-letter__signoff span { font-size: 11px; }
-  .chairman-letter__signoff p { font-size: 13px; }
+  .chairman-letter__signoff span { font-size: 12px; }
 }
 
 @media (max-width: 320px) {
-  .chairman-hero { padding: 12px 8px 22px; }
-  .chairman-hero__title { font-size: 1.4rem; letter-spacing: -0.02em; }
-  .chairman-hero__breadcrumbs { font-size: 10px; gap: 4px; margin-bottom: 12px; }
-  .chairman-hero__signature { font-size: 1.2rem; }
-  .chairman-hero__signature-row { margin-top: 12px; }
-  .chairman-hero__visual { position: relative; width: 100%; min-height: 0; height: auto; padding: 0; margin-top: 16px; }
-  .chairman-hero__portrait-blob { display: none; }
-  .chairman-hero__portrait-wrap { position: relative; left: auto; bottom: auto; top: auto; transform: none; width: 100%; height: 220px; border-radius: 12px; overflow: hidden; }
-  .chairman-hero__portrait { width: 100%; height: 100%; object-fit: cover; object-position: center top; }
+  .chairman-hero { padding: 14px 8px 26px; }
+  .chairman-hero__title { font-size: 1.5rem; }
+  .chairman-hero__visual { min-height: 240px; }
+  .chairman-hero__portrait-blob { width: 110px; height: 150px; }
+  .chairman-hero__portrait-wrap { width: 140px; height: 175px; bottom: 44px; }
   .chairman-hero__quote { display: none; }
-  .chairman-letter { padding: 0 8px 20px; }
-  .chairman-letter__shell { border-radius: 10px; }
-  .chairman-letter__profile { min-height: 0; height: auto; padding-bottom: 0; }
-  .chairman-letter__photo-wrap { position: relative; inset: auto; width: 100%; height: 260px; border-radius: 10px; }
-  .chairman-letter__photo { width: 100%; height: 100%; object-fit: cover; object-position: center top; }
-  .chairman-letter__nameplate { position: relative; left: auto; right: auto; bottom: auto; margin-top: 8px; border-radius: 8px; padding: 7px 8px; gap: 6px; }
-  .chairman-letter__nameplate-icon { width: 30px; height: 30px; flex-basis: 30px; }
-  .chairman-letter__nameplate-icon svg { width: 16px; height: 16px; }
-  .chairman-letter__nameplate-copy strong { font-size: 12px; }
-  .chairman-letter__nameplate-copy span { font-size: 10px; }
-  .chairman-letter__content { padding: 12px 8px; gap: 6px; }
+  .chairman-letter { padding: 0 8px 24px; }
+  .chairman-letter__profile { min-height: 220px; }
   .chairman-letter__point p { font-size: 12px; line-height: 1.6; }
-  .chairman-letter__signoff strong { font-size: 13px; }
-  .chairman-letter__signoff span { font-size: 10px; }
-  .chairman-letter__signoff p { font-size: 12px; }
-  .chairman-letter__signoff-line { width: 60px; }
-  .chairman-letter__quote-mark { display: none; }
+  .chairman-letter__signoff strong { font-size: 14px; }
 }

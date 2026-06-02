@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import campusBg from '../assets/images/seg.jpeg';
 import contactImg from '../assets/images/contact-support.png';
@@ -6,79 +6,20 @@ import heroBg from '../assets/images/contactusimg.jpeg';
 import logoImg from '../assets/images/logo.png';
 import '../contact-us.css';
 
-const faqIcons = [
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" /></svg>,
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" /></svg>,
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" /></svg>,
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /><line x1="16" y1="13" x2="8" y2="13" /><line x1="16" y1="17" x2="8" y2="17" /><polyline points="10 9 9 9 8 9" /></svg>,
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="4" y="4" width="16" height="16" rx="2" ry="2" /><rect x="9" y="9" width="6" height="6" /><line x1="9" y1="1" x2="9" y2="4" /><line x1="15" y1="1" x2="15" y2="4" /><line x1="9" y1="20" x2="9" y2="23" /><line x1="15" y1="20" x2="15" y2="23" /><line x1="20" y1="9" x2="23" y2="9" /><line x1="20" y1="14" x2="23" y2="14" /><line x1="1" y1="9" x2="4" y2="9" /><line x1="1" y1="14" x2="4" y2="14" /></svg>,
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.38 2 2 0 0 1 3.6 1.21h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.77a16 16 0 0 0 6 6l1.06-1.06a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21.73 16z" /></svg>
+const faqs = [
+  { q: 'How long does it take to get a response?', a: 'We typically respond within 24 hours on business days.', color: 'blue', icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" /></svg> },
+  { q: 'Do you provide scholarship assistance?', a: 'Yes, SEG offers various scholarship programs based on merit and need.', color: 'orange', icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" /></svg> },
+  { q: 'How can I apply for admission?', a: 'You can apply online through our admissions portal or visit our campus directly.', color: 'blue', icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" /></svg> },
+  { q: 'How can I track my application?', a: 'Log in to the admissions portal with your registered email to track your application status.', color: 'green', icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /><line x1="16" y1="13" x2="8" y2="13" /><line x1="16" y1="17" x2="8" y2="17" /><polyline points="10 9 9 9 8 9" /></svg> },
+  { q: 'Can I visit the campus before admission?', a: 'Absolutely! We welcome campus visits. Book a campus visit through our website or call admissions.', color: 'green', icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="4" y="4" width="16" height="16" rx="2" ry="2" /><rect x="9" y="9" width="6" height="6" /><line x1="9" y1="1" x2="9" y2="4" /><line x1="15" y1="1" x2="15" y2="4" /><line x1="9" y1="20" x2="9" y2="23" /><line x1="15" y1="20" x2="15" y2="23" /><line x1="20" y1="9" x2="23" y2="9" /><line x1="20" y1="14" x2="23" y2="14" /><line x1="1" y1="9" x2="4" y2="9" /><line x1="1" y1="14" x2="4" y2="14" /></svg> },
+  { q: 'Who can I contact for admission support?', a: 'Call 09555699988 or email admission.cell@seglko.org for any admission-related queries.', color: 'purple', icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.38 2 2 0 0 1 3.6 1.21h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.77a16 16 0 0 0 6 6l1.06-1.06a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21.73 16z" /></svg> },
 ];
-const faqColors = ['blue', 'orange', 'blue', 'green', 'green', 'purple'];
 
 export default function ContactUs() {
   const [openFaq, setOpenFaq] = useState(null);
   const [form, setForm] = useState({ name: '', email: '', phone: '', course: '', inquiry: '', message: '' });
-  const [contactData, setContactData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
 
-  useEffect(() => {
-    fetch('http://localhost:3000/api/contact')
-      .then(res => {
-        if (!res.ok) throw new Error('Network response was not ok');
-        return res.json();
-      })
-      .then(data => {
-        setContactData(data);
-        setLoading(false);
-      })
-      .catch(err => {
-        console.error('Error fetching contact data:', err);
-        setError(err.message);
-        setLoading(false);
-      });
-  }, []);
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (!form.name.trim() || !form.email.trim() || !form.message.trim()) {
-      alert('Please fill in Name, Email, and Message.');
-      return;
-    }
-    
-    fetch('http://localhost:3000/api/contact', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(form),
-    })
-      .then(res => {
-        if (!res.ok) throw new Error('Failed to submit form');
-        return res.json();
-      })
-      .then(data => {
-        alert('Message sent successfully! Our team will contact you soon.');
-        setForm({ name: '', email: '', phone: '', course: '', inquiry: '', message: '' });
-      })
-      .catch(err => {
-        console.error('Error submitting form:', err);
-        alert('Failed to send message. Please try again later.');
-      });
-  };
-
-  if (loading) return <div style={{ padding: '100px', textAlign: 'center' }}>Loading...</div>;
-  if (error) return <div style={{ padding: '100px', textAlign: 'center' }}>Error: {error}</div>;
-  if (!contactData) return <div style={{ padding: '100px', textAlign: 'center' }}>No data found.</div>;
-
-  const faqs = (contactData.faqs || []).map((f, i) => ({
-    ...f,
-    color: faqColors[i % faqColors.length],
-    icon: faqIcons[i % faqIcons.length]
-  }));
-
-  const { contactDetails } = contactData;
+  const handleSubmit = (e) => { e.preventDefault(); alert('Message sent!'); };
 
   return (
     <div className="cu-page">

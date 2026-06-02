@@ -78,6 +78,7 @@ const programsMenuItems = [
     icon: 'monitor',
     path: '/programs/bca',
   },
+  
   {
     title: 'Masters in Computer Applications',
     description: 'Our MCA program equips students with expertise in software development, IT, and systems management.',
@@ -150,7 +151,45 @@ const admissionHighlights = [
   { value: 'Join', title: 'SEG Family', desc: 'Shape your future with us', icon: 'cap' },
 ];
 
+const institutionsData = [
 
+  {
+    title: 'Shivdan Singh Institute of Technology and Management',
+    description: 'Approved by AICTE and affiliated to AKTU, Lucknow, College Code: 007',
+    icon: 'institution',
+    url: 'https://ssitm.in/',
+  },
+  {
+    title: 'Saroj Institute of Technology and Management',
+    description: 'Approved by AICTE and affiliated to AKTU, Lucknow, College Code: 123',
+    icon: 'building',
+    url: 'https://sitmlko.org/',
+  },
+  {
+    title: 'Lucknow Institute of Pharmacy',
+    description: 'Approved by Pharmacy Council of India (PCI) and affiliated to AKTU',
+    icon: 'medical',
+    url: 'https://seglko.org/lip/',
+  },
+  {
+    title: 'Saroj College of Pharmacy',
+    description: 'Approved by Pharmacy Council of India and affiliated to AKTU, Lucknow, College Code: 2031',
+    icon: 'capsule',
+    url: 'https://seglko.org/scp/',
+  },
+  {
+    title: 'Saroj College of Engineering and Polytechnic',
+    description: 'Approved by AICTE and affiliated to AKTU',
+    icon: 'gear',
+    url: 'https://seglko.org/scep/',
+  },
+  {
+    title: 'Saroj College of Law',
+    description: 'Affiliated to Lucknow University',
+    icon: 'document',
+    url: 'https://seglko.org/scl/',
+  },
+];
 
 const studentZoneItems = [
   {
@@ -504,29 +543,6 @@ export default function Navbar() {
   const navbarRef = useRef(null);
   const timeoutRef = useRef(null);
 
-  const [institutionsData, setInstitutionsData] = useState([]);
-
-  useEffect(() => {
-    fetch('http://localhost:3000/api/institutions')
-      .then(res => res.json())
-      .then(data => {
-        if (data && data.length > 0) {
-          const mapped = data.map(item => ({
-            title: item.title,
-            description: item.approval || item.description,
-            icon: item.tag?.toLowerCase().includes('law') ? 'document' :
-                  item.tag?.toLowerCase().includes('pharm') ? 'capsule' :
-                  item.tag?.toLowerCase().includes('poly') ? 'gear' :
-                  item.tag?.toLowerCase().includes('engine') ? 'institution' : 'building',
-            url: item.url || '#',
-          }));
-          setInstitutionsData(mapped);
-        }
-      })
-      .catch(err => console.error('Error fetching institutions for navbar:', err));
-  }, []);
-
-
   const handleMouseEnter = (label) => {
     if (window.innerWidth <= 1024) return;
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
@@ -632,7 +648,14 @@ export default function Navbar() {
                   <button
                     type="button"
                     className="navbar__item-button"
-                    onClick={() => setActiveDropdown(open => open === item.label ? null : item.label)}
+                    onClick={() => {
+                      console.log("Mobile Navbar Item Clicked:", item.label);
+                      setActiveDropdown(open => {
+                        const next = open === item.label ? null : item.label;
+                        console.log("Next Dropdown State:", next);
+                        return next;
+                      });
+                    }}
                     aria-expanded={activeDropdown === item.label}
                   >
                     <span className="navbar__item-text">{item.label}</span>
@@ -821,12 +844,12 @@ export default function Navbar() {
                 ))}
               </div>
 
-              <Link to="/why-join-seg" className="about-panel__cta" onClick={() => setActiveDropdown(null)}>
+              <button type="button" className="about-panel__cta">
                 Know More About SEG
                 <span className="about-panel__cta-arrow">
                   <ChevronRight />
                 </span>
-              </Link>
+              </button>
             </div>
 
             <div className="about-panel__visual">
@@ -1194,7 +1217,7 @@ export default function Navbar() {
                   </div>
                   <div className="rd-panel__quote">
                     <span className="rd-panel__quote-mark">
-                      <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M14.017 21L14.017 18C14.017 16.8954 14.9124 16 16.017 16H19.017C19.5693 16 20.017 15.5523 20.017 15V9C20.017 8.44772 19.5693 8 19.017 8H16.017C15.4647 8 15.017 8.44772 15.017 9V12C15.017 12.5523 14.5693 13 14.017 13H11.017C10.4647 13 10.017 12.5523 10.017 12V9C10.017 8.44772 10.4647 8 11.017 8H14.017C14.5693 8 15.017 7.55228 15.017 7V4C15.017 3.44772 14.5693 3 14.017 3H11.017C8.25558 3 6.017 5.23858 6.017 8V15C6.017 18.3137 8.70329 21 12.017 21H14.017Z"/></svg>
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M14.017 21L14.017 18C14.017 16.8954 14.9124 16 16.017 16H19.017C19.5693 16 20.017 15.5523 20.017 15V9C20.017 8.44772 19.5693 8 19.017 8H16.017C15.4647 8 15.017 8.44772 15.017 9V12C15.017 12.5523 14.5693 13 14.017 13H11.017C10.4647 13 10.017 12.5523 10.017 12V9C10.017 8.44772 10.4647 8 11.017 8H14.017C14.5693 8 15.017 7.55228 15.017 7V4C15.017 3.44772 14.5693 3 14.017 3H11.017C8.25558 3 6.017 5.23858 6.017 8V15C6.017 18.3137 8.70329 21 12.017 21H14.017Z" /></svg>
                     </span>
                     <p>We are committed to pushing boundaries through research, innovation, and impactful technologies.</p>
                   </div>

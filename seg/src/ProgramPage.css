@@ -1,5 +1,5 @@
 .program-page {
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Inter', sans-serif;
   background-color: #f8fafc;
   min-height: 100vh;
   padding-bottom: 4rem;
@@ -8,7 +8,7 @@
 /* HERO SECTION */
 .program-hero {
   display: flex;
-  min-height: 85vh;
+  min-height: 100vh;
   position: relative;
   overflow: hidden;
   background: #f8faff;

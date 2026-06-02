@@ -42,21 +42,383 @@ export default function FacultyPage() {
   });
 
   return (
-    <div style={{ background: '#f8faff', minHeight: '100vh' }}>
+    <div className="fp-container">
+      <style>{`
+        .fp-container {
+          background: #f8faff;
+          min-height: 100vh;
+          margin-top: 48px;
+          overflow-x: hidden;
+        }
+        .fp-container *, .fp-container *::before, .fp-container *::after {
+          box-sizing: border-box;
+        }
+
+        .fp-hero {
+          background: linear-gradient(135deg, #e8f0ff 0%, #f0f5ff 100%);
+          padding: 64px 45px 88px;
+          display: grid;
+          grid-template-columns: 1fr 560px 240px;
+          gap: 48px;
+          align-items: center;
+        }
+        .fp-hero__title {
+          font-size: 3.8rem;
+          font-weight: 700;
+          color: #162341;
+          line-height: 1.2;
+          margin: 0 0 16px;
+        }
+        .fp-hero__title span {
+          color: #1f63db;
+        }
+        .fp-hero__sub {
+          font-size: 15px;
+          color: #5f6785;
+          line-height: 1.8;
+          max-width: 420px;
+          margin: 0 0 28px;
+        }
+        .fp-hero__actions {
+          display: flex;
+          gap: 14px;
+          flex-wrap: wrap;
+        }
+        .fp-hero__visual {
+          border-radius: 18px;
+          overflow: hidden;
+          height: 480px;
+          box-shadow: 0 20px 50px rgba(20,35,90,0.15);
+        }
+        .fp-hero__visual img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+        .fp-hero__stats {
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+        }
+        .fp-stat-card {
+          background: #fff;
+          border-radius: 12px;
+          padding: 14px 18px;
+          display: flex;
+          align-items: center;
+          gap: 14px;
+          box-shadow: 0 4px 14px rgba(20,35,90,0.07);
+        }
+
+        .fp-filter-bar {
+          background: #fff;
+          padding: 0 45px;
+          border-bottom: 1px solid #eef2ff;
+        }
+        .fp-filter-list {
+          display: flex;
+          gap: 0;
+          overflow-x: auto;
+          scrollbar-width: none;
+        }
+        .fp-filter-list::-webkit-scrollbar {
+          display: none;
+        }
+        .fp-filter-btn {
+          padding: 16px 22px;
+          border: none;
+          background: transparent;
+          font-size: 14px;
+          font-weight: 600;
+          color: #5f6785;
+          border-bottom: 3px solid transparent;
+          cursor: pointer;
+          white-space: nowrap;
+          transition: all 0.2s;
+        }
+        .fp-filter-btn--active {
+          color: #1041c6;
+          border-bottom: 3px solid #1041c6;
+        }
+
+        .fp-search-bar {
+          background: #fff;
+          padding: 14px 45px;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          border-bottom: 1px solid #eef2ff;
+        }
+        .fp-search-input {
+          width: 360px;
+          padding: 10px 16px;
+          border: 1px solid #e0e8ff;
+          border-radius: 8px;
+          font-size: 14px;
+          outline: none;
+          color: #162341;
+        }
+        .fp-search-sort {
+          font-size: 14px;
+          color: #5f6785;
+        }
+
+        .fp-programs {
+          padding: 36px 45px;
+        }
+        .fp-programs__title {
+          font-size: 1.6rem;
+          font-weight: 700;
+          color: #162341;
+          margin: 0 0 6px;
+        }
+        .fp-programs__sub {
+          font-size: 14px;
+          color: #8a9bbf;
+          margin: 0 0 28px;
+        }
+        .fp-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+          gap: 22px;
+        }
+
+        .fp-recruiters {
+          background: #fff;
+          padding: 40px 45px;
+        }
+        .fp-recruiters__title {
+          font-size: 1.6rem;
+          font-weight: 700;
+          color: #162341;
+          margin: 0 0 28px;
+        }
+        .fp-recruiters-slider {
+          display: flex;
+          align-items: center;
+          gap: 32px;
+          overflow-x: auto;
+          padding-bottom: 8px;
+          scrollbar-width: none;
+        }
+        .fp-recruiters-slider::-webkit-scrollbar {
+          display: none;
+        }
+        .fp-recruiter-card {
+          flex-shrink: 0;
+          padding: 12px 24px;
+          border-radius: 10px;
+          border: 1px solid #eef2ff;
+          background: #fff;
+          box-shadow: 0 2px 10px rgba(20,35,90,0.06);
+        }
+
+        .fp-cta {
+          margin: 0 45px 50px;
+          border-radius: 20px;
+          background: linear-gradient(135deg, #0a275d 0%, #1041c6 100%);
+          padding: 50px 60px;
+          display: grid;
+          grid-template-columns: 1fr auto;
+          gap: 40px;
+          align-items: center;
+        }
+        .fp-cta__title {
+          font-size: 2rem;
+          font-weight: 700;
+          color: #fff;
+          margin: 0 0 12px;
+        }
+        .fp-cta__sub {
+          font-size: 15px;
+          color: rgba(255,255,255,0.82);
+          line-height: 1.7;
+          max-width: 500px;
+          margin: 0;
+        }
+        .fp-cta__actions {
+          display: flex;
+          gap: 14px;
+          margin-top: 24px;
+          flex-wrap: wrap;
+        }
+        .fp-cta__visual {
+          width: 200px;
+          height: 200px;
+          border-radius: 50%;
+          background: rgba(255,255,255,0.08);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 80px;
+        }
+
+        /* ── RESPONSIVE MEDIA QUERIES ── */
+        @media (max-width: 1200px) {
+          .fp-hero {
+            grid-template-columns: 1fr 1fr;
+            padding: 56px 32px 56px;
+            gap: 32px;
+          }
+          .fp-hero__visual {
+            height: 380px;
+          }
+          .fp-hero__stats {
+            grid-column: 1 / -1;
+            flex-direction: row;
+            flex-wrap: wrap;
+            justify-content: space-between;
+          }
+          .fp-stat-card {
+            flex: 1 1 200px;
+          }
+        }
+
+        @media (max-width: 1024px) {
+          .fp-container {
+            margin-top: 60px !important;
+          }
+          .fp-hero {
+            padding: 60px 24px 40px !important;
+          }
+          .fp-hero__title {
+            font-size: 2.8rem !important;
+          }
+          .fp-filter-bar {
+            padding: 0 24px !important;
+          }
+          .fp-search-bar {
+            padding: 14px 24px !important;
+          }
+          .fp-programs {
+            padding: 30px 24px !important;
+          }
+          .fp-recruiters {
+            padding: 30px 24px !important;
+          }
+          .fp-cta {
+            margin: 0 24px 40px !important;
+            padding: 40px 30px !important;
+          }
+        }
+
+        @media (max-width: 768px) {
+          .fp-container {
+            margin-top: 20px !important;
+          }
+          .fp-hero {
+            grid-template-columns: 1fr !important;
+            padding: 20px 20px 30px !important;
+            gap: 24px !important;
+            text-align: center;
+          }
+          .fp-hero__title {
+            font-size: 2.3rem !important;
+          }
+          .fp-hero__sub {
+            margin: 0 auto 20px !important;
+          }
+          .fp-hero__actions {
+            justify-content: center !important;
+          }
+          .fp-hero__visual {
+            height: 300px !important;
+            max-width: 500px !important;
+            margin: 0 auto !important;
+            width: 100% !important;
+          }
+          .fp-hero__stats {
+            grid-column: span 1 !important;
+            flex-direction: row !important;
+            justify-content: center !important;
+            gap: 12px !important;
+          }
+          .fp-stat-card {
+            flex: 1 1 160px !important;
+            max-width: 240px !important;
+            padding: 10px 14px !important;
+          }
+          .fp-filter-bar {
+            padding: 0 16px !important;
+          }
+          .fp-search-bar {
+            flex-direction: column !important;
+            align-items: stretch !important;
+            gap: 12px !important;
+            padding: 14px 16px !important;
+          }
+          .fp-search-input {
+            width: 100% !important;
+          }
+          .fp-search-sort {
+            text-align: right !important;
+          }
+          .fp-programs {
+            padding: 24px 16px !important;
+          }
+          .fp-recruiters {
+            padding: 24px 16px !important;
+          }
+          .fp-cta {
+            margin: 0 16px 30px !important;
+            padding: 30px 20px !important;
+            grid-template-columns: 1fr !important;
+            gap: 20px !important;
+            text-align: center;
+          }
+          .fp-cta__visual {
+            display: none !important;
+          }
+          .fp-cta__actions {
+            justify-content: center !important;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .fp-container {
+            margin-top: 5px !important;
+          }
+          .fp-hero {
+            padding-top: 5px !important;
+            padding-bottom: 20px !important;
+          }
+          .fp-hero__title {
+            font-size: 1.8rem !important;
+          }
+          .fp-hero__actions button {
+            width: 100% !important;
+            justify-content: center !important;
+          }
+          .fp-hero__visual {
+            height: 200px !important;
+          }
+          .fp-stat-card {
+            flex: 1 1 100% !important;
+            max-width: 100% !important;
+          }
+          .fp-grid {
+            grid-template-columns: 1fr !important;
+          }
+          .fp-cta__actions button {
+            width: 100% !important;
+            justify-content: center !important;
+          }
+        }
+      `}</style>
 
       {/* ── Hero ── */}
-      <div style={{ background: 'linear-gradient(135deg, #e8f0ff 0%, #f0f5ff 100%)', padding: '110px 45px 100px', display: 'grid', gridTemplateColumns: '1fr 560px 240px', gap: '48px', alignItems: 'center' }}>
+      <div className="fp-hero">
         <div>
-          <h1 style={{ fontSize: '3.8rem', fontWeight: 700, color: '#162341', lineHeight: 1.2, marginBottom: '16px' }}>
-            Explore Programs<br />Designed for<br /><span style={{ color: '#1f63db' }}>Your Future</span>
+          <h1 className="fp-hero__title">
+            Explore Programs<br />Designed for<br /><span>Your Future</span>
           </h1>
           <div style={{ width: '44px', height: '4px', background: '#ffbe23', borderRadius: '999px', marginBottom: '18px' }} />
-          <p style={{ fontSize: '15px', color: '#5f6785', lineHeight: 1.8, maxWidth: '420px', marginBottom: '28px' }}>
+          <p className="fp-hero__sub">
             Choose from industry-focused undergraduate, postgraduate, diploma, and professional programs designed to build future-ready careers.
           </p>
-          <div style={{ display: 'flex', gap: '14px', flexWrap: 'wrap' }}>
-            <button onClick={() => navigate('/contact-us')} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', padding: '13px 32px', minWidth: '180px', background: '#1041c6', color: '#fff', border: 'none', borderRadius: '8px', fontSize: '15px', fontWeight: 600, cursor: 'pointer', transition: 'all 0.2s ease' }}>
-              Talk to Counselor <ArrowRight />
+          <div className="fp-hero__actions">
+            <button style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '13px 28px', background: '#fff', color: '#1041c6', border: '2px solid #1041c6', borderRadius: '8px', fontSize: '15px', fontWeight: 600, cursor: 'pointer' }}>
+              Talk to Counselor
             </button>
             <button onClick={() => navigate('/faculty-new')} style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '13px 28px', background: '#fff', color: '#1041c6', border: '2px solid #1041c6', borderRadius: '8px', fontSize: '15px', fontWeight: 600, cursor: 'pointer' }}>
               View Faculty <ArrowRight />
@@ -64,13 +426,13 @@ export default function FacultyPage() {
           </div>
         </div>
 
-        <div style={{ borderRadius: '18px', overflow: 'hidden', height: '480px', boxShadow: '0 20px 50px rgba(20,35,90,0.15)' }}>
-          <img src={segImg} alt="SEG Campus" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+        <div className="fp-hero__visual">
+          <img src={segImg} alt="SEG Campus" />
         </div>
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+        <div className="fp-hero__stats">
           {stats.map((s) => (
-            <div key={s.label} style={{ background: '#fff', borderRadius: '12px', padding: '14px 18px', display: 'flex', alignItems: 'center', gap: '14px', boxShadow: '0 4px 14px rgba(20,35,90,0.07)' }}>
+            <div key={s.label} className="fp-stat-card">
               <div style={{ width: '42px', height: '42px', borderRadius: '50%', background: `${s.color}15`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                 <span style={{ fontSize: '18px', fontWeight: 800, color: s.color }}>{s.value.charAt(0)}</span>
               </div>
@@ -84,10 +446,10 @@ export default function FacultyPage() {
       </div>
 
       {/* ── Filter Tabs ── */}
-      <div style={{ background: '#fff', padding: '0 45px', borderBottom: '1px solid #eef2ff' }}>
-        <div style={{ display: 'flex', gap: '0', overflowX: 'auto' }}>
+      <div className="fp-filter-bar">
+        <div className="fp-filter-list">
           {filterTabs.map((tab) => (
-            <button key={tab} onClick={() => setActiveFilter(tab)} style={{ padding: '16px 22px', border: 'none', background: 'transparent', fontSize: '14px', fontWeight: 600, color: activeFilter === tab ? '#1041c6' : '#5f6785', borderBottom: activeFilter === tab ? '3px solid #1041c6' : '3px solid transparent', cursor: 'pointer', whiteSpace: 'nowrap', transition: 'all 0.2s' }}>
+            <button key={tab} onClick={() => setActiveFilter(tab)} className={`fp-filter-btn ${activeFilter === tab ? 'fp-filter-btn--active' : ''}`}>
               {tab}
             </button>
           ))}
@@ -95,17 +457,17 @@ export default function FacultyPage() {
       </div>
 
       {/* ── Search ── */}
-      <div style={{ background: '#fff', padding: '14px 45px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #eef2ff' }}>
-        <input value={search} onChange={e => setSearch(e.target.value)} placeholder="🔍  Search programs, specializations..." style={{ width: '360px', padding: '10px 16px', border: '1px solid #e0e8ff', borderRadius: '8px', fontSize: '14px', outline: 'none', color: '#162341' }} />
-        <div style={{ fontSize: '14px', color: '#5f6785' }}>Sort by: <strong>Popular</strong></div>
+      <div className="fp-search-bar">
+        <input value={search} onChange={e => setSearch(e.target.value)} placeholder="🔍  Search programs, specializations..." className="fp-search-input" />
+        <div className="fp-search-sort">Sort by: <strong>Popular</strong></div>
       </div>
 
       {/* ── Programs Grid ── */}
-      <div style={{ padding: '36px 45px' }}>
-        <h2 style={{ fontSize: '1.6rem', fontWeight: 700, color: '#162341', marginBottom: '6px' }}>Our Programs</h2>
-        <p style={{ fontSize: '14px', color: '#8a9bbf', marginBottom: '28px' }}>Discover programs crafted to match industry needs and accelerate your career.</p>
+      <div className="fp-programs">
+        <h2 className="fp-programs__title">Our Programs</h2>
+        <p className="fp-programs__sub">Discover programs crafted to match industry needs and accelerate your career.</p>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '22px' }}>
+        <div className="fp-grid">
           {filtered.map((p, i) => (
             <div key={i} style={{ background: '#fff', borderRadius: '16px', padding: '22px', boxShadow: '0 4px 18px rgba(20,35,90,0.07)', border: '1px solid #eef2ff', position: 'relative' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px' }}>
@@ -154,18 +516,16 @@ export default function FacultyPage() {
         </div>
 
         <div style={{ textAlign: 'center', marginTop: '32px' }}>
-          <button onClick={() => navigate('/programs')} style={{ padding: '13px 32px', background: '#fff', color: '#1041c6', border: '2px solid #1041c6', borderRadius: '8px', fontSize: '15px', fontWeight: 600, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
-            View All Programs <ArrowRight />
-          </button>
+
         </div>
       </div>
 
       {/* ── Top Recruiters ── */}
-      <div style={{ background: '#fff', padding: '40px 45px' }}>
-        <h2 style={{ fontSize: '1.6rem', fontWeight: 700, color: '#162341', marginBottom: '28px' }}>Our Top Recruiters</h2>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '32px', overflowX: 'auto', paddingBottom: '8px' }}>
+      <div className="fp-recruiters">
+        <h2 className="fp-recruiters__title">Our Top Recruiters</h2>
+        <div className="fp-recruiters-slider">
           {recruiters.map((r, i) => (
-            <div key={r} style={{ flexShrink: 0, padding: '12px 24px', borderRadius: '10px', border: '1px solid #eef2ff', background: '#fff', boxShadow: '0 2px 10px rgba(20,35,90,0.06)' }}>
+            <div key={r} className="fp-recruiter-card">
               <span style={{ fontSize: '18px', fontWeight: 800, color: recruiterColors[i] }}>{r}</span>
             </div>
           ))}
@@ -173,14 +533,14 @@ export default function FacultyPage() {
       </div>
 
       {/* ── CTA ── */}
-      <div style={{ margin: '0 45px 50px', borderRadius: '20px', background: 'linear-gradient(135deg, #0a275d 0%, #1041c6 100%)', padding: '50px 60px', display: 'grid', gridTemplateColumns: '1fr auto', gap: '40px', alignItems: 'center' }}>
+      <div className="fp-cta">
         <div>
-          <h2 style={{ fontSize: '2rem', fontWeight: 700, color: '#fff', marginBottom: '12px' }}>Start Building Your Future Today!</h2>
+          <h2 className="fp-cta__title">Start Building Your Future Today!</h2>
           <div style={{ width: '40px', height: '3px', background: '#ffbe23', borderRadius: '999px', marginBottom: '14px' }} />
-          <p style={{ fontSize: '15px', color: 'rgba(255,255,255,0.82)', lineHeight: 1.7, maxWidth: '500px' }}>
+          <p className="fp-cta__sub">
             Take the first step towards a successful and rewarding career with industry-focused programs at SEG.
           </p>
-          <div style={{ display: 'flex', gap: '14px', marginTop: '24px', flexWrap: 'wrap' }}>
+          <div className="fp-cta__actions">
             <button style={{ padding: '13px 28px', background: '#fff', color: '#1041c6', border: 'none', borderRadius: '8px', fontSize: '15px', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px' }}>
               Apply Now <ArrowRight />
             </button>
@@ -192,7 +552,7 @@ export default function FacultyPage() {
             </button>
           </div>
         </div>
-        <div style={{ width: '200px', height: '200px', borderRadius: '50%', background: 'rgba(255,255,255,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '80px' }}>
+        <div className="fp-cta__visual">
           🎓
         </div>
       </div>

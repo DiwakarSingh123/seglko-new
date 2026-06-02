@@ -132,7 +132,7 @@
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   align-items: center;
-  padding: 40px 45px;
+  padding: 50px 5%;
   gap: 0;
   box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.1);
 }

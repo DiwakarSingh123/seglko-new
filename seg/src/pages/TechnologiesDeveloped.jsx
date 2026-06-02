@@ -1,37 +1,58 @@
-import { useState, useEffect } from 'react';
 import robotImg from '../assets/images/seg.jpeg'; // Placeholder for robotic arm
 import '../technologies-developed.css';
 
 const TechnologiesDeveloped = () => {
-  const [techData, setTechData] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    fetch('http://localhost:3000/api/research')
-      .then(res => res.json())
-      .then(data => {
-        if (data && data.innovations) {
-          const mapped = data.innovations.map((item, idx) => ({
-            id: idx + 1,
-            details: item.title,
-            faculty: item.faculty,
-            department: item.dept,
-            tagClass: item.dept.toLowerCase().includes('math') ? 'tag-math' :
-                      item.dept.toLowerCase().includes('mech') ? 'tag-mech' :
-                      item.dept.toLowerCase().includes('pharm') ? 'tag-pharm' :
-                      item.dept.toLowerCase().includes('elec') ? 'tag-elec' : 'tag-gen'
-          }));
-          setTechData(mapped);
-        }
-        setLoading(false);
-      })
-      .catch(err => {
-        console.error('Error fetching innovations:', err);
-        setLoading(false);
-      });
-  }, []);
-
-  if (loading) return <div style={{ padding: '100px', textAlign: 'center' }}>Loading...</div>;
+  const techData = [
+    {
+      id: 1,
+      details: 'Generation of Concave Surfaces with GUI',
+      faculty: 'Dr. Sunil Singh',
+      department: 'Mathematics',
+      tagClass: 'tag-math'
+    },
+    {
+      id: 2,
+      details: 'Graphs Theoretic Algorithms for Equations',
+      faculty: 'Dr. Sunil Singh',
+      department: 'Mathematics',
+      tagClass: 'tag-math'
+    },
+    {
+      id: 3,
+      details: 'Energy Efficient Design of a Milk Processing Plant',
+      faculty: 'Dr. Dhirendra Thakural',
+      department: 'Mechanical',
+      tagClass: 'tag-mech'
+    },
+    {
+      id: 4,
+      details: 'R & D aspect Design concept of 3 - wheeler Vikram',
+      faculty: 'Dr. O. P. Tiwari',
+      department: 'Mechanical',
+      tagClass: 'tag-mech'
+    },
+    {
+      id: 5,
+      details: 'Fubeceh Agentc Anti Technology',
+      faculty: 'Prof. (Dr.) S.N Pandyaa',
+      department: 'Pharmacy',
+      tagClass: 'tag-pharm'
+    },
+    {
+      id: 6,
+      details: 'Potential anti HIV Agent-Man rich',
+      faculty: 'Prof. (Dr.) S.N Pandyaa',
+      department: 'Pharmacy',
+      tagClass: 'tag-pharm'
+    },
+    {
+      id: 7,
+      details: 'Laser displacement transducer for accurate displacement measurements',
+      faculty: 'Prof. M.U. Khan',
+      department: 'Electrical Engineering',
+      tagClass: 'tag-elec'
+    }
+  ];
 
   return (
     <div className="tech-dev-page">

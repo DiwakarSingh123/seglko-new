@@ -1,46 +1,32 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../ExploreMore.css';
+
+// Category to filter mapping
+const CATEGORY_MAP = {
+  'campus': 'Campus Views',
+  'library': 'Library',
+  'students': 'Gallery',
+  'events': 'Sports',
+  'facilities': 'Computer Labs',
+  'transport': 'Transport',
+};
 
 const filters = [
   { id: 'all', label: 'All Moments', icon: 'grid' },
   { id: 'campus', label: 'Campus Views', icon: 'building' },
   { id: 'library', label: 'Library', icon: 'book' },
-  { id: 'transport', label: 'Transport', icon: 'bus' },
-  { id: 'sports', label: 'Sports', icon: 'sports' },
-  { id: 'gallery', label: 'Gallery', icon: 'camera' },
-  { id: 'computer-labs', label: 'Computer Labs', icon: 'monitor' },
+  { id: 'students', label: 'Gallery', icon: 'users' },
+  { id: 'events', label: 'Sports', icon: 'calendar' },
+  { id: 'facilities', label: 'Computer Labs', icon: 'monitor' },
+  { id: 'transport', label: 'Transport', icon: 'building' },
 ];
 
-const CATEGORY_TO_ID = {
-  'Campus Views': 'campus',
-  Library: 'library',
-  Transport: 'transport',
-  Sports: 'sports',
-  Gallery: 'gallery',
-  'Computer Labs': 'computer-labs',
-};
-
-const categoryIcon = {
-  campus: 'building',
-  library: 'book',
-  transport: 'bus',
-  sports: 'sports',
-  gallery: 'camera',
-  'computer-labs': 'monitor',
-};
-
-function mapGalleryItem(item, index, showLargeFirst) {
-  const category = CATEGORY_TO_ID[item.category] || 'campus';
-  return {
-    id: item.id,
-    category,
-    type: showLargeFirst && index === 0 ? 'large' : '',
-    label: item.category,
-    title: item.title,
-    description: item.description || '',
-    image: item.url,
-  };
-}
+const stats = [
+  { value: '500+', label: 'Moments Captured', icon: 'camera', color: 'blue' },
+  { value: '2000+', label: 'Active Students', icon: 'users', color: 'indigo' },
+  { value: '15+', label: 'Campus Facilities', icon: 'building', color: 'sky' },
+  { value: 'Infinite', label: 'Memories Created', icon: 'heart', color: 'rose' },
+];
 
 const Icon = ({ type }) => {
   const common = {
@@ -64,10 +50,6 @@ const Icon = ({ type }) => {
       return <svg viewBox="0 0 24 24" {...common}><rect x="3" y="4" width="18" height="18" rx="2" ry="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" /></svg>;
     case 'monitor':
       return <svg viewBox="0 0 24 24" {...common}><rect x="2" y="3" width="20" height="14" rx="2" ry="2" /><line x1="8" y1="21" x2="16" y2="21" /><line x1="12" y1="17" x2="12" y2="21" /></svg>;
-    case 'bus':
-      return <svg viewBox="0 0 24 24" {...common}><path d="M8 6v6" /><path d="M15 6v6" /><path d="M2 12h19.6" /><path d="M18 18h3s.5-1.7.8-2.8c.1-.4.2-.8.2-1.2 0-.4-.1-.8-.2-1.2L21 10H5a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h1" /><circle cx="7" cy="18" r="2" /><path d="M9 18h5" /><circle cx="16" cy="18" r="2" /></svg>;
-    case 'sports':
-      return <svg viewBox="0 0 24 24" {...common}><circle cx="12" cy="12" r="10" /><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" /><path d="M2 12h20" /></svg>;
     case 'camera':
       return <svg viewBox="0 0 24 24" {...common}><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" /><circle cx="12" cy="13" r="4" /></svg>;
     case 'heart':
@@ -86,44 +68,35 @@ const ExploreMore = () => {
 
   useEffect(() => {
     fetch('/api/gallery')
-      .then((res) => res.json())
-      .then((data) => {
-        const list = Array.isArray(data) ? data : [];
-        setGalleryItems(list);
+      .then(res => res.json())
+      .then(data => {
+        setGalleryItems(Array.isArray(data) ? data : []);
         setLoading(false);
       })
-      .catch((err) => {
-        console.error('Failed to load gallery:', err);
-        setLoading(false);
-      });
+      .catch(() => setLoading(false));
   }, []);
 
-  const mappedItems = useMemo(
-    () => galleryItems.map((item, index) => mapGalleryItem(item, index, activeFilter === 'all')),
-    [galleryItems, activeFilter]
-  );
+  // Map DB category to filter id
+  const getCategoryId = (dbCategory) => {
+    const map = {
+      'Campus Views': 'campus',
+      'Library': 'library',
+      'Gallery': 'students',
+      'Sports': 'events',
+      'Computer Labs': 'facilities',
+      'Transport': 'transport',
+    };
+    return map[dbCategory] || 'campus';
+  };
 
-  const filteredItems = useMemo(
-    () =>
-      activeFilter === 'all'
-        ? mappedItems
-        : mappedItems.filter((item) => item.category === activeFilter),
-    [mappedItems, activeFilter]
-  );
-
-  const stats = useMemo(() => {
-    const countBy = (category) => galleryItems.filter((i) => i.category === category).length;
-    return [
-      { value: `${galleryItems.length || 0}+`, label: 'Moments Captured', icon: 'camera', color: 'blue' },
-      { value: `${countBy('Sports') || 0}+`, label: 'Sports Moments', icon: 'sports', color: 'indigo' },
-      { value: `${countBy('Computer Labs') || 0}+`, label: 'Computer Labs', icon: 'monitor', color: 'sky' },
-      { value: `${countBy('Transport') || 0}+`, label: 'Transport', icon: 'bus', color: 'rose' },
-    ];
-  }, [galleryItems]);
+  const filteredItems = activeFilter === 'all'
+    ? galleryItems
+    : galleryItems.filter(item => getCategoryId(item.category) === activeFilter);
 
   return (
     <div className="explore-more">
       <div className="explore-container">
+        {/* Header Section */}
         <header className="explore-header">
           <h1 className="explore-title">
             Life <span>@</span> <span className="seg-text">SEG</span>
@@ -133,51 +106,49 @@ const ExploreMore = () => {
           </p>
         </header>
 
+        {/* Filter Bar */}
         <div className="explore-filters">
-          {filters.map((filter) => (
+          {filters.map(filter => (
             <button
               key={filter.id}
               className={`filter-btn ${activeFilter === filter.id ? 'active' : ''}`}
               onClick={() => setActiveFilter(filter.id)}
             >
               <Icon type={filter.icon} />
-              {filter.label}
+              {filter.label}    
             </button>
           ))}
         </div>
 
+        {/* Gallery Grid */}
         <main className="explore-gallery">
-          {loading && (
-            <p className="explore-gallery-status">Loading gallery...</p>
-          )}
-          {!loading && filteredItems.length === 0 && (
-            <p className="explore-gallery-status">
-              No images in this category yet. Add images from the admin Gallery page.
-            </p>
-          )}
-          {!loading &&
-            filteredItems.map((item) => (
-              <div key={item.id} className={`gallery-item ${item.type || ''}`}>
-                <img src={item.image} alt={item.title} />
+          {loading ? (
+            <div style={{ gridColumn: '1/-1', textAlign: 'center', padding: '60px', color: '#666' }}>Loading gallery...</div>
+          ) : filteredItems.length === 0 ? (
+            <div style={{ gridColumn: '1/-1', textAlign: 'center', padding: '60px', color: '#888' }}>No images found. Add images from admin dashboard.</div>
+          ) : (
+            filteredItems.map((item, index) => (
+              <div
+                key={item._id || index}
+                className={`gallery-item ${index === 0 && activeFilter === 'all' ? 'large' : ''}`}
+              >
+                <img src={item.url} alt={item.title} loading="lazy" />
                 <div className="gallery-overlay">
                   <span className="gallery-label">
-                    <Icon type={categoryIcon[item.category] || 'grid'} />
-                    {item.label}
+                    <Icon type={getCategoryId(item.category) === 'campus' ? 'building' : getCategoryId(item.category) === 'library' ? 'book' : getCategoryId(item.category) === 'students' ? 'users' : getCategoryId(item.category) === 'events' ? 'calendar' : 'monitor'} />
+                    {item.category}
                   </span>
                   <h3 className="gallery-title">{item.title}</h3>
-                  {item.type === 'large' && item.description && (
-                    <>
-                      <p className="gallery-desc">{item.description}</p>
-                      <button type="button" className="gallery-btn" aria-label="View">
-                        <Icon type="arrow" />
-                      </button>
-                    </>
+                  {item.description && (
+                    <p className="gallery-desc">{item.description}</p>
                   )}
                 </div>
               </div>
-            ))}
+            ))
+          )}
         </main>
 
+        {/* Stats Bar */}
         <section className="explore-stats">
           {stats.map((stat, i) => (
             <div key={i} className="stat-item">

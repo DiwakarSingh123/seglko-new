@@ -23,16 +23,16 @@ import ProgramsPage from './pages/ProgramsPage'
 import ProgramDetailPage from './pages/ProgramDetailPage'
 import PayFeePage from './pages/PayFeePage'
 import StudentNoticePage from './pages/StudentNoticePage'
+import FacultyNewPage from './pages/FacultyNewPage'
+import FacultyProfilePage from './pages/FacultyProfilePage'
+import PrivacyPolicy from './pages/PrivacyPolicy'
+import TermsAndConditions from './pages/TermsAndConditions'
+import JobApplicationPage from './pages/JobApplicationPage'
 import InstitutionsPage from './pages/InstitutionsPage'
 import CareersPage from './pages/CareersPage'
 import EventDetailPage from './pages/EventDetailPage'
 import Footer from './components/Footer'
 import Chatbot from './components/Chatbot'
-import LoginPage from './pages/LoginPage'
-import FacultyNewPage from './pages/FacultyNewPage'
-import FacultyProfilePage from './pages/FacultyProfilePage'
-import TermsAndConditions from './pages/TermsAndConditions'
-import PrivacyPolicy from './pages/PrivacyPolicy'
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -40,14 +40,15 @@ function ScrollToTop() {
   return null;
 }
 
-function App() {
-  useEffect(() => {
-    fetch('/api/health')
-      .then(res => res.json())
-      .then(data => console.log('Backend connection test:', data))
-      .catch(err => console.error('Backend connection failed:', err));
-  }, []);
+function EnquireNowFloating() {
+  return (
+    <a href="/contact-us" className="enquire-now-btn">
+      Enquire Now!
+    </a>
+  );
+}
 
+function App() {
   return (
     <Router>
       <ScrollToTop />
@@ -79,13 +80,14 @@ function App() {
         <Route path="/student-notice" element={<StudentNoticePage />} />
         <Route path="/institutions" element={<InstitutionsPage />} />
         <Route path="/careers" element={<CareersPage />} />
+        <Route path="/careers/apply" element={<JobApplicationPage />} />
         <Route path="/events/:slug" element={<EventDetailPage />} />
-        <Route path="/admin" element={<LoginPage />} />
         <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
       </Routes>
       <Footer />
       <Chatbot />
+      <EnquireNowFloating />
     </Router>
   )
 }

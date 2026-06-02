@@ -6,8 +6,8 @@
            ResearchProjects, AwardWinningProjects, etc.
    ============================================ */
 
-/* ── TABLET (max-width: 1023px) ── */
-@media (max-width: 1023px) {
+/* ── TABLET (max-width: 1024px) ── */
+@media (max-width: 1024px) {
 
   /* FacultyPage hero */
   [style*="gridTemplateColumns: '1fr 560px 240px'"],
@@ -77,8 +77,8 @@
   }
 }
 
-/* ── MOBILE (max-width: 767px) ── */
-@media (max-width: 767px) {
+/* ── MOBILE (max-width: 768px) ── */
+@media (max-width: 768px) {
 
   /* FacultyPage hero - stack to column */
   [style*="gridTemplateColumns: '1fr 560px 240px'"],
@@ -232,8 +232,11 @@
   .program-cta__buttons { flex-direction: column !important; align-items: center !important; }
 
   /* Contact page */
-  .contact-hero { padding: 40px 16px !important; }
-  .contact-form-section { padding: 24px 16px !important; }
+  .cu-hero { padding: 60px 24px 40px !important; }
+  .cu-hero__title { font-size: 2.8rem !important; letter-spacing: -1.5px !important; }
+  .cu-hero__sub { font-size: 1.1rem !important; margin-bottom: 24px !important; }
+  .cu-hero__actions { flex-direction: row !important; gap: 16px !important; justify-content: center !important; }
+  .cu-main { padding: 30px 24px !important; }
 
   /* History page */
   .history-hero { padding: 40px 16px !important; }
@@ -286,6 +289,86 @@
   .quota-stats-bar { grid-template-columns: 1fr !important; }
 }
 
+/* ── LARGE MOBILE (max-width: 425px) ── */
+@media (max-width: 425px) {
+  /* Reduce space from top globally for all subpage heroes */
+  .ap-hero,
+  .placements-hero,
+  .program-hero,
+  .fee-hero,
+  .quota-hero,
+  .eligibility-hero,
+  .careers-hero,
+  .cu-hero,
+  .mv-hero,
+  .history-hero,
+  .wjs-hero,
+  .chairman-hero {
+    padding: 10px 4% 30px !important;
+  }
+
+  .ap-hero__inner,
+  .placements-hero__inner,
+  .program-hero__inner,
+  .fee-hero__inner,
+  .quota-hero__inner,
+  .eligibility-hero__inner,
+  .careers-hero__inner,
+  .cu-hero__inner,
+  .mv-hero__inner,
+  .history-hero__inner,
+  .wjs-hero__inner,
+  .chairman-hero__shell {
+    padding: 15px 10px 10px !important;
+    gap: 20px !important;
+  }
+
+  .ap-hero__content,
+  .placements-hero__content,
+  .program-hero__content,
+  .fee-hero__content,
+  .quota-hero__content,
+  .eligibility-hero__content,
+  .careers-hero__content,
+  .cu-hero__content,
+  .mv-hero__content,
+  .history-hero__content,
+  .wjs-hero__content,
+  .chairman-hero__copy {
+    padding-top: 10px !important;
+  }
+
+  [style*="padding: '60px 45px 50px'"],
+  [style*="padding: '60px 45px 40px'"],
+  [style*="padding: '36px 16px 28px'"] {
+    padding: 24px 12px 20px !important;
+  }
+  
+  [style*="fontSize: '2.8rem'"] { font-size: 1.5rem !important; }
+  [style*="fontSize: '2rem'"] { font-size: 1.3rem !important; }
+  
+  .ap-hero__title { font-size: 1.9rem !important; }
+  .placements-hero__title { font-size: 1.7rem !important; }
+  .program-hero__title { font-size: 1.9rem !important; }
+  .fee-hero__title { font-size: 1.9rem !important; }
+  .quota-hero__title { font-size: 1.9rem !important; }
+  .eligibility-hero__title { font-size: 2.1rem !important; }
+
+  /* Grid layouts to single column */
+  .eligibility-tabs { flex-direction: column !important; }
+  .fee-stats-bar, .quota-stats-bar { grid-template-columns: 1fr !important; }
+  
+  /* Placements list styling adjust */
+  .placement-card {
+    padding: 0.75rem !important;
+    gap: 0.75rem !important;
+  }
+  .placement-card__image-container {
+    max-width: 100% !important;
+    min-height: 200px !important;
+  }
+}
+
 /* ── 375px ── */
 @media (max-width: 375px) {
   [style*="padding: '36px 16px 28px'"] { padding: 28px 12px 20px !important; }
@@ -310,4 +393,85 @@
   .eligibility-container { padding: 1rem !important; }
   .quota-info-card { padding: 20px !important; }
   .ap-step__card { padding: 1rem !important; }
+}
+
+/* ── Faculty Pages (FacultyPage & FacultyNewPage) Responsiveness ── */
+@media (max-width: 1024px) {
+  /* Faculty Page (fp-) */
+  .fp-container { margin-top: 60px !important; }
+  .fp-hero { padding: 60px 24px 40px !important; }
+  .fp-hero__title { font-size: 2.8rem !important; }
+  .fp-filter-bar { padding: 0 24px !important; }
+  .fp-search-bar { padding: 14px 24px !important; }
+  .fp-programs { padding: 30px 24px !important; }
+  .fp-recruiters { padding: 30px 24px !important; }
+  .fp-cta { margin: 0 24px 40px !important; padding: 40px 30px !important; }
+
+  /* Faculty New Page (fnp-) */
+  .fnp-hero { padding: 60px 24px 40px !important; }
+  .fnp-hero__title { font-size: 2.8rem !important; }
+  .fnp-stats { margin-top: 20px !important; padding: 0 24px !important; }
+  .fnp-filters { margin: 40px 24px 30px !important; padding: 24px !important; }
+  .fnp-section { padding: 30px 24px !important; }
+}
+
+@media (max-width: 768px) {
+  /* Faculty Page (fp-) */
+  .fp-container { margin-top: 20px !important; }
+  .fp-hero {
+    grid-template-columns: 1fr !important;
+    padding: 20px 20px 30px !important;
+    gap: 24px !important;
+    text-align: center;
+  }
+  .fp-hero__title { font-size: 2.3rem !important; }
+  .fp-hero__sub { margin: 0 auto 20px !important; }
+  .fp-hero__actions { justify-content: center !important; }
+  .fp-hero__visual { height: 300px !important; max-width: 500px !important; margin: 0 auto !important; width: 100% !important; }
+  .fp-hero__stats { grid-column: span 1 !important; flex-direction: row !important; justify-content: center !important; gap: 12px !important; }
+  .fp-stat-card { flex: 1 1 160px !important; max-width: 240px !important; padding: 10px 14px !important; }
+  .fp-filter-bar { padding: 0 16px !important; }
+  .fp-search-bar { flex-direction: column !important; align-items: stretch !important; gap: 12px !important; padding: 14px 16px !important; }
+  .fp-search-input { width: 100% !important; }
+  .fp-search-sort { text-align: right !important; }
+  .fp-programs { padding: 24px 16px !important; }
+  .fp-recruiters { padding: 24px 16px !important; }
+  .fp-cta { margin: 0 16px 30px !important; padding: 30px 20px !important; grid-template-columns: 1fr !important; gap: 20px !important; text-align: center; }
+  .fp-cta__visual { display: none !important; }
+  .fp-cta__actions { justify-content: center !important; }
+
+  /* Faculty New Page (fnp-) */
+  .fnp-hero { padding: 20px 20px !important; gap: 30px !important; }
+  .fnp-hero__title { font-size: 2.3rem !important; }
+  .fnp-hero__desc { margin-bottom: 24px !important; font-size: 1rem !important; }
+  .fnp-stats { padding: 0 16px !important; gap: 12px !important; }
+  .fnp-stat-card { padding: 16px !important; }
+  .fnp-filters { margin: 30px 16px 20px !important; padding: 20px !important; }
+  .fnp-filters__grid { grid-template-columns: 1fr 1fr !important; gap: 12px !important; }
+  .fnp-section { padding: 24px 16px !important; }
+  .fnp-section__header { margin-bottom: 24px !important; }
+  .fnp-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 16px !important; }
+  .fnp-card__img-wrap { height: 200px !important; }
+  .fnp-leader__portrait-wrap { width: 110px !important; height: 110px !important; margin-bottom: 16px !important; }
+}
+
+@media (max-width: 480px) {
+  /* Faculty Page (fp-) */
+  .fp-container { margin-top: 5px !important; }
+  .fp-hero { padding-top: 5px !important; padding-bottom: 20px !important; }
+  .fp-hero__title { font-size: 1.8rem !important; }
+  .fp-hero__actions button { width: 100% !important; justify-content: center !important; }
+  .fp-hero__visual { height: 200px !important; }
+  .fp-stat-card { flex: 1 1 100% !important; max-width: 100% !important; }
+  .fp-grid { grid-template-columns: 1fr !important; }
+  .fp-cta__actions button { width: 100% !important; justify-content: center !important; }
+
+  /* Faculty New Page (fnp-) */
+  .fnp-hero { padding-top: 5px !important; padding-bottom: 20px !important; }
+  .fnp-hero__title { font-size: 1.8rem !important; }
+  .fnp-stat-card { flex: 1 1 100% !important; }
+  .fnp-filters__grid { grid-template-columns: 1fr !important; }
+  .fnp-filters__footer { flex-direction: column !important; align-items: stretch !important; gap: 16px !important; }
+  .fnp-view-toggle { justify-content: space-between !important; }
+  .fnp-grid { grid-template-columns: 1fr !important; }
 }

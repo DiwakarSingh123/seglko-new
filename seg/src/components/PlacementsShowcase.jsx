@@ -1,16 +1,8 @@
-import { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import program1 from '../assets/images/Harsh Dixit.jpeg';
-import program2 from '../assets/images/pr (2).jpeg';
+import placementsBg from '../assets/images/placements-bg.png';
+import program1 from '../assets/images/surender pratap.jpeg';
+import program2 from '../assets/images/shaloni devi.jpeg';
 import program3 from '../assets/images/Pramudit Shukla.jpeg';
-import {
-  computePlacementStats,
-  formatPlacedCount,
-  getRecentPlacements,
-  mapToShowcaseCard,
-} from '../utils/placementStats';
-
-const imagePool = [program1, program2, program3];
 
 const ArrowRight = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -67,41 +59,77 @@ const BriefcaseIcon = () => (
   </svg>
 );
 
+const successCards = [
+  {
+    name: 'surender pratap',
+    course: 'B.Tech CSE 4th Year',
+    packageLabel: '4.00 LPA',
+    company: 'Eclat Health Solution India',
+    role: 'Software Developer',
+    image: program1,
+    logo: 'SQUAREIT',
+  },
+  {
+    name: 'Shaloni Devi',
+    course: 'B.Pharm 4th Year',
+    packageLabel: '18.00 LPA',
+    company: 'Max Healthcare',
+    role: 'Executive',
+    image: program2,
+    logo: 'MAX',
+  },
+  {
+    name: 'Pramudit Shukla',
+    course: 'Diploma in CSE',
+    packageLabel: '12.00 LPA',
+    company: 'TechMech',
+    role: 'Full Stack Developer',
+    image: program3,
+    logo: 'TECHMECH',
+  },
+];
+
+const placementStats = [
+  { label: 'Students Placed', value: '1000+', icon: <PeopleIcon />, tone: 'gold' },
+  { label: 'Recruiting Partners', value: '250+', icon: <BuildingIcon />, tone: 'blue' },
+  { label: 'Placement Rate', value: 'High', icon: <GrowthIcon />, tone: 'green' },
+  { label: 'Top Industry Roles', value: 'Top', icon: <MedalIcon />, tone: 'violet' },
+];
 
 const CognizantLogo = () => (
   <svg viewBox="0 0 120 40" xmlns="http://www.w3.org/2000/svg" width="110" height="36">
-    <circle cx="20" cy="20" r="14" fill="#0033a0"/>
-    <path d="M20 10 a10 10 0 0 0 0 20" fill="none" stroke="white" strokeWidth="3"/>
+    <circle cx="20" cy="20" r="14" fill="#0033a0" />
+    <path d="M20 10 a10 10 0 0 0 0 20" fill="none" stroke="white" strokeWidth="3" />
     <text x="38" y="25" fontFamily="Arial" fontWeight="bold" fontSize="13" fill="#0033a0">Cognizant</text>
   </svg>
 );
 
 const AccentureLogo = () => (
   <svg viewBox="0 0 120 40" xmlns="http://www.w3.org/2000/svg" width="110" height="36">
-    <polygon points="55,6 65,6 60,16" fill="#a100ff"/>
+    <polygon points="55,6 65,6 60,16" fill="#a100ff" />
     <text x="10" y="30" fontFamily="Arial" fontWeight="bold" fontSize="13" fill="#000">accenture</text>
   </svg>
 );
 
 const AonLogo = () => (
   <svg viewBox="0 0 80 40" xmlns="http://www.w3.org/2000/svg" width="70" height="36">
-    <rect width="80" height="40" fill="#cc0000" rx="4"/>
+    <rect width="80" height="40" fill="#cc0000" rx="4" />
     <text x="50%" y="27" textAnchor="middle" fontFamily="Arial" fontWeight="bold" fontSize="20" fill="white">Aon</text>
   </svg>
 );
 
 const AsianPaintsLogo = () => (
   <svg viewBox="0 0 130 40" xmlns="http://www.w3.org/2000/svg" width="120" height="36">
-    <circle cx="18" cy="20" r="13" fill="#e31e24"/>
-    <circle cx="18" cy="20" r="7" fill="#f7941d"/>
-    <circle cx="18" cy="20" r="3" fill="white"/>
+    <circle cx="18" cy="20" r="13" fill="#e31e24" />
+    <circle cx="18" cy="20" r="7" fill="#f7941d" />
+    <circle cx="18" cy="20" r="3" fill="white" />
     <text x="36" y="25" fontFamily="Arial" fontWeight="bold" fontSize="12" fill="#e31e24">Asian Paints</text>
   </svg>
 );
 
 const CMCLogo = () => (
   <svg viewBox="0 0 120 40" xmlns="http://www.w3.org/2000/svg" width="110" height="36">
-    <rect width="120" height="40" fill="#003087" rx="4"/>
+    <rect width="120" height="40" fill="#003087" rx="4" />
     <text x="50%" y="26" textAnchor="middle" fontFamily="Arial" fontWeight="bold" fontSize="14" fill="white">CMC Limited</text>
   </svg>
 );
@@ -121,17 +149,17 @@ const GoogleLogo = () => (
 
 const HDFCLogo = () => (
   <svg viewBox="0 0 130 40" xmlns="http://www.w3.org/2000/svg" width="120" height="36">
-    <rect width="130" height="40" fill="#004C8F" rx="4"/>
+    <rect width="130" height="40" fill="#004C8F" rx="4" />
     <text x="50%" y="26" textAnchor="middle" fontFamily="Arial" fontWeight="bold" fontSize="13" fill="white">HDFC BANK</text>
   </svg>
 );
 
 const MicrosoftLogo = () => (
   <svg viewBox="0 0 130 40" xmlns="http://www.w3.org/2000/svg" width="120" height="36">
-    <rect x="0" y="4" width="14" height="14" fill="#F25022"/>
-    <rect x="16" y="4" width="14" height="14" fill="#7FBA00"/>
-    <rect x="0" y="20" width="14" height="14" fill="#00A4EF"/>
-    <rect x="16" y="20" width="14" height="14" fill="#FFB900"/>
+    <rect x="0" y="4" width="14" height="14" fill="#F25022" />
+    <rect x="16" y="4" width="14" height="14" fill="#7FBA00" />
+    <rect x="0" y="20" width="14" height="14" fill="#00A4EF" />
+    <rect x="16" y="20" width="14" height="14" fill="#FFB900" />
     <text x="36" y="26" fontFamily="Arial" fontSize="13" fill="#737373">Microsoft</text>
   </svg>
 );
@@ -150,7 +178,7 @@ const NIITLogo = () => (
 const TCSLogo = () => (
   <svg viewBox="0 0 80 40" xmlns="http://www.w3.org/2000/svg" width="70" height="36">
     <text x="0" y="30" fontFamily="Arial" fontWeight="bold" fontSize="24" fill="#f15a22">TCS</text>
-    <line x1="0" y1="33" x2="52" y2="33" stroke="#002b5c" strokeWidth="2"/>
+    <line x1="0" y1="33" x2="52" y2="33" stroke="#002b5c" strokeWidth="2" />
   </svg>
 );
 
@@ -186,8 +214,8 @@ function PlacementCard({ card }) {
         </div>
 
         <p className="placements-showcase__card-copy">
-          We are proud to announce that our student, <strong>{card.name}</strong>, from <strong>{card.course}</strong>,
-          has been successfully placed at <strong>{card.company}</strong> as a <strong>{card.role}</strong>.
+          We feel immensely proud to announce that our student, <strong>{card.name}</strong>, from the <strong>{card.course} batch</strong>,
+          has been successfully placed at <strong className="text-blue">{card.company}</strong> as a <strong className="text-blue">{card.role}</strong>!
         </p>
 
         <div className="placements-showcase__package-row">
@@ -206,59 +234,6 @@ function PlacementCard({ card }) {
 
 export default function PlacementsShowcase() {
   const navigate = useNavigate();
-  const [records, setRecords] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    fetch('/api/placements')
-      .then((res) => res.json())
-      .then((data) => {
-        setRecords(Array.isArray(data) ? data : []);
-        setLoading(false);
-      })
-      .catch(() => setLoading(false));
-  }, []);
-
-  const stats = useMemo(() => computePlacementStats(records), [records]);
-
-  const successCards = useMemo(
-    () =>
-      getRecentPlacements(records, 3).map((record, index) =>
-        mapToShowcaseCard(record, imagePool[index % imagePool.length])
-      ),
-    [records]
-  );
-
-  const placementStats = useMemo(
-    () => [
-      {
-        label: 'Students Placed',
-        value: formatPlacedCount(stats.totalPlaced),
-        icon: <PeopleIcon />,
-        tone: 'gold',
-      },
-      {
-        label: 'Recruiting Partners',
-        value: stats.recruiters,
-        icon: <BuildingIcon />,
-        tone: 'blue',
-      },
-      {
-        label: 'Highest Package',
-        value: stats.highestPackage === '—' ? '—' : stats.highestPackage.replace(' LPA', ''),
-        icon: <GrowthIcon />,
-        tone: 'green',
-      },
-      {
-        label: 'Average Package',
-        value: stats.avgPackage === '—' ? '—' : stats.avgPackage.replace(' LPA', ''),
-        icon: <MedalIcon />,
-        tone: 'violet',
-      },
-    ],
-    [stats]
-  );
-
   return (
     <section className="placements-showcase" id="placements-showcase">
       <div className="placements-showcase__shell">
@@ -272,6 +247,7 @@ export default function PlacementsShowcase() {
               Celebrating the success of our students who are building great careers with top companies.
             </p>
           </div>
+
           <button className="btn btn--primary placements-showcase__cta" onClick={() => { navigate('/placements'); window.scrollTo(0, 0); }}>
             View More Success Stories
             <span className="btn__arrow">
@@ -281,20 +257,9 @@ export default function PlacementsShowcase() {
         </div>
 
         <div className="placements-showcase__grid">
-          {loading && (
-            <p className="placements-showcase__loading" style={{ gridColumn: '1 / -1', textAlign: 'center', color: '#64748b' }}>
-              Loading recent placements...
-            </p>
-          )}
-          {!loading && successCards.length === 0 && (
-            <p className="placements-showcase__empty" style={{ gridColumn: '1 / -1', textAlign: 'center', color: '#64748b' }}>
-              No placement records yet. Add records from the admin Placements dashboard.
-            </p>
-          )}
-          {!loading &&
-            successCards.map((card) => (
-              <PlacementCard key={`${card.name}-${card.company}`} card={card} />
-            ))}
+          <PlacementCard card={successCards[0]} />
+          <PlacementCard card={successCards[1]} />
+          <PlacementCard card={successCards[2]} />
 
           <section className="placements-showcase__stats-card">
             <div

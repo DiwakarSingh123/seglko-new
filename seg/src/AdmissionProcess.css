@@ -1,7 +1,7 @@
 /* ADMISSION PROCESS STYLES */
 
 .admission-process {
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Inter', sans-serif;
   color: #1e293b;
   background-color: #f8fafc;
   /* very light background for the page */
@@ -89,7 +89,7 @@
   color: #1a1a1a;
   margin-bottom: 2rem;
   letter-spacing: -3px;
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Inter', sans-serif;
   text-transform: uppercase;
 }
 
@@ -601,5 +601,278 @@
 
   .ap-hero__title {
     font-size: 3rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .admission-process {
+    padding-bottom: 2rem;
+  }
+
+  .ap-hero {
+    min-height: auto;
+    padding: 2rem 1rem 2.5rem !important;
+    align-items: flex-start;
+  }
+
+  .ap-hero::before {
+    background-size: 22px 22px;
+  }
+
+  .ap-hero__bg img {
+    object-position: center;
+    opacity: 0.18;
+  }
+
+  .ap-hero__content {
+    max-width: 100%;
+    text-align: left;
+  }
+
+  .ap-hero__title {
+    font-size: 2rem !important;
+    line-height: 1;
+    letter-spacing: -1px;
+    margin-bottom: 1rem;
+  }
+
+  .ap-hero__subtitle {
+    font-size: 1rem;
+    line-height: 1.45;
+    margin-bottom: 1rem;
+  }
+
+  .ap-hero__line {
+    width: 48px;
+    height: 4px;
+    margin: 0;
+  }
+
+  .ap-hero__floating-card,
+  .ap-hero__character {
+    display: none;
+  }
+
+  .ap-procedure {
+    padding: 2.5rem 1rem;
+  }
+
+  .ap-procedure__header {
+    margin-bottom: 2rem;
+    text-align: left;
+  }
+
+  .ap-procedure__header h2 {
+    font-size: 1.45rem;
+    line-height: 1.25;
+  }
+
+  .ap-procedure__header p {
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+
+  .ap-timeline {
+    gap: 1.25rem;
+  }
+
+  .ap-timeline::before {
+    left: 18px;
+  }
+
+  .ap-step {
+    gap: 0.75rem;
+  }
+
+  .ap-step__number {
+    width: 38px;
+    height: 38px;
+    font-size: 0.82rem;
+  }
+
+  .ap-step__card {
+    padding: 1rem !important;
+    gap: 1rem;
+    border-radius: 0.875rem;
+  }
+
+  .ap-step__icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 0.75rem;
+  }
+
+  .ap-step__icon svg {
+    width: 26px;
+    height: 26px;
+  }
+
+  .ap-step__content h3 {
+    font-size: 1.12rem;
+    line-height: 1.3;
+  }
+
+  .ap-step__content p {
+    font-size: 0.92rem;
+    line-height: 1.5;
+    margin-bottom: 1rem;
+  }
+
+  .ap-btn {
+    width: 100%;
+    justify-content: center;
+    padding: 0.72rem 1rem;
+    font-size: 0.92rem;
+  }
+
+  .ap-alert {
+    align-items: flex-start;
+    font-size: 0.82rem;
+    line-height: 1.45;
+  }
+
+  .ap-checks {
+    grid-template-columns: 1fr !important;
+    gap: 0.75rem;
+  }
+
+  .ap-payment-label {
+    display: block;
+    margin: 0 0 0.75rem;
+  }
+
+  .ap-payment-icons {
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .ap-help {
+    padding: 1.5rem 1rem;
+    border-radius: 0;
+  }
+
+  .ap-help__left h2 {
+    font-size: 1.35rem;
+  }
+
+  .ap-help__left p,
+  .ap-contact-text span {
+    font-size: 0.88rem;
+    line-height: 1.45;
+  }
+
+  .ap-help__right {
+    width: 100%;
+  }
+
+  .ap-contact-item {
+    align-items: flex-start;
+    gap: 0.75rem;
+    width: 100%;
+  }
+
+  .ap-contact-icon {
+    width: 42px;
+    height: 42px;
+    flex-shrink: 0;
+  }
+
+  .ap-contact-text {
+    min-width: 0;
+  }
+
+  .ap-contact-text strong {
+    font-size: 1rem;
+    overflow-wrap: anywhere;
+  }
+}
+
+@media (max-width: 375px) {
+  .ap-hero {
+    padding: 1.5rem 0.875rem 2rem !important;
+  }
+
+  .ap-hero__title {
+    font-size: 1.75rem !important;
+  }
+
+  .ap-hero__subtitle {
+    font-size: 0.95rem;
+  }
+
+  .ap-procedure {
+    padding: 2rem 0.875rem;
+  }
+
+  .ap-step__card {
+    padding: 0.875rem !important;
+  }
+
+  .ap-step__content h3 {
+    font-size: 1.05rem;
+  }
+
+  .ap-help {
+    padding: 1.25rem 0.875rem;
+  }
+}
+
+@media (max-width: 320px) {
+  .ap-hero {
+    padding: 1.25rem 0.75rem 1.75rem !important;
+  }
+
+  .ap-hero__title {
+    font-size: 1.5rem !important;
+    letter-spacing: -0.5px;
+  }
+
+  .ap-hero__subtitle {
+    font-size: 0.9rem;
+  }
+
+  .ap-procedure {
+    padding: 1.75rem 0.75rem;
+  }
+
+  .ap-procedure__header h2 {
+    font-size: 1.25rem;
+  }
+
+  .ap-procedure__header p,
+  .ap-step__content p {
+    font-size: 0.86rem;
+  }
+
+  .ap-timeline::before {
+    left: 16px;
+  }
+
+  .ap-step {
+    gap: 0.625rem;
+  }
+
+  .ap-step__number {
+    width: 34px;
+    height: 34px;
+    font-size: 0.75rem;
+  }
+
+  .ap-step__icon {
+    width: 42px;
+    height: 42px;
+  }
+
+  .ap-step__content h3 {
+    font-size: 1rem;
+  }
+
+  .ap-btn {
+    font-size: 0.86rem;
+    padding-inline: 0.75rem;
+  }
+
+  .ap-help {
+    padding: 1.25rem 0.75rem;
   }
 }

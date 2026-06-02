@@ -2,7 +2,7 @@ export const programsData = {
   mtech: {
     hero: {
       category: 'POSTGRADUATE PROGRAM',
-      title: 'Master of Technology (M.Tech)',
+      title: 'Master of Technology\n(M.Tech)',
       description: 'Elevate your engineering expertise with our research-intensive postgraduate program designed for future innovators.',
     },
     infoCards: [
