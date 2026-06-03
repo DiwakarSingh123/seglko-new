@@ -33,19 +33,12 @@ import CareersPage from './pages/CareersPage'
 import EventDetailPage from './pages/EventDetailPage'
 import Footer from './components/Footer'
 import Chatbot from './components/Chatbot'
+import NoPaperPopup from './components/NoPaperPopup'
 
 function ScrollToTop() {
   const { pathname } = useLocation();
   useEffect(() => { window.scrollTo({ top: 0, left: 0, behavior: 'instant' }); }, [pathname]);
   return null;
-}
-
-function EnquireNowFloating() {
-  return (
-    <a href="/contact-us" className="enquire-now-btn">
-      Enquire Now!
-    </a>
-  );
 }
 
 function App() {
@@ -87,7 +80,7 @@ function App() {
       </Routes>
       <Footer />
       <Chatbot />
-      <EnquireNowFloating />
+      <NoPaperPopup />
     </Router>
   )
 }
