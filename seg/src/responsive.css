@@ -318,9 +318,9 @@ img { max-width: 100%; height: auto; }
 }
 
 /* ============================================
-   LARGE TABLET (1025px - 1199px)
+   LARGE TABLET / LAPTOP (1025px - 1440px)
    ============================================ */
-@media (min-width: 1025px) and (max-width: 1199px) {
+@media (min-width: 1025px) and (max-width: 1440px) {
   .navbar__mobile-bar { display: none !important; }
   .navbar__inner { padding: 0 20px 0 160px !important; }
   .navbar__logo-wrap { width: 140px !important; min-width: 140px !important; height: 128px !important; left: 20px !important; }
