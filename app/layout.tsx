@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import NoPaperPopupButton from "./components/NoPaperPopupButton";
 
 export const metadata: Metadata = {
   title: "AdmissionX Dashboard",
@@ -18,7 +17,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body>
         {children}
-        <NoPaperPopupButton />
       </body>
     </html>
   );
