@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { allPrograms } from './ProgramsPage';
 import programsHeroImg from '../assets/images/programs-page image.jpeg';
@@ -30,9 +31,32 @@ const highlightColors = ['#1f63db', '#6cbf46', '#ff8b1a', '#9a43f0'];
 export default function ProgramDetailPage() {
   const { slug } = useParams();
   const navigate = useNavigate();
-  const program = allPrograms.find(p => p.slug === slug);
+  const [programsList, setProgramsList] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    fetch('/api/programs')
+      .then((res) => res.json())
+      .then((data) => {
+        if (Array.isArray(data)) {
+          setProgramsList(data);
+        }
+      })
+      .catch((err) => console.error('Failed to fetch programs:', err))
+      .finally(() => setIsLoading(false));
+  }, []);
+
+  const activePrograms = programsList.length > 0 ? programsList : allPrograms;
+  const program = activePrograms.find(p => p.slug === slug);
 
   if (!program) {
+    if (isLoading) {
+      return (
+        <div style={{ background: '#fff', minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <p style={{ fontSize: '18px', color: '#162341', fontWeight: 600 }}>Loading Program Details...</p>
+        </div>
+      );
+    }
     return (
       <div className="pdp-notfound">
         <h2>Program not found</h2>
@@ -40,6 +64,9 @@ export default function ProgramDetailPage() {
       </div>
     );
   }
+
+  const seatsVal = typeof program.seats === 'number' ? `${program.seats} Seats` : program.seats;
+  const pageTitle = program.name || program.title;
 
   return (
     <div className="pdp">
@@ -51,7 +78,7 @@ export default function ProgramDetailPage() {
 
         /* Hero */
         .pdp-hero { 
-          background: url(${programsHeroImg});
+          background: linear-gradient(rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.95)), url(${programsHeroImg});
           background-size: cover;
           background-position: center;
           padding: 130px 45px 100px; 
@@ -127,7 +154,6 @@ export default function ProgramDetailPage() {
         /* ── RESPONSIVE ── */
         @media (max-width: 1023px) {
           .pdp-hero { grid-template-columns: 1fr; padding: 50px 20px 40px; }
-          .pdp-hero__img { height: 260px; }
           .pdp-highlights { padding: 40px 20px; }
           .pdp-highlights__grid { grid-template-columns: repeat(2, 1fr); }
           .pdp-spec { padding: 40px 20px; }
@@ -142,7 +168,6 @@ export default function ProgramDetailPage() {
           .pdp-hero { padding: 36px 16px 30px; gap: 24px; }
           .pdp-hero__title { font-size: 1.8rem; }
           .pdp-hero__subtitle { font-size: 1.4rem; }
-          .pdp-hero__img { height: 200px; }
           .pdp-hero__btns { flex-direction: column; }
           .pdp-hero__btn-primary, .pdp-hero__btn-outline { width: 100%; justify-content: center; }
           .pdp-highlights { padding: 28px 16px; }
@@ -187,7 +212,7 @@ export default function ProgramDetailPage() {
       <div className="pdp-hero">
         <div>
           <p className="pdp-hero__label">{program.label}</p>
-          <h1 className="pdp-hero__title">{program.title}</h1>
+          <h1 className="pdp-hero__title">{pageTitle}</h1>
           <h2 className="pdp-hero__subtitle">{program.subtitle}</h2>
           <p className="pdp-hero__desc">{program.description}</p>
           <div className="pdp-hero__btns">
@@ -202,86 +227,94 @@ export default function ProgramDetailPage() {
       </div>
 
       {/* Highlights */}
-      <div className="pdp-highlights">
-        <div className="pdp-highlights__grid">
-          {program.highlights.map((h, i) => (
-            <div key={h.title} className="pdp-highlight-card" style={{ border: `1px solid ${highlightColors[i]}22` }}>
-              <div className="pdp-highlight-card__icon" style={{ background: `${highlightColors[i]}15`, color: highlightColors[i] }}>
-                {highlightIcons[i]}
+      {program.highlights && program.highlights.length > 0 && (
+        <div className="pdp-highlights">
+          <div className="pdp-highlights__grid">
+            {program.highlights.map((h, i) => (
+              <div key={h.title || i} className="pdp-highlight-card" style={{ border: `1px solid ${(program.color || highlightColors[i % 4])}22` }}>
+                <div className="pdp-highlight-card__icon" style={{ background: `${(program.color || highlightColors[i % 4])}15`, color: program.color || highlightColors[i % 4] }}>
+                  {highlightIcons[i % 4]}
+                </div>
+                <h3>{h.title}</h3>
+                <p>{h.desc}</p>
+                <div className="pdp-highlight-card__bar" style={{ background: program.color || highlightColors[i % 4] }} />
               </div>
-              <h3>{h.title}</h3>
-              <p>{h.desc}</p>
-              <div className="pdp-highlight-card__bar" style={{ background: highlightColors[i] }} />
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Specializations */}
-      <div className="pdp-spec">
-        <div className="pdp-spec__inner">
-          <div>
-            <p className="pdp-spec__label">Specializations</p>
-            <h2 className="pdp-spec__title">Explore Our Specializations</h2>
-            <div className="pdp-spec__bar" />
-            <p className="pdp-spec__desc">Tailor your expertise with our industry-aligned specializations</p>
-          </div>
-          <div className="pdp-spec__grid">
-            {program.specializations.map((spec) => (
-              <div key={spec.name} className="pdp-spec-item">
-                <div className="pdp-spec-item__icon"><SpecIcon /></div>
-                <div style={{ flex: 1 }}>
-                  <h4>{spec.name}</h4>
-                  <p>{spec.desc}</p>
+      {program.specializations && program.specializations.length > 0 && (
+        <div className="pdp-spec">
+          <div className="pdp-spec__inner">
+            <div>
+              <p className="pdp-spec__label">Specializations</p>
+              <h2 className="pdp-spec__title">Explore Our Specializations</h2>
+              <div className="pdp-spec__bar" />
+              <p className="pdp-spec__desc">Tailor your expertise with our industry-aligned specializations</p>
+            </div>
+            <div className="pdp-spec__grid">
+              {program.specializations.map((spec, i) => (
+                <div key={spec.name || i} className="pdp-spec-item">
+                  <div className="pdp-spec-item__icon"><SpecIcon /></div>
+                  <div style={{ flex: 1 }}>
+                    <h4>{spec.name}</h4>
+                    <p>{spec.desc}</p>
+                  </div>
+                  <span style={{ color: 'rgba(255,255,255,0.5)' }}><ArrowRight /></span>
                 </div>
-                <span style={{ color: 'rgba(255,255,255,0.5)' }}><ArrowRight /></span>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
       {/* Why Choose */}
-      <div className="pdp-why">
-        <div className="pdp-why__inner">
-          <h2 className="pdp-why__title">
-            Why Choose <span style={{ color: program.color }}>SEG</span> for {program.subtitle}?
-          </h2>
-          <div className="pdp-why__bar" />
-          <div className="pdp-why__grid">
-            {program.whyChoose.map((item, i) => (
-              <div key={item.title} className="pdp-why-card">
-                <div className="pdp-why-card__icon" style={{ background: `${highlightColors[i % 4]}15`, color: highlightColors[i % 4] }}>
-                  <CheckIcon />
+      {program.whyChoose && program.whyChoose.length > 0 && (
+        <div className="pdp-why">
+          <div className="pdp-why__inner">
+            <h2 className="pdp-why__title">
+              Why Choose <span style={{ color: program.color || '#1041c6' }}>SEG</span> for {program.subtitle}?
+            </h2>
+            <div className="pdp-why__bar" />
+            <div className="pdp-why__grid">
+              {program.whyChoose.map((item, i) => (
+                <div key={item.title || i} className="pdp-why-card">
+                  <div className="pdp-why-card__icon" style={{ background: `${highlightColors[i % 4]}15`, color: highlightColors[i % 4] }}>
+                    <CheckIcon />
+                  </div>
+                  <h3>{item.title}</h3>
+                  <p>{item.desc}</p>
+                  <div className="pdp-why-card__bar" style={{ background: highlightColors[i % 4] }} />
                 </div>
-                <h3>{item.title}</h3>
-                <p>{item.desc}</p>
-                <div className="pdp-why-card__bar" style={{ background: highlightColors[i % 4] }} />
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
       {/* Career Paths */}
-      <div className="pdp-careers">
-        <div className="pdp-careers__inner">
-          <h2 className="pdp-careers__title">
-            Your Future <span style={{ color: program.color }}>Career</span> Paths
-          </h2>
-          <div className="pdp-careers__bar" />
-          <div className="pdp-careers__grid">
-            {program.careers.map((career, i) => (
-              <div key={career} className="pdp-career-item">
-                <div className="pdp-career-item__icon" style={{ background: `${highlightColors[i % 4]}15`, color: highlightColors[i % 4] }}>
-                  <CareerIcon />
+      {program.careers && program.careers.length > 0 && (
+        <div className="pdp-careers">
+          <div className="pdp-careers__inner">
+            <h2 className="pdp-careers__title">
+              Your Future <span style={{ color: program.color || '#1041c6' }}>Career</span> Paths
+            </h2>
+            <div className="pdp-careers__bar" />
+            <div className="pdp-careers__grid">
+              {program.careers.map((career, i) => (
+                <div key={career || i} className="pdp-career-item">
+                  <div className="pdp-career-item__icon" style={{ background: `${highlightColors[i % 4]}15`, color: highlightColors[i % 4] }}>
+                    <CareerIcon />
+                  </div>
+                  <span>{career}</span>
                 </div>
-                <span>{career}</span>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
       {/* CTA */}
       <div className="pdp-cta">

@@ -25,9 +25,10 @@ export default function PlacementsPage() {
   const [search, setSearch] = useState("");
   const [records, setRecords] = useState<PlacementRecord[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [editingRecord, setEditingRecord] = useState<PlacementRecord | null>(null);
   const [showAddRecord, setShowAddRecord] = useState(false);
-  const [expandedRecordId, setExpandedRecordId] = useState<number | null>(null);
+  const [expandedRecordId, setExpandedRecordId] = useState<string | null>(null);
   const [newRecord, setNewRecord] = useState({
     student: "", program: "", company: "", role: "", pkg: "", customImage: "", year: String(CURRENT_YEAR),
   });
@@ -61,64 +62,132 @@ export default function PlacementsPage() {
     setIsLoading(false);
   };
 
-  const handleDelete = async (id: number) => {
-    await fetch(`/api/placements?id=${id}`, { method: "DELETE" });
-    setRecords(prev => prev.filter(p => p.id !== id));
+  const handleDelete = async (id: string) => {
+    if (!confirm("Are you sure you want to delete this placement record?")) return;
+    try {
+      await fetch(`/api/placements?id=${id}`, { method: "DELETE" });
+      setRecords(prev => prev.filter(p => p._id !== id));
+    } catch (e) { console.error(e); }
   };
 
   const handleEditSave = async () => {
     if (!editingRecord) return;
-    await fetch("/api/placements", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(editingRecord) });
-    setRecords(prev => prev.map(p => p.id === editingRecord.id ? editingRecord : p));
-    setEditingRecord(null);
+    setIsSubmitting(true);
+    try {
+      let finalImage = editingRecord.customImage;
+      if (editingRecord.customImage && editingRecord.customImage.startsWith("data:")) {
+        const uploadRes = await fetch("/api/upload", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ image: editingRecord.customImage, folder: "seglko-placements" }),
+        });
+        if (uploadRes.ok) {
+          const uploadData = await uploadRes.json();
+          finalImage = uploadData.url;
+        } else {
+          alert("Failed to upload image to Cloudinary.");
+          setIsSubmitting(false);
+          return;
+        }
+      }
+
+      const res = await fetch("/api/placements", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...editingRecord, customImage: finalImage })
+      });
+      if (res.ok) {
+        const saved = await res.json();
+        setRecords(prev => prev.map(p => p._id === saved._id ? saved : p));
+        setEditingRecord(null);
+        alert("Placement record updated successfully!");
+      } else {
+        alert("Failed to save changes.");
+      }
+    } catch (e) {
+      console.error(e);
+      alert("An error occurred while saving placement record.");
+    }
+    setIsSubmitting(false);
   };
 
   const handleSaveRecord = async () => {
     if (!newRecord.student || !newRecord.program || !newRecord.company || !newRecord.role || !newRecord.pkg) {
       setFormError("Please fill in all required fields."); return;
     }
-    const payload = {
-      ...newRecord,
-      year: newRecord.year || String(CURRENT_YEAR),
-      institution: "SIET",
-      color: "from-indigo-400 to-indigo-600",
-    };
-    const res = await fetch("/api/placements", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
-    if (res.ok) {
-      const saved = await res.json();
-      setRecords((prev) => [...prev, saved]);
+    setIsSubmitting(true);
+    setFormError("");
+    try {
+      let finalImage = "";
+      if (newRecord.customImage && newRecord.customImage.startsWith("data:")) {
+        const uploadRes = await fetch("/api/upload", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ image: newRecord.customImage, folder: "seglko-placements" }),
+        });
+        if (uploadRes.ok) {
+          const uploadData = await uploadRes.json();
+          finalImage = uploadData.url;
+        } else {
+          setFormError("Failed to upload image to Cloudinary.");
+          setIsSubmitting(false);
+          return;
+        }
+      }
+
+      const payload = {
+        ...newRecord,
+        customImage: finalImage,
+        year: newRecord.year || String(CURRENT_YEAR),
+        institution: "SIET",
+        color: "from-indigo-400 to-indigo-600",
+      };
+      const res = await fetch("/api/placements", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
+      if (res.ok) {
+        const saved = await res.json();
+        setRecords((prev) => [...prev, saved]);
+        setShowAddRecord(false);
+        setNewRecord({ student: "", program: "", company: "", role: "", pkg: "", customImage: "", year: String(CURRENT_YEAR) });
+        alert("Placement record added successfully!");
+      } else {
+        setFormError("Failed to save placement record.");
+      }
+    } catch (e) {
+      console.error(e);
+      setFormError("An error occurred while saving.");
     }
-    setFormError(""); setShowAddRecord(false);
-    setNewRecord({ student: "", program: "", company: "", role: "", pkg: "", customImage: "", year: String(CURRENT_YEAR) });
+    setIsSubmitting(false);
   };
 
   return (
     <div className="space-y-5">
       {editingRecord && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30">
-          <div className="bg-white rounded-2xl shadow-xl p-6 w-full max-w-lg space-y-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/35 backdrop-blur-sm">
+          <div className="bg-white rounded-3xl shadow-2xl p-6 w-full max-w-lg space-y-4 border border-slate-100 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between">
-              <h2 className="text-base font-black text-slate-800">Edit Record</h2>
+              <h2 className="text-base font-black text-slate-800">Edit Placement Record</h2>
               <button onClick={() => setEditingRecord(null)} className="h-8 w-8 flex items-center justify-center rounded-lg hover:bg-slate-100">
                 <span className="material-symbols-outlined text-slate-500">close</span>
               </button>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {(["student", "program", "company", "role", "pkg"] as const).map((field) => (
-                <input
-                  key={field}
-                  value={editingRecord[field]}
-                  onChange={(e) => setEditingRecord({ ...editingRecord, [field]: e.target.value })}
-                  placeholder={field.charAt(0).toUpperCase() + field.slice(1)}
-                  className="w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-indigo-200"
-                />
+                <div key={field}>
+                  <label className="text-[10px] font-bold text-slate-500 mb-1 block uppercase">{field}</label>
+                  <input
+                    value={editingRecord[field]}
+                    onChange={(e) => setEditingRecord({ ...editingRecord, [field]: e.target.value })}
+                    placeholder={field.charAt(0).toUpperCase() + field.slice(1)}
+                    className="w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-indigo-200"
+                  />
+                </div>
               ))}
               <div>
-                <label className="text-xs font-bold text-slate-500 mb-1.5 block">Placement Year</label>
+                <label className="text-[10px] font-bold text-slate-500 mb-1 block uppercase">Placement Year</label>
                 <select
                   value={editingRecord.year}
                   onChange={(e) => setEditingRecord({ ...editingRecord, year: e.target.value })}
-                  className="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300"
+                  className="w-full px-4 py-3 rounded-2xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300"
                 >
                   {buildYearOptions(records).map((y) => (
                     <option key={y} value={y}>{y}</option>
@@ -126,9 +195,35 @@ export default function PlacementsPage() {
                 </select>
               </div>
             </div>
-            <div className="flex justify-end gap-3">
-              <button onClick={() => setEditingRecord(null)} className="px-5 py-2.5 rounded-2xl border border-slate-200 text-sm font-semibold text-slate-700 hover:bg-slate-50">Cancel</button>
-              <button onClick={handleEditSave} className="px-5 py-2.5 rounded-2xl bg-indigo-600 text-sm font-semibold text-white hover:bg-indigo-700">Save Changes</button>
+            <div>
+              <label className="text-xs font-bold text-slate-600 mb-1.5 block">Student Image</label>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={e => {
+                  const file = e.target.files?.[0];
+                  if (file) {
+                    const reader = new FileReader();
+                    reader.onloadend = () => setEditingRecord({ ...editingRecord, customImage: reader.result as string });
+                    reader.readAsDataURL(file);
+                  }
+                }}
+                className="block w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
+              />
+              {editingRecord.customImage && (
+                <div className="relative mt-2">
+                  <img src={editingRecord.customImage} alt="Preview" className="object-cover w-full h-28 border rounded-xl border-slate-200" />
+                  <button onClick={() => setEditingRecord({ ...editingRecord, customImage: "" })} className="absolute p-1 text-white bg-red-500 rounded-full top-1 right-1 hover:bg-red-600">
+                    <span className="text-sm material-symbols-outlined">close</span>
+                  </button>
+                </div>
+              )}
+            </div>
+            <div className="flex justify-end gap-3 border-t border-slate-100 pt-4">
+              <button onClick={() => setEditingRecord(null)} disabled={isSubmitting} className="px-5 py-2.5 rounded-2xl border border-slate-200 text-sm font-semibold text-slate-700 hover:bg-slate-50">Cancel</button>
+              <button onClick={handleEditSave} disabled={isSubmitting} className="px-5 py-2.5 rounded-2xl bg-indigo-600 text-sm font-semibold text-white hover:bg-indigo-700 disabled:opacity-50">
+                {isSubmitting ? "Saving..." : "Save Changes"}
+              </button>
             </div>
           </div>
         </div>
@@ -145,7 +240,7 @@ export default function PlacementsPage() {
       </div>
 
       {showAddRecord && (
-        <div className="bg-white rounded-2xl border border-indigo-100 shadow-sm p-5 space-y-4">
+        <div className="bg-white rounded-3xl border border-indigo-100 shadow-sm p-5 space-y-4">
           <div className="flex items-center justify-between">
             <p className="font-black text-slate-800">New Placement Record</p>
             <button onClick={() => setShowAddRecord(false)} className="h-8 w-8 flex items-center justify-center rounded-lg hover:bg-slate-100">
@@ -197,9 +292,11 @@ export default function PlacementsPage() {
             )}
           </div>
           {formError && <p className="text-sm text-rose-600">{formError}</p>}
-          <div className="flex justify-end gap-3">
-            <button onClick={() => setShowAddRecord(false)} className="px-5 py-2.5 rounded-2xl border border-slate-200 text-sm font-semibold text-slate-700">Cancel</button>
-            <button onClick={handleSaveRecord} className="px-5 py-2.5 rounded-2xl bg-indigo-600 text-sm font-semibold text-white hover:bg-indigo-700">Save Record</button>
+          <div className="flex justify-end gap-3 border-t border-slate-100 pt-4">
+            <button onClick={() => setShowAddRecord(false)} disabled={isSubmitting} className="px-5 py-2.5 rounded-2xl border border-slate-200 text-sm font-semibold text-slate-700 hover:bg-slate-50">Cancel</button>
+            <button onClick={handleSaveRecord} disabled={isSubmitting} className="px-5 py-2.5 rounded-2xl bg-indigo-600 text-sm font-semibold text-white hover:bg-indigo-700 disabled:opacity-50">
+              {isSubmitting ? "Saving..." : "Save Record"}
+            </button>
           </div>
         </div>
       )}
@@ -252,7 +349,7 @@ export default function PlacementsPage() {
                 </tr></thead>
                 <tbody>
                   {filtered.map(p => (
-                    <Fragment key={p.id}>
+                    <Fragment key={p._id}>
                       <tr className="border-b border-slate-50 hover:bg-slate-50/60 transition-colors">
                         <td className="px-5 py-3.5">
                           <div className="flex items-center gap-2.5">
@@ -272,16 +369,16 @@ export default function PlacementsPage() {
                             <button onClick={() => setEditingRecord(p)} className="h-7 w-7 flex items-center justify-center rounded-lg bg-indigo-50 text-indigo-600 hover:bg-indigo-100">
                               <span className="material-symbols-outlined text-sm">edit</span>
                             </button>
-                            <button onClick={() => handleDelete(p.id)} className="h-7 w-7 flex items-center justify-center rounded-lg bg-rose-50 text-rose-500 hover:bg-rose-100">
+                            <button onClick={() => handleDelete(p._id)} className="h-7 w-7 flex items-center justify-center rounded-lg bg-rose-50 text-rose-500 hover:bg-rose-100">
                               <span className="material-symbols-outlined text-sm">delete</span>
                             </button>
-                            <button onClick={() => setExpandedRecordId(expandedRecordId === p.id ? null : p.id)} className="h-7 w-7 flex items-center justify-center rounded-lg bg-slate-50 text-slate-600 hover:bg-slate-100">
+                            <button onClick={() => setExpandedRecordId(expandedRecordId === p._id ? null : p._id)} className="h-7 w-7 flex items-center justify-center rounded-lg bg-slate-50 text-slate-600 hover:bg-slate-100">
                               <span className="material-symbols-outlined text-sm">visibility</span>
                             </button>
                           </div>
                         </td>
                       </tr>
-                      {expandedRecordId === p.id && (
+                      {expandedRecordId === p._id && (
                         <tr className="bg-slate-50">
                           <td colSpan={7} className="px-5 py-4 text-sm text-slate-700">
                             <div className="grid gap-3 md:grid-cols-3">

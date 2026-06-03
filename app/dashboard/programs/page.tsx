@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import GalleryTab from "../components/GalleryTab";
 
 interface Program {
-  id: number;
+  _id: string;
   name: string;
   description: string;
   level: string;
@@ -17,6 +17,10 @@ interface Program {
   icon: string;
   image: string;
   customImage?: string;
+  highlights?: { title: string; desc: string }[];
+  specializations?: { name: string; desc: string }[];
+  whyChoose?: { title: string; desc: string }[];
+  careers?: string[];
 }
 
 const levelColors: Record<string, string> = {
@@ -31,6 +35,7 @@ export default function ProgramsPage() {
   const [search, setSearch] = useState("");
   const [level, setLevel] = useState("All");
   const [isLoading, setIsLoading] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [showAddForm, setShowAddForm] = useState(false);
   const [formError, setFormError] = useState("");
   const [newProgram, setNewProgram] = useState({
@@ -47,6 +52,10 @@ export default function ProgramsPage() {
     icon: "GearIcon",
     image: "program1",
     customImage: "",
+    highlights: [] as { title: string; desc: string }[],
+    specializations: [] as { name: string; desc: string }[],
+    whyChoose: [] as { title: string; desc: string }[],
+    careers: [] as string[],
   });
 
   const resetNewProgram = () => setNewProgram({
@@ -63,6 +72,10 @@ export default function ProgramsPage() {
     icon: "GearIcon",
     image: "program1",
     customImage: "",
+    highlights: [],
+    specializations: [],
+    whyChoose: [],
+    careers: [],
   });
 
   useEffect(() => {
@@ -94,47 +107,104 @@ export default function ProgramsPage() {
       setFormError("Program name and slug are required.");
       return;
     }
+    setIsSubmitting(true);
+    setFormError("");
     try {
+      let finalImage = newProgram.image;
+      if (newProgram.customImage && newProgram.customImage.startsWith("data:")) {
+        const uploadRes = await fetch("/api/upload", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ image: newProgram.customImage, folder: "seglko-programs" }),
+        });
+        if (uploadRes.ok) {
+          const uploadData = await uploadRes.json();
+          finalImage = uploadData.url;
+        } else {
+          setFormError("Failed to upload image to Cloudinary.");
+          setIsSubmitting(false);
+          return;
+        }
+      }
+
       const res = await fetch("/api/programs", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(newProgram),
+        body: JSON.stringify({
+          ...newProgram,
+          image: finalImage,
+          customImage: undefined,
+        }),
       });
       if (res.ok) {
         const saved = await res.json();
         setProgramsList(prev => [...prev, saved]);
-        setFormError("");
         setShowAddForm(false);
         resetNewProgram();
         alert(`Added "${saved.name}" successfully!`);
+      } else {
+        setFormError("Failed to save program details.");
       }
     } catch (error) {
       console.error("Failed to add program:", error);
+      setFormError("An error occurred. Please try again.");
     }
+    setIsSubmitting(false);
   };
 
-  const updateProgram = (id: number, field: keyof Program, value: string | number) => {
-    setProgramsList(programsList.map((p) => (p.id === id ? { ...p, [field]: value } : p)));
+  const updateProgram = (id: string, field: keyof Program, value: any) => {
+    setProgramsList(programsList.map((p) => (p._id === id ? { ...p, [field]: value } : p)));
   };
 
   const saveProgram = async (program: Program) => {
+    setIsSubmitting(true);
     try {
-      await fetch("/api/programs", {
+      let finalImage = program.image;
+      if (program.customImage && program.customImage.startsWith("data:")) {
+        const uploadRes = await fetch("/api/upload", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ image: program.customImage, folder: "seglko-programs" }),
+        });
+        if (uploadRes.ok) {
+          const uploadData = await uploadRes.json();
+          finalImage = uploadData.url;
+        } else {
+          alert("Failed to upload image to Cloudinary.");
+          setIsSubmitting(false);
+          return;
+        }
+      }
+
+      const res = await fetch("/api/programs", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(program)
+        body: JSON.stringify({
+          ...program,
+          image: finalImage,
+          customImage: undefined,
+        })
       });
-      alert(`Saved ${program.name} successfully!`);
+      if (res.ok) {
+        const saved = await res.json();
+        setProgramsList(prev => prev.map((p) => (p._id === saved._id ? saved : p)));
+        alert(`Saved ${program.name} successfully!`);
+      } else {
+        alert("Failed to save program changes.");
+      }
     } catch (error) {
       console.error("Failed to save program:", error);
+      alert("An error occurred while saving the program.");
     }
+    setIsSubmitting(false);
   };
 
-  const deleteProgram = async (id: number) => {
+  const deleteProgram = async (id: string) => {
+    if (!confirm("Are you sure you want to delete this program?")) return;
     try {
       const res = await fetch(`/api/programs?id=${id}`, { method: "DELETE" });
       if (res.ok) {
-        setProgramsList(programsList.filter((p) => p.id !== id));
+        setProgramsList(programsList.filter((p) => p._id !== id));
       }
     } catch (error) {
       console.error("Failed to delete program:", error);
@@ -158,7 +228,7 @@ export default function ProgramsPage() {
           { label: "Total Programs", value: programsList.length, icon: "menu_book", color: "bg-indigo-500" },
           { label: "UG Programs", value: programsList.filter(p => p.level === "UG").length, icon: "school", color: "bg-blue-500" },
           { label: "PG Programs", value: programsList.filter(p => p.level === "PG").length, icon: "workspace_premium", color: "bg-purple-500" },
-          { label: "Total Seats", value: programsList.reduce((a, p) => a + p.seats, 0), icon: "chair", color: "bg-emerald-500" },
+          { label: "Total Seats", value: programsList.reduce((a, p) => a + (p.seats || 0), 0), icon: "chair", color: "bg-emerald-500" },
         ].map((s) => (
           <div key={s.label} className="bg-white rounded-2xl border border-slate-100 p-4 shadow-sm">
             <div className={`h-9 w-9 rounded-xl ${s.color} flex items-center justify-center text-white mb-3 shadow-md`}>
@@ -224,9 +294,9 @@ export default function ProgramsPage() {
                     </tr>
                   ) : (
                     filtered.map((p) => (
-                      <tr key={p.id} className="border-b border-slate-50 hover:bg-slate-50/60 transition-colors">
+                      <tr key={p._id} className="border-b border-slate-50 hover:bg-slate-50/60 transition-colors">
                         <td className="px-5 py-3.5 text-sm font-semibold text-slate-800">{p.name}</td>
-                        <td className="px-5 py-3.5"><span className={`px-2.5 py-1 rounded-full text-[10px] font-bold ${levelColors[p.level]}`}>{p.level}</span></td>
+                        <td className="px-5 py-3.5"><span className={`px-2.5 py-1 rounded-full text-[10px] font-bold ${levelColors[p.level] || "bg-slate-100 text-slate-700"}`}>{p.level}</span></td>
                         <td className="px-5 py-3.5 text-sm text-slate-500">{p.duration}</td>
                         <td className="px-5 py-3.5"><span className="px-2 py-1 bg-indigo-50 text-indigo-600 text-[10px] font-bold rounded-lg">{p.institution}</span></td>
                         <td className="px-5 py-3.5 text-sm font-semibold text-slate-700">{p.seats}</td>
@@ -234,10 +304,10 @@ export default function ProgramsPage() {
                         <td className="px-5 py-3.5"><span className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-700">{p.status}</span></td>
                         <td className="px-5 py-3.5">
                           <div className="flex gap-1.5">
-                            <button onClick={() => saveProgram(p)} className="h-7 w-7 flex items-center justify-center rounded-lg bg-emerald-50 text-emerald-600 hover:bg-emerald-100 transition-colors">
+                            <button onClick={() => saveProgram(p)} disabled={isSubmitting} className="h-7 w-7 flex items-center justify-center rounded-lg bg-emerald-50 text-emerald-600 hover:bg-emerald-100 transition-colors disabled:opacity-50">
                               <span className="material-symbols-outlined text-sm">save</span>
                             </button>
-                            <button onClick={() => deleteProgram(p.id)} className="h-7 w-7 flex items-center justify-center rounded-lg bg-rose-50 text-rose-500 hover:bg-rose-100 transition-colors">
+                            <button onClick={() => deleteProgram(p._id)} className="h-7 w-7 flex items-center justify-center rounded-lg bg-rose-50 text-rose-500 hover:bg-rose-100 transition-colors">
                               <span className="material-symbols-outlined text-sm">delete</span>
                             </button>
                           </div>
@@ -317,54 +387,165 @@ export default function ProgramsPage() {
                     <option value="violet">Violet</option>
                     <option value="orange">Orange</option>
                     <option value="cyan">Cyan</option>
+                    <option value="rose">Rose</option>
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-slate-600 mb-1.5">Program Image</label>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={e => {
-                      const file = e.target.files?.[0];
-                      if (file) {
-                        const reader = new FileReader();
-                        reader.onloadend = () => setNewProgram(prev => ({ ...prev, customImage: reader.result as string }));
-                        reader.readAsDataURL(file);
-                      }
-                    }}
-                    className="block w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
-                  />
-                  {newProgram.customImage && (
-                    <div className="relative mt-2">
-                      <img src={newProgram.customImage} alt="Preview" className="object-cover w-full h-32 border rounded-xl border-slate-200" />
-                      <button onClick={() => setNewProgram(prev => ({ ...prev, customImage: "" }))} className="absolute p-1 text-white bg-red-500 rounded-full top-1 right-1 hover:bg-red-600">
-                        <span className="text-sm material-symbols-outlined">close</span>
-                      </button>
-                    </div>
-                  )}
+                  <label className="block text-xs font-bold text-slate-600 mb-1.5">Program Icon</label>
+                  <select value={newProgram.icon} onChange={e => setNewProgram({ ...newProgram, icon: e.target.value })} className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-3 px-4 text-sm outline-none focus:ring-2 focus:ring-indigo-200">
+                    <option value="GearIcon">Gear (Engineering)</option>
+                    <option value="BagIcon">Briefcase (Management)</option>
+                    <option value="CodeIcon">Code (Computers)</option>
+                    <option value="DiplomaIcon">Diploma</option>
+                    <option value="FlaskIcon">Flask (Pharmacy)</option>
+                    <option value="LawIcon">Scale (Law)</option>
+                  </select>
                 </div>
               </div>
 
+              <div>
+                <label className="block text-xs font-bold text-slate-600 mb-1.5">Program Image</label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={e => {
+                    const file = e.target.files?.[0];
+                    if (file) {
+                      const reader = new FileReader();
+                      reader.onloadend = () => setNewProgram(prev => ({ ...prev, customImage: reader.result as string }));
+                      reader.readAsDataURL(file);
+                    }
+                  }}
+                  className="block w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
+                />
+                {(newProgram.customImage || (newProgram.image && (newProgram.image.startsWith("http") || newProgram.image.startsWith("/")))) && (
+                  <div className="relative mt-2">
+                    <img src={newProgram.customImage || newProgram.image} alt="Preview" className="object-cover w-full h-32 border rounded-xl border-slate-200" />
+                    <button onClick={() => setNewProgram(prev => ({ ...prev, customImage: "", image: "" }))} className="absolute p-1 text-white bg-red-500 rounded-full top-1 right-1 hover:bg-red-600">
+                      <span className="text-sm material-symbols-outlined">close</span>
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              {/* Highlights for New Program */}
+              <div className="border-t border-slate-100 pt-4">
+                <h3 className="text-xs font-bold text-slate-700 mb-2">Program Highlights</h3>
+                <div className="grid gap-2 md:grid-cols-2">
+                  {newProgram.highlights.map((h, i) => (
+                    <div key={i} className="flex gap-2 items-center bg-slate-50 p-2 rounded-xl border border-slate-150">
+                      <div className="flex-1 space-y-1">
+                        <input type="text" placeholder="Title" value={h.title} onChange={e => {
+                          const updated = [...newProgram.highlights];
+                          updated[i].title = e.target.value;
+                          setNewProgram({ ...newProgram, highlights: updated });
+                        }} className="w-full bg-white border border-slate-200 rounded-lg py-1 px-2 text-xs outline-none" />
+                        <input type="text" placeholder="Description" value={h.desc} onChange={e => {
+                          const updated = [...newProgram.highlights];
+                          updated[i].desc = e.target.value;
+                          setNewProgram({ ...newProgram, highlights: updated });
+                        }} className="w-full bg-white border border-slate-200 rounded-lg py-1 px-2 text-xs outline-none" />
+                      </div>
+                      <button onClick={() => setNewProgram({ ...newProgram, highlights: newProgram.highlights.filter((_, idx) => idx !== i) })} className="text-rose-500 hover:bg-rose-50 p-1 rounded">
+                        <span className="material-symbols-outlined text-base">delete</span>
+                      </button>
+                    </div>
+                  ))}
+                </div>
+                <button type="button" onClick={() => setNewProgram({ ...newProgram, highlights: [...newProgram.highlights, { title: "", desc: "" }] })} className="mt-2 text-xs font-bold text-indigo-600 hover:text-indigo-700 inline-flex items-center gap-1">
+                  <span className="material-symbols-outlined text-sm">add</span> Add Highlight
+                </button>
+              </div>
+
+              {/* Specializations for New Program */}
+              <div className="border-t border-slate-100 pt-4">
+                <h3 className="text-xs font-bold text-slate-700 mb-2">Specializations</h3>
+                <div className="grid gap-2 md:grid-cols-2">
+                  {newProgram.specializations.map((spec, i) => (
+                    <div key={i} className="flex gap-2 items-center bg-slate-50 p-2 rounded-xl border border-slate-150">
+                      <div className="flex-1 space-y-1">
+                        <input type="text" placeholder="Name" value={spec.name} onChange={e => {
+                          const updated = [...newProgram.specializations];
+                          updated[i].name = e.target.value;
+                          setNewProgram({ ...newProgram, specializations: updated });
+                        }} className="w-full bg-white border border-slate-200 rounded-lg py-1 px-2 text-xs outline-none" />
+                        <input type="text" placeholder="Description" value={spec.desc} onChange={e => {
+                          const updated = [...newProgram.specializations];
+                          updated[i].desc = e.target.value;
+                          setNewProgram({ ...newProgram, specializations: updated });
+                        }} className="w-full bg-white border border-slate-200 rounded-lg py-1 px-2 text-xs outline-none" />
+                      </div>
+                      <button onClick={() => setNewProgram({ ...newProgram, specializations: newProgram.specializations.filter((_, idx) => idx !== i) })} className="text-rose-500 hover:bg-rose-50 p-1 rounded">
+                        <span className="material-symbols-outlined text-base">delete</span>
+                      </button>
+                    </div>
+                  ))}
+                </div>
+                <button type="button" onClick={() => setNewProgram({ ...newProgram, specializations: [...newProgram.specializations, { name: "", desc: "" }] })} className="mt-2 text-xs font-bold text-indigo-600 hover:text-indigo-700 inline-flex items-center gap-1">
+                  <span className="material-symbols-outlined text-sm">add</span> Add Specialization
+                </button>
+              </div>
+
+              {/* Why Choose for New Program */}
+              <div className="border-t border-slate-100 pt-4">
+                <h3 className="text-xs font-bold text-slate-700 mb-2">Why Choose Items</h3>
+                <div className="grid gap-2 md:grid-cols-2">
+                  {newProgram.whyChoose.map((item, i) => (
+                    <div key={i} className="flex gap-2 items-center bg-slate-50 p-2 rounded-xl border border-slate-150">
+                      <div className="flex-1 space-y-1">
+                        <input type="text" placeholder="Title" value={item.title} onChange={e => {
+                          const updated = [...newProgram.whyChoose];
+                          updated[i].title = e.target.value;
+                          setNewProgram({ ...newProgram, whyChoose: updated });
+                        }} className="w-full bg-white border border-slate-200 rounded-lg py-1 px-2 text-xs outline-none" />
+                        <input type="text" placeholder="Description" value={item.desc} onChange={e => {
+                          const updated = [...newProgram.whyChoose];
+                          updated[i].desc = e.target.value;
+                          setNewProgram({ ...newProgram, whyChoose: updated });
+                        }} className="w-full bg-white border border-slate-200 rounded-lg py-1 px-2 text-xs outline-none" />
+                      </div>
+                      <button onClick={() => setNewProgram({ ...newProgram, whyChoose: newProgram.whyChoose.filter((_, idx) => idx !== i) })} className="text-rose-500 hover:bg-rose-50 p-1 rounded">
+                        <span className="material-symbols-outlined text-base">delete</span>
+                      </button>
+                    </div>
+                  ))}
+                </div>
+                <button type="button" onClick={() => setNewProgram({ ...newProgram, whyChoose: [...newProgram.whyChoose, { title: "", desc: "" }] })} className="mt-2 text-xs font-bold text-indigo-600 hover:text-indigo-700 inline-flex items-center gap-1">
+                  <span className="material-symbols-outlined text-sm">add</span> Add Why Choose
+                </button>
+              </div>
+
+              {/* Careers for New Program */}
+              <div className="border-t border-slate-100 pt-4">
+                <label className="block text-xs font-bold text-slate-600 mb-1.5">Career Paths (Comma-separated)</label>
+                <input type="text" placeholder="e.g. Software Architect, Consultant, R&D Engineer" value={newProgram.careers.join(", ")} onChange={e => {
+                  const arr = e.target.value.split(",").map(s => s.trim()).filter(Boolean);
+                  setNewProgram({ ...newProgram, careers: arr });
+                }} className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-3 px-4 text-sm outline-none focus:ring-2 focus:ring-indigo-200" />
+              </div>
+
               {formError && <p className="text-sm text-rose-600">{formError}</p>}
-              <div className="flex justify-end gap-3">
-                <button onClick={() => { setShowAddForm(false); setFormError(""); resetNewProgram(); }} className="px-5 py-2.5 rounded-2xl border border-slate-200 text-sm font-semibold text-slate-700 hover:bg-slate-50">Cancel</button>
-                <button onClick={handleSaveNew} className="px-5 py-2.5 rounded-2xl bg-indigo-600 text-sm font-semibold text-white hover:bg-indigo-700">Save Program</button>
+              <div className="flex justify-end gap-3 border-t border-slate-105 pt-4">
+                <button onClick={() => { setShowAddForm(false); setFormError(""); resetNewProgram(); }} disabled={isSubmitting} className="px-5 py-2.5 rounded-2xl border border-slate-200 text-sm font-semibold text-slate-700 hover:bg-slate-50">Cancel</button>
+                <button onClick={handleSaveNew} disabled={isSubmitting} className="px-5 py-2.5 rounded-2xl bg-indigo-600 text-sm font-semibold text-white hover:bg-indigo-700 disabled:opacity-50">
+                  {isSubmitting ? "Saving..." : "Save Program"}
+                </button>
               </div>
             </div>
           )}
 
           {!isLoading && programsList.map((program) => (
-            <div key={program.id} className="rounded-3xl border border-slate-100 bg-white p-5 shadow-sm">
+            <div key={program._id} className="rounded-3xl border border-slate-100 bg-white p-5 shadow-sm">
               <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
                 <div>
-                  <h2 className="text-lg font-black text-slate-900">Program {program.id}: {program.name}</h2>
+                  <h2 className="text-lg font-black text-slate-900">Program: {program.name}</h2>
                   <p className="text-sm text-slate-500 mt-1">Edit this program content. Ensure changes are saved!</p>
                 </div>
                 <div className="flex gap-2">
-                  <button onClick={() => saveProgram(program)} className="inline-flex items-center gap-2 rounded-xl border border-emerald-100 bg-emerald-50 px-4 py-2 text-sm font-semibold text-emerald-600 hover:bg-emerald-100 transition-colors">
-                    <span className="material-symbols-outlined">save</span>Save
+                  <button onClick={() => saveProgram(program)} disabled={isSubmitting} className="inline-flex items-center gap-2 rounded-xl border border-emerald-100 bg-emerald-50 px-4 py-2 text-sm font-semibold text-emerald-600 hover:bg-emerald-100 transition-colors disabled:opacity-50">
+                    <span className="material-symbols-outlined">save</span>{isSubmitting ? "Saving..." : "Save"}
                   </button>
-                  <button onClick={() => deleteProgram(program.id)} className="inline-flex items-center gap-2 rounded-xl border border-rose-100 bg-rose-50 px-4 py-2 text-sm font-semibold text-rose-600 hover:bg-rose-100 transition-colors">
+                  <button onClick={() => deleteProgram(program._id)} className="inline-flex items-center gap-2 rounded-xl border border-rose-100 bg-rose-50 px-4 py-2 text-sm font-semibold text-rose-600 hover:bg-rose-100 transition-colors">
                     <span className="material-symbols-outlined">delete</span>Delete
                   </button>
                 </div>
@@ -373,86 +554,291 @@ export default function ProgramsPage() {
               <div className="grid gap-4 lg:grid-cols-2 mt-5">
                 <div>
                   <label className="block text-xs font-bold text-slate-600 mb-1.5">Program Name</label>
-                  <input type="text" value={program.name} onChange={(e) => updateProgram(program.id, "name", e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-3 px-4 text-sm outline-none focus:ring-2 focus:ring-indigo-200" />
+                  <input type="text" value={program.name || ""} onChange={(e) => updateProgram(program._id, "name", e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-3 px-4 text-sm outline-none focus:ring-2 focus:ring-indigo-200" />
                 </div>
                 <div>
                   <label className="block text-xs font-bold text-slate-600 mb-1.5">Frontend Slug (URL path)</label>
-                  <input type="text" value={program.slug} onChange={(e) => updateProgram(program.id, "slug", e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-3 px-4 text-sm outline-none focus:ring-2 focus:ring-indigo-200" />
+                  <input type="text" value={program.slug || ""} onChange={(e) => updateProgram(program._id, "slug", e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-3 px-4 text-sm outline-none focus:ring-2 focus:ring-indigo-200" />
                 </div>
               </div>
 
               <div className="mt-4">
                 <label className="block text-xs font-bold text-slate-600 mb-1.5">Frontend Description</label>
-                <textarea rows={2} value={program.description} onChange={(e) => updateProgram(program.id, "description", e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-3 px-4 text-sm outline-none focus:ring-2 focus:ring-indigo-200" />
+                <textarea rows={2} value={program.description || ""} onChange={(e) => updateProgram(program._id, "description", e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-3 px-4 text-sm outline-none focus:ring-2 focus:ring-indigo-200" />
               </div>
 
               <div className="grid gap-4 lg:grid-cols-4 mt-4">
                 <div>
                   <label className="block text-xs font-bold text-slate-600 mb-1.5">Level</label>
-                  <input type="text" value={program.level} onChange={(e) => updateProgram(program.id, "level", e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-3 px-4 text-sm outline-none focus:ring-2 focus:ring-indigo-200" />
+                  <input type="text" value={program.level || ""} onChange={(e) => updateProgram(program._id, "level", e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-3 px-4 text-sm outline-none focus:ring-2 focus:ring-indigo-200" />
                 </div>
                 <div>
                   <label className="block text-xs font-bold text-slate-600 mb-1.5">Duration</label>
-                  <input type="text" value={program.duration} onChange={(e) => updateProgram(program.id, "duration", e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-3 px-4 text-sm outline-none focus:ring-2 focus:ring-indigo-200" />
+                  <input type="text" value={program.duration || ""} onChange={(e) => updateProgram(program._id, "duration", e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-3 px-4 text-sm outline-none focus:ring-2 focus:ring-indigo-200" />
                 </div>
                 <div>
                   <label className="block text-xs font-bold text-slate-600 mb-1.5">Seats</label>
-                  <input type="number" value={program.seats} onChange={(e) => updateProgram(program.id, "seats", Number(e.target.value))} className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-3 px-4 text-sm outline-none focus:ring-2 focus:ring-indigo-200" />
+                  <input type="number" value={program.seats || 0} onChange={(e) => updateProgram(program._id, "seats", Number(e.target.value))} className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-3 px-4 text-sm outline-none focus:ring-2 focus:ring-indigo-200" />
                 </div>
                 <div>
                   <label className="block text-xs font-bold text-slate-600 mb-1.5">Institution</label>
-                  <input type="text" value={program.institution} onChange={(e) => updateProgram(program.id, "institution", e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-3 px-4 text-sm outline-none focus:ring-2 focus:ring-indigo-200" />
+                  <input type="text" value={program.institution || ""} onChange={(e) => updateProgram(program._id, "institution", e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-3 px-4 text-sm outline-none focus:ring-2 focus:ring-indigo-200" />
                 </div>
               </div>
 
               <div className="grid gap-4 lg:grid-cols-4 mt-4">
                 <div>
                   <label className="block text-xs font-bold text-slate-600 mb-1.5">Fee</label>
-                  <input type="text" value={program.fee} onChange={(e) => updateProgram(program.id, "fee", e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-3 px-4 text-sm outline-none focus:ring-2 focus:ring-indigo-200" />
+                  <input type="text" value={program.fee || ""} onChange={(e) => updateProgram(program._id, "fee", e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-3 px-4 text-sm outline-none focus:ring-2 focus:ring-indigo-200" />
                 </div>
                 <div>
                   <label className="block text-xs font-bold text-slate-600 mb-1.5">Status</label>
-                  <input type="text" value={program.status} onChange={(e) => updateProgram(program.id, "status", e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-3 px-4 text-sm outline-none focus:ring-2 focus:ring-indigo-200" />
+                  <input type="text" value={program.status || ""} onChange={(e) => updateProgram(program._id, "status", e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-3 px-4 text-sm outline-none focus:ring-2 focus:ring-indigo-200" />
                 </div>
                 <div>
                   <label className="block text-xs font-bold text-slate-600 mb-1.5">Card Color</label>
-                  <select value={program.color} onChange={(e) => updateProgram(program.id, "color", e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-3 px-4 text-sm outline-none focus:ring-2 focus:ring-indigo-200">
+                  <select value={program.color || "blue"} onChange={(e) => updateProgram(program._id, "color", e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-3 px-4 text-sm outline-none focus:ring-2 focus:ring-indigo-200">
                     <option value="blue">Blue</option>
                     <option value="green">Green</option>
                     <option value="violet">Violet</option>
                     <option value="orange">Orange</option>
                     <option value="cyan">Cyan</option>
+                    <option value="rose">Rose</option>
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-slate-600 mb-1.5">Program Image</label>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) => {
-                      const file = e.target.files?.[0];
-                      if (file) {
-                        const reader = new FileReader();
-                        reader.onloadend = () => {
-                          updateProgram(program.id, "customImage", reader.result as string);
-                        };
-                        reader.readAsDataURL(file);
-                      }
-                    }}
-                    className="block w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
-                  />
-                  {program.customImage && (
-                    <div className="relative mt-2">
-                      <img src={program.customImage} alt="Program" className="object-cover w-full h-32 border rounded-xl border-slate-200" />
+                  <label className="block text-xs font-bold text-slate-600 mb-1.5">Program Icon</label>
+                  <select value={program.icon || "GearIcon"} onChange={(e) => updateProgram(program._id, "icon", e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-3 px-4 text-sm outline-none focus:ring-2 focus:ring-indigo-200">
+                    <option value="GearIcon">Gear (Engineering)</option>
+                    <option value="BagIcon">Briefcase (Management)</option>
+                    <option value="CodeIcon">Code (Computers)</option>
+                    <option value="DiplomaIcon">Diploma</option>
+                    <option value="FlaskIcon">Flask (Pharmacy)</option>
+                    <option value="LawIcon">Scale (Law)</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="mt-4">
+                <label className="block text-xs font-bold text-slate-600 mb-1.5">Program Image</label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) {
+                      const reader = new FileReader();
+                      reader.onloadend = () => {
+                        updateProgram(program._id, "customImage", reader.result as string);
+                      };
+                      reader.readAsDataURL(file);
+                    }
+                  }}
+                  className="block w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
+                />
+                {(program.customImage || (program.image && (program.image.startsWith("http") || program.image.startsWith("/")))) && (
+                  <div className="relative mt-2">
+                    <img src={program.customImage || program.image} alt="Program" className="object-cover w-full h-32 border rounded-xl border-slate-200" />
+                    <button
+                      onClick={() => {
+                        updateProgram(program._id, "customImage", "");
+                        updateProgram(program._id, "image", "");
+                      }}
+                      className="absolute p-1 text-white bg-red-500 rounded-full top-1 right-1 hover:bg-red-600"
+                    >
+                      <span className="text-sm material-symbols-outlined">close</span>
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              {/* Highlights Editor */}
+              <div className="mt-6 border-t border-slate-100 pt-5">
+                <h3 className="text-sm font-bold text-slate-800 mb-3 flex items-center gap-2">
+                  <span className="material-symbols-outlined text-indigo-500">star</span>
+                  Program Highlights
+                </h3>
+                <div className="grid gap-3 md:grid-cols-2">
+                  {(program.highlights || []).map((h, index) => (
+                    <div key={index} className="flex gap-2 items-center bg-slate-50 p-3 rounded-2xl border border-slate-100">
+                      <div className="flex-1 space-y-2">
+                        <input
+                          type="text"
+                          placeholder="Highlight Title"
+                          value={h.title || ""}
+                          onChange={(e) => {
+                            const updated = [...(program.highlights || [])];
+                            updated[index] = { ...updated[index], title: e.target.value };
+                            updateProgram(program._id, "highlights", updated);
+                          }}
+                          className="w-full bg-white border border-slate-200 rounded-xl py-1.5 px-3 text-xs outline-none focus:ring-2 focus:ring-indigo-200"
+                        />
+                        <input
+                          type="text"
+                          placeholder="Highlight Description"
+                          value={h.desc || ""}
+                          onChange={(e) => {
+                            const updated = [...(program.highlights || [])];
+                            updated[index] = { ...updated[index], desc: e.target.value };
+                            updateProgram(program._id, "highlights", updated);
+                          }}
+                          className="w-full bg-white border border-slate-200 rounded-xl py-1.5 px-3 text-xs outline-none focus:ring-2 focus:ring-indigo-200"
+                        />
+                      </div>
                       <button
-                        onClick={() => updateProgram(program.id, "customImage", "")}
-                        className="absolute p-1 text-white bg-red-500 rounded-full top-1 right-1 hover:bg-red-600"
+                        onClick={() => {
+                          const updated = (program.highlights || []).filter((_, i) => i !== index);
+                          updateProgram(program._id, "highlights", updated);
+                        }}
+                        className="p-1 text-rose-500 hover:bg-rose-50 rounded-lg animate-pulse"
                       >
-                        <span className="text-sm material-symbols-outlined">close</span>
+                        <span className="material-symbols-outlined text-lg">delete</span>
                       </button>
                     </div>
-                  )}
+                  ))}
                 </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    const updated = [...(program.highlights || []), { title: "", desc: "" }];
+                    updateProgram(program._id, "highlights", updated);
+                  }}
+                  className="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-indigo-600 hover:text-indigo-700"
+                >
+                  <span className="material-symbols-outlined text-sm">add</span> Add Highlight
+                </button>
+              </div>
+
+              {/* Specializations Editor */}
+              <div className="mt-6 border-t border-slate-100 pt-5">
+                <h3 className="text-sm font-bold text-slate-800 mb-3 flex items-center gap-2">
+                  <span className="material-symbols-outlined text-indigo-500">grid_view</span>
+                  Program Specializations
+                </h3>
+                <div className="grid gap-3 md:grid-cols-2">
+                  {(program.specializations || []).map((spec, index) => (
+                    <div key={index} className="flex gap-2 items-center bg-slate-50 p-3 rounded-2xl border border-slate-100">
+                      <div className="flex-1 space-y-2">
+                        <input
+                          type="text"
+                          placeholder="Specialization Name"
+                          value={spec.name || ""}
+                          onChange={(e) => {
+                            const updated = [...(program.specializations || [])];
+                            updated[index] = { ...updated[index], name: e.target.value };
+                            updateProgram(program._id, "specializations", updated);
+                          }}
+                          className="w-full bg-white border border-slate-200 rounded-xl py-1.5 px-3 text-xs outline-none focus:ring-2 focus:ring-indigo-200"
+                        />
+                        <input
+                          type="text"
+                          placeholder="Specialization Description"
+                          value={spec.desc || ""}
+                          onChange={(e) => {
+                            const updated = [...(program.specializations || [])];
+                            updated[index] = { ...updated[index], desc: e.target.value };
+                            updateProgram(program._id, "specializations", updated);
+                          }}
+                          className="w-full bg-white border border-slate-200 rounded-xl py-1.5 px-3 text-xs outline-none focus:ring-2 focus:ring-indigo-200"
+                        />
+                      </div>
+                      <button
+                        onClick={() => {
+                          const updated = (program.specializations || []).filter((_, i) => i !== index);
+                          updateProgram(program._id, "specializations", updated);
+                        }}
+                        className="p-1 text-rose-500 hover:bg-rose-50 rounded-lg"
+                      >
+                        <span className="material-symbols-outlined text-lg">delete</span>
+                      </button>
+                    </div>
+                  ))}
+                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    const updated = [...(program.specializations || []), { name: "", desc: "" }];
+                    updateProgram(program._id, "specializations", updated);
+                  }}
+                  className="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-indigo-600 hover:text-indigo-700"
+                >
+                  <span className="material-symbols-outlined text-sm">add</span> Add Specialization
+                </button>
+              </div>
+
+              {/* Why Choose Editor */}
+              <div className="mt-6 border-t border-slate-100 pt-5">
+                <h3 className="text-sm font-bold text-slate-800 mb-3 flex items-center gap-2">
+                  <span className="material-symbols-outlined text-indigo-500">fact_check</span>
+                  Why Choose SEG Items
+                </h3>
+                <div className="grid gap-3 md:grid-cols-2">
+                  {(program.whyChoose || []).map((item, index) => (
+                    <div key={index} className="flex gap-2 items-center bg-slate-50 p-3 rounded-2xl border border-slate-100">
+                      <div className="flex-1 space-y-2">
+                        <input
+                          type="text"
+                          placeholder="Feature Title"
+                          value={item.title || ""}
+                          onChange={(e) => {
+                            const updated = [...(program.whyChoose || [])];
+                            updated[index] = { ...updated[index], title: e.target.value };
+                            updateProgram(program._id, "whyChoose", updated);
+                          }}
+                          className="w-full bg-white border border-slate-200 rounded-xl py-1.5 px-3 text-xs outline-none focus:ring-2 focus:ring-indigo-200"
+                        />
+                        <input
+                          type="text"
+                          placeholder="Feature Description"
+                          value={item.desc || ""}
+                          onChange={(e) => {
+                            const updated = [...(program.whyChoose || [])];
+                            updated[index] = { ...updated[index], desc: e.target.value };
+                            updateProgram(program._id, "whyChoose", updated);
+                          }}
+                          className="w-full bg-white border border-slate-200 rounded-xl py-1.5 px-3 text-xs outline-none focus:ring-2 focus:ring-indigo-200"
+                        />
+                      </div>
+                      <button
+                        onClick={() => {
+                          const updated = (program.whyChoose || []).filter((_, i) => i !== index);
+                          updateProgram(program._id, "whyChoose", updated);
+                        }}
+                        className="p-1 text-rose-500 hover:bg-rose-50 rounded-lg"
+                      >
+                        <span className="material-symbols-outlined text-lg">delete</span>
+                      </button>
+                    </div>
+                  ))}
+                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    const updated = [...(program.whyChoose || []), { title: "", desc: "" }];
+                    updateProgram(program._id, "whyChoose", updated);
+                  }}
+                  className="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-indigo-600 hover:text-indigo-700"
+                >
+                  <span className="material-symbols-outlined text-sm">add</span> Add Why Choose
+                </button>
+              </div>
+
+              {/* Careers Editor */}
+              <div className="mt-6 border-t border-slate-100 pt-5">
+                <h3 className="text-sm font-bold text-slate-800 mb-3 flex items-center gap-2">
+                  <span className="material-symbols-outlined text-indigo-500">work</span>
+                  Career Paths (Comma-separated)
+                </h3>
+                <input
+                  type="text"
+                  placeholder="e.g. Software Developer, Data Scientist, IT Consultant"
+                  value={(program.careers || []).join(", ")}
+                  onChange={(e) => {
+                    const val = e.target.value.split(",").map(s => s.trim()).filter(Boolean);
+                    updateProgram(program._id, "careers", val);
+                  }}
+                  className="w-full bg-slate-50 border border-slate-200 rounded-2xl py-3 px-4 text-sm outline-none focus:ring-2 focus:ring-indigo-200"
+                />
               </div>
 
             </div>

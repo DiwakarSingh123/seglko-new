@@ -30,15 +30,75 @@ export default function JobApplicationPage() {
     photo: null, resume: null,
   });
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
   const handle = (e) => {
     const { name, value, files } = e.target;
     setForm(f => ({ ...f, [name]: files ? files[0] : value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setSubmitted(true);
+    setLoading(true);
+    setError('');
+
+    try {
+      const formData = new FormData();
+      formData.append('name', form.name);
+      formData.append('email', form.email);
+      formData.append('phone', form.phone);
+      formData.append('position', form.jobProfile);
+      formData.append('qualification', form.qualification);
+      formData.append('experience', form.experience);
+      formData.append('expectedSalary', form.expectedSalary);
+      formData.append('lastOrganization', form.lastOrg);
+      formData.append('lastSalary', form.lastSalary);
+      formData.append('address', form.address);
+      if (form.resume) formData.append('resume', form.resume);
+      if (form.photo) formData.append('photo', form.photo);
+
+      const urls = ['/api/job-applications', '/api/applications'];
+      let success = false;
+      let lastError = '';
+
+      for (const url of urls) {
+        try {
+          console.log(`Submitting to ${url}...`);
+          const response = await fetch(url, {
+            method: 'POST',
+            body: formData,
+          });
+
+          const responseData = await response.json();
+          console.log(`Response from ${url}:`, response.status, responseData);
+
+          if (response.ok) {
+            success = true;
+            console.log('Application submitted successfully to', url);
+            break;
+          } else {
+            lastError = `${url}: ${responseData.error || response.statusText}`;
+            console.warn('API returned error:', lastError);
+          }
+        } catch (err) {
+          lastError = `${url}: ${err.message}`;
+          console.warn('Fetch error:', lastError);
+        }
+      }
+
+      if (success) {
+        setSubmitted(true);
+      } else {
+        setError(`Failed to submit application: ${lastError}. Please try again.`);
+        setSubmitted(true);
+      }
+    } catch (err) {
+      console.error('Application submission error:', err);
+      setError(`Error submitting application: ${err.message}`);
+    } finally {
+      setLoading(false);
+    }
   };
 
   if (submitted) {
@@ -53,6 +113,7 @@ export default function JobApplicationPage() {
             </div>
             <h2>Application Submitted!</h2>
             <p>Thank you for applying for <strong>{form.jobProfile}</strong>.<br/>We'll review your application and get back to you soon.</p>
+            {error && <p style={{ color: '#dc2626', marginTop: '10px', fontSize: '14px' }}>{error}</p>}
             <button className="jap-btn-back" onClick={() => navigate('/careers')}>← Back to Careers</button>
           </div>
         </div>
@@ -223,11 +284,11 @@ export default function JobApplicationPage() {
 
               {/* Footer */}
               <div className="jap-form-footer">
-                <button type="button" className="jap-btn-cancel" onClick={() => navigate('/careers')}>
+                <button type="button" className="jap-btn-cancel" onClick={() => navigate('/careers')} disabled={loading}>
                   ← Back to Careers
                 </button>
-                <button type="submit" className="jap-btn-submit">
-                  Submit Application
+                <button type="submit" className="jap-btn-submit" disabled={loading}>
+                  {loading ? 'Submitting...' : 'Submit Application'}
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
                     <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
                   </svg>

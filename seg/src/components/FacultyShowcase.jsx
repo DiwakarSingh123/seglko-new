@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import aboutBg from '../assets/images/about-bg.png';
 import faculty1 from '../assets/images/1776318734242.jpg';
@@ -130,6 +130,40 @@ export default function FacultyShowcase() {
   const carouselRef = useRef(null);
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('Top Faculties');
+  const [facultyCardsData, setFacultyCardsData] = useState(facultyCards);
+
+  const imageFallbacks = {
+    facultyBg,
+    aboutBg,
+    institutionsBg,
+    campusBg,
+  };
+
+  const mapFacultyItem = (item) => ({
+    id: item.id?.toString() || `${item.name}-${Math.random()}`,
+    name: item.name || 'Unnamed Faculty',
+    role: item.role || 'Faculty',
+    school: item.school || 'SEG',
+    image: imageFallbacks[item.image] || item.image || facultyBg,
+    tone: item.tone || 'cyan',
+  });
+
+  useEffect(() => {
+    const fetchFacultyData = async () => {
+      try {
+        const res = await fetch('/api/faculty');
+        if (!res.ok) throw new Error('Failed to fetch faculty data');
+        const data = await res.json();
+        if (Array.isArray(data.faculties) && data.faculties.length > 0) {
+          setFacultyCardsData(data.faculties.map(mapFacultyItem));
+        }
+      } catch (error) {
+        console.error('Failed to load faculty showcase data:', error);
+      }
+    };
+
+    fetchFacultyData();
+  }, []);
 
   const scrollCards = (direction) => {
     if (!carouselRef.current) return;
@@ -146,7 +180,7 @@ export default function FacultyShowcase() {
     'Success Stories': { heading: 'Student', highlight: 'Success Stories', sub: 'Our students are building great careers at top companies across the world.' },
   };
 
-  const currentCards = activeTab === 'Top Faculties' ? facultyCards : activeTab === 'Awards & Achievements' ? awardsCards : storiesCards;
+  const currentCards = activeTab === 'Top Faculties' ? facultyCardsData : activeTab === 'Awards & Achievements' ? awardsCards : storiesCards;
   const { heading, highlight, sub } = tabTitles[activeTab];
 
   return (
@@ -205,8 +239,8 @@ export default function FacultyShowcase() {
             <div className="faculty-showcase__grid">
 
               {/* Top Faculties Cards */}
-              {activeTab === 'Top Faculties' && facultyCards.map((faculty) => (
-                <article className={`faculty-showcase__card faculty-showcase__card--${faculty.tone}`} key={faculty.name}>
+              {activeTab === 'Top Faculties' && facultyCardsData.map((faculty) => (
+                <article className={`faculty-showcase__card faculty-showcase__card--${faculty.tone}`} key={faculty.id}>
                   <div className="faculty-showcase__portrait-wrap">
                     <img src={faculty.image} alt={faculty.name} className="faculty-showcase__portrait" loading="lazy" />
                   </div>

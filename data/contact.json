@@ -65,6 +65,15 @@
   ],
   "inquiries": [
     {
+      "id": "INQ-006",
+      "name": "k",
+      "email": "k@gmail.com",
+      "phone": "6753387894",
+      "subject": "s",
+      "date": "Jun 3, 2026",
+      "status": "New"
+    },
+    {
       "id": "INQ-001",
       "name": "Ravi Kumar",
       "email": "ravi@gmail.com",

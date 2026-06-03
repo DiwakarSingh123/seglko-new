@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import program1 from '../assets/images/program1.png';
 import program2 from '../assets/images/program2.png';
@@ -224,6 +225,23 @@ export const allPrograms = [
 
 export default function ProgramsPage() {
   const navigate = useNavigate();
+  const [programsList, setProgramsList] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    fetch('/api/programs')
+      .then((res) => res.json())
+      .then((data) => {
+        if (Array.isArray(data)) {
+          const active = data.filter((p) => p.status === 'Active' || p.status === 'active');
+          setProgramsList(active);
+        }
+      })
+      .catch((err) => console.error('Failed to fetch programs:', err))
+      .finally(() => setIsLoading(false));
+  }, []);
+
+  const displayPrograms = programsList.length > 0 ? programsList : allPrograms;
 
   return (
     <div style={{ background: '#f5f8fe', minHeight: '100vh', paddingBottom: '60px' }}>
@@ -246,35 +264,38 @@ export default function ProgramsPage() {
 
       <div style={{ maxWidth: '1350px', margin: '0 auto', padding: '44px 45px 0' }}>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(360px, 1fr))', gap: '28px' }}>
-          {allPrograms.map((program) => (
-            <div
-              key={program.slug}
-              onClick={() => navigate(`/programs/${program.slug}`)}
-              style={{ background: '#fff', borderRadius: '16px', overflow: 'hidden', boxShadow: '0 6px 20px rgba(20,35,90,0.08)', borderTop: `4px solid ${program.color}`, cursor: 'pointer', transition: 'transform 0.2s, box-shadow 0.2s' }}
-              onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-4px)'; e.currentTarget.style.boxShadow = '0 16px 36px rgba(20,35,90,0.14)'; }}
-              onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 6px 20px rgba(20,35,90,0.08)'; }}
-            >
-              <div style={{ height: '190px', overflow: 'hidden' }}>
-                <img src={program.image} alt={program.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-              </div>
-              <div style={{ padding: '22px' }}>
-                <p style={{ fontSize: '11px', fontWeight: 700, color: program.color, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '6px' }}>{program.label}</p>
-                <h3 style={{ fontSize: '19px', fontWeight: 700, color: '#162341', marginBottom: '4px' }}>{program.title}</h3>
-                <p style={{ fontSize: '15px', fontWeight: 600, color: program.color, marginBottom: '10px' }}>{program.subtitle}</p>
-                <div style={{ width: '36px', height: '3px', background: program.color, borderRadius: '999px', marginBottom: '12px' }} />
-                <p style={{ fontSize: '14px', color: '#5f6785', lineHeight: 1.7, marginBottom: '18px' }}>{program.description}</p>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '14px', borderTop: '1px solid #f0f4ff' }}>
-                  <div style={{ display: 'flex', gap: '16px' }}>
-                    <span style={{ fontSize: '13px', color: '#8a9bbf' }}>⏱ {program.duration}</span>
-                    <span style={{ fontSize: '13px', color: '#8a9bbf' }}>🎓 {program.seats}</span>
+          {displayPrograms.map((program) => {
+            const seatsVal = typeof program.seats === 'number' ? `${program.seats} Seats` : program.seats;
+            return (
+              <div
+                key={program.slug}
+                onClick={() => navigate(`/programs/${program.slug}`)}
+                style={{ background: '#fff', borderRadius: '16px', overflow: 'hidden', boxShadow: '0 6px 20px rgba(20,35,90,0.08)', borderTop: `4px solid ${program.color || '#1f63db'}`, cursor: 'pointer', transition: 'transform 0.2s, box-shadow 0.2s' }}
+                onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-4px)'; e.currentTarget.style.boxShadow = '0 16px 36px rgba(20,35,90,0.14)'; }}
+                onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 6px 20px rgba(20,35,90,0.08)'; }}
+              >
+                <div style={{ height: '190px', overflow: 'hidden' }}>
+                  <img src={program.image} alt={program.name || program.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                </div>
+                <div style={{ padding: '22px' }}>
+                  <p style={{ fontSize: '11px', fontWeight: 700, color: program.color || '#1f63db', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '6px' }}>{program.label}</p>
+                  <h3 style={{ fontSize: '19px', fontWeight: 700, color: '#162341', marginBottom: '4px' }}>{program.name || program.title}</h3>
+                  <p style={{ fontSize: '15px', fontWeight: 600, color: program.color || '#1f63db', marginBottom: '10px' }}>{program.subtitle}</p>
+                  <div style={{ width: '36px', height: '3px', background: program.color || '#1f63db', borderRadius: '999px', marginBottom: '12px' }} />
+                  <p style={{ fontSize: '14px', color: '#5f6785', lineHeight: 1.7, marginBottom: '18px' }}>{program.description}</p>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '14px', borderTop: '1px solid #f0f4ff' }}>
+                    <div style={{ display: 'flex', gap: '16px' }}>
+                      <span style={{ fontSize: '13px', color: '#8a9bbf' }}>⏱ {program.duration}</span>
+                      <span style={{ fontSize: '13px', color: '#8a9bbf' }}>🎓 {seatsVal}</span>
+                    </div>
+                    <span style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '14px', fontWeight: 600, color: program.color || '#1f63db' }}>
+                      Explore <ArrowRight />
+                    </span>
                   </div>
-                  <span style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '14px', fontWeight: 600, color: program.color }}>
-                    Explore <ArrowRight />
-                  </span>
                 </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </div>

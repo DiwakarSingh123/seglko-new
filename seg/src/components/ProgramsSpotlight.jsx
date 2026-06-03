@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import program1 from '../assets/images/engineerging.webp';
@@ -98,6 +98,7 @@ const MedalIcon = () => (
     <path d="M9.5 13L8 21L12 18.8L16 21L14.5 13" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" />
   </svg>
 );
+
 const WatermarkEngineering = () => (
   <svg width="100%" height="100%" viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
     <path d="M50 10 L50 90" />
@@ -167,68 +168,23 @@ const WatermarkLaw = () => (
   </svg>
 );
 
-const programCards = [
-  {
-    title: 'Engineering Programs',
-    description: 'B.Tech programs with modern specializations and hands-on learning.',
-    image: program1,
-    color: 'blue',
-    accentColor: '#1f63db',
-    slug: 'mtech',
-    icon: <GearIcon />,
-    watermark: <WatermarkEngineering />,
-  },
-  {
-    title: 'Management Programs',
-    description: 'MBA & BBA programs to nurture future business leaders.',
-    image: program2,
-    color: 'green',
-    accentColor: '#6cbf46',
-    slug: 'mba',
-    icon: <BagIcon />,
-    watermark: <WatermarkManagement />,
-  },
-  {
-    title: 'Computer Applications',
-    description: 'BCA, MCA & innovative programs in computer applications.',
-    image: program3,
-    color: 'violet',
-    accentColor: '#6a32df',
-    slug: 'bca',
-    icon: <CodeIcon />,
-    watermark: <WatermarkComputer />,
-  },
-  {
-    title: 'Diploma Programs',
-    description: 'Industry-focused diploma programs for skill enhancement.',
-    image: program4,
-    color: 'orange',
-    accentColor: '#ff8b1a',
-    slug: 'diploma',
-    icon: <DiplomaIcon />,
-    watermark: <WatermarkDiploma />,
-  },
-  {
-    title: 'Pharmacy Programs',
-    description: 'D.Pharm & B.Pharm programs for a bright career in healthcare.',
-    image: program5,
-    color: 'cyan',
-    accentColor: '#27c6d8',
-    slug: 'bpharm',
-    icon: <FlaskIcon />,
-    watermark: <WatermarkPharmacy />,
-  },
-  {
-    title: 'Law Programs',
-    description: 'LLB programs to build legal expertise and professional excellence.',
-    image: program3,
-    color: 'rose',
-    accentColor: '#e11d48',
-    slug: 'law',
-    icon: <LawIcon />,
-    watermark: <WatermarkLaw />,
-  },
-];
+const iconMapping = {
+  GearIcon: <GearIcon />,
+  BagIcon: <BagIcon />,
+  CodeIcon: <CodeIcon />,
+  DiplomaIcon: <DiplomaIcon />,
+  FlaskIcon: <FlaskIcon />,
+  LawIcon: <LawIcon />,
+};
+
+const watermarkMapping = {
+  GearIcon: <WatermarkEngineering />,
+  BagIcon: <WatermarkManagement />,
+  CodeIcon: <WatermarkComputer />,
+  DiplomaIcon: <WatermarkDiploma />,
+  FlaskIcon: <WatermarkPharmacy />,
+  LawIcon: <WatermarkLaw />,
+};
 
 const programBenefits = [
   {
@@ -256,6 +212,72 @@ const programBenefits = [
 export default function ProgramsSpotlight() {
   const carouselRef = useRef(null);
   const navigate = useNavigate();
+  const [programsList, setProgramsList] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    fetch('/api/programs')
+      .then((res) => res.json())
+      .then((data) => {
+        if (Array.isArray(data)) {
+          const active = data.filter((p) => p.status === 'Active' || p.status === 'active');
+          setProgramsList(active);
+        }
+      })
+      .catch((err) => console.error('Failed to fetch programs:', err))
+      .finally(() => setIsLoading(false));
+  }, []);
+
+  const displayPrograms = programsList.length > 0 ? programsList : [
+    {
+      name: 'Engineering Programs',
+      description: 'B.Tech programs with modern specializations and hands-on learning.',
+      image: program1,
+      color: 'blue',
+      slug: 'mtech',
+      icon: 'GearIcon',
+    },
+    {
+      name: 'Management Programs',
+      description: 'MBA & BBA programs to nurture future business leaders.',
+      image: program2,
+      color: 'green',
+      slug: 'mba',
+      icon: 'BagIcon',
+    },
+    {
+      name: 'Computer Applications',
+      description: 'BCA, MCA & innovative programs in computer applications.',
+      image: program3,
+      color: 'violet',
+      slug: 'bca',
+      icon: 'CodeIcon',
+    },
+    {
+      name: 'Diploma Programs',
+      description: 'Industry-focused diploma programs for skill enhancement.',
+      image: program4,
+      color: 'orange',
+      slug: 'diploma',
+      icon: 'DiplomaIcon',
+    },
+    {
+      name: 'Pharmacy Programs',
+      description: 'D.Pharm & B.Pharm programs for a bright career in healthcare.',
+      image: program5,
+      color: 'cyan',
+      slug: 'bpharm',
+      icon: 'FlaskIcon',
+    },
+    {
+      name: 'Law Programs',
+      description: 'LLB programs to build legal expertise and professional excellence.',
+      image: program3,
+      color: 'rose',
+      slug: 'law',
+      icon: 'LawIcon',
+    }
+  ];
 
   const scrollCards = (direction) => {
     if (!carouselRef.current) {
@@ -277,7 +299,6 @@ export default function ProgramsSpotlight() {
       <div className="programs-spotlight__shell">
         <div className="programs-spotlight__hero">
           <div className="programs-spotlight__intro">
-
             <span className="programs-spotlight__accent-line" />
             <h2 className="programs-spotlight__title">
               <span className="programs-spotlight__title-line programs-spotlight__title-line--lead">
@@ -296,7 +317,7 @@ export default function ProgramsSpotlight() {
           <div className="programs-spotlight__actions">
             <button
               className="btn btn--primary programs-spotlight__cta"
-              onClick={() => navigate('/all-programs')}
+              onClick={() => navigate('/programs')}
             >
               View All Programs
               <span className="btn__arrow"><ArrowRight /></span>
@@ -321,33 +342,37 @@ export default function ProgramsSpotlight() {
 
           <div className="programs-spotlight__card-viewport" ref={carouselRef}>
             <div className="programs-spotlight__card-grid">
-              {programCards.map((card) => (
-                <article
-                  className={`programs-spotlight__card programs-spotlight__card--${card.color}`}
-                  key={card.title}
-                  onClick={() => navigate(`/programs/${card.slug}`)}
-                  style={{ cursor: 'pointer', overflow: 'hidden' }}
-                >
-                  <div className="programs-spotlight__card-watermark">{card.watermark}</div>
-                  <div className="programs-spotlight__card-icon">{card.icon}</div>
-                  <img
-                    src={card.image}
-                    alt={card.title}
-                    className="programs-spotlight__card-image"
-                    loading="lazy"
-                    style={{ position: 'relative', zIndex: 1 }}
-                  />
-                  <h3 className="programs-spotlight__card-title" style={{ position: 'relative', zIndex: 1 }}>{card.title}</h3>
-                  <span className="programs-spotlight__card-line" style={{ position: 'relative', zIndex: 1 }} />
-                  <p className="programs-spotlight__card-description" style={{ position: 'relative', zIndex: 1 }}>{card.description}</p>
-                  <span className="programs-spotlight__card-link" style={{ position: 'relative', zIndex: 1 }}>
-                    Explore
-                    <span className="programs-spotlight__card-link-arrow">
-                      <ArrowRight />
+              {displayPrograms.map((card) => {
+                const icon = iconMapping[card.icon] || <GearIcon />;
+                const watermark = watermarkMapping[card.icon] || <WatermarkEngineering />;
+                return (
+                  <article
+                    className={`programs-spotlight__card programs-spotlight__card--${card.color || 'blue'}`}
+                    key={card._id || card.slug}
+                    onClick={() => navigate(`/programs/${card.slug}`)}
+                    style={{ cursor: 'pointer', overflow: 'hidden' }}
+                  >
+                    <div className="programs-spotlight__card-watermark">{watermark}</div>
+                    <div className="programs-spotlight__card-icon">{icon}</div>
+                    <img
+                      src={card.image}
+                      alt={card.name}
+                      className="programs-spotlight__card-image"
+                      loading="lazy"
+                      style={{ position: 'relative', zIndex: 1 }}
+                    />
+                    <h3 className="programs-spotlight__card-title" style={{ position: 'relative', zIndex: 1 }}>{card.name}</h3>
+                    <span className="programs-spotlight__card-line" style={{ position: 'relative', zIndex: 1 }} />
+                    <p className="programs-spotlight__card-description" style={{ position: 'relative', zIndex: 1 }}>{card.description}</p>
+                    <span className="programs-spotlight__card-link" style={{ position: 'relative', zIndex: 1 }}>
+                      Explore
+                      <span className="programs-spotlight__card-link-arrow">
+                        <ArrowRight />
+                      </span>
                     </span>
-                  </span>
-                </article>
-              ))}
+                  </article>
+                );
+              })}
             </div>
           </div>
 

@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 
 type HappeningItem = {
-  id: number;
+  _id: string;
   title: string;
   category: string;
   date: string;
@@ -25,6 +25,7 @@ const emptyForm = {
 export default function HappeningsPage() {
   const [items, setItems] = useState<HappeningItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [uploading, setUploading] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [editing, setEditing] = useState<HappeningItem | null>(null);
   const [form, setForm] = useState(emptyForm);
@@ -85,17 +86,38 @@ export default function HappeningsPage() {
       return;
     }
 
-    const payload = {
-      ...(editing ? { id: editing.id } : {}),
-      title: form.title.trim(),
-      category: form.category,
-      date: form.date,
-      description: form.description.trim(),
-      image: form.image,
-      url: form.url.trim() || "#",
-    };
+    setUploading(true);
+    setError("");
 
     try {
+      let finalImageUrl = form.image;
+
+      // If the image is a base64 encoded image, upload it to Cloudinary first
+      if (form.image && form.image.startsWith("data:image/")) {
+        const uploadRes = await fetch("/api/upload", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ image: form.image, folder: "seglko-happenings" }),
+        });
+
+        if (!uploadRes.ok) {
+          throw new Error("Failed to upload image to Cloudinary.");
+        }
+
+        const uploadData = await uploadRes.json();
+        finalImageUrl = uploadData.url;
+      }
+
+      const payload = {
+        ...(editing ? { _id: editing._id } : {}),
+        title: form.title.trim(),
+        category: form.category,
+        date: form.date,
+        description: form.description.trim(),
+        image: finalImageUrl,
+        url: form.url.trim() || "#",
+      };
+
       const res = await fetch("/api/happenings", {
         method: editing ? "PUT" : "POST",
         headers: { "Content-Type": "application/json" },
@@ -104,20 +126,22 @@ export default function HappeningsPage() {
       if (!res.ok) throw new Error("Save failed");
       const saved = await res.json();
       setItems((prev) =>
-        editing ? prev.map((item) => (item.id === saved.id ? saved : item)) : [saved, ...prev]
+        editing ? prev.map((item) => (item._id === saved._id ? saved : item)) : [saved, ...prev]
       );
       closeForm();
     } catch (e) {
       console.error(e);
       setError("Could not save this item. Please try again.");
+    } finally {
+      setUploading(false);
     }
   };
 
-  const deleteItem = async (id: number) => {
+  const deleteItem = async (id: string) => {
     if (!confirm("Delete this happening item?")) return;
     try {
       const res = await fetch(`/api/happenings?id=${id}`, { method: "DELETE" });
-      if (res.ok) setItems((prev) => prev.filter((item) => item.id !== id));
+      if (res.ok) setItems((prev) => prev.filter((item) => item._id !== id));
     } catch (e) {
       console.error(e);
     }
@@ -229,11 +253,16 @@ export default function HappeningsPage() {
           {form.image && <img src={form.image} alt="Preview" className="w-full max-h-56 object-cover rounded-xl border border-slate-200" />}
           {error && <p className="text-sm text-rose-600">{error}</p>}
           <div className="flex justify-end gap-3">
-            <button onClick={closeForm} className="px-5 py-2.5 rounded-xl border border-slate-200 text-sm font-semibold text-slate-700 hover:bg-slate-50">
+            <button onClick={closeForm} disabled={uploading} className="px-5 py-2.5 rounded-xl border border-slate-200 text-sm font-semibold text-slate-700 hover:bg-slate-50 disabled:opacity-60">
               Cancel
             </button>
-            <button onClick={saveItem} className="px-5 py-2.5 rounded-xl bg-indigo-600 text-sm font-semibold text-white hover:bg-indigo-700">
-              {editing ? "Save Changes" : "Save Item"}
+            <button
+              onClick={saveItem}
+              disabled={uploading}
+              className="px-5 py-2.5 rounded-xl bg-indigo-600 text-sm font-semibold text-white hover:bg-indigo-700 disabled:opacity-60 flex items-center gap-2"
+            >
+              {uploading && <span className="animate-spin material-symbols-outlined text-sm">progress_activity</span>}
+              {uploading ? "Saving..." : (editing ? "Save Changes" : "Save Item")}
             </button>
           </div>
         </div>
@@ -257,7 +286,7 @@ export default function HappeningsPage() {
             </thead>
             <tbody>
               {items.map((item) => (
-                <tr key={item.id} className="border-b border-slate-50 hover:bg-slate-50/60 transition-colors">
+                <tr key={item._id} className="border-b border-slate-50 hover:bg-slate-50/60 transition-colors">
                   <td className="px-5 py-3.5">
                     <div className="flex items-center gap-3">
                       <div className="h-12 w-16 rounded-lg bg-slate-100 overflow-hidden flex-shrink-0">
@@ -278,7 +307,7 @@ export default function HappeningsPage() {
                       <button onClick={() => openEdit(item)} className="h-7 w-7 flex items-center justify-center rounded-lg bg-indigo-50 text-indigo-600 hover:bg-indigo-100">
                         <span className="material-symbols-outlined text-sm">edit</span>
                       </button>
-                      <button onClick={() => deleteItem(item.id)} className="h-7 w-7 flex items-center justify-center rounded-lg bg-rose-50 text-rose-500 hover:bg-rose-100">
+                      <button onClick={() => deleteItem(item._id)} className="h-7 w-7 flex items-center justify-center rounded-lg bg-rose-50 text-rose-500 hover:bg-rose-100">
                         <span className="material-symbols-outlined text-sm">delete</span>
                       </button>
                     </div>

@@ -17,6 +17,7 @@ const nav = [
     section: "WEBSITE CMS",
     items: [
       { label: "About SEG", icon: "info", href: "/dashboard/about" },
+      { label: "Faculties", icon: "school", href: "/dashboard/faculties" },
       { label: "Programs", icon: "menu_book", href: "/dashboard/programs" },
       { label: "Admission", icon: "how_to_reg", href: "/dashboard/admission" },
       { label: "R & D", icon: "science", href: "/dashboard/research" },
@@ -25,6 +26,7 @@ const nav = [
       { label: "What's Happening", icon: "event_note", href: "/dashboard/happenings" },
       { label: "Placements", icon: "work", href: "/dashboard/placements" },
       { label: "Gallery", icon: "photo_library", href: "/dashboard/gallery" },
+      { label: "Careers", icon: "work_outline", href: "/dashboard/careers" },
       { label: "Contact Us", icon: "contact_mail", href: "/dashboard/contact" },
     ],
   },

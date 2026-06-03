@@ -18,8 +18,37 @@ const faqs = [
 export default function ContactUs() {
   const [openFaq, setOpenFaq] = useState(null);
   const [form, setForm] = useState({ name: '', email: '', phone: '', course: '', inquiry: '', message: '' });
+  const [submitting, setSubmitting] = useState(false);
 
-  const handleSubmit = (e) => { e.preventDefault(); alert('Message sent!'); };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!form.name.trim() || !form.email.trim()) {
+      alert('Please fill in at least your name and email.');
+      return;
+    }
+    setSubmitting(true);
+    try {
+      const subject = [form.inquiry, form.course, form.message].filter(Boolean).join(' — ');
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: form.name,
+          email: form.email,
+          phone: form.phone,
+          message: subject || 'General inquiry',
+        }),
+      });
+      if (!res.ok) throw new Error('Failed to submit');
+      alert('Your message has been sent successfully! We will get back to you soon.');
+      setForm({ name: '', email: '', phone: '', course: '', inquiry: '', message: '' });
+    } catch (err) {
+      console.error(err);
+      alert('Something went wrong. Please try again.');
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   return (
     <div className="cu-page">
@@ -135,9 +164,9 @@ export default function ContactUs() {
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M12 20h9" /><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" /></svg>
                 <textarea placeholder="How can we help you?" rows={4} value={form.message} onChange={e => setForm({ ...form, message: e.target.value })} />
               </div>
-              <button type="submit" className="cu-submit">
-                Send Message
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="22" y1="2" x2="11" y2="13" /><polygon points="22 2 15 22 11 13 2 9 22 2" /></svg>
+              <button type="submit" className="cu-submit" disabled={submitting} style={submitting ? { opacity: 0.7 } : {}}>
+                {submitting ? 'Sending...' : 'Send Message'}
+                {!submitting && <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="22" y1="2" x2="11" y2="13" /><polygon points="22 2 15 22 11 13 2 9 22 2" /></svg>}
               </button>
               <p className="cu-form__privacy">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><rect x="3" y="11" width="18" height="11" rx="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg>
