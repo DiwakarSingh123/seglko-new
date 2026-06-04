@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import placementsBg from '../assets/images/placements-bg.png';
 import program1 from '../assets/images/surender pratap.jpeg';
@@ -199,7 +200,11 @@ function PlacementCard({ card }) {
   return (
     <article className="placements-showcase__card">
       <div className="placements-showcase__photo-wrap">
-        <img src={card.image} alt={card.name} className="placements-showcase__photo" loading="lazy" />
+        {card.image ? (
+          <img src={card.image} alt={card.name} className="placements-showcase__photo" loading="lazy" />
+        ) : (
+          <div className="placements-showcase__photo" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#e2e8f0', color: '#94a3b8', fontSize: '64px' }}>👤</div>
+        )}
       </div>
 
       <div className="placements-showcase__card-body">
@@ -234,6 +239,28 @@ function PlacementCard({ card }) {
 
 export default function PlacementsShowcase() {
   const navigate = useNavigate();
+  const [placements, setPlacements] = useState([]);
+
+  useEffect(() => {
+    fetch('/api/placements')
+      .then((res) => res.json())
+      .then((data) => {
+        if (Array.isArray(data) && data.length > 0) {
+          const mapped = data.slice(0, 3).map((student) => ({
+            name: student.student,
+            course: `${student.program}${student.year ? ' ' + student.year : ''}`,
+            packageLabel: student.pkg,
+            company: student.company,
+            role: student.role,
+            image: student.customImage || '',
+            logo: student.company ? student.company.split(' ')[0].toUpperCase() : 'SEG',
+          }));
+          setPlacements(mapped);
+        }
+      })
+      .catch((err) => console.error('Failed to fetch placements:', err));
+  }, []);
+
   return (
     <section className="placements-showcase" id="placements-showcase">
       <div className="placements-showcase__shell">
@@ -257,9 +284,17 @@ export default function PlacementsShowcase() {
         </div>
 
         <div className="placements-showcase__grid">
-          <PlacementCard card={successCards[0]} />
-          <PlacementCard card={successCards[1]} />
-          <PlacementCard card={successCards[2]} />
+          {placements.length > 0 ? (
+            placements.map((card, idx) => (
+              <PlacementCard key={idx} card={card} />
+            ))
+          ) : (
+            <>
+              <PlacementCard card={successCards[0]} />
+              <PlacementCard card={successCards[1]} />
+              <PlacementCard card={successCards[2]} />
+            </>
+          )}
 
           <section className="placements-showcase__stats-card">
             <div

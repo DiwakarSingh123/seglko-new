@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import aboutBg from '../assets/images/hapen2.jpeg';
 import campusBg from '../assets/images/eventImg9.jpeg';
@@ -202,6 +203,72 @@ const announcementStats = [
 ];
 
 export default function HappeningsShowcase() {
+  const [events, setEvents] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchHappenings = async () => {
+      try {
+        const response = await fetch('/api/happenings');
+        if (response.ok) {
+          const data = await response.json();
+          setEvents(data);
+        }
+      } catch (error) {
+        console.error('Error fetching happenings:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchHappenings();
+  }, []);
+
+  const displayEvents = events.length > 0 ? events.slice(0, 5) : eventCards;
+
+  const processedEvents = displayEvents.map((evt, idx) => {
+    if (evt.day && evt.month && evt.year) {
+      return {
+        title: evt.title,
+        day: evt.day,
+        month: evt.month,
+        year: evt.year,
+        color: evt.color,
+        image: evt.image,
+        eventLink: `/events/${evt.slug}`,
+        isExternal: false,
+      };
+    }
+
+    const parsedDate = new Date(evt.date);
+    const day = isNaN(parsedDate.getTime()) ? '' : String(parsedDate.getDate()).padStart(2, '0');
+    const month = isNaN(parsedDate.getTime()) ? '' : parsedDate.toLocaleString('default', { month: 'short' });
+    const year = isNaN(parsedDate.getTime()) ? '' : String(parsedDate.getFullYear());
+
+    const colors = ['coral', 'mint', 'blue', 'gold'];
+    const color = colors[idx % colors.length];
+
+    let eventLink = '#';
+    let isExt = false;
+    if (evt.url && evt.url !== '#') {
+      eventLink = evt.url;
+      isExt = evt.url.startsWith('http://') || evt.url.startsWith('https://');
+    } else if (evt.title) {
+      const slug = evt.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+      eventLink = `/events/${slug}`;
+    }
+
+    return {
+      title: evt.title,
+      day,
+      month,
+      year,
+      color,
+      image: evt.image || heroBg,
+      eventLink,
+      isExternal: isExt,
+    };
+  });
+
   return (
     <section className="happenings-showcase" id="happenings-showcase">
       <div className="happenings-showcase__shell">
@@ -225,8 +292,8 @@ export default function HappeningsShowcase() {
         </div>
 
         <div className="happenings-showcase__events">
-          {eventCards.map((event) => (
-            <article className="happenings-showcase__event-card" key={event.title}>
+          {processedEvents.map((event, idx) => (
+            <article className="happenings-showcase__event-card" key={event.title || idx}>
               <div className="happenings-showcase__event-media">
                 <img src={event.image} alt={event.title} className="happenings-showcase__event-image" loading="lazy" />
                 <div className={`happenings-showcase__date happenings-showcase__date--${event.color}`}>
@@ -238,9 +305,15 @@ export default function HappeningsShowcase() {
 
               <div className="happenings-showcase__event-body">
                 <h3 className="happenings-showcase__event-title">{event.title}</h3>
-                <Link to={`/events/${event.slug}`} className="happenings-showcase__event-link" aria-label={event.title}>
-                  <ArrowRight />
-                </Link>
+                {event.isExternal ? (
+                  <a href={event.eventLink} target="_blank" rel="noopener noreferrer" className="happenings-showcase__event-link" aria-label={event.title}>
+                    <ArrowRight />
+                  </a>
+                ) : (
+                  <Link to={event.eventLink} className="happenings-showcase__event-link" aria-label={event.title}>
+                    <ArrowRight />
+                  </Link>
+                )}
               </div>
             </article>
           ))}

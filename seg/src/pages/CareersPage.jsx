@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './CareersPage.css';
 import careerHeroImg from '../assets/images/seg.jpeg';
@@ -6,13 +6,20 @@ import logoImg from '../assets/images/logo.png';
 
 function JobModal({ job, onClose }) {
   if (!job) return null;
+  
+  const getIcon = (category) => {
+    if (category === 'Teaching') return '🎓';
+    if (category === 'Technical') return '💻';
+    return '👤';
+  };
+
   return (
     <div className="job-modal-overlay" onClick={onClose}>
       <div className="job-modal" onClick={e => e.stopPropagation()}>
         <button className="job-modal__close" onClick={onClose}>✕</button>
         <div className="job-modal__header">
           <div className={`job-icon bg-${job.color}`} style={{ width: 56, height: 56, fontSize: 24, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-            {job.category === 'teaching' ? '🎓' : job.category === 'technical' ? '💻' : '👤'}
+            {getIcon(job.category)}
           </div>
           <div>
             <h2 className="job-modal__title">{job.title}</h2>
@@ -36,18 +43,18 @@ function JobModal({ job, onClose }) {
 }
 
 const jobCategories = [
-  { id: 'all', label: 'All Openings', count: 12, icon: '💼' },
-  { id: 'teaching', label: 'Teaching', count: 6, icon: '🎓' },
-  { id: 'administration', label: 'Administration', count: 3, icon: '🏛️' },
-  { id: 'technical', label: 'Technical', count: 2, icon: '💻' },
-  { id: 'support', label: 'Support Staff', count: 1, icon: '🎧' },
+  { id: 'all', label: 'All Openings', count: 0, icon: '💼' },
+  { id: 'Administration', label: 'Administration', count: 0, icon: '🏛️' },
+  { id: 'Teaching', label: 'Teaching', count: 0, icon: '🎓' },
+  { id: 'Technical', label: 'Technical', count: 0, icon: '💻' },
+  { id: 'Support Staff', label: 'Support Staff', count: 0, icon: '🎧' },
 ];
 
-const jobs = [
+const defaultJobs = [
   {
-    id: 1,
+    _id: 1,
     title: 'Chairman PS',
-    category: 'administration',
+    category: 'Administration',
     tag: 'Administration',
     dept: 'Secretariat',
     location: 'Lucknow',
@@ -57,9 +64,9 @@ const jobs = [
     color: 'blue',
   },
   {
-    id: 2,
+    _id: 2,
     title: 'Admission Counsellor',
-    category: 'administration',
+    category: 'Administration',
     tag: 'Admissions',
     dept: 'Counselling',
     location: 'Lucknow',
@@ -69,9 +76,9 @@ const jobs = [
     color: 'violet',
   },
   {
-    id: 3,
+    _id: 3,
     title: 'Assistant Professor',
-    category: 'teaching',
+    category: 'Teaching',
     tag: 'Teaching',
     dept: 'Pharmacy',
     location: 'Lucknow',
@@ -81,9 +88,9 @@ const jobs = [
     color: 'green',
   },
   {
-    id: 4,
+    _id: 4,
     title: 'Field Officers',
-    category: 'administration',
+    category: 'Administration',
     tag: 'Administration',
     dept: 'Field Officer',
     location: 'Uttar Pradesh',
@@ -97,11 +104,49 @@ const jobs = [
 export default function CareersPage() {
   const [activeCategory, setActiveCategory] = useState('all');
   const [selectedJob, setSelectedJob] = useState(null);
+  const [jobs, setJobs] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchJobs = async () => {
+      const urls = ['/api/jobs', 'http://127.0.0.1:3000/api/jobs', 'http://localhost:3000/api/jobs'];
+      let lastError = '';
+      for (const url of urls) {
+        try {
+          const response = await fetch(url);
+          if (response.ok) {
+            const data = await response.json();
+            setJobs(data.length > 0 ? data : defaultJobs);
+            setError('');
+            return;
+          }
+          lastError = `Failed to load jobs from ${url}: ${response.status} ${response.statusText}`;
+          console.warn(lastError);
+        } catch (fetchError) {
+          lastError = `Failed to fetch jobs from ${url}: ${fetchError.message}`;
+          console.warn(lastError);
+        }
+      }
+
+      setError(`Unable to load job openings from admin dashboard. Showing local fallback listings. ${lastError}`);
+      setJobs(defaultJobs);
+    };
+
+    fetchJobs().finally(() => setLoading(false));
+  }, []);
 
   const filteredJobs = activeCategory === 'all'
     ? jobs
     : jobs.filter(job => job.category === activeCategory);
+
+  const updateCategoryCounts = () => {
+    return jobCategories.map(cat => ({
+      ...cat,
+      count: cat.id === 'all' ? jobs.length : jobs.filter(j => j.category === cat.id).length,
+    }));
+  };
 
   return (
     <div className="careers-page">
@@ -137,7 +182,7 @@ export default function CareersPage() {
       {/* Category Tabs */}
       <section className="careers-categories">
         <div className="categories-grid">
-          {jobCategories.map(cat => (
+          {updateCategoryCounts().map(cat => (
             <button
               key={cat.id}
               className={`category-card ${activeCategory === cat.id ? 'active' : ''}`}
@@ -154,6 +199,16 @@ export default function CareersPage() {
       </section>
 
       {/* Job Openings */}
+      {loading && (
+        <div className="careers-loading">
+          <p>Loading job openings from admin dashboard…</p>
+        </div>
+      )}
+      {error && !loading && (
+        <div className="careers-error">
+          <p>{error}</p>
+        </div>
+      )}
       <section className="careers-list">
         <div className="list-header">
           <h2>Current Job Openings</h2>
@@ -162,10 +217,10 @@ export default function CareersPage() {
 
         <div className="jobs-container">
           {filteredJobs.map(job => (
-            <div key={job.id} className={`job-card border-${job.color}`}>
+            <div key={job._id} className={`job-card border-${job.color}`}>
               <div className="job-card__main">
                 <div className={`job-icon bg-${job.color}`}>
-                  {job.category === 'teaching' ? '🎓' : job.category === 'technical' ? '💻' : '👤'}
+                  {job.category === 'Teaching' ? '🎓' : job.category === 'Technical' ? '💻' : '👤'}
                 </div>
                 <div className="job-info">
                   <div className="job-title-row">

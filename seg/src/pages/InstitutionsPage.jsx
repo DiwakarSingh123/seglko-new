@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import './InstitutionsPage.css'
 import program1 from '../assets/images/program1.png'
 import program2 from '../assets/images/program2.png'
@@ -92,10 +92,57 @@ const sidebarItems = [
 
 export default function InstitutionsPage() {
   const [activeFilter, setActiveFilter] = useState('All')
+  const [searchTerm, setSearchTerm] = useState('')
+  const [sortBy, setSortBy] = useState('Newest')
+  const [happenings, setHappenings] = useState([])
+  const [loading, setLoading] = useState(true)
 
-  const filteredInstitutions = activeFilter === 'All'
-    ? institutions
-    : institutions.filter(inst => inst.category === activeFilter)
+  useEffect(() => {
+    const fetchHappenings = async () => {
+      try {
+        const res = await fetch('/api/happenings')
+        if (res.ok) {
+          const data = await res.json()
+          setHappenings(data)
+        }
+      } catch (err) {
+        console.error("Error fetching happenings:", err)
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchHappenings()
+  }, [])
+
+  const displayItems = happenings.length > 0 ? happenings : institutions
+
+  // Filter items by category
+  let filteredItems = displayItems.filter(item => {
+    if (activeFilter === 'All') return true
+    const cat = item.category || item.tag
+    return cat?.toLowerCase() === activeFilter.toLowerCase()
+  })
+
+  // Filter items by search query
+  if (searchTerm.trim()) {
+    const query = searchTerm.toLowerCase()
+    filteredItems = filteredItems.filter(item => 
+      item.title?.toLowerCase().includes(query) || 
+      item.description?.toLowerCase().includes(query)
+    )
+  }
+
+  // Sort items
+  filteredItems.sort((a, b) => {
+    const dateA = a.date && typeof a.date === 'string' ? new Date(a.date) : new Date(`${a.date?.year}-${a.date?.month}-01`)
+    const dateB = b.date && typeof b.date === 'string' ? new Date(b.date) : new Date(`${b.date?.year}-${b.date?.month}-01`)
+    
+    if (sortBy === 'Newest') {
+      return dateB.getTime() - dateA.getTime()
+    } else {
+      return dateA.getTime() - dateB.getTime()
+    }
+  })
 
   return (
     <div className="institutions-page">
@@ -153,36 +200,70 @@ export default function InstitutionsPage() {
             </div>
 
             <div className="filter-controls">
-              <input type="text" placeholder="Search news..." className="search-input" />
-              <select className="sort-select">
-                <option>Sort by: Newest</option>
-                <option>Sort by: Oldest</option>
+              <input
+                type="text"
+                placeholder="Search news..."
+                className="search-input"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+              <select
+                className="sort-select"
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+              >
+                <option value="Newest">Sort by: Newest</option>
+                <option value="Oldest">Sort by: Oldest</option>
               </select>
             </div>
           </div>
 
           {/* News Grid */}
           <div className="news-grid">
-            {filteredInstitutions.map((inst, idx) => (
-              <article className="news-card" key={idx}>
-                <div className="news-card__media">
-                  <img src={inst.image} alt={inst.title} className="news-card__image" />
-                  <div className="news-card__date">
-                    <strong>{inst.date.day}</strong>
-                    <span>{inst.date.month}</span>
-                    <span>{inst.date.year}</span>
+            {filteredItems.map((item, idx) => {
+              // Parse date formatting
+              let day = '';
+              let month = '';
+              let year = '';
+              
+              if (item.date && typeof item.date === 'object') {
+                day = item.date.day;
+                month = item.date.month;
+                year = item.date.year;
+              } else if (item.date) {
+                const parsedDate = new Date(item.date);
+                day = isNaN(parsedDate.getTime()) ? '' : String(parsedDate.getDate()).padStart(2, '0');
+                month = isNaN(parsedDate.getTime()) ? '' : parsedDate.toLocaleString('default', { month: 'short' }).toUpperCase();
+                year = isNaN(parsedDate.getTime()) ? '' : String(parsedDate.getFullYear());
+              }
+
+              const tag = item.tag || item.category?.toUpperCase() || 'NEWS';
+              const imageUrl = item.image || program5;
+              const url = item.url || '#';
+
+              return (
+                <article className="news-card" key={item._id || idx}>
+                  <div className="news-card__media">
+                    <img src={imageUrl} alt={item.title} className="news-card__image" />
+                    {(day || month || year) && (
+                      <div className="news-card__date">
+                        {day && <strong>{day}</strong>}
+                        {month && <span>{month}</span>}
+                        {year && <span>{year}</span>}
+                      </div>
+                    )}
                   </div>
-                </div>
-                <div className="news-card__body">
-                  <span className="news-card__tag">{inst.tag}</span>
-                  <h3 className="news-card__title">{inst.title}</h3>
-                  <p className="news-card__text">{inst.description}</p>
-                  <a href={inst.url} target="_blank" rel="noopener noreferrer" className="news-card__link">
-                    Read More <span>→</span>
-                  </a>
-                </div>
-              </article>
-            ))}
+                  <div className="news-card__body">
+                    <span className="news-card__tag">{tag}</span>
+                    <h3 className="news-card__title">{item.title}</h3>
+                    <p className="news-card__text">{item.description}</p>
+                    <a href={url} target="_blank" rel="noopener noreferrer" className="news-card__link">
+                      Read More <span>→</span>
+                    </a>
+                  </div>
+                </article>
+              );
+            })}
           </div>
 
         </main>

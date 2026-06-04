@@ -1,5 +1,5 @@
 export type PlacementRecord = {
-  id: number;
+  _id: string;
   student: string;
   program: string;
   company: string;
@@ -43,7 +43,7 @@ export function getRecentPlacements(records: PlacementRecord[], limit = 3) {
     .sort((a, b) => {
       const yearDiff = Number(b.year) - Number(a.year);
       if (yearDiff !== 0) return yearDiff;
-      return b.id - a.id;
+      return (b._id || '').localeCompare(a._id || '');
     })
     .slice(0, limit);
 }

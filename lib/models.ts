@@ -107,11 +107,19 @@ const contactSchema = new mongoose.Schema({
 
 // ── Application ────────────────────────────────────────────
 const applicationSchema = new mongoose.Schema({
+  type: { type: String, enum: ['job', 'admission'], default: 'job' },
   name: String,
   email: String,
   phone: String,
   position: String,
+  qualification: String,
+  experience: String,
+  expectedSalary: String,
+  lastOrganization: String,
+  lastSalary: String,
+  address: String,
   resume: String,
+  photo: String,
   coverLetter: String,
   status: { type: String, default: 'pending' },
 }, { timestamps: true });
@@ -130,6 +138,20 @@ const studentZoneSchema = new mongoose.Schema({
 const settingsSchema = new mongoose.Schema({
   key: { type: String, unique: true },
   value: mongoose.Schema.Types.Mixed,
+}, { timestamps: true });
+
+// ── Job Opening ────────────────────────────────────────────
+const jobOpeningSchema = new mongoose.Schema({
+  title: String,
+  category: String,
+  tag: String,
+  dept: String,
+  location: String,
+  experience: String,
+  type: String,
+  posted: String,
+  color: String,
+  description: String,
 }, { timestamps: true });
 
 // ── Admin Auth ─────────────────────────────────────────────
@@ -152,3 +174,4 @@ export const Application = mongoose.models.Application || mongoose.model('Applic
 export const StudentZone = mongoose.models.StudentZone || mongoose.model('StudentZone', studentZoneSchema);
 export const Settings = mongoose.models.Settings || mongoose.model('Settings', settingsSchema);
 export const AdminAuth = mongoose.models.AdminAuth || mongoose.model('AdminAuth', adminAuthSchema);
+export const JobOpening = mongoose.models.JobOpening || mongoose.model('JobOpening', jobOpeningSchema);
