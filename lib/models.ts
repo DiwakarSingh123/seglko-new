@@ -65,14 +65,25 @@ const gallerySchema = new mongoose.Schema({
 
 // ── Institution ────────────────────────────────────────────
 const institutionSchema = new mongoose.Schema({
-  name: String,
-  shortName: String,
+  title: String,
+  code: String,
+  tag: String,
+  short: String,
+  date: mongoose.Schema.Types.Mixed,
+  approval: String,
   description: String,
-  established: String,
-  location: String,
+  url: String,
   image: String,
-  programs: [String],
-  highlights: [String],
+  category: String,
+  type: String,
+  estd: Number,
+  programs: Number,
+  students: Number,
+  location: String,
+  status: String,
+  affiliation: String,
+  color: String,
+  customImage: String,
 }, { timestamps: true });
 
 // ── Research ───────────────────────────────────────────────

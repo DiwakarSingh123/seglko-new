@@ -136,11 +136,8 @@ export default function InstitutionsPage() {
     fetchHappenings()
   }, [])
 
-  // What's Happening: items with type='whats_happening' only, fallback to static
   const whFromAPI = happenings.filter(h => h.type === 'whats_happening')
   const displayItems = whFromAPI.length > 0 ? whFromAPI : institutions
-
-  // Upcoming Events & Announcements
   const tabItems = happenings.filter(h => h.type === activeTab)
 
   let filteredItems = displayItems.filter(item => {
@@ -245,7 +242,7 @@ export default function InstitutionsPage() {
             </>
           )}
 
-          {/* What's Happening (default) */}
+          {/* What's Happening */}
           {activeTab === 'whats_happening' && (
             <>
               <header className="content-header">

@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { facultyData } from '../data/facultyData';
 
@@ -55,9 +56,36 @@ const getFacultyMotto = (dept) => {
 export default function FacultyProfilePage() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const [remoteFaculty, setRemoteFaculty] = useState(null);
 
-  // Find faculty by id (fall back to id 1 if not found)
-  const faculty = facultyData[id] || facultyData[1];
+  useEffect(() => {
+    const fetchFaculty = async () => {
+      try {
+        const response = await fetch('/api/faculty');
+        if (!response.ok) throw new Error('Failed to load faculty data');
+        const data = await response.json();
+        const found = Array.isArray(data.faculties)
+          ? data.faculties.find((item) => item?.id?.toString() === id?.toString())
+          : null;
+        setRemoteFaculty(found || null);
+      } catch (error) {
+        console.error(error);
+        setRemoteFaculty(null);
+      }
+    };
+    fetchFaculty();
+  }, [id]);
+
+  const initialFaculty = facultyData[id] || facultyData[1];
+  const rawFaculty = remoteFaculty || initialFaculty;
+  const faculty = {
+    ...rawFaculty,
+    dept: rawFaculty?.dept || rawFaculty?.school || '',
+    tags: Array.isArray(rawFaculty?.tags) ? rawFaculty.tags : [],
+    research: Array.isArray(rawFaculty?.research) ? rawFaculty.research : [],
+    teaching: Array.isArray(rawFaculty?.teaching) ? rawFaculty.teaching : [],
+    achievements: Array.isArray(rawFaculty?.achievements) ? rawFaculty.achievements : [],
+  };
 
   return (
     <div className="fpp-container">

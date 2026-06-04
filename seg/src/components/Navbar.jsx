@@ -848,12 +848,12 @@ export default function Navbar() {
                 ))}
               </div>
 
-              <button type="button" className="about-panel__cta">
+              <Link to="/why-join-seg" className="about-panel__cta" onClick={() => setActiveDropdown(null)}>
                 Know More About SEG
                 <span className="about-panel__cta-arrow">
                   <ChevronRight />
                 </span>
-              </button>
+              </Link>
             </div>
 
             <div className="about-panel__visual">

@@ -29,6 +29,11 @@ const defaultFacultyData = {
   ],
 };
 
+type FacultyItem = {
+  id?: string | number;
+  [key: string]: unknown;
+};
+
 export async function OPTIONS() {
   return NextResponse.json({}, { headers: corsHeaders });
 }
@@ -64,5 +69,61 @@ export async function PUT(request: Request) {
   } catch (error) {
     console.error('Failed to update faculty data:', error);
     return NextResponse.json({ error: 'Failed to update faculty data' }, { status: 500, headers: corsHeaders });
+  }
+}
+
+export async function PATCH(request: Request) {
+  try {
+    await connectDB();
+    const body = await request.json();
+    const faculty = body.faculty;
+
+    if (!faculty || !faculty.id) {
+      return NextResponse.json({ error: 'Missing faculty id' }, { status: 400, headers: corsHeaders });
+    }
+
+    let data = await FacultyData.findOne();
+    if (!data) {
+      data = await FacultyData.create({ ...defaultFacultyData, faculties: [faculty] });
+    } else {
+      const existingIndex = data.faculties.findIndex((item: FacultyItem) => item.id?.toString() === faculty.id?.toString());
+      if (existingIndex >= 0) {
+        data.faculties[existingIndex] = faculty;
+      } else {
+        data.faculties.push(faculty);
+      }
+      data.markModified('faculties');
+      await data.save();
+    }
+
+    return NextResponse.json(data, { headers: corsHeaders });
+  } catch (error) {
+    console.error('Failed to patch faculty data:', error);
+    return NextResponse.json({ error: 'Failed to patch faculty data' }, { status: 500, headers: corsHeaders });
+  }
+}
+
+export async function DELETE(request: Request) {
+  try {
+    await connectDB();
+    const url = new URL(request.url);
+    const id = url.searchParams.get('id');
+
+    if (!id) {
+      return NextResponse.json({ error: 'Missing faculty id' }, { status: 400, headers: corsHeaders });
+    }
+
+    const data = await FacultyData.findOne();
+    if (!data) {
+      return NextResponse.json({ error: 'No faculty data found' }, { status: 404, headers: corsHeaders });
+    }
+
+    data.faculties = data.faculties.filter((item: FacultyItem) => item.id?.toString() !== id.toString());
+    await data.save();
+
+    return NextResponse.json(data, { headers: corsHeaders });
+  } catch (error) {
+    console.error('Failed to delete faculty data:', error);
+    return NextResponse.json({ error: 'Failed to delete faculty data' }, { status: 500, headers: corsHeaders });
   }
 }

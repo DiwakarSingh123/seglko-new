@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import facultyBg from '../assets/images/seg.jpeg';
 import aboutBg from '../assets/images/about-bg.png';
@@ -18,7 +18,7 @@ const MailIcon = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
 );
 
-const featuredFaculty = [
+const defaultFeaturedFaculty = [
   { id: 1, name: 'Dr. Rajeev Kumar', role: 'Professor & Dean (Academics)', dept: 'Mechanical Engineering', edu: 'PhD, IIT Kanpur', exp: '22+ Years', tags: ['Thermal Engineering', 'Energy Systems'], image: facultyBg },
   { id: 2, name: 'Dr. Neha Sharma', role: 'Associate Professor', dept: 'Computer Science Engineering', edu: 'PhD, IIIT Hyderabad', exp: '12+ Years', tags: ['AI & Machine Learning', 'Data Science'], image: aboutBg },
   { id: 3, name: 'Dr. Amit Verma', role: 'Professor', dept: 'Electrical Engineering', edu: 'PhD, NIT Allahabad', exp: '18+ Years', tags: ['Power Systems', 'Smart Grids'], image: institutionsBg },
@@ -26,20 +26,111 @@ const featuredFaculty = [
   { id: 5, name: 'Dr. Vikram Seth', role: 'Professor', dept: 'Management Studies', edu: 'PhD, FMS Delhi', exp: '25+ Years', tags: ['Strategic Management', 'Leadership'], image: aboutBg },
 ];
 
-const deans = [
-  { id: 5, name: 'Dr. Nirupma Gupta', role: 'Dean, Sharda School of Medical Sciences & Research', image: aboutBg },
-  { id: 6, name: 'Prof. (Dr.) Ritu S. Sood', role: 'Dean, Sharda School of Media, Film and Entertainment', image: institutionsBg },
-  { id: 7, name: 'Prof. (Dr.) Dolly Wattal Dhar', role: 'Dean, Sharda School of Agricultural Sciences', image: campusBg },
-  { id: 8, name: 'Prof. (Dr.) Debasis Mallik', role: 'Dean, Sharda School of Business Studies', image: facultyBg },
-  { id: 9, name: 'Prof. (Dr.) Rishikesh Dave', role: 'Dean, Sharda School of Law', image: campusBg },
-  { id: 10, name: 'Prof. (Dr.) Pallavi Gupta', role: 'Dean, Sharda School of Engineering & Science', image: aboutBg },
-  { id: 11, name: 'Prof. (Dr.) Geetha Ganesan', role: 'Dean, Sharda School of Computing Science & Engineering', image: institutionsBg },
-  { id: 12, name: 'Prof. (Dr.) Anviti Gupta', role: 'Professor & Dean', image: facultyBg },
-];
-
 export default function FacultyNewPage() {
   const navigate = useNavigate();
+  const [featuredFaculty, setFeaturedFaculty] = useState(defaultFeaturedFaculty);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedDepartment, setSelectedDepartment] = useState('All Departments');
+  const [selectedDesignation, setSelectedDesignation] = useState('All Designations');
+  const [selectedExperience, setSelectedExperience] = useState('All Experience');
+  const [selectedResearchArea, setSelectedResearchArea] = useState('All Research Areas');
+  const [viewMode, setViewMode] = useState('grid');
 
+  const imageFallbacks = {
+    facultyBg,
+    aboutBg,
+    institutionsBg,
+    campusBg,
+  };
+
+  const normalizeFacultyData = (faculty, index) => ({
+    id: faculty.id?.toString() || `${index}`,
+    name: faculty.name || `Faculty ${index + 1}`,
+    role: faculty.role || 'Faculty Member',
+    dept: faculty.school || faculty.dept || 'SEG',
+    edu: faculty.edu || '',
+    exp: faculty.exp || '',
+    tags: Array.isArray(faculty.tags) ? faculty.tags : [],
+    image: imageFallbacks[faculty.image] || faculty.image || facultyBg,
+  });
+
+  useEffect(() => {
+    const fetchFeaturedFaculty = async () => {
+      try {
+        const res = await fetch('/api/faculty');
+        if (!res.ok) throw new Error('Failed to fetch faculty data');
+        const data = await res.json();
+        if (Array.isArray(data.faculties) && data.faculties.length > 0) {
+          setFeaturedFaculty(data.faculties.map(normalizeFacultyData));
+        }
+      } catch (error) {
+        console.error('Unable to load featured faculty:', error);
+      }
+    };
+
+    fetchFeaturedFaculty();
+  }, []);
+
+  const departments = Array.from(new Set(featuredFaculty.map((f) => f.dept).filter(Boolean))).sort();
+  const designations = Array.from(new Set(featuredFaculty.map((f) => f.role).filter(Boolean))).sort();
+  const experiences = Array.from(new Set(featuredFaculty.map((f) => f.exp).filter(Boolean))).sort();
+  const researchAreas = Array.from(new Set(featuredFaculty.flatMap((f) => f.tags || []).filter(Boolean))).sort();
+
+  const stats = {
+    total: featuredFaculty.length,
+    phd: featuredFaculty.filter((f) => f.edu?.toLowerCase().includes('phd')).length,
+    depts: Array.from(new Set(featuredFaculty.map((f) => f.dept).filter(Boolean))).length,
+    industry: featuredFaculty.filter((f) =>
+      f.role?.toLowerCase().includes('industry') ||
+      f.tags?.some((t) => t.toLowerCase().includes('industry'))
+    ).length,
+  };
+
+  const filteredFaculty = featuredFaculty.filter((faculty) => {
+    const normalizedSearch = searchTerm.trim().toLowerCase();
+
+    if (normalizedSearch) {
+      const haystack = [
+        faculty.name,
+        faculty.role,
+        faculty.dept,
+        faculty.school,
+        faculty.edu,
+        faculty.exp,
+        faculty.tags?.join(' '),
+      ]
+        .filter(Boolean)
+        .join(' ')
+        .toLowerCase();
+
+      if (!haystack.includes(normalizedSearch)) {
+        return false;
+      }
+    }
+
+    if (selectedDepartment !== 'All Departments' && faculty.dept !== selectedDepartment) {
+      return false;
+    }
+
+    if (selectedDesignation !== 'All Designations' && faculty.role !== selectedDesignation) {
+      return false;
+    }
+
+    if (selectedExperience !== 'All Experience' && faculty.exp !== selectedExperience) {
+      return false;
+    }
+
+    if (
+      selectedResearchArea !== 'All Research Areas' &&
+      !faculty.tags?.some((tag) => tag.toLowerCase() === selectedResearchArea.toLowerCase())
+    ) {
+      return false;
+    }
+
+    return true;
+  });
+
+  const visibleFaculty = filteredFaculty.slice(0, 8);
 
   return (
     <div style={{ background: '#fcfdfe', minHeight: '100vh' }}>
@@ -83,7 +174,7 @@ export default function FacultyNewPage() {
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /></svg>
           </div>
           <div>
-            <div className="fnp-stat-card__val">150+</div>
+            <div className="fnp-stat-card__val">{stats.total}+</div>
             <div className="fnp-stat-card__label">Faculty Members</div>
           </div>
         </div>
@@ -92,7 +183,7 @@ export default function FacultyNewPage() {
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z" /><path d="M6 12v5c3 3 9 3 12 0v-5" /></svg>
           </div>
           <div>
-            <div className="fnp-stat-card__val">40+</div>
+            <div className="fnp-stat-card__val">{stats.phd}+</div>
             <div className="fnp-stat-card__label">PhD Holders</div>
           </div>
         </div>
@@ -101,7 +192,7 @@ export default function FacultyNewPage() {
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="4" y="4" width="16" height="16" rx="2" ry="2" /><line x1="9" y1="9" x2="15" y2="9" /><line x1="9" y1="13" x2="15" y2="13" /><line x1="9" y1="17" x2="15" y2="17" /></svg>
           </div>
           <div>
-            <div className="fnp-stat-card__val">12+</div>
+            <div className="fnp-stat-card__val">{stats.depts}+</div>
             <div className="fnp-stat-card__label">Departments</div>
           </div>
         </div>
@@ -110,7 +201,7 @@ export default function FacultyNewPage() {
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2" /><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" /></svg>
           </div>
           <div>
-            <div className="fnp-stat-card__val">20+</div>
+            <div className="fnp-stat-card__val">{stats.industry}+</div>
             <div className="fnp-stat-card__label">Industry Experts</div>
           </div>
         </div>
@@ -120,23 +211,56 @@ export default function FacultyNewPage() {
       <div className="fnp-filters">
         <div className="fnp-filters__grid">
           <div style={{ position: 'relative' }}>
-            <input type="text" placeholder="Search faculty by name, specialization..." className="fnp-filter__input" />
+            <input
+              type="text"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder="Search faculty by name, specialization..."
+              className="fnp-filter__input"
+            />
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#64748b" strokeWidth="2.5" style={{ position: 'absolute', right: '16px', top: '14px' }}><circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" /></svg>
           </div>
-          <select className="fnp-filter__select"><option>All Departments</option></select>
-          <select className="fnp-filter__select"><option>All Designations</option></select>
-          <select className="fnp-filter__select"><option>All Experience</option></select>
-          <select className="fnp-filter__select"><option>All Research Areas</option></select>
+          <select value={selectedDepartment} onChange={(e) => setSelectedDepartment(e.target.value)} className="fnp-filter__select">
+            <option>All Departments</option>
+            {departments.map((department) => (
+              <option key={department}>{department}</option>
+            ))}
+          </select>
+          <select value={selectedDesignation} onChange={(e) => setSelectedDesignation(e.target.value)} className="fnp-filter__select">
+            <option>All Designations</option>
+            {designations.map((designation) => (
+              <option key={designation}>{designation}</option>
+            ))}
+          </select>
+          <select value={selectedExperience} onChange={(e) => setSelectedExperience(e.target.value)} className="fnp-filter__select">
+            <option>All Experience</option>
+            {experiences.map((experience) => (
+              <option key={experience}>{experience}</option>
+            ))}
+          </select>
+          <select value={selectedResearchArea} onChange={(e) => setSelectedResearchArea(e.target.value)} className="fnp-filter__select">
+            <option>All Research Areas</option>
+            {researchAreas.map((area) => (
+              <option key={area}>{area}</option>
+            ))}
+          </select>
         </div>
         <div className="fnp-filters__footer">
-          <button style={{ background: 'none', border: 'none', color: '#64748b', fontSize: '13px', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer' }}>
+          <button
+            type="button"
+            onClick={() => {
+              setSearchTerm('');
+              setSelectedDepartment('All Departments');
+              setSelectedDesignation('All Designations');
+              setSelectedExperience('All Experience');
+              setSelectedResearchArea('All Research Areas');
+            }}
+            style={{ background: 'none', border: 'none', color: '#64748b', fontSize: '13px', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer' }}
+          >
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M23 4v6h-6" /><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10" /></svg>
             Clear Filters
           </button>
-          <div className="fnp-view-toggle">
-            <button className="fnp-view-btn fnp-view-btn--active">Grid View</button>
-            <button className="fnp-view-btn">List View</button>
-          </div>
+          
         </div>
       </div>
 
@@ -144,10 +268,10 @@ export default function FacultyNewPage() {
       <section className="fnp-section">
         <div className="fnp-section__header">
           <h2 className="fnp-section__title">Featured Faculty</h2>
-          <Link to="#" className="fnp-section__link">View All Faculty <ArrowRight /></Link>
+         
         </div>
-        <div className="fnp-grid">
-          {featuredFaculty.map(f => (
+        <div className={`fnp-grid${viewMode === 'list' ? ' fnp-grid--list' : ''}`}>
+          {visibleFaculty.length > 0 ? visibleFaculty.map((f) => (
             <article className="fnp-card" key={f.id}>
               <div className="fnp-card__img-wrap">
                 <img src={f.image} alt={f.name} />
@@ -164,36 +288,19 @@ export default function FacultyNewPage() {
                   <span>P</span> {f.edu} &nbsp; • &nbsp; {f.exp}
                 </div>
                 <div className="fnp-card__tags">
-                  {f.tags.map(t => <span className="fnp-card__tag" key={t}>{t}</span>)}
+                  {f.tags.map((t) => <span className="fnp-card__tag" key={t}>{t}</span>)}
                 </div>
                 <button className="fnp-card__btn" onClick={() => navigate(`/faculty/${f.id}`)}>View Profile <ArrowRight /></button>
               </div>
             </article>
-          ))}
+          )) : (
+            <div className="fnp-no-results" style={{ gridColumn: '1 / -1', padding: '36px 24px', borderRadius: '20px', background: '#f8fafc', color: '#475569' }}>
+              No faculty match your current filters.
+            </div>
+          )}
         </div>
       </section>
 
-      {/* ── Dean Section ── */}
-      <section className="fnp-section">
-        <div className="fnp-section__header">
-          <h2 className="fnp-section__title">Dean</h2>
-        </div>
-        <div className="fnp-grid">
-          {deans.map(d => (
-            <article className="fnp-leader" key={d.id}>
-              <div className="fnp-leader__portrait-wrap">
-                <div className="fnp-leader__portrait">
-                  <img src={d.image} alt={d.name} />
-                </div>
-              </div>
-              <h3 className="fnp-leader__name">{d.name}</h3>
-              <div className="fnp-leader__accent" />
-              <p className="fnp-leader__role">{d.role}</p>
-              <div className="fnp-leader__arrow" onClick={() => navigate(`/faculty/${d.id}`)} style={{ cursor: 'pointer' }}><ArrowRight /></div>
-            </article>
-          ))}
-        </div>
-      </section>
     </div>
   );
 }

@@ -1,35 +1,97 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
-const notices = [
-  { id: 1, title: 'Infoseek Placement Drive | 28 April 2026', category: 'Placements', dept: 'Training & Placement Cell', date: '12 May 2026, 05:10 PM', tag: 'New', isUnread: true, isImportant: false, dot: '#22c55e', icon: '💼', iconBg: '#f0fdf4', iconColor: '#16a34a', dateValue: new Date('2026-05-12T17:10:00') },
-  { id: 2, title: 'Black Apple Technologies Recruitment Drive at SITM', category: 'Placements', dept: 'Training & Placement Cell', date: '12 May 2026, 10:22 AM', tag: '⭐ Important', isUnread: false, isImportant: true, dot: '#f59e0b', icon: '📋', iconBg: '#fff7ed', iconColor: '#f59e0b', dateValue: new Date('2026-05-12T10:22:00') },
-  { id: 3, title: 'Schedule & Instructions for 1st Sessional Exam (Even Semester 2024-25)', category: 'Examinations', dept: 'Examination Cell', date: '25 May 2026, 12:34 PM', tag: null, isUnread: false, isImportant: false, dot: '#8b5cf6', icon: '🎓', iconBg: '#f5f3ff', iconColor: '#8b5cf6', dateValue: new Date('2026-05-25T12:34:00') },
-  { id: 4, title: 'Annual Cultural Fest – Udaan 2026', category: 'Events', dept: 'Student Affairs', date: '24 May 2026, 09:00 AM', tag: null, isUnread: false, isImportant: false, dot: '#e31e24', icon: '📅', iconBg: '#fff1f2', iconColor: '#e31e24', dateValue: new Date('2026-05-24T09:00:00') },
-  { id: 5, title: 'Holiday Notice – Summer Break 2026', category: 'General', dept: 'Administration', date: '20 May 2026, 03:15 PM', tag: null, isUnread: false, isImportant: false, dot: '#1041c6', icon: 'ℹ️', iconBg: '#eff6ff', iconColor: '#1041c6', dateValue: new Date('2026-05-20T15:15:00') },
-];
-
-const categoryColors = {
-  'Placements': '#dcfce7',
-  'Examinations': '#ede9fe',
-  'Events': '#fee2e2',
-  'General': '#dbeafe',
-};
-const categoryTextColors = {
-  'Placements': '#16a34a',
-  'Examinations': '#7c3aed',
-  'Events': '#dc2626',
-  'General': '#1d4ed8',
+const categoryMap = {
+  Exam: { label: 'Examinations', bg: '#ede9fe', color: '#7c3aed', icon: '🎓', iconBg: '#f5f3ff', dot: '#8b5cf6' },
+  Scholarship: { label: 'Scholarship', bg: '#dcfce7', color: '#16a34a', icon: '🏅', iconBg: '#f0fdf4', dot: '#22c55e' },
+  Event: { label: 'Events', bg: '#fee2e2', color: '#dc2626', icon: '📅', iconBg: '#fff1f2', dot: '#e31e24' },
+  General: { label: 'General', bg: '#dbeafe', color: '#1d4ed8', icon: 'ℹ️', iconBg: '#eff6ff', dot: '#1041c6' },
+  Placements: { label: 'Placements', bg: '#dcfce7', color: '#16a34a', icon: '💼', iconBg: '#f0fdf4', dot: '#22c55e' },
 };
 
 const tabs = ['All Notices', 'Unread', 'Important', 'Latest'];
 
+function NoticeModal({ notice, onClose }) {
+  if (!notice) return null;
+
+  const handleDownload = async () => {
+    try {
+      const res = await fetch(notice.image);
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${notice.title.replace(/[^a-z0-9]/gi, '_')}.png`;
+      a.click();
+      URL.revokeObjectURL(url);
+    } catch {
+      window.open(notice.image, '_blank');
+    }
+  };
+
+  return (
+    <div onClick={onClose} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.7)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
+      <div onClick={e => e.stopPropagation()} style={{ background: '#fff', borderRadius: '16px', maxWidth: '520px', width: '100%', maxHeight: '90vh', display: 'flex', flexDirection: 'column', overflow: 'hidden', boxShadow: '0 24px 60px rgba(0,0,0,0.3)' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 20px', borderBottom: '1px solid #e8eeff' }}>
+          <span style={{ fontWeight: 700, fontSize: '14px', color: '#162341', lineHeight: 1.4, flex: 1, marginRight: '12px' }}>{notice.title}</span>
+          <button onClick={onClose} style={{ width: '32px', height: '32px', borderRadius: '8px', border: '1.5px solid #e0e8ff', background: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '18px', color: '#5f6785', flexShrink: 0 }}>✕</button>
+        </div>
+        <div style={{ flex: 1, overflow: 'auto' }}>
+          <img src={notice.image} alt={notice.title} style={{ width: '100%', display: 'block' }} />
+        </div>
+        <div style={{ padding: '14px 20px', borderTop: '1px solid #e8eeff', display: 'flex', gap: '10px' }}>
+          <button onClick={handleDownload} style={{ flex: 1, padding: '10px', borderRadius: '8px', border: 'none', background: '#1041c6', color: '#fff', fontWeight: 700, fontSize: '13px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px' }}>⬇ Download Notice</button>
+          <button onClick={onClose} style={{ padding: '10px 20px', borderRadius: '8px', border: '1.5px solid #e0e8ff', background: '#fff', color: '#5f6785', fontWeight: 600, fontSize: '13px', cursor: 'pointer' }}>Close</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function StudentNoticePage() {
   const [activeTab, setActiveTab] = useState('All Notices');
   const [sortBy, setSortBy] = useState('latest');
-  const [perPage, setPerPage] = useState(2);
+  const [perPage, setPerPage] = useState(5);
   const [page, setPage] = useState(1);
+  const [viewNotice, setViewNotice] = useState(null);
+  const [notices, setNotices] = useState([]);
 
-  const latestCount = 5;
+  useEffect(() => {
+    fetch('/api/student-zone')
+      .then(r => r.ok ? r.json() : null)
+      .then(data => {
+        if (!data?.notices?.length) return;
+        const normalized = data.notices.map(n => {
+          const meta = categoryMap[n.category] || categoryMap.General;
+          return {
+            id: n.id,
+            title: n.title,
+            category: meta.label,
+            dept: n.institution || 'Administration',
+            date: n.date || '',
+            tag: n.pinned ? '⭐ Important' : null,
+            isUnread: false,
+            isImportant: !!n.pinned,
+            icon: meta.icon,
+            iconBg: meta.iconBg,
+            dateValue: new Date(n.date || Date.now()),
+            image: n.image || `https://placehold.co/800x1100/1041c6/ffffff?text=${encodeURIComponent(n.title)}`,
+          };
+        });
+        setNotices(normalized);
+      })
+      .catch(() => {});
+  }, []);
+
+  const categoryColors = {
+    Placements: '#dcfce7', Examinations: '#ede9fe', Events: '#fee2e2',
+    General: '#dbeafe', Scholarship: '#dcfce7',
+  };
+  const categoryTextColors = {
+    Placements: '#16a34a', Examinations: '#7c3aed', Events: '#dc2626',
+    General: '#1d4ed8', Scholarship: '#16a34a',
+  };
+
+  const latestCount = notices.length;
 
   const filteredNotices = notices.filter(notice => {
     switch (activeTab) {
@@ -83,19 +145,10 @@ export default function StudentNoticePage() {
   return (
     <div className="sn-container">
       <style>{`
-        .sn-container { background: #f5f8ff; min-height: 100vh; margin-top: 80px; overflow-x: hidden; }
+        .sn-container { background: #f5f8ff; min-height: 100vh; overflow-x: hidden; }
         .sn-container *, .sn-container *::before, .sn-container *::after { box-sizing: border-box; }
-        @media (max-width: 1024px) {
-          .sn-container { margin-top: 35px !important; }
-        }
-        @media (max-width: 768px) {
-          .sn-container { margin-top: 10px !important; }
-        }
-        @media (max-width: 425px) {
-          .sn-container { margin-top: 0px !important; }
-        }
 
-        .sn-hero { background: linear-gradient(135deg, #f0f5ff 0%, #fff 60%); padding: 40px 5% 36px; display: flex; align-items: center; justify-content: space-between; gap: 24px; border-bottom: 1px solid #e8eeff; }
+        .sn-hero { background: linear-gradient(135deg, #f0f5ff 0%, #fff 60%); padding: 100px 5% 36px; display: flex; align-items: center; justify-content: space-between; gap: 24px; border-bottom: 1px solid #e8eeff; }
         .sn-hero__title { font-size: 2.4rem; font-weight: 800; color: #162341; margin: 0 0 10px; line-height: 1.12; }
         .sn-hero__title span { color: #1041c6; }
         .sn-hero__sub { font-size: 15px; color: #5f6785; line-height: 1.5; margin: 0; max-width: 620px; }
@@ -146,13 +199,13 @@ export default function StudentNoticePage() {
 
         /* Responsive */
         @media (max-width: 1023px) {
-          .sn-hero { padding: 20px 5% 15px !important; }
+          .sn-hero { padding: 80px 5% 15px !important; }
           .sn-hero__title { font-size: 2rem; }
           .sn-hero__img { font-size: 60px; }
           .sn-main { padding: 15px 5% !important; }
         }
         @media (max-width: 768px) {
-          .sn-hero { padding: 6px 16px 6px !important; flex-direction: column; align-items: flex-start; }
+          .sn-hero { padding: 70px 16px 16px !important; flex-direction: column; align-items: flex-start; }
           .sn-hero__title { font-size: 1.7rem; }
           .sn-hero__img { display: none; }
           .sn-main { padding: 12px 16px !important; }
@@ -268,6 +321,8 @@ export default function StudentNoticePage() {
         }
       `}</style>
 
+      <NoticeModal notice={viewNotice} onClose={() => setViewNotice(null)} />
+
       {/* Hero */}
       <div className="sn-hero">
         <div>
@@ -306,10 +361,6 @@ export default function StudentNoticePage() {
         <div className="sn-list">
           {displayedNotices.map(notice => (
             <div key={notice.id} className="sn-item">
-              <div className="sn-item__dot" style={{ background: notice.dot }} />
-              <div className="sn-item__icon" style={{ background: notice.iconBg }}>
-                {notice.icon}
-              </div>
               <div className="sn-item__body">
                 <div className="sn-item__title">{notice.title}</div>
                 <div className="sn-item__meta">
@@ -335,9 +386,20 @@ export default function StudentNoticePage() {
               )}
 
               <div className="sn-item__actions">
-                <button className="sn-btn">👁 View</button>
-                <button className="sn-btn">⬇ Download</button>
-                <button className="sn-bookmark">🔖</button>
+                <button className="sn-btn" onClick={() => setViewNotice(notice)}>👁 View</button>
+                <button className="sn-btn" onClick={async () => {
+                  try {
+                    const res = await fetch(notice.image);
+                    const blob = await res.blob();
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `${notice.title.replace(/[^a-z0-9]/gi, '_')}.png`;
+                    a.click();
+                    URL.revokeObjectURL(url);
+                  } catch { window.open(notice.image, '_blank'); }
+                }}>⬇ Download</button>
+               
               </div>
             </div>
           ))}

@@ -78,12 +78,11 @@ const footerGroups = [
   {
     title: 'PROGRAMS',
     links: [
-      { label: 'UG', path: '/all-programs' },
-      { label: 'PG', path: '/all-programs' },
-      { label: 'Diploma', path: '/all-programs' },
-      { label: 'Ph.D.', path: '/all-rograms' },
-      { label: 'Online Programs', path: '/all-programs' },
-      { label: 'All Programs', path: '/all-programs' },
+      { label: 'UG', path: '/programs?level=ug' },
+      { label: 'PG', path: '/programs?level=pg' },
+      { label: 'Diploma', path: '/programs?level=diploma' },
+     
+      { label: 'All Programs', path: '/programs' },
     ],
   },
   {

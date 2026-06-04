@@ -125,12 +125,14 @@ const storiesCards = [
 ];
 
 const toneAccent = { cyan: '#1fb7e2', gold: '#ffbe23', blue: '#1f63db', violet: '#9a43f0' };
+const tones = ['cyan', 'gold', 'blue', 'violet'];
 
 export default function FacultyShowcase() {
   const carouselRef = useRef(null);
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('Top Faculties');
   const [facultyCardsData, setFacultyCardsData] = useState(facultyCards);
+  const [storiesCards, setStoriesCards] = useState([]);
 
   const imageFallbacks = {
     facultyBg,
@@ -163,6 +165,22 @@ export default function FacultyShowcase() {
     };
 
     fetchFacultyData();
+
+    fetch('/api/placements')
+      .then(r => r.ok ? r.json() : [])
+      .then(data => {
+        if (!Array.isArray(data) || !data.length) return;
+        setStoriesCards(data.map((p, i) => ({
+          name: p.student,
+          batch: `${p.program}${p.year ? ' ' + p.year : ''}`,
+          company: p.company,
+          role: p.role,
+          package: p.pkg,
+          image: p.customImage || null,
+          tone: tones[i % tones.length],
+        })));
+      })
+      .catch(() => {});
   }, []);
 
   const scrollCards = (direction) => {
@@ -294,10 +312,13 @@ export default function FacultyShowcase() {
               ))}
 
               {/* Success Stories Cards */}
-              {activeTab === 'Success Stories' && storiesCards.map((story) => (
-                <article className={`faculty-showcase__card faculty-showcase__card--${story.tone}`} key={story.name}>
+              {activeTab === 'Success Stories' && storiesCards.map((story, idx) => (
+                <article className={`faculty-showcase__card faculty-showcase__card--${story.tone}`} key={idx}>
                   <div className="faculty-showcase__portrait-wrap">
-                    <img src={story.image} alt={story.name} className="faculty-showcase__portrait" loading="lazy" />
+                    {story.image
+                      ? <img src={story.image} alt={story.name} className="faculty-showcase__portrait" loading="lazy" />
+                      : <div className="faculty-showcase__portrait" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#e2e8f0', fontSize: '48px' }}>👤</div>
+                    }
                   </div>
                   <span className="faculty-showcase__badge"><UserBadgeIcon /></span>
                   <h3 className="faculty-showcase__name">{story.name}</h3>
