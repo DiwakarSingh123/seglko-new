@@ -1,23 +1,29 @@
-import { Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 import institutionsBg from '../../assets/images/seg.jpeg';
 
 const HistoryHero = () => {
+  const [headline, setHeadline] = useState('The Legacy of Saroj Educational Group');
+  const [description, setDescription] = useState('A journey marked by dedication, growth, and a commitment to educational excellence that has shaped thousands of lives and continues to lead the way for future leaders.');
+
+  useEffect(() => {
+    fetch('/api/settings')
+      .then(res => res.json())
+      .then(data => {
+        if (data?.aboutHistory) {
+          if (data.aboutHistory.headline) setHeadline(data.aboutHistory.headline);
+          if (data.aboutHistory.description) setDescription(data.aboutHistory.description);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
   return (
     <section className="history-hero">
       <div className="history-hero__inner">
         <div className="history-hero__content">
-
-
-          <h1 className="history-hero__title">
-            The Legacy of
-            <br />
-            Saroj <span className="text-blue">Educational Group</span>
-          </h1>
+          <h1 className="history-hero__title">{headline}</h1>
           <div className="history-hero__accent-line"></div>
-
-          <p className="history-hero__text">
-            A journey marked by dedication, growth, and a commitment to educational excellence that has shaped thousands of lives and continues to lead the way for future leaders.
-          </p>
+          <p className="history-hero__text">{description}</p>
         </div>
 
         <div className="history-hero__visual">

@@ -341,9 +341,10 @@ button {
   position: relative;
   display: flex;
   align-items: center;
-  gap: 28px;
-  justify-content: space-between;
-  padding: 0 45px 0 250px;
+  gap: 20px;
+  justify-content: flex-end;
+  
+  padding: 0 8px 0 220px;
 }
 
 .navbar__logo-wrap {
@@ -351,16 +352,15 @@ button {
   align-items: center;
   justify-content: center;
   background: var(--color-white);
-  width: 180px;
-  min-width: 180px;
-  height: 170px;
-  padding: 16px 18px 18px;
-  margin-top: 50px;
+  width: 165px;
+  min-width: 165px;
+  height: 150px;
+  padding: 12px 14px 14px;
+  margin-top: 40px;
   border-radius: 0 0 14px 14px;
 
-  /* Added shadow */
   position: absolute;
-  left: 45px;
+  left: 5px;
   top: 50%;
   transform: translateY(-50%);
   z-index: 2;
@@ -368,11 +368,10 @@ button {
 
 .navbar__logo {
   width: 100%;
-  max-width: 136px;
+  max-width: 116px;
   height: auto;
   object-fit: contain;
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.05));
-  /* Minimum shadow on logo */
 }
 
 .navbar__nav {
@@ -380,7 +379,7 @@ button {
   flex: 1;
   align-items: center;
   justify-content: flex-start;
-  gap: 30px;
+  gap: 12px;
   min-height: 60px;
   width: 100%;
   margin-left: 0;
@@ -392,7 +391,7 @@ button {
   gap: 1px;
   cursor: pointer;
   position: relative;
-  padding: 4px 0;
+  padding: 4px 6px;
 }
 
 .navbar__item-button {
@@ -408,7 +407,7 @@ button {
 
 .navbar__item-text {
   font-family: var(--font-primary);
-  font-size: 17px;
+  font-size: 15px;
   font-weight: 500;
   color: var(--color-dark);
   white-space: nowrap;
@@ -424,8 +423,8 @@ button {
 }
 
 .navbar__item-arrow {
-  width: 23px;
-  height: 23px;
+  width: 16px;
+  height: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -433,8 +432,8 @@ button {
 }
 
 .navbar__item-arrow svg {
-  width: 15px;
-  height: 9px;
+  width: 11px;
+  height: 7px;
   color: var(--color-dark);
   transition: color 0.2s, transform 0.2s;
 }
@@ -482,9 +481,9 @@ button {
 .navbar__dropdown-shell {
   position: absolute;
   top: 100%;
-  left: 50%;
-  width: min(1232px, calc(100vw - 180px));
-  transform: translateX(-50%);
+  left: 220px;
+  width: calc(100% - 228px);
+  transform: none;
   z-index: 150;
 }
 

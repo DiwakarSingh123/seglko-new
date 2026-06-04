@@ -98,21 +98,25 @@ const programsFeatureCards = [
     title: 'M.Pharm',
     description: 'Our M.Pharm program offers in-depth knowledge in pharmaceutical sciences, preparing students for advanced careers.',
     icon: 'capsule',
+    path: '/programs/mpharm',
   },
   {
     title: 'D.Pharma',
     description: 'Our D.Pharma program prepares students with practical skills to excel in the healthcare and pharmacy sectors.',
     icon: 'medical',
+    path: '/programs/dpharm',
   },
   {
     title: 'Bachelor of Technology',
     description: 'Our B.Tech program provides a solid foundation in engineering, preparing you for a successful career in technology.',
     icon: 'gear',
+    path: '/programs/btech',
   },
   {
     title: 'Diploma Programmes',
     description: 'Our diploma programs offer practical training and industry-relevant skills, ensuring career readiness.',
     icon: 'certificate',
+    path: '/programs/diploma',
   },
 ];
 
@@ -672,7 +676,7 @@ export default function Navbar() {
                           </Link>
                         </li>
                       ))}
-                      {item.label === 'Programs' && programsMenuItems.map(sub => (
+                      {item.label === 'Programs' && [...programsMenuItems, ...programsFeatureCards].map(sub => (
                         <li key={sub.title}>
                           <Link to={sub.path} className="navbar__mobile-subitem" onClick={() => { setMobileOpen(false); setActiveDropdown(null); }}>
                             <span className="navbar__mobile-subitem-icon"><IconTile type={sub.icon} /></span>
@@ -923,7 +927,7 @@ export default function Navbar() {
 
               <div className="programs-panel__cards">
                 {programsFeatureCards.map((item) => (
-                  <article key={item.title} className="programs-panel__card">
+                  <Link key={item.title} to={item.path} className="programs-panel__card" onClick={() => setActiveDropdown(null)} style={{ textDecoration: 'none' }}>
                     <span className="programs-panel__card-icon">
                       <IconTile type={item.icon} />
                     </span>
@@ -931,7 +935,7 @@ export default function Navbar() {
                       <h4 className="programs-panel__card-title">{item.title}</h4>
                       <p className="programs-panel__card-text">{item.description}</p>
                     </div>
-                  </article>
+                  </Link>
                 ))}
               </div>
             </div>

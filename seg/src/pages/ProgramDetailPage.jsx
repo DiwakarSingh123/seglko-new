@@ -1,6 +1,6 @@
 import { useParams, useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 import { allPrograms } from './ProgramsPage';
-import programsHeroImg from '../assets/images/programs-page image.jpeg';
 
 const ArrowRight = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
@@ -30,7 +30,29 @@ const highlightColors = ['#1f63db', '#6cbf46', '#ff8b1a', '#9a43f0'];
 export default function ProgramDetailPage() {
   const { slug } = useParams();
   const navigate = useNavigate();
-  const program = allPrograms.find(p => p.slug === slug);
+
+  // Try API first, fallback to static data
+  const staticProgram = allPrograms.find(p => p.slug === slug);
+  const [program, setProgram] = useState(staticProgram || null);
+
+  useEffect(() => {
+    fetch('/api/programs')
+      .then(res => res.json())
+      .then(data => {
+        const found = Array.isArray(data) ? data.find(p => p.slug === slug) : null;
+        if (found) {
+          // Merge API data over static — API fields take priority
+          setProgram(prev => ({ ...prev, ...found,
+            image: found.image || prev?.image,
+            highlights: found.highlights?.length ? found.highlights : prev?.highlights,
+            specializations: found.specializations?.length ? found.specializations : prev?.specializations,
+            whyChoose: found.whyChoose?.length ? found.whyChoose : prev?.whyChoose,
+            careers: found.careers?.length ? found.careers : prev?.careers,
+          }));
+        }
+      })
+      .catch(() => {});
+  }, [slug]);
 
   if (!program) {
     return (
@@ -51,24 +73,26 @@ export default function ProgramDetailPage() {
 
         /* Hero */
         .pdp-hero { 
-          background: url(${programsHeroImg});
-          background-size: cover;
-          background-position: center;
-          padding: 130px 45px 100px; 
-          display: flex; 
-          flex-direction: column;
-          align-items: flex-start;
-          min-height: 520px; 
+          background: #f0f5ff;
+          padding: 80px 60px;
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 60px;
+          align-items: center;
+          min-height: 520px;
         }
-        .pdp-hero__label { font-weight: 700; font-size: 13px; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 20px; color: #1041c6 !important; }
+        .pdp-hero__content { display: flex; flex-direction: column; align-items: flex-start; }
+        .pdp-hero__label { font-weight: 700; font-size: 13px; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 20px; color: #1041c6; }
         .pdp-hero__title { font-size: 3.2rem; font-weight: 700; color: #162341; line-height: 1.1; margin-bottom: 12px; }
-        .pdp-hero__subtitle { font-size: 2.2rem; font-weight: 700; margin-bottom: 24px; color: #1041c6 !important; }
-        .pdp-hero__desc { font-size: 1.1rem; color: #5f6785; line-height: 1.8; max-width: 600px; margin-bottom: 40px; }
+        .pdp-hero__subtitle { font-size: 2.2rem; font-weight: 700; margin-bottom: 24px; color: #1041c6; }
+        .pdp-hero__desc { font-size: 1.1rem; color: #5f6785; line-height: 1.8; max-width: 560px; margin-bottom: 40px; }
         .pdp-hero__btns { display: flex; gap: 16px; flex-wrap: wrap; }
         .pdp-hero__btn-primary { padding: 15px 36px; color: #fff; border: none; border-radius: 8px; font-size: 15px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 10px; transition: transform 0.2s; }
         .pdp-hero__btn-primary:hover { transform: translateY(-2px); }
-        .pdp-hero__btn-outline { padding: 15px 36px; background: #fff; border-radius: 8px; font-size: 15px; font-weight: 700; cursor: pointer; border: 2px solid #1041c6 !important; color: #1041c6 !important; transition: all 0.2s; }
+        .pdp-hero__btn-outline { padding: 15px 36px; background: #fff; border-radius: 8px; font-size: 15px; font-weight: 700; cursor: pointer; border: 2px solid #1041c6; color: #1041c6; transition: all 0.2s; }
         .pdp-hero__btn-outline:hover { background: #f0f5ff; }
+        .pdp-hero__img-wrap { width: 100%; height: 420px; border-radius: 20px; overflow: hidden; box-shadow: 0 20px 60px rgba(16,65,198,0.18); }
+        .pdp-hero__img { width: 100%; height: 100%; object-fit: fill; }
 
         /* Highlights */
         .pdp-highlights { padding: 50px 45px; background: #fff; }
@@ -126,8 +150,8 @@ export default function ProgramDetailPage() {
 
         /* ── RESPONSIVE ── */
         @media (max-width: 1023px) {
-          .pdp-hero { grid-template-columns: 1fr; padding: 50px 20px 40px; }
-          .pdp-hero__img { height: 260px; }
+          .pdp-hero { grid-template-columns: 1fr; padding: 50px 20px 40px; gap: 32px; }
+          .pdp-hero__img-wrap { height: 280px; }
           .pdp-highlights { padding: 40px 20px; }
           .pdp-highlights__grid { grid-template-columns: repeat(2, 1fr); }
           .pdp-spec { padding: 40px 20px; }
@@ -142,7 +166,7 @@ export default function ProgramDetailPage() {
           .pdp-hero { padding: 36px 16px 30px; gap: 24px; }
           .pdp-hero__title { font-size: 1.8rem; }
           .pdp-hero__subtitle { font-size: 1.4rem; }
-          .pdp-hero__img { height: 200px; }
+          .pdp-hero__img-wrap { height: 220px; }
           .pdp-hero__btns { flex-direction: column; }
           .pdp-hero__btn-primary, .pdp-hero__btn-outline { width: 100%; justify-content: center; }
           .pdp-highlights { padding: 28px 16px; }
@@ -185,7 +209,7 @@ export default function ProgramDetailPage() {
 
       {/* Hero */}
       <div className="pdp-hero">
-        <div>
+        <div className="pdp-hero__content">
           <p className="pdp-hero__label">{program.label}</p>
           <h1 className="pdp-hero__title">{program.title}</h1>
           <h2 className="pdp-hero__subtitle">{program.subtitle}</h2>
@@ -194,10 +218,11 @@ export default function ProgramDetailPage() {
             <a href="https://ssitm.in/" target="_blank" rel="noopener noreferrer" className="pdp-hero__btn-primary" style={{ background: '#1041c6', textDecoration: 'none' }}>
               Apply Now <ArrowRight />
             </a>
-            <button className="pdp-hero__btn-outline">
-              Download Brochure
-            </button>
+            <button className="pdp-hero__btn-outline">Download Brochure</button>
           </div>
+        </div>
+        <div className="pdp-hero__img-wrap">
+          <img src={program.image} alt={program.title} className="pdp-hero__img" />
         </div>
       </div>
 
