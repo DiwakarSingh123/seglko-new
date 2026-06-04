@@ -26,10 +26,13 @@ export async function POST(request: Request) {
   try {
     await connectDB();
     const body = await request.json();
+    console.log('POST /api/happenings body:', body);
     const item = await Happening.create(body);
+    console.log('Saved happening:', item);
     return NextResponse.json(item, { status: 201, headers: corsHeaders });
-  } catch {
-    return NextResponse.json({ error: 'Failed to add happening' }, { status: 500 });
+  } catch (err: any) {
+    console.error('POST /api/happenings error:', err.message);
+    return NextResponse.json({ error: err.message || 'Failed to add happening' }, { status: 500 });
   }
 }
 

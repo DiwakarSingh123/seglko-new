@@ -203,7 +203,8 @@ const announcementStats = [
 ];
 
 export default function HappeningsShowcase() {
-  const [events, setEvents] = useState([]);
+  const [apiEvents, setApiEvents] = useState([]);
+  const [apiAnnouncements, setApiAnnouncements] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -212,7 +213,8 @@ export default function HappeningsShowcase() {
         const response = await fetch('/api/happenings');
         if (response.ok) {
           const data = await response.json();
-          setEvents(data);
+          setApiEvents(data.filter(d => d.type === 'whats_happening'));
+          setApiAnnouncements(data.filter(d => d.type === 'announcement'));
         }
       } catch (error) {
         console.error('Error fetching happenings:', error);
@@ -223,7 +225,7 @@ export default function HappeningsShowcase() {
     fetchHappenings();
   }, []);
 
-  const displayEvents = events.length > 0 ? events.slice(0, 5) : eventCards;
+  const displayEvents = apiEvents.length > 0 ? apiEvents.slice(0, 5) : eventCards;
 
   const processedEvents = displayEvents.map((evt, idx) => {
     if (evt.day && evt.month && evt.year) {
@@ -335,7 +337,17 @@ export default function HappeningsShowcase() {
           </div>
 
           <div className="happenings-showcase__announcement-list">
-            {announcements.map((item) => (
+            {(apiAnnouncements.length > 0 ? apiAnnouncements.map((item) => ({
+              day: new Date(item.date).getDate().toString().padStart(2, '0'),
+              month: new Date(item.date).toLocaleString('default', { month: 'short' }),
+              year: new Date(item.date).getFullYear().toString(),
+              title: item.title,
+              downloadTitle: item.title,
+              fileName: item.title.toLowerCase().replace(/[^a-z0-9]+/g, '-') + '.txt',
+              color: 'blue',
+              icon: <DocIcon />,
+              description: item.description,
+            })) : announcements).map((item) => (
               <article className="happenings-showcase__announcement" key={`${item.day}-${item.title}`}>
                 <div className={`happenings-showcase__announcement-date happenings-showcase__announcement-date--${item.color}`}>
                   <strong>{item.day}</strong>

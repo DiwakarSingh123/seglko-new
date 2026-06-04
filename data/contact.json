@@ -65,6 +65,15 @@
   ],
   "inquiries": [
     {
+      "id": "INQ-007",
+      "name": "Diwakar Singh",
+      "email": "diwakarsinghdd111@gmail.com",
+      "phone": "7007406326",
+      "subject": "Admissions — M.Tech — Hamla acchanak hua tha",
+      "date": "Jun 4, 2026",
+      "status": "New"
+    },
+    {
       "id": "INQ-006",
       "name": "k",
       "email": "k@gmail.com",

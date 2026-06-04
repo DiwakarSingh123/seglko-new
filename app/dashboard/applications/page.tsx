@@ -2,6 +2,100 @@
 import { useState, useEffect } from "react";
 import { resolveInstitutionName, type InstitutionRecord } from "@/lib/institution-utils";
 
+function JobDetailModal({ app, onClose, onStatusChange }: { app: any; onClose: () => void; onStatusChange: (id: string, status: string) => void }) {
+  const [status, setStatus] = useState(app.status || 'pending');
+  const [saving, setSaving] = useState(false);
+
+  const save = async () => {
+    setSaving(true);
+    try {
+      await fetch('/api/job-applications', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ _id: app._id, status }),
+      });
+      onStatusChange(app._id, status);
+      onClose();
+    } catch (e) { console.error(e); }
+    setSaving(false);
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4" onClick={onClose}>
+      <div className="bg-white rounded-3xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+        {/* Header */}
+        <div className="flex items-start justify-between p-6 border-b border-slate-100">
+          <div className="flex items-center gap-4">
+            {app.photo
+              ? <img src={app.photo} alt={app.name} className="w-16 h-16 rounded-2xl object-cover border border-slate-200" />
+              : <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white text-xl font-black">
+                  {(app.name || '').split(' ').map((n: string) => n[0]).join('').substring(0, 2)}
+                </div>
+            }
+            <div>
+              <h2 className="text-lg font-black text-slate-900">{app.name}</h2>
+              <p className="text-sm text-slate-500">{app.position}</p>
+              <p className="text-xs text-slate-400">{app.email} · {app.phone}</p>
+            </div>
+          </div>
+          <button onClick={onClose} className="h-8 w-8 flex items-center justify-center rounded-xl hover:bg-slate-100">
+            <span className="material-symbols-outlined text-slate-500">close</span>
+          </button>
+        </div>
+
+        {/* Details Grid */}
+        <div className="p-6 grid grid-cols-2 gap-4">
+          {[
+            { label: 'Phone', value: app.phone },
+            { label: 'Address', value: app.address },
+            { label: 'Qualification', value: app.qualification },
+            { label: 'Experience', value: app.experience },
+            { label: 'Expected Salary', value: app.expectedSalary },
+            { label: 'Last Organization', value: app.lastOrganization },
+            { label: 'Last Salary', value: app.lastSalary },
+            { label: 'Applied On', value: app.createdAt ? new Date(app.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : '—' },
+          ].map(({ label, value }) => (
+            <div key={label} className="bg-slate-50 rounded-2xl p-3">
+              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">{label}</p>
+              <p className="text-sm font-semibold text-slate-800">{value || '—'}</p>
+            </div>
+          ))}
+        </div>
+
+        {/* Resume */}
+        {app.resume && (
+          <div className="px-6 pb-4">
+            <a href={app.resume} target="_blank" rel="noopener noreferrer"
+              className="flex items-center gap-3 bg-indigo-50 border border-indigo-100 rounded-2xl p-4 hover:bg-indigo-100 transition-colors">
+              <span className="material-symbols-outlined text-indigo-600 text-2xl">picture_as_pdf</span>
+              <div>
+                <p className="text-sm font-bold text-indigo-700">View Resume / CV</p>
+                <p className="text-xs text-indigo-400">Click to open PDF in new tab</p>
+              </div>
+              <span className="material-symbols-outlined text-indigo-400 ml-auto">open_in_new</span>
+            </a>
+          </div>
+        )}
+
+        {/* Status Update */}
+        <div className="px-6 pb-6 flex items-center gap-3">
+          <select value={status} onChange={e => setStatus(e.target.value)}
+            className="flex-1 bg-slate-50 border border-slate-200 rounded-xl py-2 px-3 text-sm font-semibold outline-none focus:ring-2 focus:ring-indigo-200">
+            <option value="pending">Pending</option>
+            <option value="Accepted">Accepted</option>
+            <option value="Rejected">Rejected</option>
+            <option value="In Review">In Review</option>
+          </select>
+          <button onClick={save} disabled={saving}
+            className="px-5 py-2 bg-indigo-600 text-white rounded-xl text-sm font-semibold hover:bg-indigo-700 disabled:opacity-50 transition-colors">
+            {saving ? 'Saving...' : 'Update Status'}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 const statusStyle: Record<string, string> = {
   Accepted: "bg-emerald-100 text-emerald-700",
   accepted: "bg-emerald-100 text-emerald-700",
@@ -21,6 +115,7 @@ export default function ApplicationsPage() {
   const [jobApps, setJobApps] = useState<any[]>([]);
   const [institutions, setInstitutions] = useState<InstitutionRecord[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedJob, setSelectedJob] = useState<any>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -102,13 +197,20 @@ export default function ApplicationsPage() {
     </tr>
   );
 
+  const handleJobStatusChange = (id: string, status: string) => {
+    setJobApps(prev => prev.map(a => a._id === id ? { ...a, status } : a));
+  };
+
   const renderJobRow = (a: any) => (
     <tr key={a._id} className="border-b border-slate-50 hover:bg-slate-50/60 transition-colors">
       <td className="px-5 py-3.5">
         <div className="flex items-center gap-2.5">
-          <div className="h-8 w-8 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white text-[10px] font-bold flex-shrink-0">
-            {(a.name || "").split(" ").map((n: string) => n[0]).join("").substring(0, 2)}
-          </div>
+          {a.photo
+            ? <img src={a.photo} alt={a.name} className="h-8 w-8 rounded-full object-cover border border-slate-200 flex-shrink-0" />
+            : <div className="h-8 w-8 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white text-[10px] font-bold flex-shrink-0">
+                {(a.name || "").split(" ").map((n: string) => n[0]).join("").substring(0, 2)}
+              </div>
+          }
           <div>
             <div className="text-sm font-semibold text-slate-800">{a.name}</div>
             <div className="text-[10px] text-slate-400">{a.email}</div>
@@ -117,11 +219,11 @@ export default function ApplicationsPage() {
       </td>
       <td className="px-5 py-3.5 text-sm text-slate-500">{a.position}</td>
       <td className="px-5 py-3.5"><span className="px-2 py-1 bg-indigo-50 text-indigo-600 text-[10px] font-bold rounded-lg">{a.qualification}</span></td>
-      <td className="px-5 py-3.5"><span className={`px-2.5 py-1 rounded-full text-[10px] font-bold ${statusStyle[a.status]}`}>{a.status || "pending"}</span></td>
-      <td className="px-5 py-3.5 text-sm text-slate-400">{new Date(a.createdAt).toLocaleDateString()}</td>
+      <td className="px-5 py-3.5"><span className={`px-2.5 py-1 rounded-full text-[10px] font-bold ${statusStyle[a.status] || 'bg-amber-100 text-amber-700'}`}>{a.status || "pending"}</span></td>
+      <td className="px-5 py-3.5 text-sm text-slate-400">{new Date(a.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</td>
       <td className="px-5 py-3.5 text-sm text-slate-600">{a.experience || "—"}</td>
       <td className="px-5 py-3.5">
-        <button className="h-7 w-7 bg-indigo-600 rounded-full flex items-center justify-center hover:bg-indigo-700 transition-colors">
+        <button onClick={() => setSelectedJob(a)} className="h-7 w-7 bg-indigo-600 rounded-full flex items-center justify-center hover:bg-indigo-700 transition-colors">
           <span className="material-symbols-outlined text-white text-sm">arrow_forward</span>
         </button>
       </td>
@@ -130,6 +232,13 @@ export default function ApplicationsPage() {
 
   return (
     <div className="space-y-5">
+      {selectedJob && (
+        <JobDetailModal
+          app={selectedJob}
+          onClose={() => setSelectedJob(null)}
+          onStatusChange={handleJobStatusChange}
+        />
+      )}
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-xl font-black text-slate-800">Applications</h1>

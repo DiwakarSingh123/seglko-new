@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 type HappeningItem = {
   _id: string;
   title: string;
+  type?: string;
   category: string;
   date: string;
   description?: string;
@@ -40,7 +41,10 @@ export default function HappeningsPage() {
     setLoading(true);
     try {
       const res = await fetch("/api/happenings");
-      if (res.ok) setItems(await res.json());
+      if (res.ok) {
+        const data = await res.json();
+        setItems(data);
+      }
     } catch (e) {
       console.error(e);
     }
@@ -111,6 +115,7 @@ export default function HappeningsPage() {
       const payload = {
         ...(editing ? { _id: editing._id } : {}),
         title: form.title.trim(),
+        type: "whats_happening",
         category: form.category,
         date: form.date,
         description: form.description.trim(),

@@ -16,6 +16,7 @@ const placementSchema = new mongoose.Schema({
 // ── Happening ──────────────────────────────────────────────
 const happeningSchema = new mongoose.Schema({
   title: String,
+  type: { type: String, default: 'whats_happening' },
   category: String,
   date: String,
   description: String,

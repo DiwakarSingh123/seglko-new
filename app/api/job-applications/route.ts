@@ -1,12 +1,28 @@
 import { NextResponse } from 'next/server';
 import { connectDB } from '@/lib/mongodb';
 import { Application } from '@/lib/models';
+import { v2 as cloudinary } from 'cloudinary';
+import { UTApi } from 'uploadthing/server';
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
+const utapi = new UTApi();
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
   'Access-Control-Allow-Headers': 'Content-Type, Authorization',
 };
+
+async function fileToBase64(file: File): Promise<string> {
+  const buffer = await file.arrayBuffer();
+  const base64 = Buffer.from(buffer).toString('base64');
+  return `data:${file.type};base64,${base64}`;
+}
 
 export async function OPTIONS() {
   return NextResponse.json({}, { headers: corsHeaders });
@@ -28,7 +44,7 @@ export async function POST(request: Request) {
     await connectDB();
     const formData = await request.formData();
 
-    const applicationData = {
+    const applicationData: any = {
       type: 'job',
       name: formData.get('name')?.toString() || '',
       email: formData.get('email')?.toString() || '',
@@ -45,6 +61,37 @@ export async function POST(request: Request) {
 
     if (!applicationData.name || !applicationData.email) {
       return NextResponse.json({ error: 'Name and email are required' }, { status: 400, headers: corsHeaders });
+    }
+
+    // Upload photo to Cloudinary
+    const photoFile = formData.get('photo') as File | null;
+    if (photoFile && photoFile.size > 0) {
+      try {
+        const b64 = await fileToBase64(photoFile);
+        const result = await cloudinary.uploader.upload(b64, {
+          folder: 'seglko-job-applications/photos',
+          resource_type: 'image',
+          transformation: [{ quality: 'auto', fetch_format: 'auto' }],
+        });
+        applicationData.photo = result.secure_url;
+      } catch (e) {
+        console.error('Photo upload failed:', e);
+      }
+    }
+
+    // Upload resume PDF via UploadThing
+    const resumeFile = formData.get('resume') as File | null;
+    if (resumeFile && resumeFile.size > 0) {
+      try {
+        const response = await utapi.uploadFiles(resumeFile);
+        if (response.data?.ufsUrl) {
+          applicationData.resume = response.data.ufsUrl;
+        } else {
+          console.error('UploadThing resume upload failed:', response.error);
+        }
+      } catch (e) {
+        console.error('Resume upload failed:', e);
+      }
     }
 
     const application = await Application.create(applicationData);
