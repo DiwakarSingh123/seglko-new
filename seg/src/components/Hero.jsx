@@ -25,7 +25,7 @@ export default function Hero() {
           At Saroj Educational Group, we nurture talent, encourage innovation, and empower students to achieve excellence in every sphere.
         </p>
         <div className="hero__buttons animate-fade-in" style={{ animationDelay: '0.4s' }}>
-          <button className="btn btn--primary" id="explore-programs-btn" onClick={() => navigate('/all-programs')}>
+          <button className="btn btn--primary" id="explore-programs-btn" onClick={() => navigate('/programs')}>
             Explore Programs
             <span className="btn__arrow">
               <ArrowRight color="#fff" />

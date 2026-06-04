@@ -1,10 +1,33 @@
-import { useNavigate } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useState, useEffect, useMemo } from 'react';
 import programsHeroImg from '../assets/images/programs-page image.jpeg';
 
 const ArrowRight = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
 );
+
+const levelFilters = {
+  ug: {
+    title: 'Undergraduate Programs',
+    matches: (program) => /undergraduate/i.test(program.label || ''),
+  },
+  pg: {
+    title: 'Postgraduate Programs',
+    matches: (program) => /postgraduate/i.test(program.label || ''),
+  },
+  diploma: {
+    title: 'Diploma Programs',
+    matches: (program) => /diploma/i.test(`${program.label || ''} ${program.title || ''}`),
+  },
+  phd: {
+    title: 'Ph.D. Programs',
+    matches: (program) => /ph\.?d|doctor/i.test(`${program.label || ''} ${program.title || ''}`),
+  },
+  online: {
+    title: 'Online Programs',
+    matches: (program) => /online/i.test(`${program.label || ''} ${program.title || ''}`),
+  },
+};
 
 export const allPrograms = [
   {
@@ -311,7 +334,14 @@ export const allPrograms = [
 
 export default function ProgramsPage() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [displayPrograms, setDisplayPrograms] = useState(allPrograms);
+  const level = (searchParams.get('level') || '').toLowerCase();
+  const activeFilter = levelFilters[level];
+  const visiblePrograms = useMemo(
+    () => activeFilter ? displayPrograms.filter(activeFilter.matches) : displayPrograms,
+    [activeFilter, displayPrograms]
+  );
 
   useEffect(() => {
     fetch('/api/programs')
@@ -340,16 +370,16 @@ export default function ProgramsPage() {
       }}>
         <p style={{ color: '#ffbe23', fontWeight: 700, fontSize: '13px', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '14px' }}>Our Programs</p>
         <h1 style={{ fontSize: '2.8rem', fontWeight: 700, color: '#fff', marginBottom: '14px', lineHeight: 1.2 }}>
-          Programs Designed for a <span style={{ color: '#ffbe23' }}>Successful Future</span>
+          {activeFilter?.title || 'Programs'} Designed for a <span style={{ color: '#ffbe23' }}>Successful Future</span>
         </h1>
         <p style={{ fontSize: '1.05rem', color: 'rgba(255,255,255,0.82)', maxWidth: '520px', lineHeight: 1.7 }}>
           Discover a wide range of programs designed to build your skills, expand your knowledge, and shape your future.
         </p>
       </div>
 
-      <div style={{ maxWidth: '1350px', margin: '0 auto', padding: '44px 45px 0' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(360px, 1fr))', gap: '28px' }}>
-          {displayPrograms.map((program) => (
+      <div style={{ padding: '44px 45px 0' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '28px' }}>
+          {visiblePrograms.map((program) => (
             <div
               key={program.slug}
               onClick={() => navigate(`/programs/${program.slug}`)}
@@ -379,6 +409,11 @@ export default function ProgramsPage() {
             </div>
           ))}
         </div>
+        {visiblePrograms.length === 0 && (
+          <div style={{ background: '#fff', borderRadius: '16px', padding: '34px', textAlign: 'center', color: '#5f6785', boxShadow: '0 6px 20px rgba(20,35,90,0.08)' }}>
+            No {activeFilter?.title.toLowerCase() || 'programs'} are available right now.
+          </div>
+        )}
       </div>
     </div>
   );

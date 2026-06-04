@@ -1,8 +1,17 @@
-import aboutBg from '../assets/images/saroj institue.jpeg';
-import campusBg from '../assets/images/seg.jpeg';
-import heroBg from '../assets/images/ssitm.jpeg';
-import institutionsBg from '../assets/images/college of law.avif';
-import placementsBg from '../assets/images/pharmacy.jpg';
+import { useState, useEffect } from 'react';
+import ssitmFallback from '../assets/images/ssitm.jpeg';
+import sitlFallback from '../assets/images/saroj institue.jpeg';
+import lawFallback from '../assets/images/college of law.avif';
+import scpFallback from '../assets/images/pharmacy.jpg';
+import scepFallback from '../assets/images/seg.jpeg';
+
+const fallbackImages = {
+  SSITM: ssitmFallback,
+  SITM: sitlFallback,
+  SCL: lawFallback,
+  SCP: scpFallback,
+  SCEP: scepFallback,
+};
 
 const ArrowRight = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -59,48 +68,17 @@ const CheckIcon = () => (
   </svg>
 );
 
-const institutions = [
-  {
-    title: 'Shivdan Singh Institute of Technology and Management',
-    code: '007',
-    approval: 'Approved by AICTE and affiliated to AKTU, Lucknow.',
-    image: heroBg,
-    icon: <BuildingIcon />,
-    url: 'https://ssitm.in/',
-  },
-  {
-    title: 'Saroj Institute of Technology and Management',
-    code: '123',
-    approval: 'Approved by AICTE and affiliated to AKTU, Lucknow.',
-    image: aboutBg,
-    icon: <BuildingIcon />,
-    url: 'https://sitmlko.org/',
-  },
-  {
-    title: 'Saroj College of Law',
-    code: 'BCI Approved',
-    approval: 'Approved by Bar Council of India and affiliated to AKTU, Lucknow.',
-    image: institutionsBg,
-    icon: <LawIcon />,
-    url: 'https://seglko.org/scl/',
-  },
-  {
-    title: 'Saroj College of Pharmacy',
-    code: '2031',
-    approval: 'Approved by Pharmacy Council of India and affiliated to AKTU, Lucknow.',
-    image: placementsBg,
-    icon: <PharmacyIcon />,
-    url: 'https://seglko.org/scp/',
-  },
-];
+function getIcon(inst) {
+  const t = (inst.tag || inst.type || '').toLowerCase();
+  if (t.includes('law')) return <LawIcon />;
+  if (t.includes('pharm')) return <PharmacyIcon />;
+  if (t.includes('poly') || t.includes('engineer')) return <GearIcon />;
+  return <BuildingIcon />;
+}
 
-const featuredInstitution = {
-  title: 'Saroj College of Engineering and Polytechnic',
-  approval: 'Approved by AICTE and affiliated to AKTU, Lucknow.',
-  image: campusBg,
-  icon: <GearIcon />,
-  url: 'https://seglko.org/scep/',
-};
+function getImage(inst) {
+  return inst.customImage || inst.image || fallbackImages[inst.short] || ssitmFallback;
+}
 
 function InstitutionCard({ institution }) {
   return (
@@ -147,15 +125,25 @@ function InstitutionCard({ institution }) {
 }
 
 export default function FullSections() {
+  const [list, setList] = useState([]);
+
+  useEffect(() => {
+    fetch('/api/institutions')
+      .then(r => r.ok ? r.json() : [])
+      .then(data => { if (Array.isArray(data) && data.length) setList(data); })
+      .catch(() => {});
+  }, []);
+
+  const gridItems = list.slice(0, 4);
+  const featured = list[4] || null;
+
   return (
     <section className="institutions-showcase" id="institutions-showcase">
       <div className="institutions-showcase__shell">
         <div className="institutions-showcase__header">
           <div className="institutions-showcase__intro">
             <div className="institutions-showcase__title-row">
-              <span className="institutions-showcase__title-icon">
-                <BuildingIcon />
-              </span>
+              <span className="institutions-showcase__title-icon"><BuildingIcon /></span>
               <h2 className="institutions-showcase__title">Our Institutions</h2>
             </div>
             <span className="institutions-showcase__accent" />
@@ -163,51 +151,44 @@ export default function FullSections() {
               A legacy of excellence across diverse disciplines, shaping future leaders and innovators.
             </p>
           </div>
-
         </div>
 
         <div className="institutions-showcase__grid">
-          {institutions.map((institution) => (
-            <InstitutionCard key={institution.title} institution={institution} />
+          {gridItems.map((inst) => (
+            <InstitutionCard key={inst._id} institution={{ ...inst, image: getImage(inst), icon: getIcon(inst) }} />
           ))}
         </div>
 
-        <article className="institutions-showcase__featured">
-          <div className="institutions-showcase__featured-image-wrap">
-            <img
-              src={featuredInstitution.image}
-              alt={featuredInstitution.title}
-              className="institutions-showcase__featured-image"
-              loading="lazy"
-            />
-            <span className="institutions-showcase__featured-badge">{featuredInstitution.icon}</span>
-          </div>
-
-          <div className="institutions-showcase__featured-content">
-            <h3 className="institutions-showcase__featured-title">{featuredInstitution.title}</h3>
-
-            <div className="institutions-showcase__meta-row institutions-showcase__meta-row--gold">
-              <span className="institutions-showcase__meta-icon">
-                <InfoIcon />
-              </span>
-              <span>{featuredInstitution.approval}</span>
+        {featured && (
+          <article className="institutions-showcase__featured">
+            <div className="institutions-showcase__featured-image-wrap">
+              <img
+                src={getImage(featured)}
+                alt={featured.title}
+                className="institutions-showcase__featured-image"
+                loading="lazy"
+              />
+              <span className="institutions-showcase__featured-badge">{getIcon(featured)}</span>
             </div>
-
-            <a
-              href={featuredInstitution.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="institutions-showcase__link institutions-showcase__link--featured"
-            >
-              Explore Institute
-              <span className="institutions-showcase__link-arrow">
-                <ArrowRight />
-              </span>
-            </a>
-          </div>
-
-          <span className="institutions-showcase__dots" aria-hidden="true" />
-        </article>
+            <div className="institutions-showcase__featured-content">
+              <h3 className="institutions-showcase__featured-title">{featured.title}</h3>
+              <div className="institutions-showcase__meta-row institutions-showcase__meta-row--gold">
+                <span className="institutions-showcase__meta-icon"><InfoIcon /></span>
+                <span>{featured.approval}</span>
+              </div>
+              <a
+                href={featured.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="institutions-showcase__link institutions-showcase__link--featured"
+              >
+                Explore Institute
+                <span className="institutions-showcase__link-arrow"><ArrowRight /></span>
+              </a>
+            </div>
+            <span className="institutions-showcase__dots" aria-hidden="true" />
+          </article>
+        )}
       </div>
     </section>
   );

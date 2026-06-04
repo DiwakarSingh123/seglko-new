@@ -7,11 +7,7 @@ export default function ChairmanHero() {
     <section className="chairman-hero">
       <div className="chairman-hero__shell">
         <div className="chairman-hero__copy">
-          <div className="chairman-hero__breadcrumbs">
-
-            <span className="separator">&gt;</span>
-            <span className="current">Chairman&apos;s Message</span>
-          </div>
+          
 
           <span className="chairman-hero__dots" aria-hidden="true" />
 

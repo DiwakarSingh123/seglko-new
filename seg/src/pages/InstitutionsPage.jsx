@@ -94,27 +94,27 @@ export default function InstitutionsPage() {
   const [activeFilter, setActiveFilter] = useState('All')
   const [searchTerm, setSearchTerm] = useState('')
   const [sortBy, setSortBy] = useState('Newest')
-  const [happenings, setHappenings] = useState([])
+  const [displayItems, setDisplayItems] = useState(institutions)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    const fetchHappenings = async () => {
+    const fetchInstitutions = async () => {
       try {
-        const res = await fetch('/api/happenings')
+        const res = await fetch('/api/institutions')
         if (res.ok) {
           const data = await res.json()
-          setHappenings(data)
+          if (Array.isArray(data) && data.length > 0) {
+            setDisplayItems(data)
+          }
         }
       } catch (err) {
-        console.error("Error fetching happenings:", err)
+        console.error('Error fetching institutions:', err)
       } finally {
         setLoading(false)
       }
     }
-    fetchHappenings()
+    fetchInstitutions()
   }, [])
-
-  const displayItems = happenings.length > 0 ? happenings : institutions
 
   // Filter items by category
   let filteredItems = displayItems.filter(item => {
@@ -238,7 +238,8 @@ export default function InstitutionsPage() {
               }
 
               const tag = item.tag || item.category?.toUpperCase() || 'NEWS';
-              const imageUrl = item.image || program5;
+              const imageMap = { program1, program2, program3, program4, program5, program6 };
+              const imageUrl = item.customImage || imageMap[item.image] || item.image || program5;
               const url = item.url || '#';
 
               return (

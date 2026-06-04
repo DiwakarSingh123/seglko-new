@@ -1,6 +1,23 @@
 import { NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
+import { v2 as cloudinary } from 'cloudinary';
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+};
+
+export async function OPTIONS() {
+  return NextResponse.json({}, { headers: corsHeaders });
+}
 
 const dataFilePath = path.join(process.cwd(), 'data', 'student-zone.json');
 
@@ -45,15 +62,9 @@ export async function GET() {
     initializeDataFile();
     const fileData = fs.readFileSync(dataFilePath, 'utf8');
     const data = JSON.parse(fileData);
-    return NextResponse.json(data, {
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-      },
-    });
+    return NextResponse.json(data, { headers: corsHeaders });
   } catch (error) {
-    return NextResponse.json({ error: 'Failed to read data' }, { status: 500 });
+    return NextResponse.json({ error: 'Failed to read data' }, { status: 500, headers: corsHeaders });
   }
 }
 
@@ -61,9 +72,24 @@ export async function PUT(request: Request) {
   try {
     initializeDataFile();
     const updatedData = await request.json();
+
+    // Upload base64 image to Cloudinary if present
+    if (updatedData.notices) {
+      for (const notice of updatedData.notices) {
+        if (notice.image && notice.image.startsWith('data:')) {
+          const result = await cloudinary.uploader.upload(notice.image, {
+            folder: 'student-notices',
+            transformation: [{ quality: 'auto', fetch_format: 'auto' }],
+          });
+          notice.image = result.secure_url;
+        }
+      }
+    }
+
     fs.writeFileSync(dataFilePath, JSON.stringify(updatedData, null, 2));
-    return NextResponse.json({ success: true, data: updatedData });
+    return NextResponse.json({ success: true, data: updatedData }, { headers: corsHeaders });
   } catch (error) {
-    return NextResponse.json({ error: 'Failed to update data' }, { status: 500 });
+    console.error('student-zone PUT error:', error);
+    return NextResponse.json({ error: 'Failed to update data' }, { status: 500, headers: corsHeaders });
   }
 }

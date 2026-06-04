@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import GalleryTab from "../components/GalleryTab";
 
 interface Institution {
-  id: number; title: string; code: string; tag: string;
+  _id: string; title: string; code: string; tag: string;
   date: { day: string; month: string; year: string };
   approval: string; description: string; url: string;
   image: string; category: string; short: string; type: string;
@@ -17,7 +17,7 @@ export default function InstitutionsPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [tab, setTab] = useState<"list">("list");
-  const [editingId, setEditingId] = useState<number | null>(null);
+  const [editingId, setEditingId] = useState<string | null>(null);
   const [showAddForm, setShowAddForm] = useState(false);
   const [formError, setFormError] = useState("");
   const [newInst, setNewInst] = useState({
@@ -46,17 +46,24 @@ export default function InstitutionsPage() {
     setIsLoading(true);
     try {
       const res = await fetch("/api/institutions");
-      if (res.ok) setInstitutions(await res.json());
+      if (res.ok) {
+        const data = await res.json();
+        setInstitutions(Array.isArray(data) ? data : []);
+      }
     } catch (e) { console.error(e); }
     setIsLoading(false);
   };
 
+  const searchTerm = search.toLowerCase();
+  const getText = (value: unknown) => String(value ?? "").toLowerCase();
+  const getNumber = (value: unknown) => Number(value) || 0;
+
   const filtered = institutions.filter(i =>
-    i.title.toLowerCase().includes(search.toLowerCase()) || i.type.toLowerCase().includes(search.toLowerCase())
+    getText(i.title).includes(searchTerm) || getText(i.type).includes(searchTerm)
   );
 
-  const updateField = (id: number, field: keyof Institution, value: any) =>
-    setInstitutions(prev => prev.map(i => i.id === id ? { ...i, [field]: value } : i));
+  const updateField = (_id: string, field: keyof Institution, value: any) =>
+    setInstitutions(prev => prev.map(i => i._id === _id ? { ...i, [field]: value } : i));
 
   const save = async (inst: Institution) => {
     await fetch("/api/institutions", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(inst) });
@@ -64,10 +71,10 @@ export default function InstitutionsPage() {
     setEditingId(null);
   };
 
-  const del = async (id: number) => {
+  const del = async (_id: string) => {
     if (!confirm("Delete this institution?")) return;
-    await fetch(`/api/institutions?id=${id}`, { method: "DELETE" });
-    setInstitutions(prev => prev.filter(i => i.id !== id));
+    await fetch(`/api/institutions?id=${_id}`, { method: "DELETE" });
+    setInstitutions(prev => prev.filter(i => i._id !== _id));
   };
 
   const handleSaveNew = async () => {
@@ -105,9 +112,9 @@ export default function InstitutionsPage() {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {[
           { label: "Total Institutions", value: institutions.length, icon: "account_balance", color: "bg-indigo-500" },
-          { label: "Total Programs", value: institutions.reduce((a, i) => a + i.programs, 0), icon: "menu_book", color: "bg-blue-500" },
-          { label: "Total Students", value: institutions.reduce((a, i) => a + i.students, 0).toLocaleString(), icon: "group", color: "bg-emerald-500" },
-          { label: "Est. Since", value: institutions.length ? Math.min(...institutions.map(i => i.estd)) : "—", icon: "history_edu", color: "bg-amber-500" },
+          { label: "Total Programs", value: institutions.reduce((a, i) => a + getNumber(i.programs), 0), icon: "menu_book", color: "bg-blue-500" },
+          { label: "Total Students", value: institutions.reduce((a, i) => a + getNumber(i.students), 0).toLocaleString(), icon: "group", color: "bg-emerald-500" },
+          { label: "Est. Since", value: institutions.length ? Math.min(...institutions.map(i => getNumber(i.estd)).filter(Boolean)) || "—" : "—", icon: "history_edu", color: "bg-amber-500" },
         ].map(s => (
           <div key={s.label} className="bg-white rounded-2xl border border-slate-100 p-4 shadow-sm">
             <div className={`h-9 w-9 rounded-xl ${s.color} flex items-center justify-center text-white mb-3 shadow-md`}>
@@ -230,51 +237,55 @@ export default function InstitutionsPage() {
 
           <div className="space-y-4">
             {!isLoading && filtered.map(inst => (
-              <div key={inst.id} className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+              <div key={inst._id} className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
                 <div className={`h-1.5 w-full bg-gradient-to-r ${inst.color}`} />
                 <div className="p-5">
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex items-center gap-3">
-                      <div className={`h-12 w-12 rounded-xl bg-gradient-to-br ${inst.color} flex items-center justify-center text-white font-black text-sm shadow-md`}>{inst.short}</div>
+                      <div className={`h-12 w-12 rounded-xl bg-gradient-to-br ${inst.color} flex items-center justify-center text-white font-black text-sm shadow-md overflow-hidden`}>
+                        {(inst.customImage || inst.image)
+                          ? <img src={inst.customImage || inst.image} alt={inst.short} className="w-full h-full object-cover" />
+                          : inst.short}
+                      </div>
                       <div>
                         <div className="font-black text-slate-800">{inst.title}</div>
                         <div className="text-xs text-slate-400 mt-0.5">{inst.location} · {inst.affiliation}</div>
                       </div>
                     </div>
                     <div className="flex gap-2">
-                      <button onClick={() => setEditingId(editingId === inst.id ? null : inst.id)} className="h-8 px-3 flex items-center gap-1.5 rounded-lg bg-indigo-50 text-indigo-600 hover:bg-indigo-100 transition-colors text-xs font-semibold">
-                        <span className="material-symbols-outlined text-sm">{editingId === inst.id ? "expand_less" : "edit"}</span>{editingId === inst.id ? "Collapse" : "Edit"}
+                      <button onClick={() => setEditingId(editingId === inst._id ? null : inst._id)} className="h-8 px-3 flex items-center gap-1.5 rounded-lg bg-indigo-50 text-indigo-600 hover:bg-indigo-100 transition-colors text-xs font-semibold">
+                        <span className="material-symbols-outlined text-sm">{editingId === inst._id ? "expand_less" : "edit"}</span>{editingId === inst._id ? "Collapse" : "Edit"}
                       </button>
-                      {editingId === inst.id && (
+                      {editingId === inst._id && (
                         <button onClick={() => save(inst)} className="h-8 px-3 flex items-center gap-1.5 rounded-lg bg-emerald-50 text-emerald-600 hover:bg-emerald-100 transition-colors text-xs font-semibold">
                           <span className="material-symbols-outlined text-sm">save</span>Save
                         </button>
                       )}
-                      <button onClick={() => del(inst.id)} className="h-8 w-8 flex items-center justify-center rounded-lg bg-rose-50 text-rose-500 hover:bg-rose-100 transition-colors">
+                      <button onClick={() => del(inst._id)} className="h-8 w-8 flex items-center justify-center rounded-lg bg-rose-50 text-rose-500 hover:bg-rose-100 transition-colors">
                         <span className="material-symbols-outlined text-sm">delete</span>
                       </button>
                     </div>
                   </div>
 
-                  {editingId === inst.id && (
+                  {editingId === inst._id && (
                     <div className="space-y-3 mt-4 pt-4 border-t border-slate-100">
                       <div className="grid grid-cols-2 gap-3">
                         <div><label className="text-xs font-bold text-slate-600 mb-1 block">Title</label>
-                          <input value={inst.title} onChange={e => updateField(inst.id, "title", e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2 px-3 text-sm outline-none focus:ring-2 focus:ring-indigo-200" /></div>
+                          <input value={inst.title} onChange={e => updateField(inst._id, "title", e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2 px-3 text-sm outline-none focus:ring-2 focus:ring-indigo-200" /></div>
                         <div><label className="text-xs font-bold text-slate-600 mb-1 block">Tag</label>
-                          <input value={inst.tag} onChange={e => updateField(inst.id, "tag", e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2 px-3 text-sm outline-none focus:ring-2 focus:ring-indigo-200" /></div>
+                          <input value={inst.tag} onChange={e => updateField(inst._id, "tag", e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2 px-3 text-sm outline-none focus:ring-2 focus:ring-indigo-200" /></div>
                         <div><label className="text-xs font-bold text-slate-600 mb-1 block">Description</label>
-                          <textarea rows={2} value={inst.description} onChange={e => updateField(inst.id, "description", e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2 px-3 text-sm outline-none focus:ring-2 focus:ring-indigo-200" /></div>
+                          <textarea rows={2} value={inst.description} onChange={e => updateField(inst._id, "description", e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2 px-3 text-sm outline-none focus:ring-2 focus:ring-indigo-200" /></div>
                         <div><label className="text-xs font-bold text-slate-600 mb-1 block">Approval Text</label>
-                          <textarea rows={2} value={inst.approval} onChange={e => updateField(inst.id, "approval", e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2 px-3 text-sm outline-none focus:ring-2 focus:ring-indigo-200" /></div>
+                          <textarea rows={2} value={inst.approval} onChange={e => updateField(inst._id, "approval", e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2 px-3 text-sm outline-none focus:ring-2 focus:ring-indigo-200" /></div>
                         <div><label className="text-xs font-bold text-slate-600 mb-1 block">URL</label>
-                          <input value={inst.url} onChange={e => updateField(inst.id, "url", e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2 px-3 text-sm outline-none focus:ring-2 focus:ring-indigo-200" /></div>
+                          <input value={inst.url} onChange={e => updateField(inst._id, "url", e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2 px-3 text-sm outline-none focus:ring-2 focus:ring-indigo-200" /></div>
                         <div><label className="text-xs font-bold text-slate-600 mb-1 block">Category</label>
-                          <input value={inst.category} onChange={e => updateField(inst.id, "category", e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2 px-3 text-sm outline-none focus:ring-2 focus:ring-indigo-200" /></div>
+                          <input value={inst.category} onChange={e => updateField(inst._id, "category", e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2 px-3 text-sm outline-none focus:ring-2 focus:ring-indigo-200" /></div>
                         <div><label className="text-xs font-bold text-slate-600 mb-1 block">Students</label>
-                          <input type="number" value={inst.students} onChange={e => updateField(inst.id, "students", parseInt(e.target.value))} className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2 px-3 text-sm outline-none focus:ring-2 focus:ring-indigo-200" /></div>
+                          <input type="number" value={inst.students} onChange={e => updateField(inst._id, "students", parseInt(e.target.value))} className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2 px-3 text-sm outline-none focus:ring-2 focus:ring-indigo-200" /></div>
                         <div><label className="text-xs font-bold text-slate-600 mb-1 block">Programs</label>
-                          <input type="number" value={inst.programs} onChange={e => updateField(inst.id, "programs", parseInt(e.target.value))} className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2 px-3 text-sm outline-none focus:ring-2 focus:ring-indigo-200" /></div>
+                          <input type="number" value={inst.programs} onChange={e => updateField(inst._id, "programs", parseInt(e.target.value))} className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2 px-3 text-sm outline-none focus:ring-2 focus:ring-indigo-200" /></div>
                         <div className="col-span-2">
                           <label className="text-xs font-bold text-slate-600 mb-1 block">Institution Image</label>
                           <input
@@ -284,7 +295,7 @@ export default function InstitutionsPage() {
                               const file = e.target.files?.[0];
                               if (file) {
                                 const reader = new FileReader();
-                                reader.onloadend = () => updateField(inst.id, "customImage", reader.result as string);
+                                reader.onloadend = () => updateField(inst._id, "customImage", reader.result as string);
                                 reader.readAsDataURL(file);
                               }
                             }}
@@ -294,7 +305,7 @@ export default function InstitutionsPage() {
                             <div className="relative mt-2">
                               <img src={inst.customImage} alt="Institution" className="object-cover w-full h-32 border rounded-xl border-slate-200" />
                               <button
-                                onClick={() => updateField(inst.id, "customImage", "")}
+                                onClick={() => updateField(inst._id, "customImage", "")}
                                 className="absolute p-1 text-white bg-red-500 rounded-full top-1 right-1 hover:bg-red-600"
                               >
                                 <span className="text-sm material-symbols-outlined">close</span>
@@ -306,12 +317,12 @@ export default function InstitutionsPage() {
                     </div>
                   )}
 
-                  {editingId !== inst.id && (
+                  {editingId !== inst._id && (
                     <div className="mt-2">
                       <p className="text-sm text-slate-500">{inst.description}</p>
                       <div className="flex gap-4 mt-3 text-xs text-slate-400">
                         <span>📚 {inst.programs} Programs</span>
-                        <span>👥 {inst.students.toLocaleString()} Students</span>
+                        <span>👥 {inst.students?.toLocaleString()} Students</span>
                         <span>📅 Est. {inst.estd}</span>
                       </div>
                     </div>
