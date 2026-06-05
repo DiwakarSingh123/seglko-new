@@ -7442,7 +7442,7 @@ button {
   border-radius: 8px 8px 0 0;
   z-index: 9999;
   text-decoration: none;
-  box-shadow: 0 -4px 15px rgba(225, 29, 72, 0.4);
+  box-shadow: none;
   margin-top: -85px;
   transition: background 0.2s ease;
 }

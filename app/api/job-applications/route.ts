@@ -2,15 +2,12 @@ import { NextResponse } from 'next/server';
 import { connectDB } from '@/lib/mongodb';
 import { Application } from '@/lib/models';
 import { v2 as cloudinary } from 'cloudinary';
-import { UTApi } from 'uploadthing/server';
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
-
-const utapi = new UTApi();
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -79,16 +76,16 @@ export async function POST(request: Request) {
       }
     }
 
-    // Upload resume PDF via UploadThing
+    // Upload resume via Cloudinary (raw resource type supports PDF)
     const resumeFile = formData.get('resume') as File | null;
     if (resumeFile && resumeFile.size > 0) {
       try {
-        const response = await utapi.uploadFiles(resumeFile);
-        if (response.data?.ufsUrl) {
-          applicationData.resume = response.data.ufsUrl;
-        } else {
-          console.error('UploadThing resume upload failed:', response.error);
-        }
+        const b64Resume = await fileToBase64(resumeFile);
+        const result = await cloudinary.uploader.upload(b64Resume, {
+          folder: 'seglko-job-applications/resumes',
+          resource_type: 'raw',
+        });
+        applicationData.resume = result.secure_url;
       } catch (e) {
         console.error('Resume upload failed:', e);
       }

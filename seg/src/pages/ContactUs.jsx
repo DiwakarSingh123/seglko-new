@@ -272,27 +272,7 @@ export default function ContactUs() {
           </div>
 
           {/* CTA Banner */}
-          <div className="cu-cta-banner">
-            <div className="cu-cta-banner__left">
-              <div className="cu-cta-banner__icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 18v-6a9 9 0 0 1 18 0v6"></path><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"></path></svg>
-              </div>
-              <div>
-                <h3 className="cu-cta-banner__title">Need Immediate Help?</h3>
-                <p className="cu-cta-banner__desc">Talk to our admission counselor now.</p>
-              </div>
-            </div>
-            <div className="cu-cta-banner__actions">
-              <a href="tel:09555699988" className="cu-btn cu-btn--solid">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.38 2 2 0 0 1 3.6 1.21h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.77a16 16 0 0 0 6 6l1.06-1.06a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21.73 16z" /></svg>
-                Call Now
-              </a>
-              <button className="cu-btn cu-btn--outline">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" /></svg>
-                Chat with Counselor
-              </button>
-            </div>
-          </div>
+         
         </div>
       </section>
     </div>

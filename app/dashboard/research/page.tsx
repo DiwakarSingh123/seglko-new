@@ -117,12 +117,19 @@ export default function ResearchPage() {
   };
 
   const [showAdd, setShowAdd] = useState(false);
+  const [showAddProject, setShowAddProject] = useState(false);
+  const [showAddAward, setShowAddAward] = useState(false);
+  const [showAddInnovation, setShowAddInnovation] = useState(false);
   const [editingPaper, setEditingPaper] = useState<Paper | null>(null);
   const [editingProject, setEditingProject] = useState<Project | null>(null);
   const [editingAward, setEditingAward] = useState<Award | null>(null);
   const [editingInnovation, setEditingInnovation] = useState<Innovation | null>(null);
   const [expandedAward, setExpandedAward] = useState<number | null>(null);
   const [form, setForm] = useState<Omit<Paper, "id">>({ faculty: "", type: "International", title: "", journal: "", year: "", dept: departments[0] });
+  const [projectForm, setProjectForm] = useState<Omit<Project, "id">>({ name: "", dept: projectDepts[0] });
+  const [awardForm, setAwardForm] = useState<Omit<Award, "id">>({ faculty: "", dept: departments[0], projects: [] });
+  const [awardProjectsInput, setAwardProjectsInput] = useState("");
+  const [innovationForm, setInnovationForm] = useState<Omit<Innovation, "id">>({ title: "", faculty: "", dept: departments[0] });
 
   const filtered = papers.filter((p) => p.dept === selectedDept);
   const sessionProjects = projects.filter((p) => p.dept === selectedSessionDept);
@@ -190,6 +197,35 @@ export default function ResearchPage() {
     const newList = innovations.filter((i) => i.id !== id);
     setInnovations(newList);
     saveData({ papers, projects, awards, innovations: newList });
+  };
+
+  const handleAddProject = () => {
+    if (!projectForm.name.trim()) return;
+    const newList = [...projects, { id: Date.now(), ...projectForm }];
+    setProjects(newList);
+    saveData({ papers, projects: newList, awards, innovations });
+    setProjectForm({ name: "", dept: projectDepts[0] });
+    setShowAddProject(false);
+  };
+
+  const handleAddAward = () => {
+    if (!awardForm.faculty.trim()) return;
+    const projectsList = awardProjectsInput.split("\n").map(p => p.trim()).filter(Boolean);
+    const newList = [...awards, { id: Date.now(), ...awardForm, projects: projectsList }];
+    setAwards(newList);
+    saveData({ papers, projects, awards: newList, innovations });
+    setAwardForm({ faculty: "", dept: departments[0], projects: [] });
+    setAwardProjectsInput("");
+    setShowAddAward(false);
+  };
+
+  const handleAddInnovation = () => {
+    if (!innovationForm.title.trim() || !innovationForm.faculty.trim()) return;
+    const newList = [...innovations, { id: Date.now(), ...innovationForm }];
+    setInnovations(newList);
+    saveData({ papers, projects, awards, innovations: newList });
+    setInnovationForm({ title: "", faculty: "", dept: departments[0] });
+    setShowAddInnovation(false);
   };
 
   return (
@@ -288,14 +324,106 @@ export default function ResearchPage() {
         </div>
       )}
 
+      {/* Add Project Modal */}
+      {showAddProject && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30">
+          <div className="bg-white rounded-2xl shadow-xl p-6 w-full max-w-lg space-y-4">
+            <div className="flex items-center justify-between">
+              <h2 className="text-base font-black text-slate-800">Add Research Project</h2>
+              <button onClick={() => setShowAddProject(false)} className="h-8 w-8 flex items-center justify-center rounded-lg hover:bg-slate-100">
+                <span className="material-symbols-outlined text-slate-500">close</span>
+              </button>
+            </div>
+            <div>
+              <label className="text-xs font-bold text-slate-500 mb-1.5 block">Department</label>
+              <select value={projectForm.dept} onChange={(e) => setProjectForm({ ...projectForm, dept: e.target.value })} className="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300">
+                {projectDepts.map((d) => <option key={d}>{d}</option>)}
+              </select>
+            </div>
+            <input value={projectForm.name} onChange={(e) => setProjectForm({ ...projectForm, name: e.target.value })} placeholder="Project Name" className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-indigo-200" />
+            <div className="flex justify-end gap-3">
+              <button onClick={() => setShowAddProject(false)} className="px-5 py-2.5 rounded-xl border border-slate-200 text-sm font-semibold text-slate-700 hover:bg-slate-50">Cancel</button>
+              <button onClick={handleAddProject} className="px-5 py-2.5 rounded-xl bg-indigo-600 text-sm font-semibold text-white hover:bg-indigo-700">Add</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Add Award Modal */}
+      {showAddAward && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30">
+          <div className="bg-white rounded-2xl shadow-xl p-6 w-full max-w-lg space-y-4">
+            <div className="flex items-center justify-between">
+              <h2 className="text-base font-black text-slate-800">Add Award-Winning Faculty</h2>
+              <button onClick={() => setShowAddAward(false)} className="h-8 w-8 flex items-center justify-center rounded-lg hover:bg-slate-100">
+                <span className="material-symbols-outlined text-slate-500">close</span>
+              </button>
+            </div>
+            <input value={awardForm.faculty} onChange={(e) => setAwardForm({ ...awardForm, faculty: e.target.value })} placeholder="Faculty Name" className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-indigo-200" />
+            <div>
+              <label className="text-xs font-bold text-slate-500 mb-1.5 block">Department</label>
+              <select value={awardForm.dept} onChange={(e) => setAwardForm({ ...awardForm, dept: e.target.value })} className="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300">
+                {departments.map((d) => <option key={d}>{d}</option>)}
+              </select>
+            </div>
+            <div>
+              <label className="text-xs font-bold text-slate-500 mb-1.5 block">Projects (one per line)</label>
+              <textarea rows={4} value={awardProjectsInput} onChange={(e) => setAwardProjectsInput(e.target.value)} placeholder="Project name 1&#10;Project name 2" className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-indigo-200" />
+            </div>
+            <div className="flex justify-end gap-3">
+              <button onClick={() => setShowAddAward(false)} className="px-5 py-2.5 rounded-xl border border-slate-200 text-sm font-semibold text-slate-700 hover:bg-slate-50">Cancel</button>
+              <button onClick={handleAddAward} className="px-5 py-2.5 rounded-xl bg-indigo-600 text-sm font-semibold text-white hover:bg-indigo-700">Add</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Add Innovation Modal */}
+      {showAddInnovation && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30">
+          <div className="bg-white rounded-2xl shadow-xl p-6 w-full max-w-lg space-y-4">
+            <div className="flex items-center justify-between">
+              <h2 className="text-base font-black text-slate-800">Add Innovation & Technology</h2>
+              <button onClick={() => setShowAddInnovation(false)} className="h-8 w-8 flex items-center justify-center rounded-lg hover:bg-slate-100">
+                <span className="material-symbols-outlined text-slate-500">close</span>
+              </button>
+            </div>
+            <input value={innovationForm.title} onChange={(e) => setInnovationForm({ ...innovationForm, title: e.target.value })} placeholder="Technology Title" className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-indigo-200" />
+            <input value={innovationForm.faculty} onChange={(e) => setInnovationForm({ ...innovationForm, faculty: e.target.value })} placeholder="Faculty Name" className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-indigo-200" />
+            <div>
+              <label className="text-xs font-bold text-slate-500 mb-1.5 block">Department</label>
+              <select value={innovationForm.dept} onChange={(e) => setInnovationForm({ ...innovationForm, dept: e.target.value })} className="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300">
+                {departments.map((d) => <option key={d}>{d}</option>)}
+              </select>
+            </div>
+            <div className="flex justify-end gap-3">
+              <button onClick={() => setShowAddInnovation(false)} className="px-5 py-2.5 rounded-xl border border-slate-200 text-sm font-semibold text-slate-700 hover:bg-slate-50">Cancel</button>
+              <button onClick={handleAddInnovation} className="px-5 py-2.5 rounded-xl bg-indigo-600 text-sm font-semibold text-white hover:bg-indigo-700">Add</button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-xl font-black text-slate-800">Research & Development</h1>
           <p className="text-sm text-slate-400 mt-0.5">Manage research publications by department</p>
         </div>
-        <button onClick={() => setShowAdd(true)} className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-xl text-sm font-semibold hover:bg-indigo-700 transition-colors shadow-md shadow-indigo-200">
-          <span className="material-symbols-outlined text-lg">add</span>Add Paper
+        <button
+          onClick={() => {
+            if (tab === "publications") setShowAdd(true);
+            else if (tab === "session") setShowAddProject(true);
+            else if (tab === "awards") setShowAddAward(true);
+            else if (tab === "innovation") setShowAddInnovation(true);
+          }}
+          className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-xl text-sm font-semibold hover:bg-indigo-700 transition-colors shadow-md shadow-indigo-200"
+        >
+          <span className="material-symbols-outlined text-lg">add</span>
+          {tab === "publications" && "Add Paper"}
+          {tab === "session" && "Add Project"}
+          {tab === "awards" && "Add Award"}
+          {tab === "innovation" && "Add Innovation"}
         </button>
       </div>
 

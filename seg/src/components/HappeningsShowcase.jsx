@@ -307,15 +307,6 @@ export default function HappeningsShowcase() {
 
               <div className="happenings-showcase__event-body">
                 <h3 className="happenings-showcase__event-title">{event.title}</h3>
-                {event.isExternal ? (
-                  <a href={event.eventLink} target="_blank" rel="noopener noreferrer" className="happenings-showcase__event-link" aria-label={event.title}>
-                    <ArrowRight />
-                  </a>
-                ) : (
-                  <Link to={event.eventLink} className="happenings-showcase__event-link" aria-label={event.title}>
-                    <ArrowRight />
-                  </Link>
-                )}
               </div>
             </article>
           ))}

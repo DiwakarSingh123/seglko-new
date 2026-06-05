@@ -1,36 +1,21 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import trophyImg from '../assets/images/trophy for awards.jpeg';
 import '../award-winning-projects.css';
 
 const AwardWinningProjects = () => {
-  const [activeIndex, setActiveIndex] = useState(1); // Dr. D.N. Mishra expanded by default
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [facultyData, setFacultyData] = useState([]);
 
-  const facultyData = [
-    {
-      id: 0,
-      name: 'Prof. (Dr.) S.N. Pandeya',
-      projects: ['Potential anti HIV Agent-Man rich', 'Fubeceh Agentc Anti Technology']
-    },
-    {
-      id: 1,
-      name: 'Dr. D.N. Mishra',
-      projects: [
-        'Community Based Distribution Project',
-        'Update Primary Health Care services in Mohanlal Ganj Block',
-        'Study of NHRM (National Rural Health Mission) Asha in Gosaiganj Block'
-      ]
-    },
-    {
-      id: 2,
-      name: 'Er. D. K. Singh',
-      projects: ['Advanced IoT Framework for Smart Cities', 'Blockchain in Supply Chain Management']
-    },
-    {
-      id: 3,
-      name: 'Dr. Pramod Kr. Pandey',
-      projects: ['Sustainable Energy Solutions', 'AI in Predictive Healthcare']
-    }
-  ];
+  useEffect(() => {
+    fetch('/api/research')
+      .then(r => r.json())
+      .then(data => {
+        if (Array.isArray(data.awards) && data.awards.length > 0) {
+          setFacultyData(data.awards.map((a, i) => ({ id: i, name: a.faculty, projects: a.projects || [] })));
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   return (
     <div className="award-projects-page">

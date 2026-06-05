@@ -8,7 +8,7 @@ const catColors: Record<string, string> = {
   General: "bg-slate-100 text-slate-600",
 };
 
-const emptyNotice = { title: "", category: "General", institution: "All", pinned: false, image: "" };
+const emptyNotice = { title: "", category: "General", institution: "All", image: "" };
 
 export default function StudentZonePage() {
   const [showDrawer, setShowDrawer] = useState(false);
@@ -89,9 +89,9 @@ export default function StudentZonePage() {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {[
           { label: "Active Notices", value: noticeList.length, icon: "campaign", color: "bg-indigo-500" },
-          { label: "Pinned", value: noticeList.filter((n) => n.pinned).length, icon: "push_pin", color: "bg-amber-500" },
           { label: "Exams", value: noticeList.filter((n) => n.category === "Exam").length, icon: "quiz", color: "bg-rose-500" },
           { label: "Events", value: noticeList.filter((n) => n.category === "Event").length, icon: "event", color: "bg-blue-500" },
+          { label: "Scholarships", value: noticeList.filter((n) => n.category === "Scholarship").length, icon: "school", color: "bg-emerald-500" },
         ].map((s) => (
           <div key={s.label} className="bg-white rounded-2xl border border-slate-100 p-4 shadow-sm">
             <div className={`h-9 w-9 rounded-xl ${s.color} flex items-center justify-center text-white mb-3 shadow-md`}>
@@ -110,7 +110,7 @@ export default function StudentZonePage() {
           <table className="w-full">
             <thead>
               <tr className="border-b border-slate-100">
-                {["Title", "Category", "Institution", "Date", "Pinned", ""].map((h) => (
+                {["Title", "Category", "Institution", "Date", ""].map((h) => (
                   <th key={h} className="px-5 py-3 text-left text-[10px] font-bold text-slate-400 uppercase tracking-wider">
                     {h}
                   </th>
@@ -122,9 +122,6 @@ export default function StudentZonePage() {
                 <tr key={n.id} className="border-b border-slate-50 hover:bg-slate-50/60 transition-colors">
                   <td className="px-5 py-3.5">
                     <div className="flex items-center gap-2">
-                      {n.pinned && (
-                        <span className="material-symbols-outlined text-amber-500 text-sm fill-icon">push_pin</span>
-                      )}
                       <span className="text-sm font-semibold text-slate-800">{n.title}</span>
                     </div>
                   </td>
@@ -138,13 +135,6 @@ export default function StudentZonePage() {
                   </td>
                   <td className="px-5 py-3.5 text-sm text-slate-400">{n.date}</td>
                   <td className="px-5 py-3.5">
-                    <span
-                      className={`px-2.5 py-1 rounded-full text-[10px] font-bold ${n.pinned ? "bg-amber-100 text-amber-700" : "bg-slate-100 text-slate-400"}`}
-                    >
-                      {n.pinned ? "Yes" : "No"}
-                    </span>
-                  </td>
-                  <td className="px-5 py-3.5">
                     <div className="flex gap-1.5">
                       <button
                         onClick={() => {
@@ -152,7 +142,6 @@ export default function StudentZonePage() {
                             title: n.title,
                             category: n.category,
                             institution: n.institution,
-                            pinned: n.pinned,
                             image: n.image || "",
                           });
                           setEditingNoticeId(n.id);
@@ -280,20 +269,6 @@ export default function StudentZonePage() {
               </button>
             )}
           </div>
-
-          <label className="flex items-center gap-3 p-4 bg-amber-50 border border-amber-100 rounded-xl cursor-pointer hover:border-amber-300 transition-colors">
-            <input
-              type="checkbox"
-              checked={form.pinned}
-              onChange={(e) => setForm({ ...form, pinned: e.target.checked })}
-              className="w-4 h-4 accent-amber-500"
-            />
-            <div>
-              <div className="text-sm font-bold text-slate-700">Pin this notice</div>
-              <div className="text-xs text-slate-400">Pinned notices appear at the top</div>
-            </div>
-            <span className="material-symbols-outlined text-amber-500 ml-auto text-lg">push_pin</span>
-          </label>
         </div>
 
         <div className="px-6 py-4 border-t border-slate-100 flex gap-3">

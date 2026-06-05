@@ -1,10 +1,31 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import researchHeroImg from '../assets/images/researchprojects.jpeg'; // Using a placeholder for now
+import { useState, useEffect } from 'react';
+import researchHeroImg from '../assets/images/researchprojects.jpeg';
 import '../research-projects.css';
 
 const ResearchProjects = () => {
   const [activeTab, setActiveTab] = useState('Electronics');
+  const [projectsData, setProjectsData] = useState({
+    Electronics: [],
+    Electrical: [],
+    Mechanical: [],
+  });
+
+  useEffect(() => {
+    fetch('/api/research')
+      .then(r => r.json())
+      .then(data => {
+        if (Array.isArray(data.projects) && data.projects.length > 0) {
+          const grouped = { Electronics: [], Electrical: [], Mechanical: [] };
+          data.projects.forEach(p => {
+            if (p.dept?.includes('Electronics')) grouped.Electronics.push(p.name);
+            else if (p.dept?.includes('Electrical')) grouped.Electrical.push(p.name);
+            else if (p.dept?.includes('Mechanical')) grouped.Mechanical.push(p.name);
+          });
+          setProjectsData(grouped);
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   const departments = [
     { name: 'Electronics Department', id: 'Electronics', icon: '⚡' },
@@ -12,54 +33,7 @@ const ResearchProjects = () => {
     { name: 'Mechanical Department', id: 'Mechanical', icon: '⚙️' },
   ];
 
-  const projects = {
-    Electronics: [
-      "Automatic Street Lighting system using IoT",
-      "IoT based Weather Monitoring",
-      "Smart Water Monitoring System using IoT",
-      "Animatronic Hand",
-      "Smart Irrigation System using IoT",
-      "Health Monitoring Wearable Glove",
-      "IoT using Raspberry Pi",
-      "Home Automation System",
-      "GPS & GSM based Tracker",
-      "Biometric Authentication",
-      "Automated Railway Crossing",
-      "Access Control with RFID",
-      "Smart Lighting System",
-      "Persistence of Vision",
-      "Robotic Arm",
-      "Bluetooth Robotics",
-      "Gesture Based Robotics",
-      "Mobile Robotics",
-      "Swarm Robotics",
-      "Sensor Guided Robotics"
-    ],
-    Electrical: [
-      "Smart Grid Management",
-      "Solar Powered Irrigation",
-      "Wireless Power Transfer",
-      "Power Factor Correction",
-      "PLC based Industrial Automation",
-      "EV Charging Station Design",
-      "Fault Detection in Transformers",
-      "Wind Energy Harvesting",
-      "Hybrid Power Systems",
-      "Energy Efficient Motors"
-    ],
-    Mechanical: [
-      "Autonomous Ground Vehicle",
-      "3D Printing Innovations",
-      "Hydraulic Excavator Model",
-      "Formula Student Race Car",
-      "Smart HVAC Systems",
-      "Renewable Energy Turbines",
-      "Precision CNC Machining",
-      "Biomechanical Exoskeleton",
-      "Advanced Welding Techniques",
-      "Robotic Fabrication"
-    ]
-  };
+  const projects = projectsData;
 
   return (
     <div className="rd-projects-page">

@@ -1,58 +1,33 @@
-import robotImg from '../assets/images/seg.jpeg'; // Placeholder for robotic arm
+import { useState, useEffect } from 'react';
+import robotImg from '../assets/images/seg.jpeg';
 import '../technologies-developed.css';
 
+const tagClassMap = {
+  Mathematics: 'tag-math',
+  Mechanical: 'tag-mech',
+  Pharmacy: 'tag-pharm',
+  'Electrical Engineering': 'tag-elec',
+};
+
 const TechnologiesDeveloped = () => {
-  const techData = [
-    {
-      id: 1,
-      details: 'Generation of Concave Surfaces with GUI',
-      faculty: 'Dr. Sunil Singh',
-      department: 'Mathematics',
-      tagClass: 'tag-math'
-    },
-    {
-      id: 2,
-      details: 'Graphs Theoretic Algorithms for Equations',
-      faculty: 'Dr. Sunil Singh',
-      department: 'Mathematics',
-      tagClass: 'tag-math'
-    },
-    {
-      id: 3,
-      details: 'Energy Efficient Design of a Milk Processing Plant',
-      faculty: 'Dr. Dhirendra Thakural',
-      department: 'Mechanical',
-      tagClass: 'tag-mech'
-    },
-    {
-      id: 4,
-      details: 'R & D aspect Design concept of 3 - wheeler Vikram',
-      faculty: 'Dr. O. P. Tiwari',
-      department: 'Mechanical',
-      tagClass: 'tag-mech'
-    },
-    {
-      id: 5,
-      details: 'Fubeceh Agentc Anti Technology',
-      faculty: 'Prof. (Dr.) S.N Pandyaa',
-      department: 'Pharmacy',
-      tagClass: 'tag-pharm'
-    },
-    {
-      id: 6,
-      details: 'Potential anti HIV Agent-Man rich',
-      faculty: 'Prof. (Dr.) S.N Pandyaa',
-      department: 'Pharmacy',
-      tagClass: 'tag-pharm'
-    },
-    {
-      id: 7,
-      details: 'Laser displacement transducer for accurate displacement measurements',
-      faculty: 'Prof. M.U. Khan',
-      department: 'Electrical Engineering',
-      tagClass: 'tag-elec'
-    }
-  ];
+  const [techData, setTechData] = useState([]);
+
+  useEffect(() => {
+    fetch('/api/research')
+      .then(r => r.json())
+      .then(data => {
+        if (Array.isArray(data.innovations) && data.innovations.length > 0) {
+          setTechData(data.innovations.map((item, i) => ({
+            id: i + 1,
+            details: item.title,
+            faculty: item.faculty,
+            department: item.dept,
+            tagClass: tagClassMap[item.dept] || 'tag-math',
+          })));
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   return (
     <div className="tech-dev-page">

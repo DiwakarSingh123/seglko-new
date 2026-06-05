@@ -1,10 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import bookImg from '../assets/images/book image.jpeg';
-import { Link } from 'react-router-dom';
 import '../research-publications.css';
 
 const ResearchPublications = () => {
   const [activeTab, setActiveTab] = useState('CSE');
+  const [publicationData, setPublicationData] = useState({ CSE: [], EE: [], ME: [], Pharmacy: [], Biotechnology: [] });
 
   const tabs = [
     { id: 'CSE', label: 'Computer Science and Engineering (CSE)' },
@@ -14,102 +14,29 @@ const ResearchPublications = () => {
     { id: 'Biotechnology', label: 'Biotechnology' }
   ];
 
-  const publicationData = {
-    CSE: [
-      {
-        faculty: 'Dr. Shivi Chaturvedi',
-        type: 'International',
-        title: 'Digital Signal Processors (DSP) for 3G Mobile Communication Systems',
-        journal: 'International Journal on Emerging Technologies',
-        year: '2010'
-      },
-      {
-        faculty: 'Dr. Shivi Chaturvedi',
-        type: 'International',
-        title: 'Survey Paper on Reversible CPU Based on Logic Gate Structure',
-        journal: 'International Journal of Innovative Research in Computer and Communication Engineering',
-        year: '2016'
-      },
-      {
-        faculty: 'Dr. Shivi Chaturvedi',
-        type: 'International',
-        title: 'An Enhanced Clustering Based Technique for Congestion Control in VANET',
-        journal: 'International Journal of Innovative Research in Science, Engineering and Technology',
-        year: '2016'
-      },
-      {
-        faculty: 'Dr. Shivi Chaturvedi',
-        type: 'National',
-        title: 'Waste to Energy Conversion',
-        journal: 'National Journal of Engineering Science and Management',
-        year: '2011'
-      },
-      {
-        faculty: 'Dr. Shivi Chaturvedi',
-        type: 'National',
-        title: 'Use of Independent Component Analysis in Wireless Communication System',
-        journal: 'National Journal of Engineering Science and Management',
-        year: '2011'
-      },
-      {
-        faculty: 'Dr. Shivi Chaturvedi',
-        type: 'International',
-        title: 'Clinical Prediction on ML based Internet of Things for E-Health',
-        journal: 'International Journal of Data Informatics and Intelligent Computing (IJDIC)',
-        year: '2023'
-      },
-      {
-        faculty: 'Dr. Shivi Chaturvedi',
-        type: 'International',
-        title: 'Implementing and Analyzing Machine Learning Models for Early Diabetes Detection: A Methodological Approach using Survey-based Data',
-        journal: 'International Conference on Energy Systems, Drives and Automations',
-        year: '2024'
-      },
-      {
-        faculty: 'Mr. Deepanshu Kumar',
-        type: 'International',
-        title: 'E-VOTING WEBSITE',
-        journal: 'International Journal of Novel Research and Development',
-        year: '2024'
-      }
-    ],
-    EE: [
-      {
-        faculty: 'Prof. M.U. Khan',
-        type: 'International',
-        title: 'Power Quality Improvement in Distribution Systems',
-        journal: 'IEEE Transactions on Power Delivery',
-        year: '2022'
-      }
-    ],
-    ME: [
-      {
-        faculty: 'Dr. Dhirendra Thakural',
-        type: 'International',
-        title: 'Thermal Analysis of Solar Water Heaters',
-        journal: 'Journal of Renewable Energy',
-        year: '2021'
-      }
-    ],
-    Pharmacy: [
-      {
-        faculty: 'Prof. (Dr.) S.N. Pandeya',
-        type: 'International',
-        title: 'Synthesis and Pharmacological Screening of Novel Anticonvulsants',
-        journal: 'Bioorganic & Medicinal Chemistry',
-        year: '2019'
-      }
-    ],
-    Biotechnology: [
-      {
-        faculty: 'Dr. Aarti Gupta',
-        type: 'International',
-        title: 'CRISPR-Cas9 Applications in Plant Biotechnology',
-        journal: 'Nature Communications',
-        year: '2023'
-      }
-    ]
+  const deptToKey = {
+    'Computer Science and Engineering (CSE)': 'CSE',
+    'Electrical Engineering (EE)': 'EE',
+    'Mechanical Engineering (ME)': 'ME',
+    'Pharmacy': 'Pharmacy',
+    'Biotechnology': 'Biotechnology',
   };
+
+  useEffect(() => {
+    fetch('/api/research')
+      .then(r => r.json())
+      .then(data => {
+        if (Array.isArray(data.papers) && data.papers.length > 0) {
+          const grouped = { CSE: [], EE: [], ME: [], Pharmacy: [], Biotechnology: [] };
+          data.papers.forEach(p => {
+            const key = deptToKey[p.dept];
+            if (key) grouped[key].push({ faculty: p.faculty, type: p.type, title: p.title, journal: p.journal, year: p.year });
+          });
+          setPublicationData(grouped);
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   const renderDots = () => (
     <div className="rp-section__dots">

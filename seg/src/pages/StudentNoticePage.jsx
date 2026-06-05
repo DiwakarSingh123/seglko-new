@@ -29,8 +29,8 @@ function NoticeModal({ notice, onClose }) {
   };
 
   return (
-    <div onClick={onClose} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.7)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
-      <div onClick={e => e.stopPropagation()} style={{ background: '#fff', borderRadius: '16px', maxWidth: '520px', width: '100%', maxHeight: '90vh', display: 'flex', flexDirection: 'column', overflow: 'hidden', boxShadow: '0 24px 60px rgba(0,0,0,0.3)' }}>
+    <div onClick={onClose} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.7)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '12px' }}>
+      <div onClick={e => e.stopPropagation()} style={{ background: '#fff', borderRadius: '16px', maxWidth: '520px', width: '100%', maxHeight: '92vh', display: 'flex', flexDirection: 'column', overflow: 'hidden', boxShadow: '0 24px 60px rgba(0,0,0,0.3)' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 20px', borderBottom: '1px solid #e8eeff' }}>
           <span style={{ fontWeight: 700, fontSize: '14px', color: '#162341', lineHeight: 1.4, flex: 1, marginRight: '12px' }}>{notice.title}</span>
           <button onClick={onClose} style={{ width: '32px', height: '32px', borderRadius: '8px', border: '1.5px solid #e0e8ff', background: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '18px', color: '#5f6785', flexShrink: 0 }}>✕</button>
@@ -148,7 +148,7 @@ export default function StudentNoticePage() {
         .sn-container { background: #f5f8ff; min-height: 100vh; overflow-x: hidden; }
         .sn-container *, .sn-container *::before, .sn-container *::after { box-sizing: border-box; }
 
-        .sn-hero { background: linear-gradient(135deg, #f0f5ff 0%, #fff 60%); padding: 100px 5% 36px; display: flex; align-items: center; justify-content: space-between; gap: 24px; border-bottom: 1px solid #e8eeff; }
+        .sn-hero { background: linear-gradient(135deg, #f0f5ff 0%, #fff 60%); padding: 90px 5% 32px; display: flex; align-items: center; justify-content: space-between; gap: 24px; border-bottom: 1px solid #e8eeff; flex-wrap: wrap; }
         .sn-hero__title { font-size: 2.4rem; font-weight: 800; color: #162341; margin: 0 0 10px; line-height: 1.12; }
         .sn-hero__title span { color: #1041c6; }
         .sn-hero__sub { font-size: 15px; color: #5f6785; line-height: 1.5; margin: 0; max-width: 620px; }
@@ -167,13 +167,13 @@ export default function StudentNoticePage() {
 
         /* Notice list */
         .sn-list { background: #fff; border-radius: 14px; border: 1px solid #e8eeff; overflow: hidden; box-shadow: 0 4px 16px rgba(20,35,90,0.06); }
-        .sn-item { display: flex; align-items: center; gap: 16px; padding: 18px 20px; border-bottom: 1px solid #f0f4ff; transition: background 0.15s; }
+        .sn-item { display: flex; align-items: center; gap: 16px; padding: 18px 20px; border-bottom: 1px solid #f0f4ff; transition: background 0.15s; min-width: 0; }
         .sn-item:last-child { border-bottom: none; }
         .sn-item:hover { background: #f8faff; }
         .sn-item__dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
         .sn-item__icon { width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
         .sn-item__body { flex: 1; min-width: 0; }
-        .sn-item__title { font-size: 15px; font-weight: 700; color: #162341; margin-bottom: 6px; line-height: 1.4; }
+        .sn-item__title { font-size: 15px; font-weight: 700; color: #162341; margin-bottom: 6px; line-height: 1.4; word-break: break-word; }
         .sn-item__meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
         .sn-item__cat { font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 999px; }
         .sn-item__dept { font-size: 12px; color: #8a9bbf; font-weight: 500; }
@@ -199,26 +199,28 @@ export default function StudentNoticePage() {
 
         /* Responsive */
         @media (max-width: 1023px) {
-          .sn-hero { padding: 80px 5% 15px !important; }
+          .sn-hero { padding: 80px 4% 24px !important; }
           .sn-hero__title { font-size: 2rem; }
           .sn-hero__img { font-size: 60px; }
-          .sn-main { padding: 15px 5% !important; }
+          .sn-main { padding: 20px 4% !important; }
         }
         @media (max-width: 768px) {
-          .sn-hero { padding: 70px 16px 16px !important; flex-direction: column; align-items: flex-start; }
+          .sn-hero { padding: 70px 16px 20px !important; flex-direction: column; align-items: flex-start; }
           .sn-hero__title { font-size: 1.7rem; }
           .sn-hero__img { display: none; }
-          .sn-main { padding: 12px 16px !important; }
-          .sn-filters { flex-direction: column; align-items: stretch; gap: 12px; }
+          .sn-main { padding: 16px !important; }
+          .sn-filters { flex-direction: column; align-items: stretch; gap: 10px; }
           .sn-tabs { width: 100%; }
           .sn-tab { flex: 1 1 auto; }
           .sn-sort { width: 100%; justify-content: space-between; }
-          .sn-sort select { flex: 0 1 190px; max-width: 100%; }
-          .sn-item { flex-wrap: wrap; gap: 12px; padding: 14px 16px; }
+          .sn-sort select { flex: 1; min-width: 0; }
+          .sn-item { flex-wrap: wrap; gap: 10px; padding: 14px 14px; }
+          .sn-item__body { min-width: 0; }
           .sn-item__actions { width: 100%; justify-content: flex-end; }
           .sn-item__tag { order: -1; }
           .sn-pagination { flex-direction: column; align-items: stretch; }
           .sn-pages { justify-content: flex-start; }
+          .sn-perpage { justify-content: space-between; }
         }
         @media (max-width: 480px) {
           .sn-hero { padding: 4px 12px 4px !important; }
@@ -361,6 +363,10 @@ export default function StudentNoticePage() {
         <div className="sn-list">
           {displayedNotices.map(notice => (
             <div key={notice.id} className="sn-item">
+              <div className="sn-item__dot" style={{ background: categoryMap[Object.keys(categoryMap).find(k => categoryMap[k].label === notice.category) || 'General']?.dot || '#1041c6' }} />
+              <div className="sn-item__icon" style={{ background: categoryMap[Object.keys(categoryMap).find(k => categoryMap[k].label === notice.category) || 'General']?.iconBg || '#eff6ff' }}>
+                {notice.icon}
+              </div>
               <div className="sn-item__body">
                 <div className="sn-item__title">{notice.title}</div>
                 <div className="sn-item__meta">
