@@ -1,17 +1,12 @@
-import React, { useState } from 'react';
+﻿import React from 'react';
 import { Link } from 'react-router-dom';
 import '../AdmissionProcess.css';
 import logoImg from '../assets/images/logo.png';
+
+// Using campus image for the right side of the hero section
 import heroBg from '../assets/images/programsimg.jpeg';
-import AdmissionForm from './AdmissionForm';
 
 const AdmissionProcess = () => {
-  const [showForm, setShowForm] = useState(false);
-
-  if (showForm) {
-    return <AdmissionForm onBack={() => setShowForm(false)} />;
-  }
-
   return (
     <div className="admission-process">
       {/* HERO SECTION */}
@@ -61,8 +56,8 @@ const AdmissionProcess = () => {
               <div className="ap-step__content">
                 <h3>Register Yourself</h3>
                 <p>Create your account using your email address and basic personal information.</p>
-                <button className="ap-btn ap-btn--blue" onClick={() => setShowForm(true)}>
-                  Start Registration <span className="ap-btn__arrow">→</span>
+                <button className="ap-btn ap-btn--blue">
+                  Start Registration <span className="ap-btn__arrow">ΓåÆ</span>
                 </button>
               </div>
               <div className="ap-step__illustration ap-step__illustration--1">
@@ -96,7 +91,7 @@ const AdmissionProcess = () => {
                 <h3>Verify Email</h3>
                 <p>Check your email for a verification link to activate your account.</p>
                 <div className="ap-alert">
-                  <span className="ap-alert__icon">⚠️</span>
+                  <span className="ap-alert__icon">ΓÜá</span>
                   If you don't see the email, please check your spam folder.
                 </div>
               </div>
@@ -132,16 +127,16 @@ const AdmissionProcess = () => {
                 <p>Complete the detailed application form with your academic and personal information.</p>
                 <div className="ap-checks">
                   <div className="ap-check">
-                    <span className="ap-check__icon">✓</span> Personal Details
+                    <span className="ap-check__icon">Γ£ô</span> Personal Details
                   </div>
                   <div className="ap-check">
-                    <span className="ap-check__icon">✓</span> Academic History
+                    <span className="ap-check__icon">Γ£ô</span> Academic History
                   </div>
                   <div className="ap-check">
-                    <span className="ap-check__icon">✓</span> Contact Information
+                    <span className="ap-check__icon">Γ£ô</span> Contact Information
                   </div>
                   <div className="ap-check">
-                    <span className="ap-check__icon">✓</span> Document Upload
+                    <span className="ap-check__icon">Γ£ô</span> Document Upload
                   </div>
                 </div>
               </div>
@@ -187,8 +182,8 @@ const AdmissionProcess = () => {
                     <span className="ap-pay-icon ap-pay-icon--paypal">PayPal</span>
                   </div>
                 </div>
-                <button className="ap-btn ap-btn--purple" onClick={() => setShowForm(true)}>
-                  Proceed to Payment <span className="ap-btn__arrow">→</span>
+                <button className="ap-btn ap-btn--purple">
+                  Proceed to Payment <span className="ap-btn__arrow">ΓåÆ</span>
                 </button>
               </div>
               <div className="ap-step__illustration ap-step__illustration--4">
@@ -216,8 +211,8 @@ const AdmissionProcess = () => {
               <div className="ap-step__content">
                 <h3>Submit Application</h3>
                 <p>Review and submit your completed application for processing.</p>
-                <button className="ap-btn ap-btn--blue" onClick={() => setShowForm(true)}>
-                  Submit Application <span className="ap-btn__arrow">→</span>
+                <button className="ap-btn ap-btn--blue">
+                  Submit Application <span className="ap-btn__arrow">ΓåÆ</span>
                 </button>
                 <p className="ap-step__subtext">You'll receive a confirmation email with your application details</p>
               </div>

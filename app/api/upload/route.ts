@@ -27,7 +27,7 @@ export async function POST(request: Request) {
 
     const result = await cloudinary.uploader.upload(image, {
       folder,
-      resource_type: 'image',
+      resource_type: 'auto',
       transformation: [{ quality: 'auto', fetch_format: 'auto' }],
     });
 

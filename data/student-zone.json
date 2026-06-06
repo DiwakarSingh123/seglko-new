@@ -1,6 +1,15 @@
 {
   "notices": [
     {
+      "id": 1780635481105,
+      "title": "Hamla",
+      "category": "Scholarship",
+      "institution": "SIET",
+      "pinned": false,
+      "image": "https://res.cloudinary.com/docmem71d/image/upload/v1780635483/student-notices/lk4bqiupe3s1p5hag1et.jpg",
+      "date": "Jun 5, 2026"
+    },
+    {
       "id": 1779443475297,
       "title": " Schedule & Instructions for 1st Sessional Exam (Even Semester 2024-25)",
       "category": "General",

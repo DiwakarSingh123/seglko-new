@@ -58,9 +58,12 @@ type EligibilityCategory = "undergraduate" | "postgraduate" | "diploma";
 type EligibilityItem = { title: string; content: string[] };
 
 export default function AdmissionPage() {
-  const [tab, setTab] = useState<"cycles" | "process" | "eligibility">("cycles");
+  const [tab, setTab] = useState<"cycles" | "process" | "eligibility" | "applications">("applications");
   const [session, setSession] = useState("All");
   const [cycles, setCycles] = useState<AdmissionCycle[]>([]);
+  const [applications, setApplications] = useState<any[]>([]);
+  const [isAppsLoading, setIsAppsLoading] = useState(false);
+  const [viewingApp, setViewingApp] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [showAddForm, setShowAddForm] = useState(false);
   const [editingCycle, setEditingCycle] = useState<AdmissionCycle | null>(null);
@@ -91,6 +94,7 @@ export default function AdmissionPage() {
 
   useEffect(() => {
     fetchCycles();
+    fetchApplications();
   }, []);
 
   const fetchCycles = async () => {
@@ -102,6 +106,17 @@ export default function AdmissionPage() {
       console.error(e);
     }
     setIsLoading(false);
+  };
+
+  const fetchApplications = async () => {
+    setIsAppsLoading(true);
+    try {
+      const res = await fetch("/api/student-applications");
+      if (res.ok) setApplications(await res.json());
+    } catch (e) {
+      console.error(e);
+    }
+    setIsAppsLoading(false);
   };
 
   const resetForm = () => setForm({ ...emptyCycle, session: getDefaultSession() });
@@ -404,8 +419,9 @@ export default function AdmissionPage() {
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-2 bg-white border border-slate-100 rounded-2xl p-1.5 shadow-sm w-fit">
+      <div className="flex gap-2 bg-white border border-slate-100 rounded-2xl p-1.5 shadow-sm w-fit overflow-x-auto">
         {[
+          { id: "applications", label: "Applications", icon: "description" },
           { id: "cycles", label: "Admission Cycles", icon: "calendar_month" },
           { id: "process", label: "Admission Process", icon: "account_tree" },
           { id: "eligibility", label: "Eligibility Criteria", icon: "verified" },
@@ -643,6 +659,189 @@ export default function AdmissionPage() {
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+      )}
+
+      {tab === "applications" && (
+        <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+          <div className="p-5 border-b border-slate-100 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <span className="material-symbols-outlined text-indigo-600 text-xl">description</span>
+              <h2 className="text-base font-black text-slate-800">Student Applications</h2>
+            </div>
+            <button onClick={fetchApplications} className="h-8 w-8 flex items-center justify-center rounded-lg bg-slate-50 text-slate-500 hover:bg-slate-100 transition-colors">
+              <span className="material-symbols-outlined text-sm">refresh</span>
+            </button>
+          </div>
+          {isAppsLoading ? (
+            <p className="p-5 text-slate-500 text-sm">Loading applications...</p>
+          ) : applications.length === 0 ? (
+            <div className="p-10 text-center flex flex-col items-center">
+              <div className="h-16 w-16 bg-slate-50 rounded-full flex items-center justify-center mb-3">
+                <span className="material-symbols-outlined text-3xl text-slate-300">inbox</span>
+              </div>
+              <p className="text-sm font-bold text-slate-600">No applications yet</p>
+              <p className="text-xs text-slate-400 mt-1">Applications submitted by students will appear here.</p>
+            </div>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full min-w-[800px]">
+                <thead>
+                  <tr className="border-b border-slate-100 bg-slate-50/50">
+                    {["App ID", "Student", "Course & Inst.", "Payment", "Status", "Actions"].map((h) => (
+                      <th key={h} className="px-5 py-3 text-left text-[10px] font-bold text-slate-400 uppercase tracking-wider">{h}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {applications.map((app) => (
+                    <tr key={app._id} className="border-b border-slate-50 hover:bg-slate-50/60 transition-colors">
+                      <td className="px-5 py-3.5">
+                        <span className="text-xs font-black text-indigo-600 bg-indigo-50 px-2 py-1 rounded-lg">{app.applicationId}</span>
+                        <div className="text-[10px] text-slate-400 mt-1">{new Date(app.createdAt).toLocaleDateString()}</div>
+                      </td>
+                      <td className="px-5 py-3.5">
+                        <div className="text-sm font-bold text-slate-800">{app.firstName} {app.lastName}</div>
+                        <div className="text-xs text-slate-500">{app.email}</div>
+                        <div className="text-[10px] text-slate-400">{app.phone}</div>
+                      </td>
+                      <td className="px-5 py-3.5">
+                        <div className="text-sm font-semibold text-slate-700">{app.desiredCourse}</div>
+                        <div className="text-xs text-slate-500">{app.desiredInstitution}</div>
+                      </td>
+                      <td className="px-5 py-3.5">
+                        <span className={`px-2 py-1 rounded-full text-[10px] font-bold ${app.paymentStatus === 'Paid' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}`}>
+                          {app.paymentStatus}
+                        </span>
+                      </td>
+                      <td className="px-5 py-3.5">
+                        <select 
+                          value={app.status}
+                          onChange={async (e) => {
+                            const newStatus = e.target.value;
+                            await fetch('/api/student-applications', {
+                              method: 'PUT',
+                              headers: { 'Content-Type': 'application/json' },
+                              body: JSON.stringify({ _id: app._id, status: newStatus })
+                            });
+                            fetchApplications();
+                          }}
+                          className={`px-2 py-1 rounded-full text-[10px] font-bold outline-none cursor-pointer border-none ${app.status === 'Approved' ? 'bg-emerald-100 text-emerald-700' : app.status === 'Rejected' ? 'bg-rose-100 text-rose-700' : 'bg-blue-100 text-blue-700'}`}
+                        >
+                          <option>Pending</option>
+                          <option>Under Review</option>
+                          <option>Approved</option>
+                          <option>Rejected</option>
+                        </select>
+                      </td>
+                      <td className="px-5 py-3.5">
+                        <button onClick={() => setViewingApp(app)} className="text-xs font-bold text-indigo-600 bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-lg transition-colors">
+                          View Details
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+      )}
+
+      {viewingApp && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/40 p-4">
+          <div className="bg-white rounded-2xl shadow-xl w-full max-w-3xl max-h-[90vh] overflow-y-auto">
+            <div className="sticky top-0 bg-white border-b border-slate-100 p-5 flex items-center justify-between z-10">
+              <div>
+                <h2 className="text-lg font-black text-slate-800">Application Details</h2>
+                <p className="text-xs font-bold text-indigo-600 mt-0.5">{viewingApp.applicationId}</p>
+              </div>
+              <button onClick={() => setViewingApp(null)} className="h-8 w-8 flex items-center justify-center rounded-lg bg-slate-50 text-slate-500 hover:bg-slate-100">
+                <span className="material-symbols-outlined text-sm">close</span>
+              </button>
+            </div>
+            
+            <div className="p-5 space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Student Information</h3>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex"><span className="w-24 text-slate-500">Name:</span><span className="font-semibold text-slate-800">{viewingApp.firstName} {viewingApp.lastName}</span></div>
+                    <div className="flex"><span className="w-24 text-slate-500">Email:</span><span className="font-semibold text-slate-800">{viewingApp.email}</span></div>
+                    <div className="flex"><span className="w-24 text-slate-500">Phone:</span><span className="font-semibold text-slate-800">{viewingApp.phone}</span></div>
+                    <div className="flex"><span className="w-24 text-slate-500">DOB:</span><span className="font-semibold text-slate-800">{viewingApp.dob}</span></div>
+                    <div className="flex"><span className="w-24 text-slate-500">Gender:</span><span className="font-semibold text-slate-800">{viewingApp.gender}</span></div>
+                  </div>
+                </div>
+                
+                <div>
+                  <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Course Preference</h3>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex"><span className="w-24 text-slate-500">Course:</span><span className="font-semibold text-slate-800">{viewingApp.desiredCourse}</span></div>
+                    <div className="flex"><span className="w-24 text-slate-500">Institution:</span><span className="font-semibold text-slate-800">{viewingApp.desiredInstitution}</span></div>
+                    <div className="flex mt-3 pt-3 border-t border-slate-100"><span className="w-24 text-slate-500">Status:</span>
+                      <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold ${viewingApp.status === 'Approved' ? 'bg-emerald-100 text-emerald-700' : 'bg-blue-100 text-blue-700'}`}>{viewingApp.status}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Family Information</h3>
+                <div className="bg-slate-50 rounded-xl p-4 grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                  <div>
+                    <p className="text-xs text-slate-500 mb-1">Father</p>
+                    <p className="font-semibold text-slate-800">{viewingApp.fatherName}</p>
+                    <p className="text-slate-500 text-xs mt-0.5">{viewingApp.fatherPhone}</p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-slate-500 mb-1">Mother</p>
+                    <p className="font-semibold text-slate-800">{viewingApp.motherName}</p>
+                    <p className="text-slate-500 text-xs mt-0.5">{viewingApp.motherPhone}</p>
+                  </div>
+                  <div className="md:col-span-2 pt-3 border-t border-slate-200">
+                    <p className="text-xs text-slate-500 mb-1">Address</p>
+                    <p className="font-semibold text-slate-800">{viewingApp.address}, {viewingApp.city}, {viewingApp.state} - {viewingApp.pincode}</p>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">Academic Records</h3>
+                <div className="space-y-3">
+                  <div className="border border-slate-100 rounded-xl p-4 flex items-center justify-between hover:bg-slate-50 transition-colors">
+                    <div>
+                      <h4 className="text-sm font-bold text-slate-800">Class 10th - {viewingApp.class10Board}</h4>
+                      <p className="text-xs text-slate-500 mt-1">{viewingApp.class10School} ({viewingApp.class10Year}) • <span className="font-bold text-indigo-600">{viewingApp.class10Percent}%</span></p>
+                    </div>
+                    {viewingApp.class10Marksheet && (
+                      <a href={viewingApp.class10Marksheet} target="_blank" rel="noreferrer" className="px-4 py-2 bg-indigo-50 text-indigo-600 rounded-lg text-xs font-bold hover:bg-indigo-100 transition-colors">
+                        View Marksheet
+                      </a>
+                    )}
+                  </div>
+                  
+                  <div className="border border-slate-100 rounded-xl p-4 flex items-center justify-between hover:bg-slate-50 transition-colors">
+                    <div>
+                      <h4 className="text-sm font-bold text-slate-800">Class 12th - {viewingApp.class12Board}</h4>
+                      <p className="text-xs text-slate-500 mt-1">{viewingApp.class12School} ({viewingApp.class12Year}) • {viewingApp.class12Stream} • <span className="font-bold text-indigo-600">{viewingApp.class12Percent}%</span></p>
+                    </div>
+                    {viewingApp.class12Marksheet && (
+                      <a href={viewingApp.class12Marksheet} target="_blank" rel="noreferrer" className="px-4 py-2 bg-indigo-50 text-indigo-600 rounded-lg text-xs font-bold hover:bg-indigo-100 transition-colors">
+                        View Marksheet
+                      </a>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div className="p-5 border-t border-slate-100 bg-slate-50 rounded-b-2xl flex justify-end">
+              <button onClick={() => setViewingApp(null)} className="px-6 py-2.5 bg-white border border-slate-200 text-slate-700 rounded-xl text-sm font-semibold hover:bg-slate-50 transition-colors">
+                Close
+              </button>
+            </div>
           </div>
         </div>
       )}

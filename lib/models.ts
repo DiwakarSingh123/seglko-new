@@ -172,6 +172,46 @@ const adminAuthSchema = new mongoose.Schema({
   passwordHash: String,
 }, { timestamps: true });
 
+// ── Student Application ────────────────────────────────────
+const studentApplicationSchema = new mongoose.Schema({
+  // Personal Info
+  firstName: String,
+  lastName: String,
+  email: String,
+  phone: String,
+  dob: String,
+  gender: String,
+  address: String,
+  city: String,
+  state: String,
+  pincode: String,
+  // Parents Info
+  fatherName: String,
+  fatherPhone: String,
+  motherName: String,
+  motherPhone: String,
+  // Education
+  class10School: String,
+  class10Board: String,
+  class10Year: String,
+  class10Percent: String,
+  class10Marksheet: String, // Cloudinary URL
+  class12School: String,
+  class12Board: String,
+  class12Year: String,
+  class12Percent: String,
+  class12Stream: String,
+  class12Marksheet: String, // Cloudinary URL
+  // Course
+  desiredCourse: String,
+  desiredInstitution: String,
+  // Status
+  applicationId: String,
+  status: { type: String, default: 'Pending' },
+  paymentStatus: { type: String, default: 'Pending' },
+  paymentAmount: String,
+}, { timestamps: true });
+
 // Export models (prevent re-compilation in Next.js hot reload)
 export const Placement = mongoose.models.Placement || mongoose.model('Placement', placementSchema);
 export const Happening = mongoose.models.Happening || mongoose.model('Happening', happeningSchema);
@@ -186,4 +226,5 @@ export const Application = mongoose.models.Application || mongoose.model('Applic
 export const StudentZone = mongoose.models.StudentZone || mongoose.model('StudentZone', studentZoneSchema);
 export const Settings = mongoose.models.Settings || mongoose.model('Settings', settingsSchema);
 export const AdminAuth = mongoose.models.AdminAuth || mongoose.model('AdminAuth', adminAuthSchema);
+export const StudentApplication = mongoose.models.StudentApplication || mongoose.model('StudentApplication', studentApplicationSchema);
 export const JobOpening = mongoose.models.JobOpening || mongoose.model('JobOpening', jobOpeningSchema);
