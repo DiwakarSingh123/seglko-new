@@ -5,7 +5,6 @@ import logoImg from '../assets/images/logo.png';
 
 const navItems = [
   { label: 'Home', hasDropdown: false },
-
   { label: 'About SEG', hasDropdown: true },
   { label: 'Programs', hasDropdown: true },
   { label: 'Admission', hasDropdown: true },
@@ -14,6 +13,7 @@ const navItems = [
   { label: 'Student Zone', hasDropdown: true },
   { label: 'Placements', hasDropdown: false, path: '/placements' },
   { label: 'Explore more', hasDropdown: false, path: '/explore-more' },
+  { label: 'Careers', hasDropdown: false, path: '/careers' },
   { label: 'Contact us', hasDropdown: false },
 ];
 
@@ -201,6 +201,12 @@ const studentZoneItems = [
     description: 'Important updates and announcements for SEG students-stay informed and engaged!',
     icon: 'message',
     path: '/student-notice',
+  },
+  {
+    title: 'Pay Fee',
+    description: 'Pay your tuition and other fees online quickly and securely.',
+    icon: 'rupee',
+    path: '/pay-fee',
   },
 ];
 
@@ -543,6 +549,7 @@ const IconTile = ({ type }) => {
 
 export default function Navbar() {
   const [activeDropdown, setActiveDropdown] = useState(null);
+  const [mobileDropdown, setMobileDropdown] = useState(null);
   const [mobileOpen, setMobileOpen] = useState(false);
   const navbarRef = useRef(null);
   const timeoutRef = useRef(null);
@@ -598,7 +605,7 @@ export default function Navbar() {
         <button
           type="button"
           className="navbar__hamburger"
-          onClick={() => { setMobileOpen(o => !o); setActiveDropdown(null); }}
+          onClick={() => { setMobileOpen(o => !o); setActiveDropdown(null); setMobileDropdown(null); }}
           aria-label="Toggle navigation"
           aria-expanded={mobileOpen}
         >
@@ -610,7 +617,7 @@ export default function Navbar() {
       {mobileOpen && (
         <div
           className="navbar__overlay"
-          onClick={() => { setMobileOpen(false); setActiveDropdown(null); }}
+          onClick={() => { setMobileOpen(false); setActiveDropdown(null); setMobileDropdown(null); }}
         />
       )}
 
@@ -620,7 +627,7 @@ export default function Navbar() {
           <button
             type="button"
             className="navbar__drawer-close"
-            onClick={() => { setMobileOpen(false); setActiveDropdown(null); }}
+            onClick={() => { setMobileOpen(false); setActiveDropdown(null); setMobileDropdown(null); }}
             aria-label="Close menu"
           >
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
@@ -633,18 +640,18 @@ export default function Navbar() {
           {navItems.map((item, i) => (
             <li
               key={i}
-              className={`navbar__item${item.label === activeDropdown ? ' navbar__item--active' : ''}`}
+              className={`navbar__item${item.label === mobileDropdown ? ' navbar__item--active' : ''}`}
             >
               {item.label === 'Home' ? (
-                <Link to="/" className="navbar__item-text" onClick={() => { setMobileOpen(false); setActiveDropdown(null); }}>
+                <Link to="/" className="navbar__item-text" onClick={() => { setMobileOpen(false); setMobileDropdown(null); }}>
                   {item.label}
                 </Link>
               ) : item.label === 'Contact us' ? (
-                <Link to="/contact-us" className="navbar__item-text" onClick={() => { setMobileOpen(false); setActiveDropdown(null); }}>
+                <Link to="/contact-us" className="navbar__item-text" onClick={() => { setMobileOpen(false); setMobileDropdown(null); }}>
                   {item.label}
                 </Link>
-              ) : ['Placements', 'Explore more'].includes(item.label) ? (
-                <Link to={item.path} className="navbar__item-text" onClick={() => { setMobileOpen(false); setActiveDropdown(null); }}>
+              ) : ['Placements', 'Explore more', 'Careers'].includes(item.label) ? (
+                <Link to={item.path} className="navbar__item-text" onClick={() => { setMobileOpen(false); setMobileDropdown(null); }}>
                   {item.label}
                 </Link>
               ) : ['About SEG', 'Programs', 'Admission', 'R & D', 'Our Institutions', 'Student Zone'].includes(item.label) ? (
@@ -652,25 +659,17 @@ export default function Navbar() {
                   <button
                     type="button"
                     className="navbar__item-button"
-                    onClick={() => {
-                      console.log("Mobile Navbar Item Clicked:", item.label);
-                      setActiveDropdown(open => {
-                        const next = open === item.label ? null : item.label;
-                        console.log("Next Dropdown State:", next);
-                        return next;
-                      });
-                    }}
-                    aria-expanded={activeDropdown === item.label}
+                    onClick={() => setMobileDropdown(open => open === item.label ? null : item.label)}
+                    aria-expanded={mobileDropdown === item.label}
                   >
                     <span className="navbar__item-text">{item.label}</span>
-                    <span className="navbar__item-arrow" style={{ transform: activeDropdown === item.label ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }}><DropdownArrow /></span>
+                    <span className="navbar__item-arrow" style={{ transform: mobileDropdown === item.label ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }}><DropdownArrow /></span>
                   </button>
-                  {/* Inline sub-items */}
-                  {activeDropdown === item.label && (
+                  {mobileDropdown === item.label && (
                     <ul className="navbar__mobile-subnav">
                       {item.label === 'About SEG' && aboutSegItems.map(sub => (
                         <li key={sub.title}>
-                          <Link to={sub.path} className="navbar__mobile-subitem" onClick={() => { setMobileOpen(false); setActiveDropdown(null); }}>
+                          <Link to={sub.path} className="navbar__mobile-subitem" onClick={() => { setMobileOpen(false); setMobileDropdown(null); }}>
                             <span className="navbar__mobile-subitem-icon"><IconTile type={sub.icon} /></span>
                             <span>{sub.title}</span>
                           </Link>
@@ -678,7 +677,7 @@ export default function Navbar() {
                       ))}
                       {item.label === 'Programs' && [...programsMenuItems, ...programsFeatureCards].map(sub => (
                         <li key={sub.title}>
-                          <Link to={sub.path} className="navbar__mobile-subitem" onClick={() => { setMobileOpen(false); setActiveDropdown(null); }}>
+                          <Link to={sub.path} className="navbar__mobile-subitem" onClick={() => { setMobileOpen(false); setMobileDropdown(null); }}>
                             <span className="navbar__mobile-subitem-icon"><IconTile type={sub.icon} /></span>
                             <span>{sub.title}</span>
                           </Link>
@@ -686,7 +685,7 @@ export default function Navbar() {
                       ))}
                       {item.label === 'Admission' && admissionMenuItems.map(sub => (
                         <li key={sub.title}>
-                          <Link to={sub.path} className="navbar__mobile-subitem" onClick={() => { setMobileOpen(false); setActiveDropdown(null); }}>
+                          <Link to={sub.path} className="navbar__mobile-subitem" onClick={() => { setMobileOpen(false); setMobileDropdown(null); }}>
                             <span className="navbar__mobile-subitem-icon"><IconTile type={sub.icon} /></span>
                             <span>{sub.title}</span>
                           </Link>
@@ -694,7 +693,7 @@ export default function Navbar() {
                       ))}
                       {item.label === 'R & D' && rdItems.map(sub => (
                         <li key={sub.title}>
-                          <Link to={sub.path} className="navbar__mobile-subitem" onClick={() => { setMobileOpen(false); setActiveDropdown(null); }}>
+                          <Link to={sub.path} className="navbar__mobile-subitem" onClick={() => { setMobileOpen(false); setMobileDropdown(null); }}>
                             <span className="navbar__mobile-subitem-icon"><IconTile type={sub.icon} /></span>
                             <span>{sub.title}</span>
                           </Link>
@@ -703,12 +702,12 @@ export default function Navbar() {
                       {item.label === 'Our Institutions' && institutionsData.map(sub => (
                         <li key={sub.title}>
                           {sub.path ? (
-                            <Link to={sub.path} className="navbar__mobile-subitem" onClick={() => { setMobileOpen(false); setActiveDropdown(null); }}>
+                            <Link to={sub.path} className="navbar__mobile-subitem" onClick={() => { setMobileOpen(false); setMobileDropdown(null); }}>
                               <span className="navbar__mobile-subitem-icon"><IconTile type={sub.icon} /></span>
                               <span>{sub.title}</span>
                             </Link>
                           ) : (
-                            <a href={sub.url} target="_blank" rel="noopener noreferrer" className="navbar__mobile-subitem" onClick={() => { setMobileOpen(false); setActiveDropdown(null); }}>
+                            <a href={sub.url} target="_blank" rel="noopener noreferrer" className="navbar__mobile-subitem" onClick={() => { setMobileOpen(false); setMobileDropdown(null); }}>
                               <span className="navbar__mobile-subitem-icon"><IconTile type={sub.icon} /></span>
                               <span>{sub.title}</span>
                             </a>
@@ -717,7 +716,7 @@ export default function Navbar() {
                       ))}
                       {item.label === 'Student Zone' && studentZoneItems.map(sub => (
                         <li key={sub.title}>
-                          <Link to={sub.path} className="navbar__mobile-subitem" onClick={() => { setMobileOpen(false); setActiveDropdown(null); }}>
+                          <Link to={sub.path} className="navbar__mobile-subitem" onClick={() => { setMobileOpen(false); setMobileDropdown(null); }}>
                             <span className="navbar__mobile-subitem-icon"><IconTile type={sub.icon} /></span>
                             <span>{sub.title}</span>
                           </Link>
@@ -756,7 +755,7 @@ export default function Navbar() {
                 <Link to="/contact-us" className="navbar__item-text" onClick={() => setActiveDropdown(null)}>
                   {item.label}
                 </Link>
-              ) : ['Placements', 'Explore more'].includes(item.label) ? (
+              ) : ['Placements', 'Explore more', 'Careers'].includes(item.label) ? (
                 <Link to={item.path} className="navbar__item-text" onClick={() => setActiveDropdown(null)}>
                   {item.label}
                 </Link>
@@ -925,6 +924,10 @@ export default function Navbar() {
                 </div>
               </div>
 
+              <Link to="/programs" className="programs-panel__cta" onClick={() => setActiveDropdown(null)}
+                style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', marginTop: '12px', marginBottom: '12px', fontSize: '13px', fontWeight: 700, color: '#1041c6', textDecoration: 'none' }}>
+                View All Programs <ChevronRight />
+              </Link>
               <div className="programs-panel__cards">
                 {programsFeatureCards.map((item) => (
                   <Link key={item.title} to={item.path} className="programs-panel__card" onClick={() => setActiveDropdown(null)} style={{ textDecoration: 'none' }}>
@@ -1097,6 +1100,10 @@ export default function Navbar() {
                   <span className="institutions-panel__quote-mark">“</span>
                   <p>Excellence in education across all our specialized campuses.</p>
                 </div>
+                <Link to="/institutions" onClick={() => setActiveDropdown(null)}
+                  style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', marginTop: '12px', fontSize: '13px', fontWeight: 700, color: '#1041c6', textDecoration: 'none' }}>
+                  What's Happening <ChevronRight />
+                </Link>
               </div>
             </div>
           </section>
