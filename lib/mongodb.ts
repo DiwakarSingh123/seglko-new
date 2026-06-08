@@ -1,12 +1,4 @@
 import mongoose from 'mongoose';
-import { setServers } from 'node:dns/promises';
-
-// Force DNS lookup to use public DNS resolvers (Google / Cloudflare) to prevent querySrv lookups failing on local/ISP DNS
-try {
-  setServers(['8.8.8.8', '1.1.1.1']);
-} catch (dnsErr: any) {
-  console.warn('Could not set custom DNS servers in mongodb.ts:', dnsErr.message);
-}
 
 const MONGODB_URI = process.env.MONGODB_URI!;
 
