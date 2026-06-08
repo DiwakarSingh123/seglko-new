@@ -8,6 +8,7 @@ type Item = {
   type: "upcoming_event" | "announcement";
   category: string;
   date: string;
+  createdAt?: string;
   description?: string;
   image?: string;
   url?: string;
@@ -203,7 +204,7 @@ export default function EventsAnnouncementsPage() {
                       {item.description && <p className="text-xs text-slate-400 line-clamp-2 mt-1">{item.description}</p>}
                     </div>
                   </td>
-                  <td className="px-5 py-3.5 text-sm text-slate-400">{new Date(item.date || item.createdAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}</td>
+                  <td className="px-5 py-3.5 text-sm text-slate-400">{new Date(item.date || item.createdAt || Date.now()).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}</td>
                   <td className="px-5 py-3.5">
                     <button
                       onClick={() => handleDelete(item._id)}
