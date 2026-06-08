@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import bookImg from '../assets/images/book image.jpeg';
 import '../research-publications.css';
+import { api } from '../api.js';
 
 const ResearchPublications = () => {
   const [activeTab, setActiveTab] = useState('CSE');
@@ -23,7 +24,7 @@ const ResearchPublications = () => {
   };
 
   useEffect(() => {
-    fetch('/api/research')
+    fetch(api('/api/research'))
       .then(r => r.json())
       .then(data => {
         if (Array.isArray(data.papers) && data.papers.length > 0) {

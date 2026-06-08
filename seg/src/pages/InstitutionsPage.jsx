@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { api } from '../api.js'
 import './InstitutionsPage.css'
 import program1 from '../assets/images/program1.png'
 import program2 from '../assets/images/program2.png'
@@ -122,7 +123,7 @@ export default function InstitutionsPage() {
   useEffect(() => {
     const fetchHappenings = async () => {
       try {
-        const res = await fetch('/api/happenings')
+        const res = await fetch(api('/api/happenings'))
         if (res.ok) {
           const data = await res.json()
           setHappenings(data)

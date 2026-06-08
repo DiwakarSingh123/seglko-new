@@ -1,5 +1,6 @@
 import React from 'react';
 import '../PlacementsPage.css';
+import { api } from '../api.js';
 import heroBg from '../assets/images/placementsimg.jpeg';
 
 const PlacementsPage = () => {
@@ -9,7 +10,7 @@ const PlacementsPage = () => {
   const cardsPerPage = 8;
 
   React.useEffect(() => {
-    fetch('/api/placements')
+    fetch(api('/api/placements'))
       .then(res => res.json())
       .then(data => {
         setStudentsData(Array.isArray(data) ? data : []);

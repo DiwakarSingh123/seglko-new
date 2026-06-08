@@ -1,5 +1,6 @@
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useState, useEffect, useMemo } from 'react';
+import { api } from '../api.js';
 import programsHeroImg from '../assets/images/programs-page image.jpeg';
 
 const ArrowRight = () => (
@@ -344,7 +345,7 @@ export default function ProgramsPage() {
   );
 
   useEffect(() => {
-    fetch('/api/programs')
+    fetch(api('/api/programs'))
       .then(res => res.json())
       .then(data => {
         if (!Array.isArray(data) || data.length === 0) return;

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import './JobApplicationPage.css';
+import { api } from '../api.js';
 import logoImg from '../assets/images/logo.png';
 
 const CheckIcon = () => (
@@ -58,7 +59,7 @@ export default function JobApplicationPage() {
       if (form.resume) formData.append('resume', form.resume);
       if (form.photo) formData.append('photo', form.photo);
 
-      const urls = ['/api/job-applications', '/api/applications'];
+      const urls = [api('/api/job-applications'), api('/api/applications')];
       let success = false;
       let lastError = '';
 

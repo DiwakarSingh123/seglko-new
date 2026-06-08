@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { api } from '../api.js';
 import campusBg from '../assets/images/seg.jpeg';
 import contactImg from '../assets/images/contact-support.png';
 import heroBg from '../assets/images/contactusimg.jpeg';
@@ -29,7 +30,7 @@ export default function ContactUs() {
     setSubmitting(true);
     try {
       const subject = [form.inquiry, form.course, form.message].filter(Boolean).join(' — ');
-      const res = await fetch('/api/contact', {
+      const res = await fetch(api('/api/contact'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

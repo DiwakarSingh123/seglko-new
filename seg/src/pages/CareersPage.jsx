@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './CareersPage.css';
+import { api } from '../api.js';
 import careerHeroImg from '../assets/images/seg.jpeg';
 import logoImg from '../assets/images/logo.png';
 
@@ -111,7 +112,7 @@ export default function CareersPage() {
 
   useEffect(() => {
     const fetchJobs = async () => {
-      const urls = ['/api/jobs', 'http://127.0.0.1:3000/api/jobs', 'http://localhost:3000/api/jobs'];
+      const urls = [api('/api/jobs')];
       let lastError = '';
       for (const url of urls) {
         try {

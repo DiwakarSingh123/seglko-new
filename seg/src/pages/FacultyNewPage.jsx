@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { api } from '../api.js';
 import facultyBg from '../assets/images/seg.jpeg';
 import aboutBg from '../assets/images/about-bg.png';
 import institutionsBg from '../assets/images/seg.jpeg';
@@ -57,7 +58,7 @@ export default function FacultyNewPage() {
   useEffect(() => {
     const fetchFeaturedFaculty = async () => {
       try {
-        const res = await fetch('/api/faculty');
+        const res = await fetch(api('/api/faculty'));
         if (!res.ok) throw new Error('Failed to fetch faculty data');
         const data = await res.json();
         if (Array.isArray(data.faculties) && data.faculties.length > 0) {

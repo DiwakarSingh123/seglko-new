@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { api } from '../api.js';
 import aboutBg from '../assets/images/about-bg.png';
 import faculty1 from '../assets/images/1776318734242.jpg';
 import faculty2 from '../assets/images/M_1722920383.jpg';
@@ -153,7 +154,7 @@ export default function FacultyShowcase() {
   useEffect(() => {
     const fetchFacultyData = async () => {
       try {
-        const res = await fetch('/api/faculty');
+        const res = await fetch(api('/api/faculty'));
         if (!res.ok) throw new Error('Failed to fetch faculty data');
         const data = await res.json();
         if (Array.isArray(data.faculties) && data.faculties.length > 0) {
@@ -166,7 +167,7 @@ export default function FacultyShowcase() {
 
     fetchFacultyData();
 
-    fetch('/api/placements')
+    fetch(api('/api/placements'))
       .then(r => r.ok ? r.json() : [])
       .then(data => {
         if (!Array.isArray(data) || !data.length) return;

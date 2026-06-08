@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { api } from '../api.js';
 import aboutBg from '../assets/images/hapen2.jpeg';
 import campusBg from '../assets/images/eventImg9.jpeg';
 import facultyBg from '../assets/images/hapen1.jpeg';
@@ -210,7 +211,7 @@ export default function HappeningsShowcase() {
   useEffect(() => {
     const fetchHappenings = async () => {
       try {
-        const response = await fetch('/api/happenings');
+        const response = await fetch(api('/api/happenings'));
         if (response.ok) {
           const data = await response.json();
           setApiEvents(data.filter(d => d.type === 'whats_happening'));

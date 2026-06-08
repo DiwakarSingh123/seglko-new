@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { api } from '../api.js';
 import placementsBg from '../assets/images/placements-bg.png';
 import program1 from '../assets/images/surender pratap.jpeg';
 import program2 from '../assets/images/shaloni devi.jpeg';
@@ -242,7 +243,7 @@ export default function PlacementsShowcase() {
   const [placements, setPlacements] = useState([]);
 
   useEffect(() => {
-    fetch('/api/placements')
+    fetch(api('/api/placements'))
       .then((res) => res.json())
       .then((data) => {
         if (Array.isArray(data) && data.length > 0) {

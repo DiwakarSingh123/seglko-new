@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import '../ExploreMore.css';
+import { api } from '../api.js';
 
 // Category to filter mapping
 const CATEGORY_MAP = {
@@ -67,7 +68,7 @@ const ExploreMore = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch('/api/gallery')
+    fetch(api('/api/gallery'))
       .then(res => res.json())
       .then(data => {
         setGalleryItems(Array.isArray(data) ? data : []);

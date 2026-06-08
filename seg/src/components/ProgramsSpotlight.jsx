@@ -1,5 +1,6 @@
 import { useRef, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { api } from '../api.js';
 
 import program1 from '../assets/images/engineerging.webp';
 import program2 from '../assets/images/management.jpg';
@@ -216,7 +217,7 @@ export default function ProgramsSpotlight() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    fetch('/api/programs')
+    fetch(api('/api/programs'))
       .then((res) => res.json())
       .then((data) => {
         if (Array.isArray(data)) {

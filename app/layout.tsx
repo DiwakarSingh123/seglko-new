@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "AdmissionX Dashboard",
+  title: "Saroj Educational Group(Seg)",
   description: "AdmissionX - Saroj Educational Group",
 };
 

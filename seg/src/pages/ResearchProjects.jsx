@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import researchHeroImg from '../assets/images/researchprojects.jpeg';
 import '../research-projects.css';
+import { api } from '../api.js';
 
 const ResearchProjects = () => {
   const [activeTab, setActiveTab] = useState('Electronics');
@@ -11,7 +12,7 @@ const ResearchProjects = () => {
   });
 
   useEffect(() => {
-    fetch('/api/research')
+    fetch(api('/api/research'))
       .then(r => r.json())
       .then(data => {
         if (Array.isArray(data.projects) && data.projects.length > 0) {
