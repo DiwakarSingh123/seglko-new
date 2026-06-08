@@ -110,9 +110,10 @@ const statusStyle: Record<string, string> = {
 export default function ApplicationsPage() {
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("All");
-  const [applicationType, setApplicationType] = useState("admission"); // "admission" or "job"
+  const [applicationType, setApplicationType] = useState("student"); // "student", "admission" or "job"
   const [admissionApps, setAdmissionApps] = useState<any[]>([]);
   const [jobApps, setJobApps] = useState<any[]>([]);
+  const [studentApps, setStudentApps] = useState<any[]>([]);
   const [institutions, setInstitutions] = useState<InstitutionRecord[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedJob, setSelectedJob] = useState<any>(null);
@@ -120,19 +121,21 @@ export default function ApplicationsPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [appsRes, jobAppsRes, instsRes] = await Promise.all([
+        const [appsRes, jobAppsRes, instsRes, studentAppsRes] = await Promise.all([
           fetch("/api/applications"),
           fetch("/api/job-applications"),
           fetch("/api/institutions"),
+          fetch("/api/student-applications"),
         ]);
         const apps = await appsRes.json();
         const jobAppsData = await jobAppsRes.json();
         const insts = await instsRes.json();
+        const studentAppsData = await studentAppsRes.json();
         
         if (Array.isArray(apps)) setAdmissionApps(apps);
         if (Array.isArray(jobAppsData)) setJobApps(jobAppsData);
         if (Array.isArray(insts)) setInstitutions(insts);
-        console.log('Fetched applications:', { apps: apps?.length, jobApps: jobAppsData?.length });
+        if (Array.isArray(studentAppsData)) setStudentApps(studentAppsData);
       } catch (err) {
         console.error('Error fetching applications:', err);
       } finally {
@@ -150,10 +153,16 @@ export default function ApplicationsPage() {
   const getInstitutionLabel = (university: string) =>
     resolveInstitutionName(university, institutions);
 
-  const applications = applicationType === "admission" ? admissionApps : jobApps;
+  const applications = applicationType === "admission" ? admissionApps : applicationType === "job" ? jobApps : studentApps;
 
   const filtered = applications.filter((a) => {
-    if (applicationType === "admission") {
+    if (applicationType === "student") {
+      const s = (`${a.firstName} ${a.lastName}` || "").toLowerCase().includes(search.toLowerCase()) ||
+        (a.email || "").toLowerCase().includes(search.toLowerCase()) ||
+        (a.desiredCourse || "").toLowerCase().includes(search.toLowerCase());
+      const f = filter === "All" || a.status === filter;
+      return s && f;
+    } else if (applicationType === "admission") {
       const institutionLabel = getInstitutionLabel(a.university || "").toLowerCase();
       const s =
         (a.student || "").toLowerCase().includes(search.toLowerCase()) ||
@@ -249,11 +258,11 @@ export default function ApplicationsPage() {
       {/* Application Type Tabs */}
       <div className="flex gap-2">
         <button
-          onClick={() => { setApplicationType("admission"); setFilter("All"); }}
-          className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all ${applicationType === "admission" ? "bg-indigo-600 text-white shadow-md" : "bg-slate-100 text-slate-600 hover:bg-slate-200"}`}
+          onClick={() => { setApplicationType("student"); setFilter("All"); }}
+          className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all ${applicationType === "student" ? "bg-indigo-600 text-white shadow-md" : "bg-slate-100 text-slate-600 hover:bg-slate-200"}`}
         >
-          <span className="material-symbols-outlined inline mr-2 text-base align-text-bottom">school</span>
-          Admission Applications ({admissionApps.length})
+          <span className="material-symbols-outlined inline mr-2 text-base align-text-bottom">how_to_reg</span>
+          Student Admissions ({studentApps.length})
         </button>
         <button
           onClick={() => { setApplicationType("job"); setFilter("All"); }}
@@ -273,21 +282,17 @@ export default function ApplicationsPage() {
               className="w-full bg-slate-50 border border-slate-200 rounded-xl py-2 pl-10 pr-4 text-sm outline-none focus:ring-2 focus:ring-indigo-200 transition-all" />
           </div>
           <div className="flex gap-2 flex-wrap">
-            {applicationType === "admission" ? (
-              ["All", "Pending", "Accepted", "Rejected", "In Review"].map((s) => (
-                <button key={s} onClick={() => setFilter(s)}
-                  className={`px-3 py-2 rounded-xl text-xs font-semibold transition-all ${filter === s ? "bg-indigo-600 text-white shadow-sm" : "bg-slate-100 text-slate-500 hover:bg-slate-200"}`}>
-                  {s}
-                </button>
-              ))
-            ) : (
-              ["All", "pending", "Accepted", "Rejected"].map((s) => (
-                <button key={s} onClick={() => setFilter(s)}
-                  className={`px-3 py-2 rounded-xl text-xs font-semibold transition-all ${filter === s ? "bg-indigo-600 text-white shadow-sm" : "bg-slate-100 text-slate-500 hover:bg-slate-200"}`}>
-                  {s}
-                </button>
-              ))
-            )}
+            {(applicationType === "student"
+              ? ["All", "Pending", "Accepted", "Rejected", "In Review"]
+              : applicationType === "admission"
+              ? ["All", "Pending", "Accepted", "Rejected", "In Review"]
+              : ["All", "pending", "Accepted", "Rejected"]
+            ).map((s) => (
+              <button key={s} onClick={() => setFilter(s)}
+                className={`px-3 py-2 rounded-xl text-xs font-semibold transition-all ${filter === s ? "bg-indigo-600 text-white shadow-sm" : "bg-slate-100 text-slate-500 hover:bg-slate-200"}`}>
+                {s}
+              </button>
+            ))}
           </div>
         </div>
 
@@ -295,7 +300,11 @@ export default function ApplicationsPage() {
           <table className="w-full">
             <thead>
               <tr className="border-b border-slate-100">
-                {applicationType === "admission" ? (
+                {applicationType === "student" ? (
+                  ["Student", "Contact", "Course", "Institution", "App ID", "Status", "Date"].map((h) => (
+                    <th key={h} className="px-5 py-3 text-left text-[10px] font-bold text-slate-400 uppercase tracking-wider">{h}</th>
+                  ))
+                ) : applicationType === "admission" ? (
                   ["Student", "Institution", "Course", "Status", "Date", "Fee", ""].map((h) => (
                     <th key={h} className="px-5 py-3 text-left text-[10px] font-bold text-slate-400 uppercase tracking-wider">{h}</th>
                   ))
@@ -307,7 +316,31 @@ export default function ApplicationsPage() {
               </tr>
             </thead>
             <tbody>
-              {filtered.map((a) => (applicationType === "admission" ? renderAdmissionRow(a) : renderJobRow(a)))}
+              {applicationType === "student" ? filtered.map((a: any) => (
+                <tr key={a._id} className="border-b border-slate-50 hover:bg-slate-50/60 transition-colors">
+                  <td className="px-5 py-3.5">
+                    <div className="flex items-center gap-2.5">
+                      <div className="h-8 w-8 rounded-full bg-gradient-to-br from-indigo-400 to-indigo-600 flex items-center justify-center text-white text-[10px] font-bold flex-shrink-0">
+                        {`${a.firstName?.[0] || ''}${a.lastName?.[0] || ''}`}
+                      </div>
+                      <div>
+                        <div className="text-sm font-semibold text-slate-800">{a.firstName} {a.lastName}</div>
+                        <div className="text-[10px] text-slate-400">{a.email}</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td className="px-5 py-3.5 text-sm text-slate-500">{a.phone}</td>
+                  <td className="px-5 py-3.5"><span className="px-2 py-1 bg-indigo-50 text-indigo-600 text-[10px] font-bold rounded-lg">{a.desiredCourse}</span></td>
+                  <td className="px-5 py-3.5 text-xs text-slate-500 max-w-[180px] truncate">{a.desiredInstitution}</td>
+                  <td className="px-5 py-3.5 text-xs font-bold text-indigo-600">{a.applicationId}</td>
+                  <td className="px-5 py-3.5">
+                    <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold ${statusStyle[a.status] || 'bg-amber-100 text-amber-700'}`}>{a.status || 'Pending'}</span>
+                  </td>
+                  <td className="px-5 py-3.5 text-sm text-slate-400">
+                    {a.createdAt ? new Date(a.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : '—'}
+                  </td>
+                </tr>
+              )) : applicationType === "admission" ? filtered.map((a: any) => renderAdmissionRow(a)) : filtered.map((a: any) => renderJobRow(a))}
             </tbody>
           </table>
           {filtered.length === 0 && (

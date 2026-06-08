@@ -1,44 +1,35 @@
 import { NextResponse } from "next/server";
-import fs from "fs";
-import path from "path";
+import { connectDB } from "@/lib/mongodb";
+import { StudentApplication, Institution } from "@/lib/models";
 import { computeDashboardStats } from "@/lib/dashboard-stats";
-
-const dataDir = path.join(process.cwd(), "data");
-
-function readJson<T>(filename: string, fallback: T): T {
-  const filePath = path.join(dataDir, filename);
-  try {
-    if (!fs.existsSync(filePath)) return fallback;
-    return JSON.parse(fs.readFileSync(filePath, "utf8")) as T;
-  } catch {
-    return fallback;
-  }
-}
 
 export async function GET() {
   try {
-    const applications = readJson<unknown[]>("applications.json", []);
-    const institutions = readJson<unknown[]>("institutions.json", []);
+    await connectDB();
 
-    // computeDashboardStats expects typed Application[] / Institution[].
-    // JSON parsing gives unknown[], so we filter out non-object entries.
-    // Keep these as `unknown[]` filtered to objects, then cast to the expected shapes.
-    // This avoids passing `unknown[]` directly into the typed compute function.
-    const typedApplications = (Array.isArray(applications)
-      ? applications.filter((x): x is Record<string, unknown> => typeof x === "object" && x !== null)
-      : []) as unknown[];
+    const dbApps = await StudentApplication.find({}).lean();
+    const dbInsts = await Institution.find({}).lean();
 
-    const typedInstitutions = (Array.isArray(institutions)
-      ? institutions.filter((x): x is Record<string, unknown> => typeof x === "object" && x !== null)
-      : []) as unknown[];
+    const appsTyped = dbApps.map((app: any) => ({
+      date: app.createdAt ? new Date(app.createdAt).toISOString() : undefined,
+      status: app.status || "Pending",
+      fee: app.paymentAmount?.toString() || "0",
+      university: app.desiredInstitution || ""
+    }));
 
-    const appsTyped = typedApplications as any; // Application[]
-    const institutionsTyped = typedInstitutions as any; // Institution[]
+    const institutionsTyped = dbInsts.map((inst: any) => ({
+      title: inst.title || "",
+      short: inst.short || "",
+      students: Number(inst.students) || 0,
+      programs: Number(inst.programs) || 0,
+      status: inst.status || "Active"
+    }));
 
     const stats = computeDashboardStats(appsTyped, institutionsTyped);
 
     return NextResponse.json(stats);
-  } catch {
+  } catch (error) {
+    console.error("Dashboard Stats Error:", error);
     return NextResponse.json({ error: "Failed to load dashboard stats" }, { status: 500 });
   }
 }

@@ -54,12 +54,14 @@ const empty = {
   desiredCourse: '', desiredInstitution: '',
 };
 
+const API = typeof __API_BASE__ !== 'undefined' ? __API_BASE__ : '';
+
 async function uploadPDF(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onloadend = async () => {
       try {
-        const res = await fetch('/api/upload', {
+        const res = await fetch(`${API}/api/upload`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ image: reader.result, folder: 'seglko-marksheets' }),
@@ -137,7 +139,7 @@ export default function AdmissionForm({ onBack }) {
   const handleSubmit = async () => {
     setSubmitting(true);
     try {
-      const res = await fetch('/api/student-applications', {
+      const res = await fetch(`${API}/api/student-applications`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form),

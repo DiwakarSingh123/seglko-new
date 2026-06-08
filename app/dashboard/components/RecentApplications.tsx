@@ -90,7 +90,7 @@ export default function RecentApplications() {
       const res = await fetch("/api/applications", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(newList),
+        body: JSON.stringify({ id: selected.id, status: editStatus }),
       });
       if (res.ok) {
         const sorted = sortApplications(newList);

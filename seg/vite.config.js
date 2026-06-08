@@ -13,5 +13,9 @@ export default defineConfig({
         changeOrigin: true,
       }
     }
+  },
+  define: {
+    // makes VITE_API_BASE available — fallback to '' so local proxy still works
+    __API_BASE__: JSON.stringify(process.env.VITE_API_BASE || ''),
   }
 })

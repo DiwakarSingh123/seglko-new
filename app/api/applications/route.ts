@@ -1,36 +1,44 @@
 import { NextResponse } from 'next/server';
-import fs from 'fs';
-import path from 'path';
+import { connectDB } from '@/lib/mongodb';
+import { StudentApplication } from '@/lib/models';
 
-const dataFilePath = path.join(process.cwd(), 'data', 'applications.json');
+const COLORS = [
+  "from-orange-400 to-orange-600",
+  "from-blue-400 to-blue-600",
+  "from-emerald-400 to-emerald-600",
+  "from-purple-400 to-purple-600",
+  "from-rose-400 to-rose-600",
+  "from-amber-400 to-amber-600",
+  "from-teal-400 to-teal-600",
+  "from-pink-400 to-pink-600"
+];
 
-const initializeDataFile = () => {
-  const dir = path.dirname(dataFilePath);
-  if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir, { recursive: true });
+function getColorForId(id: string) {
+  let hash = 0;
+  for (let i = 0; i < id.length; i++) {
+    hash = id.charCodeAt(i) + ((hash << 5) - hash);
   }
-
-  if (!fs.existsSync(dataFilePath)) {
-    const defaultData = [
-      { id: "#AP-1284", student: "Rahul Sharma", email: "rahul@email.com", university: "Saroj Institute of Technology and Management", course: "B.Tech CSE", date: "Jan 15, 2024", status: "Pending", fee: "₹2,500", color: "from-orange-400 to-orange-600" },
-      { id: "#AP-1283", student: "Priya Singh", email: "priya@email.com", university: "Shivdan Singh Institute of Technology and Management", course: "MS Computer Science", date: "Jan 14, 2024", status: "Accepted", fee: "₹5,000", color: "from-blue-400 to-blue-600" },
-      { id: "#AP-1282", student: "Amit Patel", email: "amit@email.com", university: "Lucknow Institute of Pharmacy", course: "MBA", date: "Jan 13, 2024", status: "Rejected", fee: "₹3,500", color: "from-emerald-400 to-emerald-600" },
-      { id: "#AP-1281", student: "Sneha Reddy", email: "sneha@email.com", university: "Saroj College of Pharmacy", course: "MSc Data Science", date: "Jan 12, 2024", status: "In Review", fee: "₹4,500", color: "from-purple-400 to-purple-600" },
-      { id: "#AP-1280", student: "Vikram Malhotra", email: "vikram@email.com", university: "Saroj College of Engineering and Polytechnic", course: "PhD AI", date: "Jan 11, 2024", status: "Accepted", fee: "₹5,000", color: "from-rose-400 to-rose-600" },
-      { id: "#AP-1279", student: "Anjali Gupta", email: "anjali@email.com", university: "Saroj College of Law", course: "B.Tech ECE", date: "Jan 10, 2024", status: "Pending", fee: "₹2,500", color: "from-amber-400 to-amber-600" },
-      { id: "#AP-1278", student: "Rohan Verma", email: "rohan@email.com", university: "Saroj Institute of Technology and Management", course: "MS Finance", date: "Jan 9, 2024", status: "In Review", fee: "₹4,000", color: "from-teal-400 to-teal-600" },
-      { id: "#AP-1277", student: "Kavya Nair", email: "kavya@email.com", university: "Lucknow Institute of Pharmacy", course: "LLM", date: "Jan 8, 2024", status: "Accepted", fee: "₹5,000", color: "from-pink-400 to-pink-600" },
-    ];
-    fs.writeFileSync(dataFilePath, JSON.stringify(defaultData, null, 2));
-  }
-};
+  return COLORS[Math.abs(hash) % COLORS.length];
+}
 
 export async function GET() {
   try {
-    initializeDataFile();
-    const fileData = fs.readFileSync(dataFilePath, 'utf8');
-    const data = JSON.parse(fileData);
-    return NextResponse.json(data, {
+    await connectDB();
+    const apps = await StudentApplication.find({}).sort({ createdAt: -1 }).lean();
+    
+    const formattedData = apps.map((app: any) => ({
+      id: app.applicationId || app._id.toString(),
+      student: `${app.firstName || ''} ${app.lastName || ''}`.trim() || 'Unknown Student',
+      email: app.email || '',
+      university: app.desiredInstitution || '',
+      course: app.desiredCourse || '',
+      date: app.createdAt ? new Date(app.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : '',
+      status: app.status || 'Pending',
+      fee: app.paymentAmount ? `₹${app.paymentAmount}` : '₹0',
+      color: getColorForId(app.applicationId || app._id.toString())
+    }));
+
+    return NextResponse.json(formattedData, {
       headers: {
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
@@ -38,17 +46,29 @@ export async function GET() {
       },
     });
   } catch (error) {
+    console.error('Error fetching applications:', error);
     return NextResponse.json({ error: 'Failed to read data' }, { status: 500 });
   }
 }
 
 export async function PUT(request: Request) {
   try {
-    initializeDataFile();
-    const updatedData = await request.json();
-    fs.writeFileSync(dataFilePath, JSON.stringify(updatedData, null, 2));
-    return NextResponse.json({ success: true, data: updatedData });
+    await connectDB();
+    const body = await request.json();
+    
+    // We expect the body to have { id, status } now
+    if (body.id && body.status) {
+      const updated = await StudentApplication.findOneAndUpdate(
+        { $or: [{ applicationId: body.id }, { _id: body.id }] },
+        { status: body.status },
+        { new: true }
+      );
+      return NextResponse.json({ success: true, data: updated });
+    }
+
+    return NextResponse.json({ error: 'Invalid update payload' }, { status: 400 });
   } catch (error) {
+    console.error('Error updating application:', error);
     return NextResponse.json({ error: 'Failed to update data' }, { status: 500 });
   }
 }
