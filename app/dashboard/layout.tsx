@@ -4,7 +4,7 @@ import Header from "./components/Header";
 import AuthGuard from "./components/AuthGuard";
 
 export const metadata: Metadata = {
-  title: "Dashboard | AdmissionX",
+  title: "Dashboard | Saroj Educational Group",
 };
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {

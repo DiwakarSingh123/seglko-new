@@ -57,7 +57,7 @@ export default function LoginPage() {
       <div className="w-full max-w-md bg-white rounded-2xl shadow-xl border border-slate-100 p-8 relative z-10">
         <div className="text-center mb-8">
           <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center overflow-hidden rounded-xl border border-slate-100 shadow-sm">
-            <Image src="/seg-logo.jpeg" alt="SEG Logo" width={56} height={56} className="object-contain" />
+            <Image src="/seg-logo.png" alt="SEG Logo" width={56} height={56} className="object-contain" />
           </div>
           <h1 className="text-2xl font-black text-slate-800">Welcome Back</h1>
           <p className="text-sm text-slate-400 mt-1">Sign in to access the admin dashboard</p>

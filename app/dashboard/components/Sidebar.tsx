@@ -69,7 +69,7 @@ export default function Sidebar() {
         <Link href="/dashboard" className="flex items-center gap-3">
           <div className="flex items-center justify-center flex-shrink-0 w-12 h-12 overflow-hidden bg-white border shadow-sm rounded-xl border-slate-100">
             <Image
-              src="/seg-logo.jpeg"
+              src="/seg-logo.png"
               alt="SEG Logo"
               width={48}
               height={48}
