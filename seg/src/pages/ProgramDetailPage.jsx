@@ -36,12 +36,15 @@ export default function ProgramDetailPage() {
   const [program, setProgram] = useState(staticProgram || null);
 
   useEffect(() => {
+    // Reset to correct static program immediately when slug changes
+    const newStatic = allPrograms.find(p => p.slug === slug);
+    setProgram(newStatic || null);
+
     fetch('/api/programs')
       .then(res => res.json())
       .then(data => {
         const found = Array.isArray(data) ? data.find(p => p.slug === slug) : null;
         if (found) {
-          // Merge API data over static — API fields take priority
           setProgram(prev => ({ ...prev, ...found,
             image: found.image || prev?.image,
             highlights: found.highlights?.length ? found.highlights : prev?.highlights,
@@ -215,10 +218,10 @@ export default function ProgramDetailPage() {
           <h2 className="pdp-hero__subtitle">{program.subtitle}</h2>
           <p className="pdp-hero__desc">{program.description}</p>
           <div className="pdp-hero__btns">
-            <a href="https://ssitm.in/" target="_blank" rel="noopener noreferrer" className="pdp-hero__btn-primary" style={{ background: '#1041c6', textDecoration: 'none' }}>
+            <a href="https://seglko.in8.nopaperforms.com/" target="_blank" rel="noopener noreferrer" className="pdp-hero__btn-primary" style={{ background: '#1041c6', textDecoration: 'none' }}>
               Apply Now <ArrowRight />
             </a>
-            <button className="pdp-hero__btn-outline">Download Brochure</button>
+
           </div>
         </div>
         <div className="pdp-hero__img-wrap">
@@ -316,8 +319,7 @@ export default function ProgramDetailPage() {
           <p>Join our {program.subtitle} program and become part of the next generation of leaders.</p>
         </div>
         <div className="pdp-cta__btns">
-          <a href="https://ssitm.in/" target="_blank" rel="noopener noreferrer" className="pdp-cta__btn-white" style={{ textDecoration: 'none' }}>Apply Now <ArrowRight /></a>
-          <button className="pdp-cta__btn-outline">Contact Admissions</button>
+          <a href="https://seglko.in8.nopaperforms.com/" target="_blank" rel="noopener noreferrer" className="pdp-cta__btn-white" style={{ textDecoration: 'none' }}>Apply Now <ArrowRight /></a>
         </div>
       </div>
 

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import './CareersPage.css';
 import { api } from '../api.js';
 import careerHeroImg from '../assets/images/seg.jpeg';
@@ -7,7 +7,8 @@ import logoImg from '../assets/images/logo.png';
 
 function JobModal({ job, onClose }) {
   if (!job) return null;
-  
+  const navigate = useNavigate();
+
   const getIcon = (category) => {
     if (category === 'Teaching') return '🎓';
     if (category === 'Technical') return '💻';
@@ -36,7 +37,13 @@ function JobModal({ job, onClose }) {
           ))}
         </div>
         <div className="job-modal__footer">
-          <button className={`btn-apply bg-${job.color}`} style={{ width: '100%', justifyContent: 'center' }}>Apply Now →</button>
+          <button
+            className={`btn-apply bg-${job.color}`}
+            style={{ width: '100%', justifyContent: 'center' }}
+            onClick={() => { onClose(); navigate('/careers/apply', { state: { jobTitle: job.title } }); }}
+          >
+            Apply Now →
+          </button>
         </div>
       </div>
     </div>
@@ -52,54 +59,10 @@ const jobCategories = [
 ];
 
 const defaultJobs = [
-  {
-    _id: 1,
-    title: 'Chairman PS',
-    category: 'Administration',
-    tag: 'Administration',
-    dept: 'Secretariat',
-    location: 'Lucknow',
-    experience: '5-8 Years',
-    type: 'Full Time',
-    posted: '05 June 2025',
-    color: 'blue',
-  },
-  {
-    _id: 2,
-    title: 'Admission Counsellor',
-    category: 'Administration',
-    tag: 'Admissions',
-    dept: 'Counselling',
-    location: 'Lucknow',
-    experience: '1-3 Years',
-    type: 'Full Time',
-    posted: '05 June 2025',
-    color: 'violet',
-  },
-  {
-    _id: 3,
-    title: 'Assistant Professor',
-    category: 'Teaching',
-    tag: 'Teaching',
-    dept: 'Pharmacy',
-    location: 'Lucknow',
-    experience: '2-5 Years',
-    type: 'Full Time',
-    posted: '05 June 2025',
-    color: 'green',
-  },
-  {
-    _id: 4,
-    title: 'Field Officers',
-    category: 'Administration',
-    tag: 'Administration',
-    dept: 'Field Officer',
-    location: 'Uttar Pradesh',
-    experience: '1-4 Years',
-    type: 'Full Time',
-    posted: '05 June 2025',
-    color: 'orange',
-  },
+  { _id: 1, title: 'Chairman PS', category: 'Administration', tag: 'Administration', dept: 'Secretariat', location: 'Lucknow', experience: '5-8 Years', type: 'Full Time', posted: '05 June 2025', color: 'blue' },
+  { _id: 2, title: 'Admission Counsellor', category: 'Administration', tag: 'Admissions', dept: 'Counselling', location: 'Lucknow', experience: '1-3 Years', type: 'Full Time', posted: '05 June 2025', color: 'violet' },
+  { _id: 3, title: 'Assistant Professor', category: 'Teaching', tag: 'Teaching', dept: 'Pharmacy', location: 'Lucknow', experience: '2-5 Years', type: 'Full Time', posted: '05 June 2025', color: 'green' },
+  { _id: 4, title: 'Field Officers', category: 'Administration', tag: 'Administration', dept: 'Field Officer', location: 'Uttar Pradesh', experience: '1-4 Years', type: 'Full Time', posted: '05 June 2025', color: 'orange' },
 ];
 
 export default function CareersPage() {
@@ -112,29 +75,16 @@ export default function CareersPage() {
 
   useEffect(() => {
     const fetchJobs = async () => {
-      const urls = [api('/api/jobs')];
-      let lastError = '';
-      for (const url of urls) {
-        try {
-          const response = await fetch(url);
-          if (response.ok) {
-            const data = await response.json();
-            setJobs(data.length > 0 ? data : defaultJobs);
-            setError('');
-            return;
-          }
-          lastError = `Failed to load jobs from ${url}: ${response.status} ${response.statusText}`;
-          console.warn(lastError);
-        } catch (fetchError) {
-          lastError = `Failed to fetch jobs from ${url}: ${fetchError.message}`;
-          console.warn(lastError);
+      try {
+        const response = await fetch(api('/api/jobs'));
+        if (response.ok) {
+          const data = await response.json();
+          setJobs(data.length > 0 ? data : defaultJobs);
+          return;
         }
-      }
-
-      setError(`Unable to load job openings from admin dashboard. Showing local fallback listings. ${lastError}`);
+      } catch (e) {}
       setJobs(defaultJobs);
     };
-
     fetchJobs().finally(() => setLoading(false));
   }, []);
 
@@ -142,16 +92,15 @@ export default function CareersPage() {
     ? jobs
     : jobs.filter(job => job.category === activeCategory);
 
-  const updateCategoryCounts = () => {
-    return jobCategories.map(cat => ({
+  const updateCategoryCounts = () =>
+    jobCategories.map(cat => ({
       ...cat,
       count: cat.id === 'all' ? jobs.length : jobs.filter(j => j.category === cat.id).length,
     }));
-  };
 
   return (
     <div className="careers-page">
-      {/* Hero Section */}
+      {/* Hero */}
       <section className="careers-hero">
         <div className="careers-hero__overlay"></div>
         <div className="careers-hero__content">
@@ -165,7 +114,6 @@ export default function CareersPage() {
               Join a dynamic team of educators, innovators, and professionals working together to empower the next generation.
             </p>
           </div>
-
           <div className="careers-hero__image-wrap">
             <img src={careerHeroImg} alt="Join SEG" className="careers-hero__image" />
             <div className="careers-hero__info-card">
@@ -200,22 +148,13 @@ export default function CareersPage() {
       </section>
 
       {/* Job Openings */}
-      {loading && (
-        <div className="careers-loading">
-          <p>Loading job openings from admin dashboard…</p>
-        </div>
-      )}
-      {error && !loading && (
-        <div className="careers-error">
-          <p>{error}</p>
-        </div>
-      )}
+      {loading && <div className="careers-loading"><p>Loading job openings…</p></div>}
+
       <section className="careers-list">
         <div className="list-header">
           <h2>Current Job Openings</h2>
           <span className="open-count">{filteredJobs.length} Open Positions</span>
         </div>
-
         <div className="jobs-container">
           {filteredJobs.map(job => (
             <div key={job._id} className={`job-card border-${job.color}`}>
@@ -229,26 +168,12 @@ export default function CareersPage() {
                     <span className={`job-tag tag-${job.color}`}>{job.tag}</span>
                   </div>
                   <div className="job-meta">
-                    <div className="meta-item">
-                      <span className="meta-label">Department</span>
-                      <span className="meta-value">{job.dept}</span>
-                    </div>
-                    <div className="meta-item">
-                      <span className="meta-label">Location</span>
-                      <span className="meta-value">{job.location}</span>
-                    </div>
-                    <div className="meta-item">
-                      <span className="meta-label">Experience</span>
-                      <span className="meta-value">{job.experience}</span>
-                    </div>
-                    <div className="meta-item">
-                      <span className="meta-label">Job Type</span>
-                      <span className="meta-value">{job.type}</span>
-                    </div>
-                    <div className="meta-item">
-                      <span className="meta-label">Posted On</span>
-                      <span className="meta-value">{job.posted}</span>
-                    </div>
+                    {[['Department', job.dept], ['Location', job.location], ['Experience', job.experience], ['Job Type', job.type], ['Posted On', job.posted]].map(([label, value]) => (
+                      <div className="meta-item" key={label}>
+                        <span className="meta-label">{label}</span>
+                        <span className="meta-value">{value}</span>
+                      </div>
+                    ))}
                   </div>
                 </div>
               </div>
@@ -258,23 +183,6 @@ export default function CareersPage() {
               </div>
             </div>
           ))}
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="careers-cta">
-        <div className="cta-content">
-          <div className="cta-text">
-            <h3>Don&apos;t see the right role?</h3>
-            <p>We are always looking for passionate people. Send us your resume and we&apos;ll keep you in mind.</p>
-          </div>
-          <button className="btn-submit-resume">
-            <span className="icon">📄</span>
-            Submit Your Resume
-          </button>
-          <div className="cta-visual">
-            <img src={logoImg} alt="SEG Logo" className="cta-logo" />
-          </div>
         </div>
       </section>
 

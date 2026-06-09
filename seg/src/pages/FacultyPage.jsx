@@ -545,7 +545,7 @@ export default function FacultyPage() {
               Apply Now <ArrowRight />
             </button>
             <button style={{ padding: '13px 28px', background: 'transparent', color: '#fff', border: '2px solid rgba(255,255,255,0.5)', borderRadius: '8px', fontSize: '15px', fontWeight: 600, cursor: 'pointer' }}>
-              Download Brochure
+              Contact Admissions
             </button>
             <button style={{ padding: '13px 28px', background: 'transparent', color: '#fff', border: '2px solid rgba(255,255,255,0.5)', borderRadius: '8px', fontSize: '15px', fontWeight: 600, cursor: 'pointer' }}>
               Contact Admissions
