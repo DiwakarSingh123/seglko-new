@@ -41,6 +41,13 @@ function ScrollToTop() {
   return null;
 }
 
+function AdminRedirect() {
+  useEffect(() => {
+    window.location.href = 'https://seglko-new-ilmq.vercel.app/login';
+  }, []);
+  return null;
+}
+
 function App() {
   return (
     <Router>
@@ -77,6 +84,8 @@ function App() {
         <Route path="/events/:slug" element={<EventDetailPage />} />
         <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+        <Route path="/admin" element={<AdminRedirect />} />
+        <Route path="/admin/*" element={<AdminRedirect />} />
       </Routes>
       <Footer />
       <Chatbot />
