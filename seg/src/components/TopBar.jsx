@@ -10,24 +10,20 @@ const MailIcon = () => (
 export default function TopBar() {
   return (
     <div className="top-bar">
-      <div className="top-bar__left">
-        <div className="top-bar__primary">
-          <Link to="/why-join-seg" className="top-bar__link">Why SEG?</Link>
-          <span className="top-bar__divider top-bar__divider--visible" />
-          <Link to="/careers" className="top-bar__link">Career</Link>
-          <span className="top-bar__divider top-bar__divider--visible" />
-          <a href="https://sitmalumni.seglko.org/" target="_blank" rel="noopener noreferrer" className="top-bar__link">Alumni</a>
-        </div>
-        <div className="top-bar__utility">
-          <span className="top-bar__link">Toll Free no: 1800-180-7686</span>
-          <span className="top-bar__divider top-bar__divider--visible" />
-          <span className="top-bar__link top-bar__email">
-            <MailIcon />
-            <span>: For jobs ( send Cv ) ~hr @seglko.org</span>
-          </span>
-        </div>
-      </div>
-      <div className="top-bar__right">
+      <div className="top-bar__right-group">
+        <Link to="/why-join-seg" className="top-bar__link">Why SEG?</Link>
+        <span className="top-bar__divider top-bar__divider--visible" />
+        <Link to="/careers" className="top-bar__link">Career</Link>
+        <span className="top-bar__divider top-bar__divider--visible" />
+        <a href="https://sitmalumni.seglko.org/" target="_blank" rel="noopener noreferrer" className="top-bar__link">Alumni</a>
+        <span className="top-bar__divider top-bar__divider--visible" />
+        <span className="top-bar__link">Toll Free no: 1800-180-7686</span>
+        <span className="top-bar__divider top-bar__divider--visible" />
+        <span className="top-bar__link top-bar__email">
+          <MailIcon />
+          <span>: For jobs ( send Cv ) ~hr @seglko.org</span>
+        </span>
+        <span className="top-bar__divider top-bar__divider--visible" />
         <Link to="/pay-fee" className="top-bar__pay-btn">Pay Fee Online</Link>
       </div>
     </div>
