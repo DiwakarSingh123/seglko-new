@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { connectDB } from '@/lib/mongodb';
 import { JobOpening } from '@/lib/models';
+import { readJsonFallback } from '@/lib/api-fallback';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -73,7 +74,8 @@ export async function GET() {
     return NextResponse.json(jobs, { headers: corsHeaders });
   } catch (error) {
     console.error('GET /api/jobs error:', error);
-    return NextResponse.json({ error: 'Failed to load job openings' }, { status: 500, headers: corsHeaders });
+    const jobs = await readJsonFallback('jobs.json', defaultJobOpenings);
+    return NextResponse.json(jobs, { headers: corsHeaders });
   }
 }
 

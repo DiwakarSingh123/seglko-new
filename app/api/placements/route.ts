@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { connectDB } from '@/lib/mongodb';
 import { Placement } from '@/lib/models';
+import { logApiError, readJsonFallback } from '@/lib/api-fallback';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -17,8 +18,10 @@ export async function GET() {
     await connectDB();
     const placements = await Placement.find().sort({ createdAt: -1 });
     return NextResponse.json(placements, { headers: corsHeaders });
-  } catch {
-    return NextResponse.json({ error: 'Failed to load placements' }, { status: 500 });
+  } catch (error) {
+    logApiError('GET /api/placements', error);
+    const placements = await readJsonFallback('placements.json', []);
+    return NextResponse.json(placements, { headers: corsHeaders });
   }
 }
 

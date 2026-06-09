@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { connectDB } from '@/lib/mongodb';
 import { StudentApplication } from '@/lib/models';
+import { readJsonFallback } from '@/lib/api-fallback';
 
 const COLORS = [
   "from-orange-400 to-orange-600",
@@ -47,7 +48,14 @@ export async function GET() {
     });
   } catch (error) {
     console.error('Error fetching applications:', error);
-    return NextResponse.json({ error: 'Failed to read data' }, { status: 500 });
+    const applications = await readJsonFallback('applications.json', []);
+    return NextResponse.json(applications, {
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+      },
+    });
   }
 }
 

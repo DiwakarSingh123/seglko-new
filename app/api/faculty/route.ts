@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { connectDB } from '@/lib/mongodb';
 import { FacultyData } from '@/lib/models';
+import { readJsonFallback } from '@/lib/api-fallback';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -48,7 +49,8 @@ export async function GET() {
     return NextResponse.json(data, { headers: corsHeaders });
   } catch (error) {
     console.error('Failed to load faculty data:', error);
-    return NextResponse.json({ error: 'Failed to load faculty data' }, { status: 500, headers: corsHeaders });
+    const data = await readJsonFallback('faculty.json', defaultFacultyData);
+    return NextResponse.json(data, { headers: corsHeaders });
   }
 }
 

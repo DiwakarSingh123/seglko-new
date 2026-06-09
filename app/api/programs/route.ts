@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { connectDB } from '@/lib/mongodb';
 import { Program } from '@/lib/models';
+import { logApiError, readJsonFallback } from '@/lib/api-fallback';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -17,8 +18,10 @@ export async function GET() {
     await connectDB();
     const programs = await Program.find().sort({ createdAt: -1 });
     return NextResponse.json(programs, { headers: corsHeaders });
-  } catch {
-    return NextResponse.json({ error: 'Failed to load programs' }, { status: 500 });
+  } catch (error) {
+    logApiError('GET /api/programs', error);
+    const programs = await readJsonFallback('programs.json', []);
+    return NextResponse.json(programs, { headers: corsHeaders });
   }
 }
 

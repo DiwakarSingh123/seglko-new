@@ -13,7 +13,9 @@ export async function connectDB() {
   if (cached.conn) return cached.conn;
 
   if (!cached.promise) {
-    cached.promise = mongoose.connect(MONGODB_URI)
+    cached.promise = mongoose.connect(MONGODB_URI, {
+      serverSelectionTimeoutMS: Number(process.env.MONGODB_TIMEOUT_MS || 5000),
+    })
       .then((m) => m)
       .catch((err) => {
         cached.promise = null; // Clear cached promise on failure to allow retries

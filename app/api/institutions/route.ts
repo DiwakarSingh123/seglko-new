@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { connectDB } from '@/lib/mongodb';
 import { Institution } from '@/lib/models';
+import { logApiError, readJsonFallback } from '@/lib/api-fallback';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -123,8 +124,10 @@ export async function GET() {
       items = await Institution.insertMany(defaultInstitutions);
     }
     return NextResponse.json(items, { headers: corsHeaders });
-  } catch {
-    return NextResponse.json({ error: 'Failed to load institutions' }, { status: 500 });
+  } catch (error) {
+    logApiError('GET /api/institutions', error);
+    const items = await readJsonFallback('institutions.json', defaultInstitutions);
+    return NextResponse.json(items, { headers: corsHeaders });
   }
 }
 

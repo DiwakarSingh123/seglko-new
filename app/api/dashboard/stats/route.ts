@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/mongodb";
 import { StudentApplication, Institution } from "@/lib/models";
+import { readJsonFallback } from "@/lib/api-fallback";
 import { computeDashboardStats } from "@/lib/dashboard-stats";
 
 export async function GET() {
@@ -30,6 +31,11 @@ export async function GET() {
     return NextResponse.json(stats);
   } catch (error) {
     console.error("Dashboard Stats Error:", error);
-    return NextResponse.json({ error: "Failed to load dashboard stats" }, { status: 500 });
+    const [applications, institutions] = await Promise.all([
+      readJsonFallback("applications.json", []),
+      readJsonFallback("institutions.json", []),
+    ]);
+    const stats = computeDashboardStats(applications, institutions);
+    return NextResponse.json(stats);
   }
 }

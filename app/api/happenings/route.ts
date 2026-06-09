@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { connectDB } from '@/lib/mongodb';
 import { Happening } from '@/lib/models';
+import { logApiError, readJsonFallback } from '@/lib/api-fallback';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -17,8 +18,10 @@ export async function GET() {
     await connectDB();
     const items = await Happening.find().sort({ createdAt: -1 });
     return NextResponse.json(items, { headers: corsHeaders });
-  } catch {
-    return NextResponse.json({ error: 'Failed to load happenings' }, { status: 500 });
+  } catch (error) {
+    logApiError('GET /api/happenings', error);
+    const items = await readJsonFallback('happenings.json', []);
+    return NextResponse.json(items, { headers: corsHeaders });
   }
 }
 
