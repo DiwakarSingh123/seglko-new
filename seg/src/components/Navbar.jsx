@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import aboutBgImg from '../assets/images/seg.jpeg';
 import logoImg from '../assets/images/logo.png';
 
@@ -21,7 +21,6 @@ const aboutSegItems = [
   {
     title: 'History of SEG',
     description: 'Our journey of growth & excellence',
-    accent: true,
     icon: 'institution',
     path: '/history-of-seg',
   },
@@ -56,7 +55,6 @@ const programsMenuItems = [
   {
     title: 'Master of Technology',
     description: 'Our M.Tech program offers advanced skills in engineering, with opportunities for research and innovation.',
-    accent: true,
     icon: 'gear',
     path: '/programs/mtech',
   },
@@ -78,7 +76,6 @@ const programsMenuItems = [
     icon: 'monitor',
     path: '/programs/bca',
   },
-  
   {
     title: 'Masters in Computer Applications',
     description: 'Our MCA program equips students with expertise in software development, IT, and systems management.',
@@ -124,7 +121,6 @@ const admissionMenuItems = [
   {
     title: 'Admission Process',
     description: 'Follow our seamless process to secure your seat.',
-    accent: true,
     icon: 'expand',
     path: '/admission-process',
   },
@@ -562,6 +558,7 @@ export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const navbarRef = useRef(null);
   const timeoutRef = useRef(null);
+  const location = useLocation();
 
   const handleMouseEnter = (label) => {
     if (window.innerWidth <= 1024) return;
@@ -773,11 +770,12 @@ export default function Navbar() {
               {aboutSegItems.map((item) => {
                 const ItemTag = item.path ? Link : 'button';
                 const itemProps = item.path ? { to: item.path, onClick: () => setActiveDropdown(null) } : { type: 'button' };
+                const isActive = item.path && location.pathname === item.path;
                 return (
                   <ItemTag
                     key={item.title}
                     {...itemProps}
-                    className={`about-panel__menu-item${item.accent ? ' about-panel__menu-item--accent' : ''}`}
+                    className={`about-panel__menu-item${isActive ? ' about-panel__menu-item--accent' : ''}`}
                   >
                     <span className="about-panel__menu-icon">
                       <IconTile type={item.icon} />
@@ -855,11 +853,12 @@ export default function Navbar() {
               {programsMenuItems.map((item) => {
                 const ItemTag = item.path ? Link : 'button';
                 const itemProps = item.path ? { to: item.path, onClick: () => setActiveDropdown(null) } : { type: 'button' };
+                const isActive = item.path && location.pathname === item.path;
                 return (
                   <ItemTag
                     key={item.title}
                     {...itemProps}
-                    className={`programs-panel__menu-item${item.accent ? ' programs-panel__menu-item--accent' : ''}`}
+                    className={`programs-panel__menu-item${isActive ? ' programs-panel__menu-item--accent' : ''}`}
                   >
                     <span className="programs-panel__menu-icon">
                       <IconTile type={item.icon} />
@@ -929,12 +928,14 @@ export default function Navbar() {
           <section className="admission-panel" id="admission-panel">
             <div className="admission-panel__top">
               <div className="admission-panel__menu">
-                {admissionMenuItems.map((item, index) => (
+                {admissionMenuItems.map((item, index) => {
+                  const isActive = item.path && location.pathname === item.path;
+                  return (
                   <Link
                     key={item.title}
                     to={item.path}
                     onClick={() => setActiveDropdown(null)}
-                    className={`admission-panel__menu-item${item.accent ? ' admission-panel__menu-item--accent' : ''} ${index === 1 ? 'color-green' : index === 2 ? 'color-purple' : index === 3 ? 'color-blue' : ''}`}
+                    className={`admission-panel__menu-item${isActive ? ' admission-panel__menu-item--accent' : ''} ${index === 1 ? 'color-green' : index === 2 ? 'color-purple' : index === 3 ? 'color-blue' : ''}`}
                     style={{ textDecoration: 'none' }}
                   >
                     <span className="admission-panel__menu-icon">
@@ -948,7 +949,8 @@ export default function Navbar() {
                       <ChevronRight />
                     </span>
                   </Link>
-                ))}
+                  );
+                })}
               </div>
 
               <div className="admission-panel__content">
@@ -1023,12 +1025,14 @@ export default function Navbar() {
           <section className="institutions-panel" id="institutions-panel">
             <div className="institutions-panel__top">
               <div className="institutions-panel__grid">
-                {institutionsData.map((item, index) => (
+                {institutionsData.map((item, index) => {
+                  const isActive = item.path && location.pathname === item.path;
+                  return (
                   item.path ? (
                     <Link
                       key={index}
                       to={item.path}
-                      className="institutions-panel__item"
+                      className={`institutions-panel__item${isActive ? ' institutions-panel__item--accent' : ''}`}
                       onClick={() => setActiveDropdown(null)}
                     >
                       <span className="institutions-panel__icon">
@@ -1048,7 +1052,7 @@ export default function Navbar() {
                       href={item.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="institutions-panel__item"
+                      className={`institutions-panel__item${isActive ? ' institutions-panel__item--accent' : ''}`}
                       onClick={() => setActiveDropdown(null)}
                     >
                       <span className="institutions-panel__icon">
@@ -1063,7 +1067,8 @@ export default function Navbar() {
                       </span>
                     </a>
                   )
-                ))}
+                  );
+                })}
               </div>
 
               <div className="institutions-panel__visual">
@@ -1092,11 +1097,13 @@ export default function Navbar() {
           <section className="student-zone-panel" id="student-zone-panel">
             <div className="student-zone-panel__top">
               <div className="student-zone-panel__grid">
-                {studentZoneItems.map((item, index) => (
+                {studentZoneItems.map((item, index) => {
+                  const isActive = item.path && location.pathname === item.path;
+                  return (
                   <Link
                     key={index}
                     to={item.path}
-                    className="student-zone-panel__item"
+                    className={`student-zone-panel__item${isActive ? ' student-zone-panel__item--accent' : ''}`}
                     onClick={() => setActiveDropdown(null)}
                   >
                     <span className="student-zone-panel__icon">
@@ -1110,7 +1117,8 @@ export default function Navbar() {
                       <ChevronRight />
                     </span>
                   </Link>
-                ))}
+                  );
+                })}
               </div>
 
               <div className="student-zone-panel__visual">
@@ -1138,11 +1146,12 @@ export default function Navbar() {
                 <div className="rd-panel__menu">
                   {rdItems.map((item, index) => {
                     const iconColors = ['orange', 'green', 'purple', 'blue'];
+                    const isActive = item.path && location.pathname === item.path;
                     return (
                       <Link
                         key={index}
                         to={item.path}
-                        className={`rd-panel__menu-item${index === 0 ? ' rd-panel__menu-item--accent' : ''}`}
+                        className={`rd-panel__menu-item${isActive ? ' rd-panel__menu-item--accent' : ''}`}
                         onClick={() => setActiveDropdown(null)}
                       >
                         <span className={`rd-panel__menu-icon rd-panel__menu-icon--${iconColors[index]}`}>

@@ -243,35 +243,7 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="footer__newsletter">
-          <div className="footer__newsletter-copy">
-            <span className="footer__newsletter-icon">
-              <BellIcon />
-            </span>
-            <div>
-              <h3>Stay Updated with Saroj Education Group</h3>
-              <p>Subscribe to our newsletter and never miss an important update.</p>
-            </div>
-          </div>
 
-          <form className="footer__newsletter-form">
-            <input type="email" placeholder="Enter your email address" aria-label="Email address" />
-            <button type="submit">Subscribe</button>
-          </form>
-
-          <a href="#footer" className="footer__brochure">
-            <span className="footer__brochure-icon">
-              <BrochureIcon />
-            </span>
-            <div className="footer__brochure-copy">
-              <strong>Download Brochure</strong>
-              <span>Explore programs, fees and more.</span>
-            </div>
-            <span className="footer__brochure-arrow">
-              <ArrowRight />
-            </span>
-          </a>
-        </div>
       </div>
 
       <div className="footer__bottom">

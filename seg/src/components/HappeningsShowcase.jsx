@@ -250,6 +250,9 @@ export default function HappeningsShowcase() {
     const colors = ['coral', 'mint', 'blue', 'gold'];
     const color = colors[idx % colors.length];
 
+    const fallbackImages = [heroBg, campusBg, facultyBg, aboutBg, event];
+    const fallbackImage = fallbackImages[idx % fallbackImages.length];
+
     let eventLink = '#';
     let isExt = false;
     if (evt.url && evt.url !== '#') {
@@ -266,7 +269,7 @@ export default function HappeningsShowcase() {
       month,
       year,
       color,
-      image: evt.image || heroBg,
+      image: evt.image || fallbackImage,
       eventLink,
       isExternal: isExt,
     };

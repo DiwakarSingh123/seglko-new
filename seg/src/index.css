@@ -462,7 +462,8 @@ button {
 }
 
 .navbar__item--active .navbar__item-text {
-  color: #2f2f2f;
+  color: #1041c6;
+  font-weight: 700;
 }
 
 .navbar__item-arrow {
@@ -490,10 +491,23 @@ button {
   transform: rotate(180deg);
 }
 
+.navbar__item:hover .navbar__item-button {
+  padding: 11px 14px;
+  background: #f0f4ff;
+  border-radius: 10px;
+  box-shadow: inset 0 0 0 1px rgba(16, 65, 198, 0.15);
+}
+
 .navbar__item--active .navbar__item-button {
   padding: 11px 14px;
   background: #f7ecd7;
+  border-radius: 10px;
   box-shadow: inset 0 0 0 1px rgba(232, 206, 157, 0.45);
+}
+
+.navbar__item--active .navbar__item-text {
+  color: #1041c6;
+  font-weight: 700;
 }
 
 .navbar__item--active .navbar__item-arrow svg {
@@ -6895,6 +6909,18 @@ button {
   box-shadow: 0 10px 20px rgba(17, 65, 198, 0.08);
 }
 
+.institutions-panel__item--accent,
+.student-zone-panel__item--accent {
+  border-color: rgba(255, 186, 16, 0.4);
+  background: linear-gradient(180deg, #fff9ee, #fff4df);
+}
+
+.institutions-panel__item--accent .institutions-panel__icon,
+.student-zone-panel__item--accent .student-zone-panel__icon {
+  background: rgba(255, 186, 16, 0.18);
+  color: #ffae00;
+}
+
 .institutions-panel__icon,
 .student-zone-panel__icon,
 .rd-panel__icon {
@@ -7609,3 +7635,6 @@ button {
   background: #be1238;
   color: #ffffff;
 }
+
+
+

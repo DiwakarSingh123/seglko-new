@@ -16,7 +16,7 @@ export async function OPTIONS() {
 export async function GET() {
   try {
     await connectDB();
-    const items = await Happening.find().sort({ createdAt: -1 });
+    const items = await Happening.find().sort({ date: -1, createdAt: -1 });
     return NextResponse.json(items, { headers: corsHeaders });
   } catch (error) {
     logApiError('GET /api/happenings', error);
