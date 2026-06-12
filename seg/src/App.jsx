@@ -43,7 +43,7 @@ function ScrollToTop() {
 
 function AdminRedirect() {
   useEffect(() => {
-    window.location.href = 'https://seglko-backend.vercel.app/login';
+    window.location.href = '/login';
   }, []);
   return null;
 }
