@@ -403,7 +403,7 @@ button {
   border-radius: 0 0 14px 14px;
 
   position: absolute;
-  left: 5px;
+  left: 7px;
   top: 50%;
   transform: translateY(-50%);
   z-index: 2;

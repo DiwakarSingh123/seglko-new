@@ -121,9 +121,10 @@ const footerGroups = [
     links: [
       { label: 'Shivdan Singh Institute of Technology and Management', url: 'https://ssitm.in/' },
       { label: 'Saroj Institute of Technology and Management', url: 'https://sitmlko.org/' },
+      { label: 'Lucknow Institute of Pharmacy', url: '/lip/' },
       { label: 'Saroj College of Law', url: '/scl/' },
-      { label: 'Saroj College of Pharmacy', url: 'https://seglko.org/scp/' },
-      { label: 'Saroj College of Engineering and Polytechnic', url: 'https://seglko.org/scep/' },
+      { label: 'Saroj College of Pharmacy', url: '/scp/' },
+      { label: 'Saroj College of Engineering and Polytechnic', url: '/scep/' },
     ],
   },
 ];

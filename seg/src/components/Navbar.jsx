@@ -169,25 +169,25 @@ const institutionsData = [
     title: 'Lucknow Institute of Pharmacy',
     description: 'Approved by Pharmacy Council of India (PCI) and affiliated to AKTU',
     icon: 'medical',
-    url: 'https://seglko.org/lip/',
+    url: '/lip/',
   },
   {
     title: 'Saroj College of Pharmacy',
     description: 'Approved by Pharmacy Council of India and affiliated to AKTU, Lucknow, College Code: 2031',
     icon: 'capsule',
-    url: 'https://seglko.org/scp/',
+    url: '/scp/',
   },
   {
     title: 'Saroj College of Engineering and Polytechnic',
     description: 'Approved by AICTE and affiliated to AKTU',
     icon: 'gear',
-    url: 'https://seglko.org/scep/',
+    url: '/scep/',
   },
   {
     title: 'Saroj College of Law',
     description: 'Affiliated to Lucknow University',
     icon: 'document',
-    url: 'https://seglko.org/scl/',
+    url: '/scl/',
   },
 ];
 
