@@ -1081,7 +1081,7 @@ export default function Navbar() {
                 </div>
                 <Link to="/institutions" onClick={() => setActiveDropdown(null)}
                   style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', marginTop: '12px', fontSize: '13px', fontWeight: 700, color: '#1041c6', textDecoration: 'none' }}>
-                  What's Happening <ChevronRight />
+              
                 </Link>
               </div>
             </div>

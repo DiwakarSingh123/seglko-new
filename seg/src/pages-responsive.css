@@ -1,5 +1,116 @@
-/* ============================================
-   PAGES RESPONSIVE CSS
+/* ── PROGRAMS PAGE GRID ── */
+.programs-hero-banner {
+  padding: 110px 5% 80px !important;
+}
+
+@media (max-width: 768px) {
+  .programs-hero-banner {
+    padding: 80px 5% 50px !important;
+  }
+  .programs-hero-banner h1 {
+    font-size: 1.9rem !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .programs-hero-banner {
+    padding: 70px 4% 40px !important;
+  }
+  .programs-hero-banner h1 {
+    font-size: 1.6rem !important;
+  }
+}
+
+@media (max-width: 425px) {
+  .programs-hero-banner {
+    padding: 65px 4% 36px !important;
+  }
+  .programs-hero-banner h1 {
+    font-size: 1.5rem !important;
+  }
+}
+
+@media (max-width: 375px) {
+  .programs-hero-banner {
+    padding: 60px 4% 30px !important;
+  }
+  .programs-hero-banner h1 {
+    font-size: 1.4rem !important;
+  }
+}
+
+@media (max-width: 320px) {
+  .programs-hero-banner {
+    padding: 55px 3% 28px !important;
+  }
+  .programs-hero-banner h1 {
+    font-size: 1.3rem !important;
+  }
+}
+
+.programs-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 28px;
+}
+
+@media (max-width: 1024px) {
+  .programs-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .programs-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+  .programs-grid-wrap {
+    padding: 28px 4% 0 !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .programs-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .programs-grid-wrap {
+    padding: 20px 4% 0 !important;
+  }
+}
+
+@media (max-width: 425px) {
+  .programs-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+  .programs-grid-wrap {
+    padding: 16px 4% 0 !important;
+  }
+}
+
+@media (max-width: 375px) {
+  .programs-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  .programs-grid-wrap {
+    padding: 14px 3% 0 !important;
+  }
+}
+
+@media (max-width: 320px) {
+  .programs-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  .programs-grid-wrap {
+    padding: 12px 3% 0 !important;
+  }
+}
+
    Covers: FacultyPage, ProgramsPage, ProgramDetailPage,
            OurInstitutions, ContactUs, History, Chairman,
            MissionVision, WhyJoinSeg, ExploreMore,
@@ -106,7 +217,8 @@
   /* ProgramsPage grid - single column */
   [style*="minmax(360px, 1fr)"],
   [style*="minmax(380px, 1fr)"],
-  [style*="minmax(300px, 1fr)"] {
+  [style*="minmax(300px, 1fr)"],
+  .programs-grid-wrap [style*="repeat(4, 1fr)"] {
     grid-template-columns: 1fr !important;
   }
 
@@ -194,6 +306,11 @@
 
   [style*="padding: '44px 45px 0'"] {
     padding: 24px 16px 0 !important;
+  }
+
+  /* ProgramsPage responsive grid */
+  .programs-grid-wrap [style*="repeat(4, 1fr)"] {
+    grid-template-columns: repeat(2, 1fr) !important;
   }
 
   /* Buttons full width on mobile */

@@ -121,7 +121,7 @@ const footerGroups = [
     links: [
       { label: 'Shivdan Singh Institute of Technology and Management', url: 'https://ssitm.in/' },
       { label: 'Saroj Institute of Technology and Management', url: 'https://sitmlko.org/' },
-      { label: 'Saroj College of Law', url: 'https://seglko.org/scl/' },
+      { label: 'Saroj College of Law', url: '/scl/' },
       { label: 'Saroj College of Pharmacy', url: 'https://seglko.org/scp/' },
       { label: 'Saroj College of Engineering and Polytechnic', url: 'https://seglko.org/scep/' },
     ],

@@ -84,7 +84,7 @@ export default function TermsAndConditions() {
       <section className="tnc-hero">
         <div className="tnc-hero__inner">
           <h1 className="tnc-hero__title">Terms and Conditions</h1>
-          <span className="tnc-hero__badge">Latest Updated</span>
+         
         </div>
       </section>
 

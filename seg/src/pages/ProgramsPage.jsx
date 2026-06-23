@@ -362,11 +362,11 @@ export default function ProgramsPage() {
   return (
     <div style={{ background: '#f5f8fe', minHeight: '100vh', paddingBottom: '60px' }}>
 
-      <div style={{
+      <div className="programs-hero-banner" style={{
         background: `linear-gradient(rgba(10, 39, 93, 0.9), rgba(16, 65, 198, 0.85)), url(${programsHeroImg})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
-        padding: '110px 45px 80px',
+        padding: '110px 5% 80px',
         marginTop: '0'
       }}>
         <p style={{ color: '#ffbe23', fontWeight: 700, fontSize: '13px', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '14px' }}>Our Programs</p>
@@ -378,8 +378,8 @@ export default function ProgramsPage() {
         </p>
       </div>
 
-      <div style={{ padding: '44px 45px 0' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '28px' }}>
+      <div className="programs-grid-wrap" style={{ padding: '44px 5% 0' }}>
+        <div className="programs-grid">
           {visiblePrograms.map((program) => (
             <div
               key={program.slug}
