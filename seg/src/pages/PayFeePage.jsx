@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import institutionsBg from '../assets/images/institutions-bg.png';
 import aboutBg from '../assets/images/about-bg.png';
@@ -84,7 +85,20 @@ const LockIcon = () => (
   </svg>
 );
 
+const paymentTypes = ['Tuition Fee', 'Exam Fee', 'Hostel Fee', 'Transport Fee', 'Other Fee'];
+
 export default function PayFeePage() {
+  const [selectedInst, setSelectedInst] = useState('');
+  const [rollNumber, setRollNumber] = useState('');
+  const [paymentType, setPaymentType] = useState('');
+
+  const [qrModal, setQrModal] = useState(null);
+
+  const handleProceed = () => {
+    const inst = institutions.find(i => i.name === selectedInst);
+    if (inst) setQrModal(inst);
+  };
+
   return (
     <div style={{ background: '#f0f4ff', minHeight: '100vh' }}>
       <style>{`
@@ -99,7 +113,9 @@ export default function PayFeePage() {
         .pf-hero__mockup { background:#fff; border-radius:16px; padding:22px; max-width:360px; box-shadow:0 30px 60px rgba(0,0,0,0.35); margin-left:auto; }
         .pf-hero__mockup h4 { font-size:14px; font-weight:700; color:#162341; margin-bottom:3px; }
         .pf-hero__mockup p { font-size:11px; color:#8a9bbf; margin-bottom:16px; }
-        .pf-field { background:#f5f8ff; border:1px solid #e0e8ff; border-radius:7px; padding:9px 12px; margin-bottom:9px; font-size:12px; color:#aab4cc; }
+        .pf-field { background:#f5f8ff; border:1px solid #e0e8ff; border-radius:7px; padding:9px 12px; margin-bottom:9px; font-size:12px; color:#162341; box-sizing:border-box; display:block; }
+        .pf-field::placeholder { color:#aab4cc; }
+        .pf-field option { color:#162341; }
         .pf-pay-btn-hero { width:100%; padding:11px; background:#1041c6; color:#fff; border:none; border-radius:8px; font-size:13px; font-weight:700; cursor:pointer; margin-top:4px; display:flex; align-items:center; justify-content:center; gap:6px; }
 
         /* Breadcrumb */
@@ -262,13 +278,61 @@ export default function PayFeePage() {
           <div className="pf-hero__mockup">
             <h4>Fee Payment Portal</h4>
             <p>Secure payment for your bright future</p>
-            <div className="pf-field">Select Institution ▾</div>
-            <div className="pf-field">Enter Roll Number</div>
-            <div className="pf-field">Select Payment Type ▾</div>
-            <button className="pf-pay-btn-hero"><LockIcon /> Proceed to Pay</button>
+            <select
+              className="pf-field"
+              value={selectedInst}
+              onChange={e => setSelectedInst(e.target.value)}
+              style={{ width:'100%', cursor:'pointer', appearance:'auto', color: selectedInst ? '#162341' : '#aab4cc' }}
+            >
+              <option value="">Select Institution ▾</option>
+              {institutions.map(i => <option key={i.code} value={i.name}>{i.name}</option>)}
+            </select>
+            <input
+              className="pf-field"
+              type="text"
+              placeholder="Enter Roll Number"
+              value={rollNumber}
+              onChange={e => setRollNumber(e.target.value)}
+              style={{ width:'100%', outline:'none' }}
+            />
+            <select
+              className="pf-field"
+              value={paymentType}
+              onChange={e => setPaymentType(e.target.value)}
+              style={{ width:'100%', cursor:'pointer', appearance:'auto', color: paymentType ? '#162341' : '#aab4cc' }}
+            >
+              <option value="">Select Payment Type ▾</option>
+              {paymentTypes.map(t => <option key={t} value={t}>{t}</option>)}
+            </select>
+            <button
+              className="pf-pay-btn-hero"
+              onClick={handleProceed}
+              disabled={!selectedInst}
+              style={{ opacity: selectedInst ? 1 : 0.6, cursor: selectedInst ? 'pointer' : 'not-allowed' }}
+            >
+              <LockIcon /> Proceed to Pay
+            </button>
           </div>
         </div>
       </div>
+
+      {/* ── QR Modal ── */}
+      {qrModal && (
+        <div onClick={() => setQrModal(null)} style={{ position:'fixed', inset:0, background:'rgba(0,0,0,0.7)', display:'flex', alignItems:'center', justifyContent:'center', zIndex:9999, padding:'20px' }}>
+          <div onClick={e => e.stopPropagation()} style={{ background:'#fff', borderRadius:'16px', padding:'28px', maxWidth:'340px', width:'100%', textAlign:'center', position:'relative' }}>
+            <button onClick={() => setQrModal(null)} style={{ position:'absolute', top:'12px', right:'14px', background:'none', border:'none', fontSize:'20px', cursor:'pointer', color:'#64748b' }}>✕</button>
+            <h3 style={{ fontSize:'15px', fontWeight:700, color:'#162341', marginBottom:'4px' }}>{qrModal.name}</h3>
+            <p style={{ fontSize:'12px', color:'#8a9bbf', marginBottom:'16px' }}>Scan QR code to pay fees</p>
+            <div style={{ border:`2px solid ${qrModal.color}`, borderRadius:'12px', padding:'12px', display:'inline-block', marginBottom:'16px' }}>
+              <img src={qrModal.qrCode} alt="Payment QR" style={{ width:'220px', height:'220px', objectFit:'contain', display:'block' }} />
+            </div>
+            <div style={{ display:'flex', gap:'10px', justifyContent:'center' }}>
+              <a href={qrModal.qrCode} download style={{ padding:'9px 16px', background:'#f0f4ff', color:qrModal.color, borderRadius:'8px', fontSize:'13px', fontWeight:600, textDecoration:'none' }}>📥 Download QR</a>
+              <a href={qrModal.payUrl} target="_blank" rel="noopener noreferrer" style={{ padding:'9px 16px', background:qrModal.color, color:'#fff', borderRadius:'8px', fontSize:'13px', fontWeight:600, textDecoration:'none' }}>Pay Online</a>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* ── Breadcrumb ── */}
      
