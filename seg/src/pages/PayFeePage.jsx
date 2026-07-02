@@ -4,9 +4,9 @@ import aboutBg from '../assets/images/about-bg.png';
 import campusBg from '../assets/images/campus-bg.png';
 
 const institutions = [
-  { name: 'Saroj Institute of Technology & Management', city: 'Lucknow', code: '123', image: institutionsBg, color: '#1041c6', payUrl: 'https://seglko.org/' },
-  { name: 'Shivdan Singh Institute of Technology & Management', city: 'Aligarh', code: '007', image: aboutBg, color: '#16a34a', payUrl: 'https://ssitm.in/' },
-  { name: 'Lucknow Institute of Pharmacy', city: 'Lucknow', code: '572', image: campusBg, color: '#e31e24', payUrl: 'https://seglko.org/lip/' },
+  { name: 'Saroj Institute of Technology & Management', city: 'Lucknow', code: '123', image: institutionsBg, color: '#1041c6', payUrl: 'https://smartpay.easebuzz.in/75636/Application', qrCode: '/SITMQR.jpg' },
+  { name: 'Shivdan Singh Institute of Technology & Management', city: 'Aligarh', code: '007', image: aboutBg, color: '#16a34a', payUrl: 'https://smartpay.easebuzz.in/75653/Application', qrCode: '/SSITMQR.png' },
+  { name: 'Lucknow Institute of Pharmacy', city: 'Lucknow', code: '572', image: campusBg, color: '#e31e24', payUrl: 'https://smartpay.easebuzz.in/75672/Application', qrCode: '/LIPQR.jpg' },
 ];
 
 const features = [
@@ -317,9 +317,9 @@ export default function PayFeePage() {
                 <div className="pf-card__qr-wrap">
                   <div className="pf-card__col-label">◀ Scan & Pay ▶</div>
                   <div className="pf-card__qr-box">
-                    <QRCode color={inst.color} />
+                    <img src={inst.qrCode} alt="Payment QR Code" style={{ width: 120, height: 120, objectFit: 'contain' }} />
                   </div>
-                  <a href="#" className="pf-card__dl" style={{ color: inst.color }}>
+                  <a href={inst.qrCode} download className="pf-card__dl" style={{ color: inst.color }}>
                     Download QR Code 📥
                   </a>
                 </div>
