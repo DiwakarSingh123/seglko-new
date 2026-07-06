@@ -61,9 +61,15 @@ const AdmissionProcess = () => {
               <div className="ap-step__content">
                 <h3>Register Yourself</h3>
                 <p>Create your account using your email address and basic personal information.</p>
-                <button className="ap-btn ap-btn--blue" onClick={() => setShowForm(true)}>
+                <a
+                  href="https://seglko.in8.nopaperforms.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="ap-btn ap-btn--blue"
+                  style={{ textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}
+                >
                   Start Registration <span className="ap-btn__arrow">→</span>
-                </button>
+                </a>
               </div>
               <div className="ap-step__illustration ap-step__illustration--1">
                 <svg viewBox="0 0 120 100" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -187,7 +193,7 @@ const AdmissionProcess = () => {
                     <span className="ap-pay-icon ap-pay-icon--paypal">PayPal</span>
                   </div>
                 </div>
-                <button className="ap-btn ap-btn--purple" onClick={() => setShowForm(true)}>
+                <button className="ap-btn ap-btn--purple" disabled style={{ cursor: 'default', opacity: 0.85 }}>
                   Proceed to Payment <span className="ap-btn__arrow">→</span>
                 </button>
               </div>
@@ -216,7 +222,7 @@ const AdmissionProcess = () => {
               <div className="ap-step__content">
                 <h3>Submit Application</h3>
                 <p>Review and submit your completed application for processing.</p>
-                <button className="ap-btn ap-btn--blue" onClick={() => setShowForm(true)}>
+                <button className="ap-btn ap-btn--blue" disabled style={{ cursor: 'default', opacity: 0.85 }}>
                   Submit Application <span className="ap-btn__arrow">→</span>
                 </button>
                 <p className="ap-step__subtext">You'll receive a confirmation email with your application details</p>
