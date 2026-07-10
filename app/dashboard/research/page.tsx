@@ -405,7 +405,7 @@ export default function ResearchPage() {
       )}
 
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-xl font-black text-slate-800">Research & Development</h1>
           <p className="text-sm text-slate-400 mt-0.5">Manage research publications by department</p>
@@ -417,7 +417,7 @@ export default function ResearchPage() {
             else if (tab === "awards") setShowAddAward(true);
             else if (tab === "innovation") setShowAddInnovation(true);
           }}
-          className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-xl text-sm font-semibold hover:bg-indigo-700 transition-colors shadow-md shadow-indigo-200"
+          className="flex items-center justify-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-xl text-sm font-semibold hover:bg-indigo-700 transition-colors shadow-md shadow-indigo-200 w-full sm:w-auto"
         >
           <span className="material-symbols-outlined text-lg">add</span>
           {tab === "publications" && "Add Paper"}
@@ -446,7 +446,7 @@ export default function ResearchPage() {
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-2 bg-white border border-slate-100 rounded-2xl p-1.5 shadow-sm w-fit">
+      <div className="flex gap-2 bg-white border border-slate-100 rounded-2xl p-1.5 shadow-sm w-fit max-w-full overflow-x-auto whitespace-nowrap flex-shrink-0">
         {[
           { id: "publications", label: "Research Publications", icon: "menu_book" },
           { id: "session", label: "Research", icon: "event" },
@@ -532,7 +532,7 @@ export default function ResearchPage() {
             </div>
           </div>
           <div className="overflow-x-auto">
-            <table className="w-full">
+            <table className="w-full min-w-[900px]">
               <thead>
                 <tr className="bg-indigo-600">
                   <th className="px-5 py-3 text-left text-xs font-bold text-white">Sr. No</th>
@@ -690,7 +690,7 @@ export default function ResearchPage() {
             )}
           </div>
 
-          <div className="border-t border-slate-100 p-5 grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="border-t border-slate-100 p-5 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
             {[
               { label: "Research Projects", value: "150+", icon: "science" },
               { label: "Student Researchers", value: "300+", icon: "school" },
@@ -725,7 +725,7 @@ export default function ResearchPage() {
 
           {/* Table */}
           <div className="overflow-x-auto">
-            <table className="w-full">
+            <table className="w-full min-w-[900px]">
               <thead>
                 <tr className="bg-indigo-600">
                   <th className="px-5 py-3 text-left text-xs font-bold text-white">Faculty Name</th>

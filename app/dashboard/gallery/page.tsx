@@ -195,14 +195,14 @@ export default function GalleryPage() {
       )}
 
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-xl font-black text-slate-800">Gallery</h1>
           <p className="text-sm text-slate-400 mt-0.5">Manage campus gallery images by category</p>
         </div>
         <button
           onClick={() => { setShowAddForm(true); setFormError(""); if (selectedCategory !== ALL_MOMENTS) setForm(f => ({ ...f, category: selectedCategory as any })); }}
-          className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-xl text-sm font-semibold hover:bg-indigo-700 transition-colors shadow-md shadow-indigo-200"
+          className="flex items-center justify-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-xl text-sm font-semibold hover:bg-indigo-700 transition-colors shadow-md shadow-indigo-200 w-full sm:w-auto"
         >
           <span className="material-symbols-outlined text-lg">add_photo_alternate</span>
           Add Image
@@ -210,7 +210,7 @@ export default function GalleryPage() {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
         {[
           { label: "Total Images", value: images.length, icon: "photo_library", color: "bg-indigo-500" },
           { label: "Transport", value: countFor("Transport"), icon: "directions_bus", color: "bg-blue-500" },
@@ -327,7 +327,7 @@ export default function GalleryPage() {
             <p className="text-xs mt-1">Click &quot;Add Image&quot; to upload</p>
           </div>
         ) : (
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {filtered.map((img) => (
               <div key={img._id} className="rounded-xl overflow-hidden border border-slate-100 bg-slate-50">
                 <div className="aspect-square relative">

@@ -275,7 +275,7 @@ export default function FacultiesPage() {
       ) : (
         <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
           <div className="overflow-x-auto">
-            <table className="w-full text-sm text-left">
+            <table className="w-full text-sm text-left min-w-[700px]">
               <thead>
                 <tr className="text-slate-500 border-b">
                   <th className="py-4 px-4 w-12">#</th>

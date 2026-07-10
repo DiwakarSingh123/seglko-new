@@ -251,22 +251,22 @@ export default function AboutPage() {
 
   return (
     <div className="space-y-5">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-xl font-black text-slate-800">Why SEG / About SEG</h1>
           <p className="text-sm text-slate-400 mt-0.5">Manage about us content, vision, mission and leadership</p>
         </div>
-        <div className="flex items-center gap-3">
-          <button onClick={saveAllSections} className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white transition-colors bg-indigo-600 shadow-md rounded-xl hover:bg-indigo-700 shadow-indigo-200">
+        <div className="flex flex-wrap items-center gap-3 w-full sm:w-auto">
+          <button onClick={saveAllSections} className="flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-2 text-sm font-semibold text-white transition-colors bg-indigo-600 shadow-md rounded-xl hover:bg-indigo-700 shadow-indigo-200">
             <span className="text-lg material-symbols-outlined">save</span>Save Changes
           </button>
-          <button onClick={() => setPreviewSection(tab)} className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-indigo-700 transition-colors bg-white border border-indigo-200 shadow-sm rounded-xl hover:bg-indigo-50">
+          <button onClick={() => setPreviewSection(tab)} className="flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 py-2 text-sm font-semibold text-indigo-700 transition-colors bg-white border border-indigo-200 shadow-sm rounded-xl hover:bg-indigo-50">
             <span className="text-lg material-symbols-outlined">visibility</span>View Saved
           </button>
         </div>
       </div>
 
-      <div className="flex gap-2 bg-white border border-slate-100 rounded-2xl p-1.5 shadow-sm w-fit overflow-x-auto">
+      <div className="flex gap-2 bg-white border border-slate-100 rounded-2xl p-1.5 shadow-sm w-fit max-w-full overflow-x-auto whitespace-nowrap flex-shrink-0">
         {[
           { id: "history", label: "History of SEG", icon: "history" },
           { id: "vision", label: "Vision & Mission", icon: "flag" },
@@ -304,17 +304,18 @@ export default function AboutPage() {
             </div>
             <div className="space-y-4">
               {milestones.map((milestone) => (
-                <div key={milestone.id} className="p-4 border bg-slate-50 rounded-2xl border-slate-200">
-                  <div className="flex gap-4">
-                    <div className="flex-shrink-0 space-y-2">
+                <div key={milestone.id} className="relative p-4 border bg-slate-50 rounded-2xl border-slate-200">
+                  <div className="flex flex-col sm:flex-row gap-4 items-start">
+                    <div className="w-full sm:w-auto flex-shrink-0 space-y-1">
+                      <label className="block text-xs font-bold text-slate-500 sm:hidden">Year</label>
                       <input 
                         type="text" 
                         value={milestone.year} 
                         onChange={(e) => updateMilestone(milestone.id, "year", e.target.value)}
-                        className="w-16 px-3 py-2 text-sm font-bold text-indigo-600 transition-all bg-white border outline-none border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-200" 
+                        className="w-full sm:w-16 px-3 py-2 text-sm font-bold text-indigo-600 transition-all bg-white border outline-none border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-200" 
                       />
                     </div>
-                    <div className="flex-1 space-y-3">
+                    <div className="flex-1 w-full space-y-3 pr-8 sm:pr-0">
                       <input 
                         type="text" 
                         value={milestone.title}
@@ -363,7 +364,7 @@ export default function AboutPage() {
                     </div>
                     <button 
                       onClick={() => deleteMilestone(milestone.id)}
-                      className="flex items-center justify-center w-8 h-8 text-red-600 transition-colors bg-white border rounded-lg hover:bg-red-50 border-slate-200">
+                      className="absolute top-4 right-4 sm:static flex items-center justify-center w-8 h-8 text-red-600 transition-colors bg-white border rounded-lg hover:bg-red-50 border-slate-200 flex-shrink-0">
                       <span className="text-sm material-symbols-outlined">delete</span>
                     </button>
                   </div>

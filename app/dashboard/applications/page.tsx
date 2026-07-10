@@ -2,9 +2,11 @@
 import { useState, useEffect } from "react";
 import { resolveInstitutionName, type InstitutionRecord } from "@/lib/institution-utils";
 
-function JobDetailModal({ app, onClose, onStatusChange }: { app: any; onClose: () => void; onStatusChange: (id: string, status: string) => void }) {
+function JobDetailModal({ app, onClose, onStatusChange, onDelete }: { app: any; onClose: () => void; onStatusChange: (id: string, status: string) => void; onDelete: (id: string) => void }) {
   const [status, setStatus] = useState(app.status || 'pending');
   const [saving, setSaving] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState(false);
 
   const save = async () => {
     setSaving(true);
@@ -20,15 +22,25 @@ function JobDetailModal({ app, onClose, onStatusChange }: { app: any; onClose: (
     setSaving(false);
   };
 
+  const handleDelete = async () => {
+    setDeleting(true);
+    try {
+      await fetch(`/api/job-applications?id=${app._id}`, { method: 'DELETE' });
+      onDelete(app._id);
+      onClose();
+    } catch (e) { console.error(e); }
+    setDeleting(false);
+  };
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4" onClick={onClose}>
       <div className="bg-white rounded-3xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
         {/* Header */}
-        <div className="flex items-start justify-between p-6 border-b border-slate-100">
-          <div className="flex items-center gap-4">
+        <div className="relative flex flex-col sm:flex-row items-center sm:items-start justify-between p-6 gap-4 border-b border-slate-100">
+          <div className="flex flex-col sm:flex-row items-center sm:items-start text-center sm:text-left gap-4">
             {app.photo
               ? <img src={app.photo} alt={app.name} className="w-16 h-16 rounded-2xl object-cover border border-slate-200" />
-              : <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white text-xl font-black">
+              : <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white text-xl font-black flex-shrink-0">
                   {(app.name || '').split(' ').map((n: string) => n[0]).join('').substring(0, 2)}
                 </div>
             }
@@ -38,13 +50,13 @@ function JobDetailModal({ app, onClose, onStatusChange }: { app: any; onClose: (
               <p className="text-xs text-slate-400">{app.email} · {app.phone}</p>
             </div>
           </div>
-          <button onClick={onClose} className="h-8 w-8 flex items-center justify-center rounded-xl hover:bg-slate-100">
+          <button onClick={onClose} className="absolute top-4 right-4 sm:static h-8 w-8 flex items-center justify-center rounded-xl hover:bg-slate-100 flex-shrink-0">
             <span className="material-symbols-outlined text-slate-500">close</span>
           </button>
         </div>
 
         {/* Details Grid */}
-        <div className="p-6 grid grid-cols-2 gap-4">
+        <div className="p-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
           {[
             { label: 'Phone', value: app.phone },
             { label: 'Address', value: app.address },
@@ -63,33 +75,70 @@ function JobDetailModal({ app, onClose, onStatusChange }: { app: any; onClose: (
         </div>
 
         {/* Resume */}
-        {app.resume && (
-          <div className="px-6 pb-4">
-            <a href={app.resume} target="_blank" rel="noopener noreferrer"
-              className="flex items-center gap-3 bg-indigo-50 border border-indigo-100 rounded-2xl p-4 hover:bg-indigo-100 transition-colors">
-              <span className="material-symbols-outlined text-indigo-600 text-2xl">picture_as_pdf</span>
-              <div>
-                <p className="text-sm font-bold text-indigo-700">View Resume / CV</p>
-                <p className="text-xs text-indigo-400">Click to open PDF in new tab</p>
-              </div>
-              <span className="material-symbols-outlined text-indigo-400 ml-auto">open_in_new</span>
-            </a>
-          </div>
-        )}
+        {app.resume && (() => {
+          const isCloudinary = app.resume.includes('cloudinary.com');
+          const viewUrl = isCloudinary
+            ? `/api/resume-proxy?url=${encodeURIComponent(app.resume)}`
+            : app.resume;
+          const downloadUrl = isCloudinary
+            ? `/api/resume-proxy?url=${encodeURIComponent(app.resume)}&download=1`
+            : app.resume;
+          return (
+            <div className="px-6 pb-4">
+              <a
+                href={viewUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-3 bg-indigo-50 border border-indigo-100 rounded-2xl p-4 hover:bg-indigo-100 transition-colors"
+              >
+                <span className="material-symbols-outlined text-indigo-600 text-2xl">picture_as_pdf</span>
+                <div>
+                  <p className="text-sm font-bold text-indigo-700">View Resume / CV</p>
+                  <p className="text-xs text-indigo-400">Click to open PDF in new tab</p>
+                </div>
+                <span className="material-symbols-outlined text-indigo-400 ml-auto">open_in_new</span>
+              </a>
+              <a
+                href={downloadUrl}
+                download="resume.pdf"
+                className="mt-2 flex items-center gap-2 text-xs text-slate-500 hover:text-indigo-600 px-4"
+              >
+                <span className="material-symbols-outlined text-sm">download</span>
+                Download Resume
+              </a>
+            </div>
+          );
+        })()}
 
         {/* Status Update */}
-        <div className="px-6 pb-6 flex items-center gap-3">
-          <select value={status} onChange={e => setStatus(e.target.value)}
-            className="flex-1 bg-slate-50 border border-slate-200 rounded-xl py-2 px-3 text-sm font-semibold outline-none focus:ring-2 focus:ring-indigo-200">
-            <option value="pending">Pending</option>
-            <option value="Accepted">Accepted</option>
-            <option value="Rejected">Rejected</option>
-            <option value="In Review">In Review</option>
-          </select>
-          <button onClick={save} disabled={saving}
-            className="px-5 py-2 bg-indigo-600 text-white rounded-xl text-sm font-semibold hover:bg-indigo-700 disabled:opacity-50 transition-colors">
-            {saving ? 'Saving...' : 'Update Status'}
-          </button>
+        <div className="px-6 pb-6 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+          {confirmDelete ? (
+            <>
+              <span className="text-sm text-rose-600 font-semibold flex-1">Are you sure you want to delete?</span>
+              <button onClick={() => setConfirmDelete(false)} className="px-4 py-2 bg-slate-100 text-slate-600 rounded-xl text-sm font-semibold hover:bg-slate-200 transition-colors">Cancel</button>
+              <button onClick={handleDelete} disabled={deleting} className="px-4 py-2 bg-rose-600 text-white rounded-xl text-sm font-semibold hover:bg-rose-700 disabled:opacity-50 transition-colors">
+                {deleting ? 'Deleting...' : 'Yes, Delete'}
+              </button>
+            </>
+          ) : (
+            <>
+              <button onClick={() => setConfirmDelete(true)} className="px-4 py-2 bg-rose-50 text-rose-600 border border-rose-100 rounded-xl text-sm font-semibold hover:bg-rose-100 transition-colors">
+                <span className="material-symbols-outlined text-sm align-text-bottom mr-1">delete</span>
+                Delete
+              </button>
+              <select value={status} onChange={e => setStatus(e.target.value)}
+                className="flex-1 bg-slate-50 border border-slate-200 rounded-xl py-2 px-3 text-sm font-semibold outline-none focus:ring-2 focus:ring-indigo-200">
+                <option value="pending">Pending</option>
+                <option value="Accepted">Accepted</option>
+                <option value="Rejected">Rejected</option>
+                <option value="In Review">In Review</option>
+              </select>
+              <button onClick={save} disabled={saving}
+                className="px-5 py-2 bg-indigo-600 text-white rounded-xl text-sm font-semibold hover:bg-indigo-700 disabled:opacity-50 transition-colors">
+                {saving ? 'Saving...' : 'Update Status'}
+              </button>
+            </>
+          )}
         </div>
       </div>
     </div>
@@ -206,6 +255,10 @@ export default function ApplicationsPage() {
     </tr>
   );
 
+  const handleJobDelete = (id: string) => {
+    setJobApps(prev => prev.filter(a => a._id !== id));
+  };
+
   const handleJobStatusChange = (id: string, status: string) => {
     setJobApps(prev => prev.map(a => a._id === id ? { ...a, status } : a));
   };
@@ -246,6 +299,7 @@ export default function ApplicationsPage() {
           app={selectedJob}
           onClose={() => setSelectedJob(null)}
           onStatusChange={handleJobStatusChange}
+          onDelete={handleJobDelete}
         />
       )}
       <div className="flex items-center justify-between">
@@ -256,7 +310,7 @@ export default function ApplicationsPage() {
       </div>
 
       {/* Application Type Tabs */}
-      <div className="flex gap-2">
+      <div className="flex gap-2 flex-wrap">
         <button
           onClick={() => { setApplicationType("student"); setFilter("All"); }}
           className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all ${applicationType === "student" ? "bg-indigo-600 text-white shadow-md" : "bg-slate-100 text-slate-600 hover:bg-slate-200"}`}
@@ -297,7 +351,7 @@ export default function ApplicationsPage() {
         </div>
 
         <div className="overflow-x-auto">
-          <table className="w-full">
+          <table className="w-full min-w-[950px]">
             <thead>
               <tr className="border-b border-slate-100">
                 {applicationType === "student" ? (

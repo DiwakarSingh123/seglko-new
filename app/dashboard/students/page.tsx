@@ -22,17 +22,17 @@ export default function StudentsPage() {
 
   return (
     <div className="space-y-5">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-xl font-black text-slate-800">Students</h1>
           <p className="text-sm text-slate-400 mt-0.5">{students.length} registered students</p>
         </div>
-        <button className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-xl text-sm font-semibold hover:bg-indigo-700 transition-colors shadow-md shadow-indigo-200">
+        <button className="flex items-center justify-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-xl text-sm font-semibold hover:bg-indigo-700 transition-colors shadow-md shadow-indigo-200 w-full sm:w-auto">
           <span className="material-symbols-outlined text-lg">person_add</span>Add Student
         </button>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
         {[
           { label: "Total", value: "45,210", icon: "group", bg: "bg-indigo-500" },
           { label: "Active", value: "38,420", icon: "check_circle", bg: "bg-emerald-500" },
@@ -93,7 +93,7 @@ export default function StudentsPage() {
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full">
+            <table className="w-full min-w-[680px]">
               <thead>
                 <tr className="border-b border-slate-100">
                   {["Student", "Email", "Phone", "City", "Apps", "Status", "Joined"].map(h => (

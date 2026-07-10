@@ -70,7 +70,7 @@ export default function StudentZonePage() {
 
   return (
     <div className="space-y-5">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-xl font-black text-slate-800">Student Zone</h1>
           <p className="text-sm text-slate-400 mt-0.5">Manage student notices and announcements</p>
@@ -78,7 +78,7 @@ export default function StudentZonePage() {
         <button
           type="button"
           onClick={() => setShowDrawer(true)}
-          className="flex items-center gap-2 px-4 py-2 text-white rounded-xl text-sm font-semibold transition-colors shadow-md"
+          className="flex items-center justify-center gap-2 px-4 py-2 text-white rounded-xl text-sm font-semibold transition-colors shadow-md w-full sm:w-auto"
           style={{ backgroundColor: "#151869" }}
         >
           <span className="material-symbols-outlined text-lg">add</span>
@@ -86,7 +86,7 @@ export default function StudentZonePage() {
         </button>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
         {[
           { label: "Active Notices", value: noticeList.length, icon: "campaign", color: "bg-indigo-500" },
           { label: "Exams", value: noticeList.filter((n) => n.category === "Exam").length, icon: "quiz", color: "bg-rose-500" },
@@ -107,7 +107,8 @@ export default function StudentZonePage() {
         {loading ? (
           <p className="text-slate-500 p-6 text-sm">Loading notices...</p>
         ) : (
-          <table className="w-full">
+          <div className="overflow-x-auto">
+          <table className="w-full min-w-[650px]">
             <thead>
               <tr className="border-b border-slate-100">
                 {["Title", "Category", "Institution", "Date", ""].map((h) => (
@@ -163,11 +164,12 @@ export default function StudentZonePage() {
               ))}
             </tbody>
           </table>
+          </div>
         )}
       </div>
 
       <div
-        className={`fixed top-0 right-0 h-full w-[420px] bg-white shadow-2xl z-50 flex flex-col transition-transform duration-300 ease-in-out ${showDrawer ? "translate-x-0" : "translate-x-full"}`}
+        className={`fixed top-0 right-0 h-full w-full sm:w-[420px] bg-white shadow-2xl z-50 flex flex-col transition-transform duration-300 ease-in-out ${showDrawer ? "translate-x-0" : "translate-x-full"}`}
       >
         <div className="flex items-center justify-between px-6 py-5 border-b border-slate-100">
           <div>

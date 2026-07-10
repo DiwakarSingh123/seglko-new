@@ -99,17 +99,17 @@ export default function InstitutionsPage() {
 
   return (
     <div className="space-y-5">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-xl font-black text-slate-800">Our Institutions</h1>
           <p className="text-sm text-slate-400 mt-0.5">Manage all institutions under Saroj Educational Group</p>
         </div>
-        <button onClick={() => { setShowAddForm(true); setFormError(""); }} className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-xl text-sm font-semibold hover:bg-indigo-700 transition-colors shadow-md shadow-indigo-200">
+        <button onClick={() => { setShowAddForm(true); setFormError(""); }} className="flex items-center justify-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-xl text-sm font-semibold hover:bg-indigo-700 transition-colors shadow-md shadow-indigo-200 w-full sm:w-auto">
           <span className="material-symbols-outlined text-lg">add</span>Add Institution
         </button>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
         {[
           { label: "Total Institutions", value: institutions.length, icon: "account_balance", color: "bg-indigo-500" },
           { label: "Total Programs", value: institutions.reduce((a, i) => a + getNumber(i.programs), 0), icon: "menu_book", color: "bg-blue-500" },
@@ -240,7 +240,7 @@ export default function InstitutionsPage() {
               <div key={inst._id} className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
                 <div className={`h-1.5 w-full bg-gradient-to-r ${inst.color}`} />
                 <div className="p-5">
-                  <div className="flex items-start justify-between mb-4">
+                  <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 mb-4">
                     <div className="flex items-center gap-3">
                       <div className={`h-12 w-12 rounded-xl bg-gradient-to-br ${inst.color} flex items-center justify-center text-white font-black text-sm shadow-md overflow-hidden`}>
                         {(inst.customImage || inst.image)

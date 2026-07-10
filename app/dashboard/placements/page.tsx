@@ -229,12 +229,12 @@ export default function PlacementsPage() {
         </div>
       )}
 
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-xl font-black text-slate-800">Placements</h1>
           <p className="text-sm text-slate-400 mt-0.5">Manage placement session records, recruiters and statistics</p>
         </div>
-        <button onClick={() => setShowAddRecord(true)} className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-xl text-sm font-semibold hover:bg-indigo-700 transition-colors shadow-md shadow-indigo-200">
+        <button onClick={() => setShowAddRecord(true)} className="flex items-center justify-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-xl text-sm font-semibold hover:bg-indigo-700 transition-colors shadow-md shadow-indigo-200 w-full sm:w-auto">
           <span className="material-symbols-outlined text-lg">add</span>Add Record
         </button>
       </div>
@@ -318,7 +318,7 @@ export default function PlacementsPage() {
         ))}
       </div>
 
-      <div className="flex gap-2 bg-white border border-slate-100 rounded-2xl p-1.5 shadow-sm w-fit">
+      <div className="flex gap-2 bg-white border border-slate-100 rounded-2xl p-1.5 shadow-sm w-fit max-w-full overflow-x-auto whitespace-nowrap flex-shrink-0">
         {[{ id: "records", label: "Records", icon: "work_history" }, { id: "recruiters", label: "Recruiters", icon: "business" }, { id: "stats", label: "Statistics", icon: "bar_chart" }].map(t => (
           <button key={t.id} onClick={() => setTab(t.id as typeof tab)}
             className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold transition-all ${tab === t.id ? "bg-indigo-600 text-white shadow-md shadow-indigo-200" : "text-slate-500 hover:bg-slate-50"}`}>
@@ -343,7 +343,7 @@ export default function PlacementsPage() {
           </div>
           {isLoading ? <p className="p-5 text-slate-500">Loading placement records...</p> : (
             <div className="overflow-x-auto">
-              <table className="w-full">
+              <table className="w-full min-w-[850px]">
                 <thead><tr className="border-b border-slate-100">
                   {["Student", "Program", "Company", "Role", "Package", "Year", ""].map(h => <th key={h} className="px-5 py-3 text-left text-[10px] font-bold text-slate-400 uppercase tracking-wider">{h}</th>)}
                 </tr></thead>
@@ -401,7 +401,7 @@ export default function PlacementsPage() {
       {tab === "recruiters" && (
         <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
           <h2 className="text-sm font-black text-slate-800 mb-5">Top Recruiters</h2>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
             {recruiters.map(r => (
               <div key={r.name} className="flex items-center gap-3 p-4 bg-slate-50 rounded-xl border border-slate-100">
                 <div className={`h-12 w-12 rounded-xl ${r.color} flex items-center justify-center text-white font-black text-lg shadow-md`}>{r.logo}</div>

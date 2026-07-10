@@ -91,14 +91,14 @@ export default function EventsAnnouncementsPage() {
     <div className="space-y-5">
 
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-xl font-black text-slate-800">Events & Announcements</h1>
           <p className="text-sm text-slate-400 mt-0.5">Add items that show on the Institutions page sidebar tabs</p>
         </div>
         <button
           onClick={() => { reset(); setShowForm(true); }}
-          className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-xl text-sm font-semibold hover:bg-indigo-700 transition-colors shadow-md shadow-indigo-200"
+          className="flex items-center justify-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-xl text-sm font-semibold hover:bg-indigo-700 transition-colors shadow-md shadow-indigo-200 w-full sm:w-auto"
         >
           <span className="material-symbols-outlined text-lg">add</span>
           Add {activeTab === "upcoming_event" ? "Event" : "Announcement"}
@@ -187,36 +187,38 @@ export default function EventsAnnouncementsPage() {
             <p className="text-xs mt-1">Click the Add button above to create one.</p>
           </div>
         ) : (
-          <table className="w-full">
-            <thead>
-              <tr className="border-b border-slate-100">
-                {["Title & Description", "Date", ""].map(h => (
-                  <th key={h} className="px-5 py-3 text-left text-[10px] font-bold text-slate-400 uppercase tracking-wider">{h}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {tabItems.map(item => (
-                <tr key={item._id} className="border-b border-slate-50 hover:bg-slate-50/60 transition-colors">
-                  <td className="px-5 py-3.5">
-                    <div className="min-w-0">
-                      <p className="text-sm font-semibold text-slate-800 line-clamp-1">{item.title}</p>
-                      {item.description && <p className="text-xs text-slate-400 line-clamp-2 mt-1">{item.description}</p>}
-                    </div>
-                  </td>
-                  <td className="px-5 py-3.5 text-sm text-slate-400">{new Date(item.date || item.createdAt || Date.now()).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}</td>
-                  <td className="px-5 py-3.5">
-                    <button
-                      onClick={() => handleDelete(item._id)}
-                      className="h-7 w-7 flex items-center justify-center rounded-lg bg-rose-50 text-rose-500 hover:bg-rose-100 transition-colors"
-                    >
-                      <span className="material-symbols-outlined text-sm">delete</span>
-                    </button>
-                  </td>
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-[600px]">
+              <thead>
+                <tr className="border-b border-slate-100">
+                  {["Title & Description", "Date", ""].map(h => (
+                    <th key={h} className="px-5 py-3 text-left text-[10px] font-bold text-slate-400 uppercase tracking-wider">{h}</th>
+                  ))}
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {tabItems.map(item => (
+                  <tr key={item._id} className="border-b border-slate-50 hover:bg-slate-50/60 transition-colors">
+                    <td className="px-5 py-3.5">
+                      <div className="min-w-0">
+                        <p className="text-sm font-semibold text-slate-800 line-clamp-1">{item.title}</p>
+                        {item.description && <p className="text-xs text-slate-400 line-clamp-2 mt-1">{item.description}</p>}
+                      </div>
+                    </td>
+                    <td className="px-5 py-3.5 text-sm text-slate-400">{new Date(item.date || item.createdAt || Date.now()).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}</td>
+                    <td className="px-5 py-3.5">
+                      <button
+                        onClick={() => handleDelete(item._id)}
+                        className="h-7 w-7 flex items-center justify-center rounded-lg bg-rose-50 text-rose-500 hover:bg-rose-100 transition-colors"
+                      >
+                        <span className="material-symbols-outlined text-sm">delete</span>
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         )}
       </div>
     </div>

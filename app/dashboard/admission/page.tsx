@@ -387,14 +387,14 @@ export default function AdmissionPage() {
         </div>
       )}
 
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-xl font-black text-slate-800">Admission</h1>
           <p className="text-sm text-slate-400 mt-0.5">Manage admission cycles and process content</p>
         </div>
         <button
           onClick={() => { setShowAddForm(true); setFormError(""); }}
-          className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-xl text-sm font-semibold hover:bg-indigo-700 transition-colors shadow-md shadow-indigo-200"
+          className="flex items-center justify-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-xl text-sm font-semibold hover:bg-indigo-700 transition-colors shadow-md shadow-indigo-200 w-full sm:w-auto"
         >
           <span className="material-symbols-outlined text-lg">add</span>New Cycle
         </button>
@@ -419,7 +419,7 @@ export default function AdmissionPage() {
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-2 bg-white border border-slate-100 rounded-2xl p-1.5 shadow-sm w-fit overflow-x-auto">
+      <div className="flex gap-2 bg-white border border-slate-100 rounded-2xl p-1.5 shadow-sm w-fit max-w-full overflow-x-auto whitespace-nowrap flex-shrink-0">
         {[
           { id: "applications", label: "Applications", icon: "description" },
           { id: "cycles", label: "Admission Cycles", icon: "calendar_month" },
@@ -517,7 +517,7 @@ export default function AdmissionPage() {
             <p className="p-5 text-slate-500 text-sm">Loading admission cycles...</p>
           ) : (
           <div className="overflow-x-auto">
-            <table className="w-full">
+            <table className="w-full min-w-[900px]">
               <thead>
                 <tr className="border-b border-slate-100">
                   {["Session", "Program", "Institution", "Open Date", "Close Date", "Seats", "Filled", "Status", ""].map((h) => (
@@ -565,7 +565,7 @@ export default function AdmissionPage() {
 
       {tab === "eligibility" && (
         <div className="space-y-4">
-          <div className="flex gap-2 bg-white border border-slate-100 rounded-2xl p-1.5 shadow-sm w-fit">
+          <div className="flex gap-2 bg-white border border-slate-100 rounded-2xl p-1.5 shadow-sm w-fit max-w-full overflow-x-auto whitespace-nowrap flex-shrink-0">
             {[
               { id: "undergraduate", label: "Undergraduate", icon: "school" },
               { id: "postgraduate", label: "Postgraduate", icon: "workspace_premium" },

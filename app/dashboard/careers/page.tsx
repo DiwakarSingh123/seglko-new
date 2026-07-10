@@ -230,7 +230,7 @@ export default function CareersPage() {
         </div>
       )}
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
         {categoryOptions.map((cat) => (
           <div key={cat} className="bg-white rounded-2xl border border-slate-100 p-4 shadow-sm">
             <div className="h-9 w-9 rounded-xl bg-indigo-500 flex items-center justify-center text-white mb-3 shadow-md">

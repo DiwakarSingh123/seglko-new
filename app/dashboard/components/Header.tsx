@@ -10,7 +10,7 @@ import {
   defaultAdminProfile,
 } from "@/lib/admin-profile";
 
-export default function Header() {
+export default function Header({ onMenuClick }: { onMenuClick?: () => void }) {
   const router = useRouter();
   const [search, setSearch] = useState("");
   const [inquiries, setInquiries] = useState<any[]>([]);
@@ -126,7 +126,15 @@ export default function Header() {
   };
 
   return (
-    <header className="h-16 bg-white border-b border-slate-100 flex items-center justify-between px-6 flex-shrink-0 z-40">
+    <header className="h-16 bg-white border-b border-slate-100 flex items-center justify-between px-4 md:px-6 flex-shrink-0 z-40">
+      {/* Hamburger — all screens */}
+      <button
+        onClick={onMenuClick}
+        className="h-9 w-9 flex items-center justify-center rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-500 mr-3 flex-shrink-0"
+      >
+        <span className="material-symbols-outlined text-xl">menu</span>
+      </button>
+
       {/* Search Input */}
       <div className="flex-1 max-w-md">
         <div className="relative">

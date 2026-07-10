@@ -337,19 +337,19 @@ export default function ProgramsPage() {
   return (
     <div className="space-y-5">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-xl font-black text-slate-800">Programs</h1>
           <p className="text-sm text-slate-400 mt-0.5">Manage all academic programs — content, image, highlights & careers</p>
         </div>
         <button onClick={() => setShowAddForm(true)}
-          className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-xl text-sm font-semibold hover:bg-indigo-700 transition-colors shadow-md shadow-indigo-200">
+          className="flex items-center justify-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-xl text-sm font-semibold hover:bg-indigo-700 transition-colors shadow-md shadow-indigo-200 w-full sm:w-auto">
           <span className="material-symbols-outlined text-lg">add</span>Add Program
         </button>
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
         {[
           { label: "Total Programs", value: programsList.length, icon: "menu_book", color: "bg-indigo-500" },
           { label: "UG Programs", value: programsList.filter(p => p.level === "UG").length, icon: "school", color: "bg-blue-500" },
@@ -420,7 +420,7 @@ export default function ProgramsPage() {
         filtered.map(program => (
           <div key={program._id} className="rounded-3xl border border-slate-100 bg-white shadow-sm overflow-hidden">
             {/* Header row */}
-            <div className="flex items-center justify-between p-5 cursor-pointer hover:bg-slate-50 transition-colors"
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-5 cursor-pointer hover:bg-slate-50 transition-colors"
               onClick={() => toggleExpand(program)}>
               <div className="flex items-center gap-4">
                 {program.image

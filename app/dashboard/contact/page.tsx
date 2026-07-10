@@ -6,6 +6,44 @@ const statusStyle: Record<string, string> = {
   Closed: "bg-slate-100 text-slate-500",
 };
 
+function InquiryModal({ inq, onClose }: { inq: any; onClose: () => void }) {
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4" onClick={onClose}>
+      <div className="bg-white rounded-3xl shadow-2xl w-full max-w-lg" onClick={e => e.stopPropagation()}>
+        <div className="flex items-center justify-between p-6 border-b border-slate-100">
+          <div>
+            <h2 className="text-base font-black text-slate-900">{inq.name}</h2>
+            <p className="text-xs text-slate-400">{inq.email} · {inq.phone}</p>
+          </div>
+          <button onClick={onClose} className="h-8 w-8 flex items-center justify-center rounded-xl hover:bg-slate-100">
+            <span className="material-symbols-outlined text-slate-500">close</span>
+          </button>
+        </div>
+        <div className="p-6 space-y-4">
+          <div>
+            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Subject</p>
+            <p className="text-sm font-semibold text-slate-800">{inq.subject || '—'}</p>
+          </div>
+          <div>
+            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Message</p>
+            <p className="text-sm text-slate-700 whitespace-pre-wrap">{inq.message || '—'}</p>
+          </div>
+          <div className="flex gap-4">
+            <div>
+              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Date</p>
+              <p className="text-sm text-slate-600">{inq.date}</p>
+            </div>
+            <div>
+              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Status</p>
+              <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold ${statusStyle[inq.status]}`}>{inq.status}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function ContactPage() {
   type Faq = { q: string; a: string };
   const [tab, setTab] = useState<"inquiries" | "info" | "faq">("inquiries");
@@ -13,6 +51,7 @@ export default function ContactPage() {
   const [editingFaq, setEditingFaq] = useState<(Faq & { index: number }) | null>(null);
   const [filter, setFilter] = useState("All");
   const [inquiries, setInquiries] = useState<any[]>([]);
+  const [selectedInquiry, setSelectedInquiry] = useState<any>(null);
 
   const [contactDetails, setContactDetails] = useState({
     address: "",
@@ -148,7 +187,7 @@ export default function ContactPage() {
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-2 bg-white border border-slate-100 rounded-2xl p-1.5 shadow-sm w-fit">
+      <div className="flex gap-2 bg-white border border-slate-100 rounded-2xl p-1.5 shadow-sm w-fit max-w-full overflow-x-auto whitespace-nowrap flex-shrink-0">
         {[
           { id: "inquiries", label: "Inquiries", icon: "inbox" },
           { id: "info", label: "Contact Info", icon: "contact_phone" },
@@ -163,6 +202,7 @@ export default function ContactPage() {
 
       {tab === "inquiries" && (
         <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+          {selectedInquiry && <InquiryModal inq={selectedInquiry} onClose={() => setSelectedInquiry(null)} />}
           <div className="p-5 border-b border-slate-100 flex gap-2">
             {["All", "New", "Replied", "Closed"].map((s) => (
               <button key={s} onClick={() => setFilter(s)}
@@ -172,7 +212,7 @@ export default function ContactPage() {
             ))}
           </div>
           <div className="overflow-x-auto">
-            <table className="w-full">
+            <table className="w-full min-w-[850px]">
               <thead>
                 <tr className="border-b border-slate-100">
                   {["Name", "Subject", "Phone", "Date", "Status", "Action"].map((h) => (
@@ -187,7 +227,12 @@ export default function ContactPage() {
                       <div className="text-sm font-semibold text-slate-800">{inq.name}</div>
                       <div className="text-xs text-slate-400">{inq.email}</div>
                     </td>
-                    <td className="px-5 py-3.5 text-sm text-slate-600 max-w-xs truncate">{inq.subject}</td>
+                    <td className="px-5 py-3.5 text-sm text-slate-600 max-w-xs">
+                      <div className="truncate">{inq.subject}</div>
+                      {inq.message && (
+                        <button onClick={() => setSelectedInquiry(inq)} className="text-[10px] text-indigo-500 hover:text-indigo-700 font-semibold mt-0.5">Show More</button>
+                      )}
+                    </td>
                     <td className="px-5 py-3.5 text-sm text-slate-500">{inq.phone}</td>
                     <td className="px-5 py-3.5 text-sm text-slate-400">{inq.date}</td>
                     <td className="px-5 py-3.5">
