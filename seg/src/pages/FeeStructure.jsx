@@ -1,33 +1,81 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
 import '../FeeStructure.css';
 import institutionsBg from '../assets/images/seg.jpeg';
 
-const btechFees = [
-  { branch: 'Computer Science & Engineering', duration: '4 Years', firstYear: '₹ 85,000', secondYear: '₹ 85,000', total: '₹ 3,40,000' },
-  { branch: 'Electronics & Communication', duration: '4 Years', firstYear: '₹ 75,000', secondYear: '₹ 75,000', total: '₹ 3,00,000' },
-  { branch: 'Mechanical Engineering', duration: '4 Years', firstYear: '₹ 75,000', secondYear: '₹ 75,000', total: '₹ 3,00,000' },
-  { branch: 'Information Technology', duration: '4 Years', firstYear: '₹ 80,000', secondYear: '₹ 80,000', total: '₹ 3,20,000' },
-  { branch: 'Civil Engineering', duration: '4 Years', firstYear: '₹ 75,000', secondYear: '₹ 75,000', total: '₹ 3,00,000' },
+const sitmFees = [
+  { course: 'B.Pharma', total: '₹1,03,000', tuition: '₹80,000' },
+  { course: 'B.Pharm Lateral', total: '₹60,000', tuition: '₹60,000' },
+  { course: 'D.Pharma', total: '₹60,000', tuition: '₹60,000' },
+  { course: 'Diploma', total: '₹40,000', tuition: '₹40,000' },
+  { course: 'BBA', total: '₹60,000', tuition: '₹45,000' },
+  { course: 'BCA', total: '₹60,000', tuition: '₹45,000' },
+  { course: 'B.Tech', total: '₹85,000', tuition: '₹60,000' },
+  { course: 'B.Tech Lateral', total: '₹85,000', tuition: '₹60,000' },
+  { course: 'M.Tech', total: '₹60,000', tuition: '₹40,000' },
+  { course: 'MBA', total: '₹60,000', tuition: '₹40,000' },
+  { course: 'MCA', total: '₹60,000', tuition: '₹40,000' },
 ];
 
-const diplomaFees = [
-  { course: 'Polytechnic Diploma', duration: '3 Years', perYear: '₹ 35,000', total: '₹ 1,05,000' },
-  { course: 'Pharmacy (D.Pharm)', duration: '2 Years', perYear: '₹ 90,000', total: '₹ 1,80,000' },
+const ssitmFees = [
+  { course: 'B.Pharma', total: '₹1,03,000', tuition: '₹80,000' },
+  { course: 'B.Pharm Lateral', total: '₹60,000', tuition: '₹60,000' },
+  { course: 'D.Pharma', total: '₹60,000', tuition: '₹60,000' },
+  { course: 'Diploma', total: '₹40,000', tuition: '₹40,000' },
+  { course: 'BBA', total: '₹60,000', tuition: '₹45,000' },
+  { course: 'BCA', total: '₹60,000', tuition: '₹45,000' },
+  { course: 'B.Tech', total: '₹85,000', tuition: '₹60,000' },
+  { course: 'B.Tech Lateral', total: '₹85,000', tuition: '₹60,000' },
+  { course: 'M.Tech', total: '₹60,000', tuition: '₹40,000' },
+  { course: 'MBA', total: '₹60,000', tuition: '₹40,000' },
+  { course: 'MCA', total: '₹60,000', tuition: '₹40,000' },
 ];
+
+const institutions = {
+  SITM: {
+    label: 'SITM Fee Structure',
+    fullName: 'Saroj Institute of Technology & Management (SITM), Lucknow',
+    address: 'Ahimamau P.O. Arjunganj Sultanpur Road Lucknow | Phone: 9555699988',
+    session: '2026-2027',
+    fees: sitmFees,
+    notes: [
+      'Fees once deposited are non-refundable.',
+      'Examination, form, and enrollment fees are to be paid directly to the university.',
+      'Dress and transportation charges are separate (if availed).',
+      'Hostel fee is ₹60,000/year, inclusive of mess facility.',
+      '10% of the total fee will be charged as a Development Fee.',
+    ],
+  },
+  SSITM: {
+    label: 'SSITM Fee Structure',
+    fullName: 'Shivdan Singh Institute of Technology & Management (SSITM), Lucknow',
+    address: 'Sultanpur Road, Lucknow | Phone: 9555699988',
+    session: '2026-2027',
+    fees: ssitmFees,
+    notes: [
+      'Fees once deposited are non-refundable.',
+      'Examination, form, and enrollment fees are to be paid directly to the university.',
+      'Dress and transportation charges are separate (if availed).',
+      'Hostel fee is ₹60,000/year, inclusive of mess facility.',
+      '10% of the total fee will be charged as a Development Fee.',
+    ],
+  },
+};
 
 const FeeStructure = () => {
+  const [active, setActive] = useState(null);
+
+  const data = active ? institutions[active] : null;
+
   return (
     <div className="fee-structure-page">
-      {/* Hero Section */}
+      {/* Hero */}
       <section className="fee-hero">
         <div className="fee-hero__inner">
           <div className="fee-hero__content">
-
             <h1 className="fee-hero__title">Transparent <br />Fee Structure</h1>
             <div className="fee-hero__accent-line"></div>
             <p className="fee-hero__text">
-              We believe in transparency and providing clear information about our academic investments. Explore our detailed fee structure across various programs and institutions.
+              We believe in transparency and providing clear information about our academic investments. Select an institution below to view its detailed fee structure.
             </p>
           </div>
           <div className="fee-hero__visual">
@@ -76,70 +124,62 @@ const FeeStructure = () => {
         </div>
       </section>
 
-      {/* Main Content */}
-      <main className="fee-content">
-        {/* Engineering Fees */}
-        <section className="fee-section">
-          <div className="fee-section__header">
-            <h2 className="fee-section__title">B.Tech Programs</h2>
-            <p className="fee-section__desc">Academic investment details for our undergraduate engineering programs.</p>
-          </div>
-          <div className="fee-table-container">
-            <table className="fee-table">
-              <thead>
-                <tr>
-                  <th>Branch Name</th>
-                  <th>Duration</th>
-                  <th>1st Year Fee</th>
-                  <th>Subsequent Years</th>
-                  <th>Total Investment</th>
-                </tr>
-              </thead>
-              <tbody>
-                {btechFees.map((item, i) => (
-                  <tr key={i}>
-                    <td><strong>{item.branch}</strong></td>
-                    <td><span className="fee-badge fee-badge--blue">{item.duration}</span></td>
-                    <td>{item.firstYear}</td>
-                    <td>{item.secondYear}</td>
-                    <td><strong>{item.total}</strong></td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </section>
+      {/* Institution Selector Buttons */}
+      <div className="fee-selector">
+        <p className="fee-selector__label">Select Institution to View Fee Structure</p>
+        <div className="fee-selector__buttons">
+          {Object.keys(institutions).map((key) => (
+            <button
+              key={key}
+              className={`fee-selector__btn${active === key ? ' fee-selector__btn--active' : ''}`}
+              onClick={() => setActive(active === key ? null : key)}
+            >
+              {institutions[key].label}
+            </button>
+          ))}
+        </div>
+      </div>
 
-        {/* Diploma & Others */}
-        <section className="fee-section">
-          <div className="fee-section__header">
-            <h2 className="fee-section__title">Diploma & Pharmacy</h2>
-            <p className="fee-section__desc">Fee details for our vocational and pharmaceutical science courses.</p>
-          </div>
-          <div className="fee-table-container">
-            <table className="fee-table">
-              <thead>
-                <tr>
-                  <th>Course Name</th>
-                  <th>Duration</th>
-                  <th>Annual Fee</th>
-                  <th>Total Investment</th>
-                </tr>
-              </thead>
-              <tbody>
-                {diplomaFees.map((item, i) => (
-                  <tr key={i}>
-                    <td><strong>{item.course}</strong></td>
-                    <td><span className="fee-badge fee-badge--green">{item.duration}</span></td>
-                    <td>{item.perYear}</td>
-                    <td><strong>{item.total}</strong></td>
+      {/* Fee Table */}
+      {data && (
+        <main className="fee-content">
+          <section className="fee-section">
+            <div className="fee-institute-header">
+              <h2 className="fee-institute-header__name">{data.fullName}</h2>
+              <p className="fee-institute-header__session">Fee Structure for Session {data.session}</p>
+              <p className="fee-institute-header__address">{data.address}</p>
+            </div>
+
+            <div className="fee-table-container">
+              <div className="fee-table-title">Quick Overview</div>
+              <table className="fee-table">
+                <thead>
+                  <tr>
+                    <th>Course</th>
+                    <th>Total Fees</th>
+                    <th>Tuition Fees</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </section>
-      </main>
+                </thead>
+                <tbody>
+                  {data.fees.map((item, i) => (
+                    <tr key={i}>
+                      <td><strong>{item.course}</strong></td>
+                      <td>{item.total}</td>
+                      <td>{item.tuition}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            <ul className="fee-notes">
+              {data.notes.map((note, i) => (
+                <li key={i}>• {note}</li>
+              ))}
+            </ul>
+          </section>
+        </main>
+      )}
     </div>
   );
 };

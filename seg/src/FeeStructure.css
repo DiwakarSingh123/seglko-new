@@ -344,3 +344,94 @@
     justify-content: flex-start;
   }
 }
+
+/* Institution Selector */
+.fee-selector {
+  padding: 60px 5% 20px;
+  text-align: center;
+}
+
+.fee-selector__label {
+  font-size: 16px;
+  color: #64748b;
+  margin-bottom: 20px;
+  font-weight: 500;
+}
+
+.fee-selector__buttons {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.fee-selector__btn {
+  padding: 14px 36px;
+  border-radius: 10px;
+  border: 2px solid #1041c6;
+  background: #fff;
+  color: #1041c6;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+}
+
+.fee-selector__btn:hover {
+  background: #eff6ff;
+  box-shadow: 0 4px 16px rgba(16,65,198,0.12);
+}
+
+.fee-selector__btn--active {
+  background: #1041c6;
+  color: #fff;
+  box-shadow: 0 4px 16px rgba(16,65,198,0.25);
+}
+
+/* Institute Header */
+.fee-institute-header {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.fee-institute-header__name {
+  font-size: 22px;
+  font-weight: 800;
+  color: #0f172a;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.fee-institute-header__session {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1041c6;
+  margin-bottom: 4px;
+}
+
+.fee-institute-header__address {
+  font-size: 14px;
+  color: #64748b;
+}
+
+/* Table title */
+.fee-table-title {
+  padding: 16px 20px;
+  font-weight: 700;
+  font-size: 15px;
+  color: #1e293b;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+/* Fee Notes */
+.fee-notes {
+  list-style: none;
+  padding: 20px 0 0;
+  margin: 0;
+}
+
+.fee-notes li {
+  font-size: 14px;
+  color: #475569;
+  padding: 4px 0;
+}
