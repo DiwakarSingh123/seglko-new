@@ -82,7 +82,7 @@ export default function CareersPage() {
           setJobs(data.length > 0 ? data : defaultJobs);
           return;
         }
-      } catch (e) {}
+      } catch (e) { }
       setJobs(defaultJobs);
     };
     fetchJobs().finally(() => setLoading(false));
@@ -121,7 +121,7 @@ export default function CareersPage() {
               <div className="info-card__body">
                 <h4>Why Join SEG?</h4>
                 <p>Be part of an institution that values excellence, innovation and integrity.</p>
-                <a href="#" className="info-card__link">Watch Our Culture Video <span>▶</span></a>
+
               </div>
             </div>
           </div>

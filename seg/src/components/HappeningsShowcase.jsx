@@ -427,7 +427,6 @@ export default function HappeningsShowcase() {
             </div>
 
             <div className="happenings-showcase__cta-badge">
-              <span className="happenings-showcase__cta-badge-text">Admission<br />open</span>
               <img src={logoImg} alt="SEG Logo" className="happenings-showcase__cta-badge-logo" />
             </div>
           </article>

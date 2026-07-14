@@ -14,7 +14,7 @@ const HistoryHero = () => {
           if (data.aboutHistory.description) setDescription(data.aboutHistory.description);
         }
       })
-      .catch(() => {});
+      .catch(() => { });
   }, []);
 
   return (

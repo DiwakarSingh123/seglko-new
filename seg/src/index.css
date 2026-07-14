@@ -386,7 +386,7 @@ button {
   align-items: center;
   gap: 20px;
   justify-content: flex-end;
-  
+
   padding: 0 8px 0 220px;
 }
 
@@ -399,22 +399,21 @@ button {
   min-width: 165px;
   height: 150px;
   padding: 12px 14px 14px;
-  margin-top: 40px;
   border-radius: 0 0 14px 14px;
+  box-shadow: none;
 
   position: absolute;
-  left: 7px;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 2;
+  left: -20px;
+  top: 15px;
+  z-index: 10;
 }
 
 .navbar__logo {
   width: 100%;
-  max-width: 116px;
+  max-width: 138px;
   height: auto;
   object-fit: contain;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.05));
+  display: block;
 }
 
 .navbar__nav {
@@ -1022,21 +1021,21 @@ button {
   gap: 8px;
   width: fit-content;
   margin: 14px 0 14px 26px;
-  padding: 9px 14px;
-  border-radius: 999px;
-  background: #eef4ff;
-  color: #1041c6;
-  font-size: 13px;
-  font-weight: 700;
+  padding: 12px 18px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #15357f, #173f9a 56%, #0f2c72);
+  color: var(--color-white);
+  font-size: 14px;
+  font-weight: 600;
   line-height: 1;
   text-decoration: none;
-  transition: background 0.2s, color 0.2s, transform 0.2s;
+  box-shadow: 0 16px 28px rgba(15, 44, 114, 0.25);
+  transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .programs-panel__cta:hover {
-  background: #1041c6;
-  color: #ffffff;
   transform: translateY(-1px);
+  box-shadow: 0 20px 32px rgba(15, 44, 114, 0.3);
 }
 
 .programs-panel__cta-arrow {
@@ -1811,7 +1810,7 @@ button {
   background: rgba(255, 255, 255, 0.92);
   border: 1px solid rgba(214, 225, 244, 0.85);
   /* Shadow emphasizing the border */
-  
+
   scroll-snap-align: start;
 }
 
@@ -3832,28 +3831,19 @@ button {
 
 .happenings-showcase__cta-badge {
   background: #ffffff;
-  width: 155px;
-  height: 185px;
-  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 25px), 50% 100%, 0 calc(100% - 25px));
+  width: 170px;
+  height: 195px;
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 20px), 50% 100%, 0 calc(100% - 20px));
   display: flex;
-  flex-direction: column;
   align-items: center;
-  padding: 24px 16px 16px;
+  justify-content: center;
+  padding: 0 14px 20px;
   z-index: 10;
   filter: drop-shadow(0 10px 14px rgba(0, 0, 0, 0.15));
 }
 
-.happenings-showcase__cta-badge-text {
-  color: #0b2361;
-  font-size: 18px;
-  font-weight: 800;
-  line-height: 1.25;
-  text-align: center;
-  margin-bottom: 24px;
-}
-
 .happenings-showcase__cta-badge-logo {
-  width: 85px;
+  width: 110px;
   height: auto;
   object-fit: contain;
 }
@@ -5608,7 +5598,7 @@ button {
     width: 108px;
     min-width: 108px;
     height: 94px;
-    padding: 8px 10px 10px;
+    padding: 8px 30px 10px;
   }
 
   .navbar__logo {
@@ -5737,7 +5727,8 @@ button {
   }
 
   .navbar__logo-wrap {
-    left: 20px;
+    left: -20px;
+    top: 15px;
     width: 142px;
     min-width: 142px;
     height: 132px;
@@ -6519,20 +6510,21 @@ button {
   justify-content: center;
   gap: 12px;
   margin-top: 36px;
-  padding: 12px 24px;
+  padding: 12px 18px;
   border-radius: 10px;
-  background: #1f3776;
+  background: linear-gradient(135deg, #15357f, #173f9a 56%, #0f2c72);
   color: white;
   font-size: 14px;
   font-weight: 600;
   text-decoration: none;
-  transition: transform 0.2s;
+  box-shadow: 0 16px 28px rgba(15, 44, 114, 0.25);
+  transition: transform 0.2s, box-shadow 0.2s;
   max-width: max-content;
 }
 
 .admission-panel__cta:hover {
   transform: translateY(-1px);
-  background: #152554;
+  box-shadow: 0 20px 32px rgba(15, 44, 114, 0.3);
 }
 
 .admission-panel__cta-arrow {
@@ -7438,22 +7430,21 @@ button {
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  background: #2563eb;
-  color: white;
-  padding: 10px 20px;
+  background: linear-gradient(135deg, #15357f, #173f9a 56%, #0f2c72);
+  color: var(--color-white);
+  padding: 12px 18px;
   border-radius: 10px;
-  font-size: 0.85rem;
-  font-weight: 700;
+  font-size: 14px;
+  font-weight: 600;
   text-decoration: none;
   width: fit-content;
-  transition: all 0.25s ease;
-  box-shadow: 0 6px 18px rgba(37, 99, 235, 0.25);
+  box-shadow: 0 16px 28px rgba(15, 44, 114, 0.25);
+  transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .rd-panel__cta:hover {
-  background: #1d4ed8;
-  transform: translateY(-2px);
-  box-shadow: 0 10px 24px rgba(37, 99, 235, 0.35);
+  transform: translateY(-1px);
+  box-shadow: 0 20px 32px rgba(15, 44, 114, 0.3);
 }
 
 /* Visual Column */
@@ -7636,5 +7627,1829 @@ button {
   color: #ffffff;
 }
 
+/* ============================================================
+   CONSOLIDATED RESPONSIVE MEDIA QUERIES
+   Breakpoints: 1400 | 1280 | 1024 | 768 | 576 | 480 | 360
+   ============================================================ */
 
+/* ----- ≤ 1400px ----- */
+@media (max-width: 1400px) {
+  :root {
+    --section-padding: 0 30px;
+  }
 
+  .hero__content {
+    max-width: 520px;
+    padding: 20px 0 24px 30px;
+  }
+
+  .hero__heading {
+    font-size: 36px;
+  }
+
+  .stats-bar {
+    width: calc(100% - 60px);
+    padding: 30px 36px;
+  }
+
+  .programs-spotlight__art {
+    right: 60px;
+    width: 380px;
+  }
+
+  .happenings-showcase__cta-content {
+    transform: translateX(-40px);
+  }
+}
+
+/* ----- ≤ 1280px ----- */
+@media (max-width: 1280px) {
+  .hero__content {
+    max-width: 480px;
+    padding: 18px 0 20px 24px;
+  }
+
+  .hero__heading {
+    font-size: 34px;
+  }
+
+  .hero__subtext {
+    font-size: 16px;
+    max-width: 380px;
+    margin-bottom: 40px;
+  }
+
+  .stats-bar {
+    width: calc(100% - 48px);
+    padding: 26px 32px;
+  }
+
+  .stats-bar__number {
+    font-size: 28px;
+  }
+
+  .stats-bar__label {
+    font-size: 13px;
+  }
+
+  .programs-spotlight__art {
+    right: 20px;
+    width: 340px;
+    height: 260px;
+  }
+
+  .happenings-showcase__cta-content {
+    transform: none;
+  }
+
+  .happenings-showcase__events {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .happenings-showcase__announcement-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .happenings-showcase__announcement+.happenings-showcase__announcement:nth-child(3) {
+    border-left: none;
+    border-top: 1px solid rgba(219, 228, 244, 0.95);
+  }
+}
+
+/* ----- ≤ 1024px (Tablet) ----- */
+@media (max-width: 1024px) {
+
+  /* Top bar */
+  .top-bar {
+    display: none !important;
+  }
+
+  /* Navbar */
+  .navbar {
+    min-height: 64px;
+    height: auto;
+    padding: 0 !important;
+    overflow: visible;
+  }
+
+  .navbar__mobile-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    min-height: 64px;
+    padding: 8px 16px;
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  }
+
+  .navbar__mobile-bar .navbar__logo-wrap {
+    position: static !important;
+    transform: none !important;
+    width: 80px !important;
+    min-width: 80px !important;
+    height: 56px !important;
+    margin: 0 !important;
+    padding: 6px !important;
+    border-radius: 0 0 8px 8px !important;
+    box-shadow: none !important;
+  }
+
+  .navbar__mobile-bar .navbar__logo {
+    max-width: 56px !important;
+  }
+
+  .navbar__inner {
+    display: none !important;
+  }
+
+  .navbar__overlay {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(10, 23, 54, 0.35);
+    z-index: 998;
+  }
+
+  .navbar__drawer {
+    display: flex;
+    max-width: 340px;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  .navbar__drawer .navbar__nav {
+    gap: 0 !important;
+    border-top: 0 !important;
+  }
+
+  .navbar__drawer .navbar__item {
+    padding: 0 !important;
+  }
+
+  .navbar__drawer .navbar__item-button {
+    border-radius: 0 !important;
+  }
+
+  .navbar__dropdown-shell {
+    display: none !important;
+  }
+
+  /* Hero */
+  .hero {
+    min-height: 580px;
+    align-items: flex-start;
+  }
+
+  .hero__content {
+    max-width: 420px;
+    padding: 36px 20px 32px;
+  }
+
+  .hero__heading {
+    font-size: 30px;
+  }
+
+  .hero__subtext {
+    font-size: 15px;
+    margin-bottom: 28px;
+  }
+
+  .hero__buttons {
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+
+  #explore-programs-btn,
+  #campus-tour-btn {
+    min-width: 0;
+  }
+
+  /* Stats bar */
+  .stats-bar {
+    width: calc(100% - 40px);
+    margin-top: -44px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    padding: 22px 20px;
+    gap: 16px;
+  }
+
+  .stats-bar__item {
+    padding: 8px 4px;
+    justify-content: flex-start;
+  }
+
+  .stats-bar__icon {
+    width: 52px;
+    height: 52px;
+  }
+
+  .stats-bar__number {
+    font-size: 26px;
+  }
+
+  /* Programs section */
+  .programs__shell,
+  .programs__grid {
+    padding: 0 20px;
+    overflow-x: hidden;
+  }
+
+  .programs__grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .programs__card {
+    height: 260px;
+  }
+
+  .programs__card--slot-1,
+  .programs__card--slot-2,
+  .programs__card--slot-3,
+  .programs__card--slot-4 {
+    grid-column: auto;
+    grid-row: auto;
+  }
+
+  .programs__card--float-right,
+  .programs__card--float-left {
+    animation: none;
+  }
+
+  /* Programs spotlight */
+  .programs-spotlight {
+    padding: 10px 0 55px;
+  }
+
+  .programs-spotlight__shell {
+    padding: 34px 20px 20px;
+  }
+
+  .programs-spotlight__hero {
+    min-height: auto;
+  }
+
+  .programs-spotlight__actions {
+    padding-top: 20px;
+  }
+
+  .programs-spotlight__art {
+    position: relative;
+    right: auto;
+    top: auto;
+    width: 100%;
+    max-width: 320px;
+    height: 220px;
+    margin: 16px auto 0;
+  }
+
+  .programs-spotlight__carousel {
+    margin-top: 24px;
+  }
+
+  .programs-spotlight__carousel-button {
+    top: 82px;
+    width: 48px;
+    height: 48px;
+  }
+
+  .programs-spotlight__card {
+    flex-basis: calc((100% - 12px) / 2);
+  }
+
+  .programs-spotlight__benefits {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .programs-spotlight__benefit:nth-child(3),
+  .programs-spotlight__benefit:nth-child(4) {
+    border-top: 1px solid rgba(255, 255, 255, 0.16);
+  }
+
+  .programs-spotlight__benefit:nth-child(3) {
+    border-left: none;
+  }
+
+  /* Placements showcase */
+  .placements-showcase {
+    padding: 0 20px 60px;
+  }
+
+  .placements-showcase__shell {
+    padding: 34px 20px 24px;
+  }
+
+  .placements-showcase__header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .placements-showcase__cta {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .placements-showcase__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .placements-showcase__card {
+    grid-template-columns: 220px minmax(0, 1fr);
+  }
+
+  .placements-showcase__stats-hero {
+    grid-template-columns: 1fr;
+  }
+
+  .placements-showcase__stats-grid {
+    border-left: none;
+    border-top: 1px solid rgba(25, 49, 104, 0.08);
+  }
+
+  .placements-showcase__partners {
+    grid-template-columns: 1fr;
+  }
+
+  .placements-showcase__partners-label {
+    border-right: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+    padding-bottom: 18px;
+  }
+
+  /* Faculty showcase */
+  .faculty-showcase {
+    padding: 0 20px 64px;
+  }
+
+  .faculty-showcase__shell {
+    padding: 34px 20px 24px;
+  }
+
+  .faculty-showcase__header {
+    flex-direction: column;
+    margin-top: 42px;
+    gap: 18px;
+  }
+
+  .faculty-showcase__actions {
+    align-items: flex-start;
+  }
+
+  .faculty-showcase__cta {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .faculty-showcase__carousel {
+    margin-top: 34px;
+  }
+
+  .faculty-showcase__carousel-button {
+    width: 48px;
+    height: 48px;
+  }
+
+  .faculty-showcase__carousel-button--prev {
+    left: 8px;
+    right: auto;
+  }
+
+  .faculty-showcase__carousel-button--next {
+    right: 8px;
+    left: auto;
+  }
+
+  .faculty-showcase__card {
+    flex-basis: calc((100% - 24px) / 2);
+  }
+
+  /* Institutions showcase */
+  .institutions-showcase {
+    padding: 60px 20px;
+  }
+
+  .institutions-showcase__shell {
+    padding: 0 20px;
+  }
+
+  .institutions-showcase__header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 18px;
+  }
+
+  .institutions-showcase__cta {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .institutions-showcase__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .institutions-showcase__featured {
+    grid-template-columns: 1fr;
+  }
+
+  .institutions-showcase__featured-image {
+    height: 250px;
+    min-height: 250px;
+    clip-path: none;
+  }
+
+  .institutions-showcase__featured-content {
+    padding: 24px 24px 28px;
+  }
+
+  /* Happenings showcase */
+  .happenings-showcase {
+    padding: 0 20px 60px;
+  }
+
+  .happenings-showcase__shell {
+    padding: 34px 20px 18px;
+  }
+
+  .happenings-showcase__header,
+  .happenings-showcase__announcements-head {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .happenings-showcase__cta {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .happenings-showcase__events {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+  }
+
+  .happenings-showcase__announcement-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .happenings-showcase__announcement+.happenings-showcase__announcement {
+    border-left: none;
+  }
+
+  .happenings-showcase__announcement:nth-child(n + 3) {
+    border-top: 1px solid rgba(219, 228, 244, 0.95);
+  }
+
+  .happenings-showcase__stats-strip {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .happenings-showcase__stat:nth-child(odd) {
+    border-left: none;
+  }
+
+  .happenings-showcase__stat:nth-child(n + 3) {
+    border-top: 1px solid rgba(219, 228, 244, 0.95);
+  }
+
+  .happenings-showcase__cta-panel {
+    grid-template-columns: 1fr;
+    padding: 34px 28px 30px;
+    gap: 18px;
+  }
+
+  .happenings-showcase__cta-visual {
+    min-height: 220px;
+  }
+
+  .happenings-showcase__cta-building {
+    justify-self: start;
+  }
+
+  .happenings-showcase__cta-content {
+    transform: none;
+    max-width: 100%;
+  }
+
+  /* Home sections / feature sections */
+  .home-sections {
+    padding: 30px 20px 70px;
+  }
+
+  .feature-section,
+  .feature-section--reverse {
+    grid-template-columns: 1fr;
+  }
+
+  .feature-section--reverse .feature-section__content,
+  .feature-section--reverse .feature-section__visual {
+    order: initial;
+  }
+
+  .feature-section__content,
+  .feature-section__visual {
+    padding: 28px;
+  }
+
+  .feature-section__title {
+    font-size: 30px;
+  }
+
+  .feature-section__highlight-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  /* About / programs panels (in nav dropdown) */
+  .about-panel,
+  .programs-panel {
+    min-height: 0;
+    grid-template-columns: 1fr;
+    gap: 18px;
+    padding: 24px 18px;
+  }
+
+  .about-panel__menu {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    padding-right: 0;
+    border-right: none;
+  }
+
+  .about-panel__content,
+  .about-panel__visual {
+    border-right: none;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .about-panel__stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .programs-panel__menu {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    border-right: none;
+    padding-right: 0;
+  }
+
+  .programs-panel__hero {
+    grid-template-columns: 1fr;
+    padding-left: 0;
+  }
+
+  .programs-panel__cards {
+    grid-template-columns: 1fr;
+  }
+
+  .programs-panel__card:nth-child(odd) {
+    border-right: none;
+  }
+
+  /* Admission panel */
+  .admission-panel__top {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  .admission-panel__menu,
+  .admission-panel__content {
+    border-right: none;
+    padding-right: 0;
+  }
+
+  .admission-panel__menu {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .admission-panel__visual {
+    padding-left: 0;
+  }
+
+  .admission-panel__image-wrap {
+    min-height: 280px;
+  }
+
+  /* Institutions panel */
+  .institutions-panel__top,
+  .student-zone-panel__top,
+  .rd-panel__top {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  .institutions-panel,
+  .student-zone-panel,
+  .rd-panel {
+    padding: 20px 15px;
+  }
+
+  .institutions-panel__visual,
+  .student-zone-panel__visual,
+  .rd-panel__visual {
+    display: none;
+  }
+
+  .institutions-panel__grid,
+  .student-zone-panel__grid,
+  .rd-panel__grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Footer */
+  .footer {
+    padding-inline: 20px;
+  }
+
+  .footer__shell {
+    padding: 30px 16px 0;
+  }
+
+  .footer__main {
+    grid-template-columns: 1fr;
+  }
+
+  .footer__contact {
+    padding: 10px 12px 26px;
+    border-right: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  }
+
+  .footer__grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .footer__col:nth-child(4) {
+    border-left: none;
+  }
+
+  .footer__newsletter {
+    grid-template-columns: 1fr;
+  }
+
+  .footer__brochure {
+    padding-left: 0;
+    border-left: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.14);
+    padding-top: 18px;
+  }
+
+  .footer__bottom {
+    flex-direction: column;
+    gap: 12px;
+    text-align: center;
+  }
+
+  /* Buttons */
+  #view-all-programs-btn,
+  .placements-showcase__cta,
+  .faculty-showcase__cta,
+  .institutions-showcase__cta,
+  .happenings-showcase__cta,
+  .happenings-showcase__cta-button {
+    width: 100%;
+    min-width: 0;
+  }
+
+  /* Section headers */
+  .section-header,
+  .placements-showcase__header,
+  .faculty-showcase__header,
+  .institutions-showcase__header,
+  .happenings-showcase__header {
+    align-items: flex-start;
+    gap: 18px;
+    flex-direction: column;
+  }
+}
+
+/* ----- ≤ 768px (Mobile Landscape / Large Phone) ----- */
+@media (max-width: 768px) {
+
+  /* Navbar mobile bar adjustments */
+  .navbar__mobile-bar {
+    padding: 6px 12px;
+    min-height: 56px;
+  }
+
+  .navbar__mobile-bar .navbar__logo-wrap {
+    width: 68px !important;
+    min-width: 68px !important;
+    height: 48px !important;
+    padding: 4px !important;
+  }
+
+  .navbar__mobile-bar .navbar__logo {
+    max-width: 50px !important;
+  }
+
+  /* Hero */
+  .hero {
+    min-height: 560px;
+  }
+
+  .hero__bg img {
+    object-position: 65% center;
+  }
+
+  .hero__content {
+    max-width: 100%;
+    padding: 26px 16px 30px;
+  }
+
+  .hero__heading {
+    font-size: 26px;
+    line-height: 1.35;
+  }
+
+  .hero__subtext {
+    max-width: 100%;
+    font-size: 15px;
+  }
+
+  .hero__buttons {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .btn,
+  #explore-programs-btn,
+  #campus-tour-btn,
+  #view-all-programs-btn,
+  .placements-showcase__cta,
+  .faculty-showcase__cta,
+  .institutions-showcase__cta,
+  .happenings-showcase__cta,
+  .happenings-showcase__cta-button {
+    width: 100%;
+    min-width: 0;
+    justify-content: center;
+  }
+
+  /* Stats bar */
+  .stats-bar {
+    width: calc(100% - 28px);
+    margin: -28px auto 0;
+    grid-template-columns: 1fr;
+    padding: 18px 16px;
+    gap: 14px;
+    border-radius: 14px;
+  }
+
+  .stats-bar__item {
+    padding: 10px 0;
+    justify-content: flex-start;
+  }
+
+  .stats-bar__icon {
+    width: 48px;
+    height: 48px;
+  }
+
+  .stats-bar__number {
+    font-size: 28px;
+  }
+
+  .stats-bar__label {
+    font-size: 14px;
+  }
+
+  /* Programs section */
+  .programs {
+    padding: 60px 0 30px;
+  }
+
+  .programs__shell {
+    padding: 0 14px;
+  }
+
+  .programs__grid {
+    padding: 0 14px;
+  }
+
+  .programs .section-header,
+  .section-header {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+
+  .programs__card {
+    height: 220px;
+  }
+
+  /* Programs spotlight */
+  .programs-spotlight {
+    padding: 0 0 45px;
+  }
+
+  .programs-spotlight__shell {
+    padding: 28px 14px 16px;
+    border-radius: 14px;
+  }
+
+  .programs-spotlight__title {
+    font-size: 2.1rem;
+    white-space: normal;
+  }
+
+  .programs-spotlight__title-line--lead,
+  .programs-spotlight__title-line:not(.programs-spotlight__title-line--lead) {
+    white-space: normal;
+  }
+
+  .programs-spotlight__description {
+    font-size: 15px;
+  }
+
+  .programs-spotlight__cta {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .programs-spotlight__art {
+    max-width: 250px;
+    height: 190px;
+  }
+
+  .programs-spotlight__carousel {
+    margin-top: 18px;
+  }
+
+  .programs-spotlight__carousel-button {
+    top: 74px;
+    width: 42px;
+    height: 42px;
+  }
+
+  .programs-spotlight__carousel-button--prev {
+    left: 12px;
+  }
+
+  .programs-spotlight__carousel-button--next {
+    right: 12px;
+  }
+
+  .programs-spotlight__card {
+    flex-basis: 100%;
+    padding: 14px 14px 18px;
+  }
+
+  .programs-spotlight__card-title {
+    font-size: 20px;
+  }
+
+  .programs-spotlight__card-description {
+    min-height: 0;
+  }
+
+  .programs-spotlight__benefits {
+    grid-template-columns: 1fr;
+    padding: 14px 10px;
+  }
+
+  .programs-spotlight__benefit,
+  .programs-spotlight__benefit+.programs-spotlight__benefit,
+  .programs-spotlight__benefit:nth-child(3),
+  .programs-spotlight__benefit:nth-child(4) {
+    border: none;
+  }
+
+  .programs-spotlight__benefit+.programs-spotlight__benefit {
+    border-top: 1px solid rgba(255, 255, 255, 0.16);
+  }
+
+  .programs-spotlight__benefit {
+    padding: 14px 8px;
+  }
+
+  /* Placements showcase */
+  .placements-showcase {
+    padding: 0 14px 48px;
+  }
+
+  .placements-showcase__shell {
+    padding: 28px 14px 18px;
+    border-radius: 14px;
+  }
+
+  .placements-showcase__title {
+    font-size: 2rem;
+    white-space: normal;
+  }
+
+  .placements-showcase__subtitle {
+    font-size: 15px;
+  }
+
+  .placements-showcase__card {
+    grid-template-columns: 1fr;
+  }
+
+  .placements-showcase__photo-wrap {
+    min-height: 260px;
+  }
+
+  .placements-showcase__card-body {
+    padding: 18px 16px;
+  }
+
+  .placements-showcase__package-row {
+    grid-template-columns: 1fr;
+    width: 100%;
+  }
+
+  .placements-showcase__stats-copy {
+    padding: 26px 18px 20px;
+  }
+
+  .placements-showcase__stats-copy h3 {
+    font-size: 24px;
+  }
+
+  .placements-showcase__stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .placements-showcase__stat,
+  .placements-showcase__stat:nth-child(odd),
+  .placements-showcase__stat:nth-child(1),
+  .placements-showcase__stat:nth-child(2) {
+    border: none;
+  }
+
+  .placements-showcase__stat+.placements-showcase__stat {
+    border-top: 1px solid rgba(25, 49, 104, 0.08);
+  }
+
+  .placements-showcase__stat {
+    padding: 22px 18px;
+  }
+
+  .placements-showcase__partners {
+    padding: 14px;
+  }
+
+  .placements-showcase__partners-label {
+    padding: 8px 4px 16px;
+  }
+
+  /* Faculty showcase */
+  .faculty-showcase {
+    padding: 0 14px 48px;
+  }
+
+  .faculty-showcase__shell {
+    padding: 28px 14px 18px;
+    border-radius: 14px;
+  }
+
+  .faculty-showcase__tabs {
+    gap: 14px;
+  }
+
+  .faculty-showcase__tab {
+    font-size: 15px;
+  }
+
+  .faculty-showcase__tab-icon {
+    width: 54px;
+    height: 54px;
+  }
+
+  .faculty-showcase__header {
+    margin-top: 34px;
+  }
+
+  .faculty-showcase__title {
+    font-size: 2rem;
+    white-space: normal;
+  }
+
+  .faculty-showcase__subtitle {
+    font-size: 15px;
+  }
+
+  .faculty-showcase__carousel {
+    margin-top: 34px;
+  }
+
+  .faculty-showcase__carousel-button {
+    width: 42px;
+    height: 42px;
+  }
+
+  .faculty-showcase__grid {
+    gap: 18px;
+  }
+
+  .faculty-showcase__card {
+    flex-basis: 100%;
+    min-height: 0;
+  }
+
+  .faculty-showcase__portrait-wrap {
+    width: 190px;
+    height: 190px;
+  }
+
+  .faculty-showcase__info {
+    padding: 16px 14px;
+    min-height: 0;
+  }
+
+  /* Institutions showcase */
+  .institutions-showcase {
+    padding: 48px 14px;
+  }
+
+  .institutions-showcase__shell {
+    padding: 0 14px;
+    border-radius: 14px;
+  }
+
+  .institutions-showcase__title-row {
+    align-items: flex-start;
+    gap: 14px;
+  }
+
+  .institutions-showcase__title-icon {
+    width: 60px;
+    height: 60px;
+  }
+
+  .institutions-showcase__title,
+  .placements-showcase__title,
+  .faculty-showcase__title {
+    font-size: 2rem;
+    white-space: normal;
+  }
+
+  .institutions-showcase__subtitle {
+    font-size: 15px;
+  }
+
+  .institutions-showcase__grid {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  .institutions-showcase__card-image {
+    height: 190px;
+  }
+
+  .institutions-showcase__card-body {
+    padding: 16px 18px 20px;
+  }
+
+  .institutions-showcase__card-title {
+    min-height: 0;
+    font-size: 20px;
+  }
+
+  .institutions-showcase__featured-image {
+    height: 210px;
+    min-height: 210px;
+  }
+
+  .institutions-showcase__featured-content {
+    padding: 22px 18px;
+  }
+
+  /* Happenings showcase */
+  .happenings-showcase {
+    padding: 0 14px 48px;
+  }
+
+  .happenings-showcase__shell {
+    padding: 28px 14px 14px;
+    border-radius: 14px;
+  }
+
+  .happenings-showcase__title {
+    font-size: 2rem;
+    white-space: normal;
+  }
+
+  .happenings-showcase__events {
+    grid-template-columns: 1fr;
+  }
+
+  .happenings-showcase__event-image {
+    height: 200px;
+  }
+
+  .happenings-showcase__event-body {
+    min-height: 0;
+    padding: 28px 16px 16px;
+  }
+
+  .happenings-showcase__event-title {
+    font-size: 15px;
+  }
+
+  .happenings-showcase__announcements {
+    margin-top: 26px;
+    padding: 14px 8px 8px;
+  }
+
+  .happenings-showcase__announcements-head {
+    padding: 6px 10px 14px;
+  }
+
+  .happenings-showcase__announcements-link {
+    font-size: 14px;
+  }
+
+  .happenings-showcase__announcements-icon {
+    width: 58px;
+    height: 58px;
+  }
+
+  .happenings-showcase__announcements-title {
+    font-size: 17px;
+  }
+
+  .happenings-showcase__announcement-list {
+    grid-template-columns: 1fr;
+  }
+
+  .happenings-showcase__announcement {
+    grid-template-columns: 72px 52px minmax(0, 1fr) 28px;
+    gap: 12px;
+    padding: 14px 12px;
+  }
+
+  .happenings-showcase__announcement+.happenings-showcase__announcement,
+  .happenings-showcase__announcement:nth-child(n + 3) {
+    border: none;
+    border-top: 1px solid rgba(219, 228, 244, 0.95);
+  }
+
+  .happenings-showcase__announcement-text {
+    font-size: 14px;
+  }
+
+  .happenings-showcase__stats-strip {
+    grid-template-columns: 1fr;
+  }
+
+  .happenings-showcase__stat,
+  .happenings-showcase__stat:nth-child(odd),
+  .happenings-showcase__stat:nth-child(n + 3) {
+    border: none;
+  }
+
+  .happenings-showcase__stat+.happenings-showcase__stat {
+    border-top: 1px solid rgba(219, 228, 244, 0.95);
+  }
+
+  .happenings-showcase__stat {
+    padding: 18px 16px 18px 24px;
+  }
+
+  .happenings-showcase__stat-icon {
+    width: 72px;
+    height: 72px;
+  }
+
+  .happenings-showcase__stat-copy strong {
+    font-size: 24px;
+  }
+
+  .happenings-showcase__stat-copy span {
+    font-size: 14px;
+  }
+
+  .happenings-showcase__cta-panel {
+    margin-top: 30px;
+    padding: 28px 18px 24px;
+    border-radius: 24px;
+    box-shadow: 8px 0 0 #fdb515, 0 18px 28px rgba(10, 39, 93, 0.22);
+    flex-direction: column;
+  }
+
+  .happenings-showcase__cta-panel::after,
+  .happenings-showcase__cta-rail--right,
+  .happenings-showcase__cta-dots--right,
+  .happenings-showcase__cta-building {
+    display: none;
+  }
+
+  .happenings-showcase__cta-title {
+    font-size: 1.9rem;
+  }
+
+  .happenings-showcase__cta-title-line,
+  .happenings-showcase__cta-title-highlight {
+    white-space: normal;
+  }
+
+  .happenings-showcase__cta-actions {
+    flex-direction: column;
+    margin-top: 24px;
+  }
+
+  .happenings-showcase__cta-button {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .happenings-showcase__cta-visual {
+    min-height: 190px;
+  }
+
+  /* Home sections */
+  .home-sections {
+    padding: 20px 14px 55px;
+  }
+
+  .feature-section {
+    gap: 18px;
+  }
+
+  .feature-section__content,
+  .feature-section__visual {
+    padding: 22px;
+    border-radius: 22px;
+  }
+
+  .feature-section__title {
+    margin-top: 18px;
+    font-size: 24px;
+  }
+
+  .feature-section__description,
+  .feature-section__point,
+  .feature-section__summary-text,
+  .feature-section__highlight-text {
+    font-size: 14px;
+  }
+
+  .feature-section__summary-title {
+    font-size: 22px;
+  }
+
+  .feature-section__highlight-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .feature-section__highlight-card {
+    min-height: 100px;
+  }
+
+  /* About / programs nav panels */
+  .about-panel,
+  .programs-panel {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    padding: 20px 16px;
+    min-height: auto;
+    border-radius: 0;
+  }
+
+  .about-panel__menu {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    padding-right: 0;
+    border-right: none;
+  }
+
+  .about-panel__menu-item {
+    min-height: 60px;
+    padding: 12px;
+    gap: 10px;
+  }
+
+  .about-panel__image-wrap {
+    min-height: 240px;
+  }
+
+  .about-panel__quote {
+    right: 12px;
+    bottom: 12px;
+    max-width: 180px;
+  }
+
+  .about-panel__stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+  }
+
+  .programs-panel__menu {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    padding: 0;
+    border-right: none;
+  }
+
+  .programs-panel__menu-item {
+    min-height: 70px;
+    padding: 14px 12px;
+    gap: 12px;
+    border-right: none;
+  }
+
+  .programs-panel__card {
+    border-right: none;
+    border-bottom: 1px solid rgba(21, 53, 127, 0.1);
+    padding: 16px 12px;
+  }
+
+  .programs-panel__card:last-child {
+    border-bottom: none;
+  }
+
+  .programs-panel__title {
+    font-size: 24px;
+  }
+
+  .programs-panel__cards {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  /* Institutions panel items */
+  .institutions-panel__item,
+  .student-zone-panel__item,
+  .rd-panel__item {
+    padding: 15px;
+    gap: 12px;
+  }
+
+  .institutions-panel__icon,
+  .student-zone-panel__icon,
+  .rd-panel__icon {
+    width: 36px;
+    height: 36px;
+    padding: 8px;
+  }
+
+  .institutions-panel__name,
+  .student-zone-panel__name,
+  .rd-panel__name {
+    font-size: 13px;
+  }
+
+  .institutions-panel__desc,
+  .student-zone-panel__desc,
+  .rd-panel__desc {
+    font-size: 10px;
+  }
+
+  /* R&D panel */
+  .rd-panel__metrics {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* Footer */
+  .footer {
+    padding-inline: 14px;
+  }
+
+  .footer__shell {
+    padding: 26px 12px 0;
+    border-radius: 18px 18px 0 0;
+  }
+
+  .footer__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .footer__col,
+  .footer__col+.footer__col {
+    border: none;
+    padding: 18px 12px;
+  }
+
+  .footer__col+.footer__col {
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+  }
+
+  .footer__newsletter {
+    margin-top: 18px;
+    padding: 14px 12px;
+  }
+
+  .footer__newsletter-form {
+    grid-template-columns: 1fr;
+    gap: 10px;
+    border: none;
+    background: transparent;
+  }
+
+  .footer__newsletter-form input,
+  .footer__newsletter-form button {
+    border-radius: 8px;
+  }
+
+  .footer__newsletter-form input {
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    background: rgba(6, 28, 77, 0.76);
+  }
+
+  .footer__brochure {
+    gap: 12px;
+  }
+
+  .footer__bottom {
+    padding: 16px 12px 18px;
+    border-radius: 0 0 16px 16px;
+  }
+
+  .footer__bottom-links {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .footer__bottom-links a+a::before {
+    display: none;
+  }
+}
+
+/* ----- ≤ 576px (Small Phone) ----- */
+@media (max-width: 576px) {
+
+  /* Navbar */
+  .navbar__drawer {
+    max-width: 100%;
+  }
+
+  /* Hero */
+  .hero {
+    min-height: 520px;
+  }
+
+  .hero__heading {
+    font-size: 23px;
+  }
+
+  .hero__subtext {
+    font-size: 14px;
+    margin-bottom: 22px;
+  }
+
+  /* Stats bar */
+  .stats-bar {
+    width: calc(100% - 20px);
+    margin: -18px auto 0;
+    border-radius: 12px;
+  }
+
+  .stats-bar__icon {
+    width: 44px;
+    height: 44px;
+  }
+
+  .stats-bar__number {
+    font-size: 26px;
+  }
+
+  .stats-bar__label {
+    font-size: 13px;
+  }
+
+  /* Programs section */
+  .programs__card {
+    height: 200px;
+  }
+
+  /* Programs spotlight */
+  .programs-spotlight__shell {
+    padding: 22px 12px 14px;
+    border-radius: 12px;
+  }
+
+  .programs-spotlight__title {
+    font-size: 1.85rem;
+  }
+
+  .programs-spotlight__card {
+    border-radius: 14px;
+  }
+
+  .programs-spotlight__art {
+    max-width: 200px;
+    height: 160px;
+  }
+
+  /* Placements */
+  .placements-showcase {
+    padding: 0 10px 40px;
+  }
+
+  .placements-showcase__shell {
+    border-radius: 12px;
+  }
+
+  .placements-showcase__title {
+    font-size: 1.8rem;
+  }
+
+  .placements-showcase__photo-wrap {
+    min-height: 220px;
+  }
+
+  .placements-showcase__card-body {
+    padding: 14px 12px;
+  }
+
+  .placements-showcase__card-head h3 {
+    font-size: 17px;
+  }
+
+  .placements-showcase__student-name {
+    font-size: 14px;
+  }
+
+  .placements-showcase__card-copy {
+    font-size: 13px;
+  }
+
+  .placements-showcase__package {
+    font-size: 15px;
+    min-height: 44px;
+  }
+
+  /* Faculty */
+  .faculty-showcase {
+    padding: 0 10px 40px;
+  }
+
+  .faculty-showcase__shell {
+    border-radius: 12px;
+  }
+
+  .faculty-showcase__portrait-wrap {
+    width: 160px;
+    height: 160px;
+  }
+
+  /* Institutions */
+  .institutions-showcase {
+    padding: 36px 10px;
+  }
+
+  .institutions-showcase__card-image {
+    height: 170px;
+  }
+
+  /* Happenings */
+  .happenings-showcase {
+    padding: 0 10px 40px;
+  }
+
+  .happenings-showcase__shell {
+    border-radius: 12px;
+  }
+
+  .happenings-showcase__announcement {
+    grid-template-columns: 60px minmax(0, 1fr) 24px;
+    gap: 10px;
+  }
+
+  .happenings-showcase__announcement-icon-card {
+    display: none;
+  }
+
+  .happenings-showcase__cta-title {
+    font-size: 1.7rem;
+  }
+
+  /* About / programs nav panels */
+  .about-panel__menu {
+    grid-template-columns: 1fr;
+  }
+
+  .programs-panel__menu {
+    grid-template-columns: 1fr;
+  }
+
+  /* Home sections */
+  .home-sections {
+    padding: 16px 10px 44px;
+  }
+
+  .feature-section__content,
+  .feature-section__visual {
+    padding: 18px;
+    border-radius: 18px;
+  }
+
+  .feature-section__title {
+    font-size: 21px;
+  }
+
+  .feature-section__summary-title {
+    font-size: 19px;
+  }
+
+  /* Footer */
+  .footer {
+    padding-inline: 10px;
+  }
+
+  .footer__col {
+    padding: 14px 8px;
+  }
+
+  .footer__newsletter-icon {
+    width: 56px;
+    height: 56px;
+  }
+
+  .footer__newsletter-copy h3 {
+    font-size: 15px;
+  }
+
+  .footer__bottom {
+    padding: 14px 10px 16px;
+  }
+}
+
+/* ----- ≤ 480px (Small Phone Portrait) ----- */
+@media (max-width: 480px) {
+
+  /* Navbar */
+  .navbar__mobile-bar {
+    padding: 4px 10px;
+    min-height: 52px;
+  }
+
+  .navbar__mobile-bar .navbar__logo-wrap {
+    width: 60px !important;
+    min-width: 60px !important;
+    height: 44px !important;
+  }
+
+  .navbar__mobile-bar .navbar__logo {
+    max-width: 44px !important;
+  }
+
+  /* Hero */
+  .hero {
+    min-height: 480px;
+  }
+
+  .hero__content {
+    padding: 20px 12px 24px;
+  }
+
+  .hero__heading {
+    font-size: 21px;
+    line-height: 1.3;
+  }
+
+  .hero__subtext {
+    font-size: 13.5px;
+    margin-bottom: 18px;
+  }
+
+  /* Stats bar */
+  .stats-bar {
+    width: calc(100% - 16px);
+    margin: -14px auto 0;
+    padding: 14px 12px;
+    gap: 12px;
+    border-radius: 10px;
+  }
+
+  .stats-bar__icon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .stats-bar__icon svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  .stats-bar__number {
+    font-size: 24px;
+  }
+
+  .stats-bar__label {
+    font-size: 12px;
+  }
+
+  /* Programs spotlight */
+  .programs-spotlight__title {
+    font-size: 1.65rem;
+  }
+
+  .programs-spotlight__card {
+    padding: 12px 12px 16px;
+    min-height: 400px;
+  }
+
+  .programs-spotlight__card-title {
+    font-size: 18px;
+  }
+
+  .programs-spotlight__card-image {
+    height: 170px;
+  }
+
+  /* Placements */
+  .placements-showcase__title {
+    font-size: 1.65rem;
+  }
+
+  .placements-showcase__stats-copy h3 {
+    font-size: 20px;
+  }
+
+  /* Faculty */
+  .faculty-showcase__title {
+    font-size: 1.7rem;
+  }
+
+  .faculty-showcase__portrait-wrap {
+    width: 140px;
+    height: 140px;
+  }
+
+  /* Happenings */
+  .happenings-showcase__title {
+    font-size: 1.75rem;
+  }
+
+  .happenings-showcase__cta-title {
+    font-size: 1.55rem;
+  }
+
+  /* Feature sections */
+  .feature-section__content,
+  .feature-section__visual {
+    padding: 16px;
+    border-radius: 16px;
+  }
+
+  .feature-section__title {
+    font-size: 20px;
+  }
+
+  /* Enquire button */
+  .enquire-now-btn {
+    font-size: 13px;
+    padding: 8px 6px;
+  }
+}
+
+/* ----- ≤ 360px (Very Small Phone) ----- */
+@media (max-width: 360px) {
+  .hero__heading {
+    font-size: 19px;
+  }
+
+  .hero__subtext {
+    font-size: 13px;
+  }
+
+  .btn {
+    font-size: 13px;
+    height: 46px;
+  }
+
+  .stats-bar__number {
+    font-size: 22px;
+  }
+
+  .stats-bar__icon {
+    width: 36px;
+    height: 36px;
+  }
+
+  .programs-spotlight__title {
+    font-size: 1.5rem;
+  }
+
+  .programs-spotlight__card {
+    min-height: 360px;
+  }
+
+  .programs-spotlight__card-image {
+    height: 150px;
+  }
+
+  .placements-showcase__title,
+  .faculty-showcase__title,
+  .institutions-showcase__title,
+  .happenings-showcase__title {
+    font-size: 1.5rem;
+  }
+
+  .footer__col-title {
+    font-size: 14px;
+  }
+
+  .footer__link {
+    font-size: 13px;
+  }
+
+  .footer__bottom p,
+  .footer__bottom-links a {
+    font-size: 12px;
+  }
+}

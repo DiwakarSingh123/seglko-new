@@ -131,7 +131,7 @@ export default function FullSections() {
     fetch('/api/institutions')
       .then(r => r.ok ? r.json() : [])
       .then(data => { if (Array.isArray(data) && data.length) setList(data); })
-      .catch(() => {});
+      .catch(() => { });
   }, []);
 
   const gridItems = list.slice(0, 4);
@@ -143,7 +143,7 @@ export default function FullSections() {
         <div className="institutions-showcase__header">
           <div className="institutions-showcase__intro">
             <div className="institutions-showcase__title-row">
-              <span className="institutions-showcase__title-icon"><BuildingIcon /></span>
+
               <h2 className="institutions-showcase__title">Our Institutions</h2>
             </div>
             <span className="institutions-showcase__accent" />
