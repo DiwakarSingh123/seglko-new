@@ -67,9 +67,9 @@ const Chatbot = () => {
     setTimeout(() => {
       let botResponse = "";
       if (option === "Admission Inquiry") {
-        botResponse = "For admission inquiries, please visit our Admission Process page or call our toll-free number: 1800-123-4567.";
+        botResponse = "For admission inquiries, please visit our Admission Process page or call our toll-free number: 1800-180-7686.";
       } else if (option === "General Inquiry") {
-        botResponse = "For general inquiries, you can reach out to us at info@seg.edu.in or use the Contact Us page.";
+        botResponse = "For general inquiries, you can reach out to us at admission.cell@seglko.org  or use the Contact Us page.";
       }
 
       setMessages(prev => [...prev, { 
