@@ -1,28 +1,31 @@
 import React from 'react';
 import './Programs.css';
-import program1 from '../assets/images/program1.png';
-import program2 from '../assets/images/program2.png';
 import program3 from '../assets/images/program3.png';
 import program4 from '../assets/images/program4.png';
 
 const topRow = [
-  { image: program1, title: 'Engineering & Technology', big: true },
-  { image: program2, title: 'Medical & Health Sciences', big: false },
-  { image: program1, title: 'Engineering & Technology', big: true },
-  { image: program2, title: 'Medical & Health Sciences', big: false },
-  { image: program1, title: 'Engineering & Technology', big: true },
-  { image: program2, title: 'Medical & Health Sciences', big: false },
-  { image: program1, title: 'Engineering & Technology', big: true },
-  { image: program2, title: 'Medical & Health Sciences', big: false },
+  { image: '/Manisha-verma.jpeg', title: 'Manisha Verma', big: false },
+  { image: '/out-alumuni.jpeg', title: 'Our Alumni', big: true },
+  { image: '/Satyam-ojha.jpeg', title: 'Satyam Ojha', big: false },
+  { image: '/Amit-chaudhary.jpeg', title: 'Amit Chaudhary', big: false },
+  { image: '/Ayush-mishra.jpeg', title: 'Ayush Mishra', big: false },
+  { image: '/Pravin-tiwari.jpeg', title: 'Pravin Tiwari', big: false },
+  { image: '/Manisha-verma.jpeg', title: 'Manisha Verma', big: false },
+  { image: '/out-alumuni.jpeg', title: 'Our Alumni', big: true },
+  { image: '/Satyam-ojha.jpeg', title: 'Satyam Ojha', big: false },
+  { image: '/Amit-chaudhary.jpeg', title: 'Amit Chaudhary', big: false },
+  { image: '/Ayush-mishra.jpeg', title: 'Ayush Mishra', big: false },
+  { image: '/Pravin-tiwari.jpeg', title: 'Pravin Tiwari', big: false },
 ];
 
 const bottomRow = [
+  { image: '/All-company.jpeg', title: 'All Company', big: true },
   { image: program3, title: 'Business & Management', big: false },
   { image: program4, title: 'Arts & Humanities', big: true },
+  { image: '/All-company.jpeg', title: 'All Company', big: true },
   { image: program3, title: 'Business & Management', big: false },
   { image: program4, title: 'Arts & Humanities', big: true },
-  { image: program3, title: 'Business & Management', big: false },
-  { image: program4, title: 'Arts & Humanities', big: true },
+  { image: '/All-company.jpeg', title: 'All Company', big: true },
   { image: program3, title: 'Business & Management', big: false },
   { image: program4, title: 'Arts & Humanities', big: true },
 ];

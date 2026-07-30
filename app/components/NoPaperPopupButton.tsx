@@ -92,7 +92,7 @@ export default function NoPaperPopupButton() {
         zIndex: 50,
       }}
     >
-      Enquire Now!
+      Enquire Now! 
     </button>
   )
 }

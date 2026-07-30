@@ -25,7 +25,6 @@
   border-radius: 16px;
   overflow: hidden;
   box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08);
-
   position: relative;
   transition: transform 0.3s ease;
   flex-shrink: 0;
@@ -70,24 +69,24 @@
     padding: 40px 0;
   }
   .programs__card {
-    height: 200px;
+    height: 300px;
   }
   .programs__card--big {
-    width: 280px;
+    width: 320px;
   }
   .programs__card--small {
-    width: 180px;
+    width: 240px;
   }
 }
 
 @media (max-width: 480px) {
   .programs__card {
-    height: 160px;
+    height: 240px;
   }
   .programs__card--big {
-    width: 220px;
+    width: 260px;
   }
   .programs__card--small {
-    width: 140px;
+    width: 200px;
   }
 }

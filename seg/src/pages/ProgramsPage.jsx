@@ -37,7 +37,7 @@ export const allPrograms = [
     title: 'Master of Technology',
     subtitle: '(M.Tech)',
     description: 'Elevate your engineering expertise with our research-intensive postgraduate program designed for future innovators.',
-    image: '/Master-of-Technology.jpg',
+    image: '/M-tech.jpeg',
     color: '#1f63db',
     duration: '2 Years',
     seats: '60 Seats',
@@ -187,7 +187,7 @@ export const allPrograms = [
     title: 'Bachelor of Pharmacy',
     subtitle: '(B.Pharm)',
     description: 'Comprehensive education in pharmaceutical sciences preparing students for diverse roles in healthcare and research.',
-    image: '/Bachelor-of-Pharmacy.png',
+    image: '/B-pharma.jpeg',
     color: '#27c6d8',
     duration: '4 Years',
     seats: '100 Seats',
@@ -247,7 +247,7 @@ export const allPrograms = [
     title: 'Bachelor of Technology',
     subtitle: '(B.Tech)',
     description: 'A rigorous 4-year engineering program that builds a strong technical foundation for a successful career in engineering and technology sectors.',
-    image: '/Bachelor-of-Technology.png',
+    image: '/B-tech.jpeg',
     color: '#1f63db',
     duration: '4 Years',
     seats: '240 Seats',
@@ -277,7 +277,7 @@ export const allPrograms = [
     title: 'Diploma in Pharmacy',
     subtitle: '(D.Pharm)',
     description: 'A 2-year pharmacy diploma equipping students with essential pharmaceutical knowledge and hands-on skills required in the healthcare and pharmacy industry.',
-    image: '/Diploma-in-Pharmacy.png',
+    image: '/D-pharma.jpeg',
     color: '#27c6d8',
     duration: '2 Years',
     seats: '60 Seats',
@@ -307,7 +307,7 @@ export const allPrograms = [
     title: 'Master of Pharmacy',
     subtitle: '(M.Pharm)',
     description: 'An advanced postgraduate program in pharmaceutical sciences for students aiming at research, academia, regulatory affairs and specialized pharmacy practice.',
-    image: '/Master-of-Pharmacy.png',
+    image: '/M-pharma.jpeg',
     color: '#6cbf46',
     duration: '2 Years',
     seats: '30 Seats',
@@ -352,7 +352,7 @@ export default function ProgramsPage() {
         // Merge API data into static list
         const merged = allPrograms.map(sp => {
           const api = data.find(ap => ap.slug === sp.slug);
-          return api ? { ...sp, ...api, image: api.image || sp.image } : sp;
+          return api ? { ...sp, ...api, image: sp.image } : sp;
         });
         setDisplayPrograms(merged);
       })
