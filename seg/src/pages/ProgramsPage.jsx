@@ -67,7 +67,7 @@ export const allPrograms = [
     title: 'Bachelor of Business Administration',
     subtitle: '(BBA)',
     description: 'Develop leadership and business management skills with our industry-focused BBA program designed for future business leaders.',
-    image: '/Bachelor-of-Business-Administration.png',
+    image: '/best-bba-college-in-lucknow-saroj-educational-group.webp',
     color: '#ff8b1a',
     duration: '3 Years',
     seats: '120 Seats',
@@ -97,7 +97,7 @@ export const allPrograms = [
     title: 'Master of Business Administration',
     subtitle: '(MBA)',
     description: 'Develop leadership and strategic management skills for global business with our industry-focused MBA program.',
-    image: '/Master-of-Business-Administration.png',
+    image: '/top-mba-college-in-lucknow-saroj-educational-group.webp',
     color: '#6cbf46',
     duration: '2 Years',
     seats: '180 Seats',
@@ -127,7 +127,7 @@ export const allPrograms = [
     title: 'Bachelor of Computer Applications',
     subtitle: '(BCA)',
     description: 'Master programming, system management, and application development for a thriving career in the IT industry.',
-    image: '/Bachelor-of-Computer-Applications.png',
+    image: '/best-bca-college-in-lucknow-saroj-educational-group.webp',
     color: '#6a32df',
     duration: '3 Years',
     seats: '120 Seats',
@@ -157,7 +157,7 @@ export const allPrograms = [
     title: 'Masters in Computer Applications',
     subtitle: '(MCA)',
     description: 'Equip yourself with expertise in software development, IT, and systems management with our comprehensive MCA program.',
-    image: '/Master-of-Computer-Applications.png',
+    image: '/top-mca-college-in-lucknow-saroj-educational-group.webp',
     color: '#27c6d8',
     duration: '2 Years',
     seats: '60 Seats',
@@ -217,7 +217,7 @@ export const allPrograms = [
     title: 'Diploma Programs',
     subtitle: '(Engineering & Technology)',
     description: 'Industry-focused diploma programs designed for skill enhancement and quick entry into the professional world.',
-    image: '/Polytechnic-Diploma.png',
+    image: '/best-polytechnic-diploma-college-in-lucknow-saroj-educational-group.webp',
     color: '#ff8b1a',
     duration: '1-3 Years',
     seats: '160 Seats',
@@ -351,8 +351,10 @@ export default function ProgramsPage() {
         if (!Array.isArray(data) || data.length === 0) return;
         // Merge API data into static list
         const merged = allPrograms.map(sp => {
-          const api = data.find(ap => ap.slug === sp.slug);
-          return api ? { ...sp, ...api, image: sp.image } : sp;
+          const ap = data.find(ap => ap.slug === sp.slug);
+          if (!ap) return sp;
+          const image = ap.image?.startsWith('http') ? sp.image : (ap.image || sp.image);
+          return { ...sp, ...ap, image };
         });
         setDisplayPrograms(merged);
       })

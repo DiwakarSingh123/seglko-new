@@ -11,6 +11,11 @@ const updates = [
   { slug: 'bpharm', image: '/top-best-b-pharm-course-saroj-educational-group.webp' },
   { slug: 'mpharm', image: '/top-best-m-pharm-course-saroj-educational-group.webp' },
   { slug: 'dpharm', image: '/top-best-d-pharm-course-saroj-educational-group.webp' },
+  { slug: 'bba',    image: '/best-bba-college-in-lucknow-saroj-educational-group.webp' },
+  { slug: 'mba',    image: '/top-mba-college-in-lucknow-saroj-educational-group.webp' },
+  { slug: 'bca',    image: '/best-bca-college-in-lucknow-saroj-educational-group.webp' },
+  { slug: 'mca',    image: '/top-mca-college-in-lucknow-saroj-educational-group.webp' },
+  { slug: 'diploma',image: '/best-polytechnic-diploma-college-in-lucknow-saroj-educational-group.webp' },
 ];
 
 for (const u of updates) {

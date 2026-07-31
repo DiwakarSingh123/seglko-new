@@ -53,9 +53,9 @@ function App() {
   return (
     <Router>
       <ScrollToTop />
+      <Suspense fallback={<div style={{minHeight:'100vh'}} />}>
       <TopBar />
       <Navbar />
-      <Suspense fallback={null}>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/history-of-seg" element={<HistoryOfSeg />} />
@@ -89,10 +89,10 @@ function App() {
         <Route path="/admin" element={<AdminRedirect />} />
         <Route path="/admin/*" element={<AdminRedirect />} />
       </Routes>
-      </Suspense>
       <Footer />
       <Chatbot />
       <NoPaperPopup />
+      </Suspense>
     </Router>
   )
 }

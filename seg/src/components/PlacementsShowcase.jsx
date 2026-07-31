@@ -185,16 +185,21 @@ const TCSLogo = () => (
 );
 
 const hiringPartners = [
-  { name: 'Cognizant', LogoComponent: CognizantLogo },
-  { name: 'Accenture', LogoComponent: AccentureLogo },
-  { name: 'AON', LogoComponent: AonLogo },
-  { name: 'Asian Paints', LogoComponent: AsianPaintsLogo },
-  { name: 'CMC Limited', LogoComponent: CMCLogo },
-  { name: 'Google', LogoComponent: GoogleLogo },
-  { name: 'HDFC Bank', LogoComponent: HDFCLogo },
-  { name: 'Microsoft', LogoComponent: MicrosoftLogo },
-  { name: 'NIIT', LogoComponent: NIITLogo },
-  { name: 'TCS', LogoComponent: TCSLogo },
+  { name: 'Acer', image: '/acer-placement-hiring-partners-collaboration-saroj-educational-group.webp' },
+  { name: 'Adda247', image: '/adda247-placement-hiring-partners-collaboration-saroj-educational-group.webp' },
+  { name: 'AWS', image: '/aws-amazon-web-services-placement-hiring-partners-collaboration-saroj-educational-group.webp' },
+  { name: 'Cisco', image: '/cisco-placement-hiring-partners-collaboration-saroj-educational-group.webp' },
+  { name: 'Educobuild', image: '/educobuild-placement-hiring-partners-collaboration-saroj-educational-group.webp' },
+  { name: 'Google', image: '/google-placement-hiring-partners-collaboration-saroj-educational-group.webp' },
+  { name: 'HCL', image: '/hcl-placement-hiring-partners-collaboration-saroj-educational-group.webp' },
+  { name: 'HDFC Bank', image: '/hdfc-bank-placement-hiring-partners-collaboration-saroj-educational-group.webp' },
+  { name: 'IBM', image: '/ibm-placement-hiring-partners-collaboration-saroj-educational-group.webp' },
+  { name: 'Infosys', image: '/infosys-placement-hiring-partners-collaboration-saroj-educational-group.webp' },
+  { name: 'KPMG', image: '/kpmg-placement-hiring-partners-collaboration-saroj-educational-group.webp' },
+  { name: 'L&T Edutech', image: '/l-and-t-edutech-placement-hiring-partners-collaboration-saroj-educational-group.webp' },
+  { name: 'Microsoft', image: '/microsoft-placement-hiring-partners-collaboration-saroj-educational-group.webp' },
+  { name: 'TCS', image: '/tcs-placement-hiring-partners-collaboration-saroj-educational-group.webp' },
+  { name: 'Wipro', image: '/wipro-placement-hiring-partners-collaboration-saroj-educational-group.webp' },
 ];
 
 function PlacementCard({ card }) {
@@ -346,7 +351,7 @@ export default function PlacementsShowcase() {
             <div className="placements-showcase__partners-track">
               {[...hiringPartners, ...hiringPartners].map((partner, index) => (
                 <div className="placements-showcase__partner-item" key={`${partner.name}-${index}`}>
-                  <partner.LogoComponent />
+                  <img src={partner.image} alt={partner.name} style={{ height: '50px', width: 'auto', objectFit: 'contain' }} />
                 </div>
               ))}
             </div>

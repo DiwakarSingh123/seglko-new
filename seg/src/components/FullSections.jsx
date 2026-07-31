@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
-import ssitmFallback from '../assets/images/ssitm.jpeg';
-import sitlFallback from '../assets/images/saroj institue.jpeg';
-import lawFallback from '../assets/images/college of law.avif';
-import scpFallback from '../assets/images/pharmacy.jpg';
-import scepFallback from '../assets/images/seg.jpeg';
+const ssitmFallback = '/best-engineering-and-management-college-in-aligarh-shivdan-singh-institute-of-technology-and-management-saroj-educational-group.webp';
+const sitlFallback = '/best-engineering-and-management-college-in-lucknow-saroj-institute-of-technology-and-management-saroj-educational-group.webp';
+const lawFallback = '/best-law-college-in-lucknow-saroj-college-of-law-saroj-educational-group.webp';
+const scpFallback = '/best-pharmacy-college-in-lucknow-saroj-college-of-pharmacy-saroj-educational-group.webp';
+const scepFallback = '/best-engineering-and-polytechnic-college-in-lucknow-saroj-college-of-engineering-and-polytechnics-saroj-educational-group.webp';
 
 const fallbackImages = {
   SSITM: ssitmFallback,
@@ -77,7 +77,9 @@ function getIcon(inst) {
 }
 
 function getImage(inst) {
-  return inst.customImage || inst.image || fallbackImages[inst.short] || ssitmFallback;
+  const img = inst.customImage || inst.image || fallbackImages[inst.short] || ssitmFallback;
+  if (img && img.startsWith('http')) return fallbackImages[inst.short] || ssitmFallback;
+  return img;
 }
 
 function InstitutionCard({ institution }) {
