@@ -44,7 +44,10 @@ function ScrollToTop() {
 
 function AdminRedirect() {
   useEffect(() => {
-    window.location.href = 'http://localhost:3000/login';
+    const adminUrl = window.location.hostname === 'localhost'
+      ? 'http://localhost:3000/login'
+      : `https://${window.location.hostname}/login`;
+    window.location.href = adminUrl;
   }, []);
   return null;
 }
