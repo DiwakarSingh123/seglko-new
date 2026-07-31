@@ -83,6 +83,7 @@ const CapIcon = () => (
 const eventCards = [
   {
     title: 'Enhancing Research Practices: SSHSS Hosts FDP on Data Analysis and AI-Driven Insights',
+    description: 'A Faculty Development Program focused on modern data analysis techniques and AI-driven research methodologies.',
     day: '17',
     month: 'Apr',
     year: '2026',
@@ -92,6 +93,7 @@ const eventCards = [
   },
   {
     title: 'Jashn-e-Riwayat: A Heartfelt Farewell Celebration Honoring Tradition and Legacy',
+    description: 'A grand farewell event celebrating the journey of outgoing students with cultural performances and memories.',
     day: '17',
     month: 'Apr',
     year: '2026',
@@ -101,6 +103,7 @@ const eventCards = [
   },
   {
     title: 'INNOVATE BHARAT 2026: National Hackathon for Real-World Innovation',
+    description: 'A national-level hackathon inviting students to build innovative solutions for real-world challenges.',
     day: '10',
     month: 'Apr',
     year: '2026',
@@ -110,6 +113,7 @@ const eventCards = [
   },
   {
     title: 'Belliatus Cultura 2026 - 9th Northeast Cultural Fest',
+    description: 'The 9th edition of our flagship cultural festival celebrating diversity, art, and student talent.',
     day: '18',
     month: 'Mar',
     year: '2026',
@@ -119,6 +123,7 @@ const eventCards = [
   },
   {
     title: 'Annual Sports Meet 2026 - Celebrating Excellence in Athletics',
+    description: 'A celebration of sportsmanship and athletic excellence with competitions across multiple disciplines.',
     day: '05',
     month: 'Mar',
     year: '2026',
@@ -237,6 +242,7 @@ export default function HappeningsShowcase() {
         year: evt.year,
         color: evt.color,
         image: evt.image,
+        description: evt.description || '',
         eventLink: `/events/${evt.slug}`,
         isExternal: false,
       };
@@ -270,6 +276,7 @@ export default function HappeningsShowcase() {
       year,
       color,
       image: evt.image || fallbackImage,
+      description: evt.description || '',
       eventLink,
       isExternal: isExt,
     };
@@ -311,6 +318,9 @@ export default function HappeningsShowcase() {
 
               <div className="happenings-showcase__event-body">
                 <h3 className="happenings-showcase__event-title">{event.title}</h3>
+                {event.description && (
+                  <p className="happenings-showcase__event-desc">{event.description}</p>
+                )}
               </div>
             </article>
           ))}
