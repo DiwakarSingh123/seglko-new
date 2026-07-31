@@ -1,33 +1,40 @@
 import React from 'react';
 import './Programs.css';
-import program3 from '../assets/images/program3.png';
-import program4 from '../assets/images/program4.png';
 
 const topRow = [
-  { image: '/Manisha-verma.jpeg', title: 'Manisha Verma', big: false },
-  { image: '/out-alumuni.jpeg', title: 'Our Alumni', big: true },
-  { image: '/Satyam-ojha.jpeg', title: 'Satyam Ojha', big: false },
-  { image: '/Amit-chaudhary.jpeg', title: 'Amit Chaudhary', big: false },
-  { image: '/Ayush-mishra.jpeg', title: 'Ayush Mishra', big: false },
-  { image: '/Pravin-tiwari.jpeg', title: 'Pravin Tiwari', big: false },
-  { image: '/Manisha-verma.jpeg', title: 'Manisha Verma', big: false },
-  { image: '/out-alumuni.jpeg', title: 'Our Alumni', big: true },
-  { image: '/Satyam-ojha.jpeg', title: 'Satyam Ojha', big: false },
-  { image: '/Amit-chaudhary.jpeg', title: 'Amit Chaudhary', big: false },
-  { image: '/Ayush-mishra.jpeg', title: 'Ayush Mishra', big: false },
-  { image: '/Pravin-tiwari.jpeg', title: 'Pravin Tiwari', big: false },
+  { image: '/Manisha-verma.webp', title: 'Manisha Verma', big: false },
+  { image: '/Our-aluminu.webp', title: 'Our Alumni', big: true },
+  { image: '/Satyam-Ojha.webp', title: 'Satyam Ojha', big: false },
+  { image: '/Amit-chaudhary.webp', title: 'Amit Chaudhary', big: false },
+  { image: '/Ayush-mishra.webp', title: 'Ayush Mishra', big: false },
+  { image: '/Pravin-tiwari.webp', title: 'Pravin Tiwari', big: false },
+  { image: '/Manisha-verma.webp', title: 'Manisha Verma', big: false },
+  { image: '/Our-aluminu.webp', title: 'Our Alumni', big: true },
+  { image: '/Satyam-Ojha.webp', title: 'Satyam Ojha', big: false },
+  { image: '/Amit-chaudhary.webp', title: 'Amit Chaudhary', big: false },
+  { image: '/Ayush-mishra.webp', title: 'Ayush Mishra', big: false },
+  { image: '/Pravin-tiwari.webp', title: 'Pravin Tiwari', big: false },
 ];
 
 const bottomRow = [
-  { image: '/All-company.jpeg', title: 'All Company', big: true },
-  { image: program3, title: 'Business & Management', big: false },
-  { image: program4, title: 'Arts & Humanities', big: true },
-  { image: '/All-company.jpeg', title: 'All Company', big: true },
-  { image: program3, title: 'Business & Management', big: false },
-  { image: program4, title: 'Arts & Humanities', big: true },
-  { image: '/All-company.jpeg', title: 'All Company', big: true },
-  { image: program3, title: 'Business & Management', big: false },
-  { image: program4, title: 'Arts & Humanities', big: true },
+  { image: '/All-company.webp', title: 'Our Recruiters', big: true },
+  { image: '/alumni-meet-saroj-educational-group-best-college-in-lucknow.webp', title: 'Alumni Meet', big: false },
+  { image: '/annual-sports-and-creative-gala-saroj-educational-group-best-college-in-lucknow.webp', title: 'Sports Gala', big: false },
+  { image: '/annual-sports-week-saroj-educational-group-best-college-in-lucknow.webp', title: 'Sports Week', big: false },
+  { image: '/artificial-intelligence-workshop-saroj-educational-group-best-college-in-lucknow.webp', title: 'AI Workshop', big: false },
+  { image: '/campus-placement-drive-saroj-educational-group-best-college-in-lucknow.webp', title: 'Campus Placement', big: true },
+  { image: '/guest-lecture-saroj-educational-group-best-college-in-lucknow.webp', title: 'Guest Lecture', big: false },
+  { image: '/placement-drive-hiring-saroj-educational-group-best-college-in-lucknow.webp', title: 'Placement Drive', big: true },
+  { image: '/placement-drive-saroj-educational-group-best-college-in-lucknow.webp', title: 'Placement Hiring', big: true },
+  { image: '/All-company.webp', title: 'Our Recruiters', big: true },
+  { image: '/alumni-meet-saroj-educational-group-best-college-in-lucknow.webp', title: 'Alumni Meet', big: false },
+  { image: '/annual-sports-and-creative-gala-saroj-educational-group-best-college-in-lucknow.webp', title: 'Sports Gala', big: false },
+  { image: '/annual-sports-week-saroj-educational-group-best-college-in-lucknow.webp', title: 'Sports Week', big: false },
+  { image: '/artificial-intelligence-workshop-saroj-educational-group-best-college-in-lucknow.webp', title: 'AI Workshop', big: false },
+  { image: '/campus-placement-drive-saroj-educational-group-best-college-in-lucknow.webp', title: 'Campus Placement', big: true },
+  { image: '/guest-lecture-saroj-educational-group-best-college-in-lucknow.webp', title: 'Guest Lecture', big: false },
+  { image: '/placement-drive-hiring-saroj-educational-group-best-college-in-lucknow.webp', title: 'Placement Drive', big: true },
+  { image: '/placement-drive-saroj-educational-group-best-college-in-lucknow.webp', title: 'Placement Hiring', big: true },
 ];
 
 export default function Programs() {

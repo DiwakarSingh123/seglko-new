@@ -6,11 +6,11 @@ await mongoose.connect(MONGODB_URI);
 const Program = mongoose.model('Program', new mongoose.Schema({}, { strict: false }));
 
 const updates = [
-  { slug: 'mtech',  image: '/M-tech.jpeg' },
-  { slug: 'btech',  image: '/B-tech.jpeg' },
-  { slug: 'bpharm', image: '/B-pharma.jpeg' },
-  { slug: 'mpharm', image: '/M-pharma.jpeg' },
-  { slug: 'dpharm', image: '/D-pharma.jpeg' },
+  { slug: 'mtech',  image: '/top-best-m-tech-course-saroj-educational-group.webp' },
+  { slug: 'btech',  image: '/top-best-b-tech-ai-ml-course-saroj-educational-group.webp' },
+  { slug: 'bpharm', image: '/top-best-b-pharm-course-saroj-educational-group.webp' },
+  { slug: 'mpharm', image: '/top-best-m-pharm-course-saroj-educational-group.webp' },
+  { slug: 'dpharm', image: '/top-best-d-pharm-course-saroj-educational-group.webp' },
 ];
 
 for (const u of updates) {
