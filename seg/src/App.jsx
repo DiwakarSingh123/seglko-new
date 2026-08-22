@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom'
-import { useEffect } from 'react'
+import { useEffect, Suspense } from 'react'
 import TopBar from './components/TopBar'
 import Navbar from './components/Navbar'
 import Home from './pages/Home'
