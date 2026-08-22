@@ -4,17 +4,17 @@ import '../FeeStructure.css';
 import institutionsBg from '../assets/images/seg.jpeg';
 
 const sitmFees = [
-  { sno: 1, course: 'B.Pharma', total: '₹1,03,000', tuition: '₹80,000' },
-  { sno: 2, course: 'B.Pharm Lateral', total: '₹60,000', tuition: '₹60,000' },
-  { sno: 3, course: 'D.Pharma', total: '₹60,000', tuition: '₹60,000' },
-  { sno: 4, course: 'Diploma', total: '₹40,000', tuition: '₹40,000' },
-  { sno: 5, course: 'BBA', total: '₹60,000', tuition: '₹45,000' },
-  { sno: 6, course: 'BCA', total: '₹60,000', tuition: '₹45,000' },
-  { sno: 7, course: 'B.Tech', total: '₹85,000', tuition: '₹60,000' },
-  { sno: 8, course: 'B.Tech Lateral', total: '₹85,000', tuition: '₹60,000' },
-  { sno: 9, course: 'M.Tech', total: '₹60,000', tuition: '₹40,000' },
-  { sno: 10, course: 'MBA', total: '₹60,000', tuition: '₹40,000' },
-  { sno: 11, course: 'MCA', total: '₹60,000', tuition: '₹40,000' },
+  { sno: 1, course: 'B.Pharma', total: '₹ 1,03,000', tuition: '₹ 60,000' },
+  { sno: 2, course: 'D.Pharma', total: '₹ 60,000', tuition: '₹ 60,000' },
+  { sno: 3, course: 'Diploma Engg / Lateral Entry', total: '₹ 40,000', tuition: '₹ 30,000' },
+  { sno: 4, course: 'BBA', total: '₹ 60,000', tuition: '₹ 30,000' },
+  { sno: 5, course: 'BCA', total: '₹ 60,000', tuition: '₹ 30,000' },
+  { sno: 6, course: 'B.Tech', total: '₹ 85,000', tuition: '₹ 60,000' },
+  { sno: 7, course: 'B.Tech Lateral Entry', total: '₹ 45,000', tuition: '₹ 45,000' },
+  { sno: 8, course: 'M.Tech', total: '₹ 60,000', tuition: '₹ 30,000' },
+  { sno: 9, course: 'MBA', total: '₹ 60,000', tuition: '₹ 30,000' },
+  { sno: 10, course: 'MCA', total: '₹ 60,000', tuition: '₹ 30,000' },
+  { sno: 11, course: 'B.Pharma Lateral', total: '₹ 60,000', tuition: '₹ 60,000' },
 ];
 
 const ssitmFees = [
@@ -66,16 +66,19 @@ const institutions = {
     approvals: 'APPROVED BY AICTE & PCI, NEW DELHI',
     address: 'Ahimamau P.O. Arjunganj Sultanpur Road Lucknow',
     phone: '9555699988',
-    website: 'www.seglko.com',
+    website: 'www.sitmlko.org',
     session: '2026-2027',
     isSpecialScholarship: false,
     fees: sitmFees,
     notes: [
-      'Fees once deposited are non-refundable.',
+      '10% Development Fee applicable.',
+      'Scholarships applicable only on Tuition Fees.',
+      'Sibling Discount: 15% on Total Fees.',
+      'Installment option available (₹2,000 extra).',
+      'Hostel & Bus charges separate (if availed).',
+      '50% seats eligible for scholarship (50% scholarship seats reserved for girls).',
       'Examination, form, and enrollment fees are to be paid directly to the university.',
-      'Dress and transportation charges are separate (if availed).',
-      'Hostel fee is ₹60,000/year, inclusive of mess facility.',
-      '10% of the total fee will be charged as a Development Fee.',
+      'Fees once deposited are strictly non-refundable.',
     ],
   },
 };
