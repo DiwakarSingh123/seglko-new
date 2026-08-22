@@ -46,9 +46,7 @@ export async function GET() {
     if (!data) {
       data = await FacultyData.create(defaultFacultyData);
     }
-    return NextResponse.json(data, {
-      headers: { ...corsHeaders, 'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=300' },
-    });
+    return NextResponse.json(data, { headers: corsHeaders });
   } catch (error) {
     console.error('Failed to load faculty data:', error);
     const data = await readJsonFallback('faculty.json', defaultFacultyData);
