@@ -12,26 +12,6 @@ export default defineConfig({
         target: 'http://localhost:3000',
         changeOrigin: true,
       },
-      '/scl': {
-        target: 'http://localhost:3000',
-        changeOrigin: true,
-      },
-      '/scp': {
-        target: 'http://localhost:3000',
-        changeOrigin: true,
-      },
-      '/scep': {
-        target: 'http://localhost:3000',
-        changeOrigin: true,
-      },
-      '/sitm': {
-        target: 'http://localhost:3000',
-        changeOrigin: true,
-      },
-      '/lip': {
-        target: 'http://localhost:3000',
-        changeOrigin: true,
-      },
     }
   },
   define: {
