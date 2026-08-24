@@ -133,7 +133,7 @@ const socialLinks = [
   { label: 'Facebook', icon: <FacebookIcon />, tone: 'facebook', url: 'https://www.facebook.com/SEGofficial' },
   { label: 'Instagram', icon: <InstagramIcon />, tone: 'instagram', url: 'https://www.instagram.com/segindia/' },
   { label: 'LinkedIn', icon: <LinkedinIcon />, tone: 'linkedin', url: 'https://www.linkedin.com/company/segindia' },
-  { label: 'YouTube', icon: <YoutubeIcon />, tone: 'youtube', url: 'https://www.youtube.com/@sarojeducationalgroup1018' },
+  { label: 'YouTube', icon: <YoutubeIcon />, tone: 'youtube', url: 'https://www.youtube.com/@seglucknow' },
 ];
 
 export default function Footer() {
