@@ -17,17 +17,17 @@ const sitmFees = [
 ];
 
 const ssitmFees = [
-  { course: 'B.Pharma', total: '₹1,03,000', tuition: '₹80,000' },
+  { course: 'B.Pharma', total: '₹85,000', tuition: '₹60,000' },
   { course: 'B.Pharm Lateral', total: '₹60,000', tuition: '₹60,000' },
-  { course: 'D.Pharma', total: '₹60,000', tuition: '₹60,000' },
-  { course: 'Diploma', total: '₹40,000', tuition: '₹40,000' },
-  { course: 'BBA', total: '₹60,000', tuition: '₹45,000' },
-  { course: 'BCA', total: '₹60,000', tuition: '₹45,000' },
+  { course: 'D.Pharma', total: '₹75,000', tuition: '₹65,000' },
+  { course: 'Diploma', total: '₹35,000', tuition: '₹35,000' },
+  { course: 'BBA', total: '₹45,000', tuition: '₹30,000' },
+  { course: 'BCA', total: '₹45,000', tuition: '₹30,000' },
   { course: 'B.Tech', total: '₹85,000', tuition: '₹60,000' },
   { course: 'B.Tech Lateral', total: '₹85,000', tuition: '₹60,000' },
-  { course: 'M.Tech', total: '₹60,000', tuition: '₹40,000' },
-  { course: 'MBA', total: '₹60,000', tuition: '₹40,000' },
-  { course: 'MCA', total: '₹60,000', tuition: '₹40,000' },
+  { course: 'M.Tech', total: '₹60,000', tuition: '₹30,000' },
+  { course: 'MBA', total: '₹60,000', tuition: '₹30,000' },
+  { course: 'MCA', total: '₹60,000', tuition: '₹30,000' },
 ];
 
 const institutions = {
@@ -47,8 +47,8 @@ const institutions = {
   },
   SSITM: {
     label: 'SSITM Fee Structure',
-    fullName: 'Shivdan Singh Institute of Technology & Management (SSITM), Lucknow',
-    address: 'Sultanpur Road, Lucknow | Phone: 9555699988',
+    fullName: 'Shivdan Singh Institute of Technology & Management (SSITM), Aligarh',
+    address: '10th Km Stone, Aligarh-Mathura Road, Aligarh, Uttar Pradesh 202001 | Phone: 9555699988',
     session: '2026-2027',
     fees: ssitmFees,
     notes: [
@@ -62,7 +62,7 @@ const institutions = {
 };
 
 const FeeStructure = () => {
-  const [active, setActive] = useState(null);
+  const [active, setActive] = useState('SITM');
 
   const data = active ? institutions[active] : null;
 

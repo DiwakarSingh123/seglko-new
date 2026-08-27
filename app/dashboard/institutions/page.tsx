@@ -199,13 +199,16 @@ export default function InstitutionsPage() {
                   <input
                     type="file"
                     accept="image/*"
-                    onChange={e => {
+                    onChange={async e => {
                       const file = e.target.files?.[0];
-                      if (file) {
-                        const reader = new FileReader();
-                        reader.onloadend = () => setNewInst(prev => ({ ...prev, customImage: reader.result as string }));
-                        reader.readAsDataURL(file);
-                      }
+                      if (!file) return;
+                      const reader = new FileReader();
+                      reader.onloadend = async () => {
+                        const res = await fetch('/api/upload', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ image: reader.result, folder: 'seglko-institutions' }) });
+                        const data = await res.json();
+                        if (data.url) setNewInst(prev => ({ ...prev, customImage: data.url }));
+                      };
+                      reader.readAsDataURL(file);
                     }}
                     className="block w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
                   />
@@ -291,13 +294,16 @@ export default function InstitutionsPage() {
                           <input
                             type="file"
                             accept="image/*"
-                            onChange={e => {
+                            onChange={async e => {
                               const file = e.target.files?.[0];
-                              if (file) {
-                                const reader = new FileReader();
-                                reader.onloadend = () => updateField(inst._id, "customImage", reader.result as string);
-                                reader.readAsDataURL(file);
-                              }
+                              if (!file) return;
+                              const reader = new FileReader();
+                              reader.onloadend = async () => {
+                                const res = await fetch('/api/upload', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ image: reader.result, folder: 'seglko-institutions' }) });
+                                const data = await res.json();
+                                if (data.url) updateField(inst._id, 'customImage', data.url);
+                              };
+                              reader.readAsDataURL(file);
                             }}
                             className="block w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
                           />

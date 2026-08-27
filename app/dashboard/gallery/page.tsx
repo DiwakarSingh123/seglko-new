@@ -20,6 +20,7 @@ const categories = [
   "Sports",
   "Gallery",
   "Computer Labs",
+  "Campus Recruitment",
 ] as const;
 
 const uploadCategories = categories.filter((c) => c !== ALL_MOMENTS);

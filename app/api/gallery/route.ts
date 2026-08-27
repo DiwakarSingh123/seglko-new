@@ -16,7 +16,7 @@ export async function OPTIONS() {
 export async function GET() {
   try {
     await connectDB();
-    const items = await Gallery.find().sort({ createdAt: -1 }).limit(20);
+    const items = await Gallery.find().sort({ createdAt: -1 });
     return NextResponse.json(items, {
       headers: { ...corsHeaders, 'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=300' },
     });

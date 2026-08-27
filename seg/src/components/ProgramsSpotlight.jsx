@@ -7,7 +7,7 @@ import program2 from '../assets/images/management.jpg';
 import program3 from '../assets/images/computer.webp';
 import program4 from '../assets/images/diploma.jpg';
 import program5 from '../assets/images/pharmacy copy.jpg';
-import booksImg from '../assets/images/booksimg.jpeg';
+
 
 const ArrowRight = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -327,7 +327,7 @@ export default function ProgramsSpotlight() {
 
           <div className="programs-spotlight__art" aria-hidden="true">
             <span className="programs-spotlight__orb programs-spotlight__orb--gold" />
-            <img src={booksImg} alt="Academic Books" className="programs-spotlight__art-img" />
+            <img src="/programs-and-courses-in-saroj-educational-group.webp" alt="Programs and Courses" className="programs-spotlight__art-img" />
           </div>
         </div>
 

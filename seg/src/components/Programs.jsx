@@ -26,6 +26,8 @@ const bottomRow = [
   { image: '/industry-placement-saroj-educational-group.webp', title: 'Industry Placement', big: true, contain: true },
   { image: '/placement-drive-hiring-saroj-educational-group-best-college-in-lucknow.webp', title: 'Placement Drive', big: true },
   { image: '/placement-drive-saroj-educational-group-best-college-in-lucknow.webp', title: 'Placement Hiring', big: true },
+  { image: '/approved-by-pci-aktu-aicte-saroj-educational-group.webp', title: 'Approved By PCI AKTU AICTE', big: true, contain: true },
+  { image: '/national-board-of-accreditation-nba-saroj-educational-group.webp', title: 'NBA Accreditation', big: true },
   { image: '/alumni-meet-saroj-educational-group-best-college-in-lucknow.webp', title: 'Alumni Meet', big: false },
   { image: '/annual-sports-and-creative-gala-saroj-educational-group-best-college-in-lucknow.webp', title: 'Sports Gala', big: false },
   { image: '/annual-sports-week-saroj-educational-group-best-college-in-lucknow.webp', title: 'Sports Week', big: false },
@@ -35,6 +37,8 @@ const bottomRow = [
   { image: '/industry-placement-saroj-educational-group.webp', title: 'Industry Placement', big: true, contain: true },
   { image: '/placement-drive-hiring-saroj-educational-group-best-college-in-lucknow.webp', title: 'Placement Drive', big: true },
   { image: '/placement-drive-saroj-educational-group-best-college-in-lucknow.webp', title: 'Placement Hiring', big: true },
+  { image: '/approved-by-pci-aktu-aicte-saroj-educational-group.webp', title: 'Approved By PCI AKTU AICTE', big: true, contain: true },
+  { image: '/national-board-of-accreditation-nba-saroj-educational-group.webp', title: 'NBA Accreditation', big: true },
 ];
 
 export default function Programs() {

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { api } from '../api.js';
 const ssitmFallback = '/best-engineering-and-management-college-in-aligarh-shivdan-singh-institute-of-technology-and-management-saroj-educational-group.webp';
 const sitlFallback = '/best-engineering-and-management-college-in-lucknow-saroj-institute-of-technology-and-management-saroj-educational-group.webp';
 const lawFallback = '/best-law-college-in-lucknow-saroj-college-of-law-saroj-educational-group.webp';
@@ -77,9 +78,9 @@ function getIcon(inst) {
 }
 
 function getImage(inst) {
-  const img = inst.customImage || inst.image || fallbackImages[inst.short] || ssitmFallback;
-  if (img && img.startsWith('http')) return fallbackImages[inst.short] || ssitmFallback;
-  return img;
+  if (inst.customImage) return inst.customImage;
+  if (inst.image && inst.image.startsWith('http')) return inst.image;
+  return fallbackImages[inst.short] || ssitmFallback;
 }
 
 function InstitutionCard({ institution }) {
@@ -130,7 +131,7 @@ export default function FullSections() {
   const [list, setList] = useState([]);
 
   useEffect(() => {
-    fetch('/api/institutions')
+    fetch(api('/api/institutions'))
       .then(r => r.ok ? r.json() : [])
       .then(data => { if (Array.isArray(data) && data.length) setList(data); })
       .catch(() => { });

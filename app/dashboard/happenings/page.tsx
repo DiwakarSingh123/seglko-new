@@ -372,11 +372,11 @@ export default function HappeningsPage() {
           </div>
         ) : (
           <div className="overflow-x-auto">
-          <table className="w-full min-w-[820px]">
+          <table className="w-full min-w-[600px]">
             <thead className="bg-slate-50/70">
               <tr className="border-b border-slate-100">
-                {["Item", "Category", "Date", ""].map((heading) => (
-                  <th key={heading} className="px-5 py-3 text-left text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                  {["Item", "Category", "Date", ""].map((heading, i) => (
+                  <th key={heading} className={`px-5 py-3 text-left text-[10px] font-bold text-slate-400 uppercase tracking-wider${i === 3 ? ' sticky right-0 bg-slate-50' : ''}`}>
                     {heading}
                   </th>
                 ))}
@@ -405,12 +405,12 @@ export default function HappeningsPage() {
                     <span className="px-2.5 py-1 rounded-full text-[10px] font-bold bg-indigo-50 text-indigo-600">{item.category}</span>
                   </td>
                   <td className="px-5 py-3.5 text-sm text-slate-400">{item.date}</td>
-                  <td className="px-5 py-3.5 text-right">
+                  <td className="px-5 py-3.5 text-right sticky right-0 bg-white">
                     <div className="flex justify-end gap-1.5">
-                      <button onClick={() => openEdit(item)} className="h-7 w-7 flex items-center justify-center rounded-lg bg-indigo-50 text-indigo-600 hover:bg-indigo-100">
+                      <button onClick={() => openEdit(item)} className="h-8 w-8 flex items-center justify-center rounded-lg bg-indigo-50 text-indigo-600 hover:bg-indigo-100">
                         <span className="material-symbols-outlined text-sm">edit</span>
                       </button>
-                      <button onClick={() => deleteItem(item._id)} className="h-7 w-7 flex items-center justify-center rounded-lg bg-rose-50 text-rose-500 hover:bg-rose-100">
+                      <button onClick={() => deleteItem(item._id)} className="h-8 w-8 flex items-center justify-center rounded-lg bg-rose-50 text-rose-500 hover:bg-rose-100">
                         <span className="material-symbols-outlined text-sm">delete</span>
                       </button>
                     </div>
