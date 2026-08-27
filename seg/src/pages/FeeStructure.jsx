@@ -1,70 +1,105 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import '../FeeStructure.css';
 import institutionsBg from '../assets/images/seg.jpeg';
 
 const sitmFees = [
-  { course: 'B.Pharma', total: '₹1,03,000', tuition: '₹80,000' },
-  { course: 'B.Pharm Lateral', total: '₹60,000', tuition: '₹60,000' },
-  { course: 'D.Pharma', total: '₹60,000', tuition: '₹60,000' },
-  { course: 'Diploma', total: '₹40,000', tuition: '₹40,000' },
-  { course: 'BBA', total: '₹60,000', tuition: '₹45,000' },
-  { course: 'BCA', total: '₹60,000', tuition: '₹45,000' },
-  { course: 'B.Tech', total: '₹85,000', tuition: '₹60,000' },
-  { course: 'B.Tech Lateral', total: '₹85,000', tuition: '₹60,000' },
-  { course: 'M.Tech', total: '₹60,000', tuition: '₹40,000' },
-  { course: 'MBA', total: '₹60,000', tuition: '₹40,000' },
-  { course: 'MCA', total: '₹60,000', tuition: '₹40,000' },
+  { sno: 1, course: 'B.Pharma', total: '₹ 1,03,000', tuition: '₹ 60,000' },
+  { sno: 2, course: 'D.Pharma', total: '₹ 60,000', tuition: '₹ 60,000' },
+  { sno: 3, course: 'Diploma Engg / Lateral Entry', total: '₹ 40,000', tuition: '₹ 30,000' },
+  { sno: 4, course: 'BBA', total: '₹ 60,000', tuition: '₹ 30,000' },
+  { sno: 5, course: 'BCA', total: '₹ 60,000', tuition: '₹ 30,000' },
+  { sno: 6, course: 'B.Tech', total: '₹ 85,000', tuition: '₹ 60,000' },
+  { sno: 7, course: 'B.Tech Lateral Entry', total: '₹ 45,000', tuition: '₹ 45,000' },
+  { sno: 8, course: 'M.Tech', total: '₹ 60,000', tuition: '₹ 30,000' },
+  { sno: 9, course: 'MBA', total: '₹ 60,000', tuition: '₹ 30,000' },
+  { sno: 10, course: 'MCA', total: '₹ 60,000', tuition: '₹ 30,000' },
+  { sno: 11, course: 'B.Pharma Lateral', total: '₹ 60,000', tuition: '₹ 60,000' },
 ];
 
 const ssitmFees = [
-  { course: 'B.Pharma', total: '₹85,000', tuition: '₹60,000' },
-  { course: 'B.Pharm Lateral', total: '₹60,000', tuition: '₹60,000' },
-  { course: 'D.Pharma', total: '₹75,000', tuition: '₹65,000' },
-  { course: 'Diploma', total: '₹35,000', tuition: '₹35,000' },
-  { course: 'BBA', total: '₹45,000', tuition: '₹30,000' },
-  { course: 'BCA', total: '₹45,000', tuition: '₹30,000' },
-  { course: 'B.Tech', total: '₹85,000', tuition: '₹60,000' },
-  { course: 'B.Tech Lateral', total: '₹85,000', tuition: '₹60,000' },
-  { course: 'M.Tech', total: '₹60,000', tuition: '₹30,000' },
-  { course: 'MBA', total: '₹60,000', tuition: '₹30,000' },
-  { course: 'MCA', total: '₹60,000', tuition: '₹30,000' },
+  { sno: 1, course: 'B.PHARMACY', total: '₹ 1,03,000/-', scholarshipFee: '₹ 35,000/-*', savings: '₹ 68,000/yr', badge: 'High Demand' },
+  { sno: 2, course: 'D.PHARMACY', total: '₹ 60,000/-', scholarshipFee: '₹ 30,000/-*', savings: '₹ 30,000/yr', badge: 'PCI Approved' },
+  { sno: 3, course: 'DIPLOMA ENGG / LATERAL ENTRY', total: '₹ 40,000/-', scholarshipFee: '₹ 20,000/-*', savings: '₹ 20,000/yr', badge: 'BTE Approved' },
+  { sno: 4, course: 'BBA', total: '₹ 60,000/-', scholarshipFee: '₹ 25,000/-*', savings: '₹ 35,000/yr', badge: 'Industry Ready' },
+  { sno: 5, course: 'BCA', total: '₹ 60,000/-', scholarshipFee: '₹ 25,000/-*', savings: '₹ 35,000/yr', badge: 'Tech Career' },
+  { sno: 6, course: 'B.TECH', total: '₹ 85,000/-', scholarshipFee: '₹ 35,000/-*', savings: '₹ 50,000/yr', badge: 'AKTU Affiliated' },
+  { sno: 7, course: 'B.TECH (LATERAL ENTRY)', total: '₹ 45,000/-', scholarshipFee: '₹ 30,000/-*', savings: '₹ 15,000/yr', badge: 'Direct 2nd Yr' },
+  { sno: 8, course: 'M.TECH', total: '₹ 60,000/-', scholarshipFee: '₹ 40,000/-*', savings: '₹ 20,000/yr', badge: 'PG Program' },
+  { sno: 9, course: 'MBA', total: '₹ 60,000/-', scholarshipFee: '₹ 25,000/-*', savings: '₹ 35,000/yr', badge: 'Placement Focus' },
+  { sno: 10, course: 'MCA', total: '₹ 60,000/-', scholarshipFee: '₹ 25,000/-*', savings: '₹ 35,000/yr', badge: 'Software Track' },
+  { sno: 11, course: 'B.PHARMACY (LATERAL)', total: '₹ 60,000/-', scholarshipFee: '₹ 35,000/-*', savings: '₹ 25,000/yr', badge: 'Direct 2nd Yr' },
 ];
 
 const institutions = {
-  SITM: {
-    label: 'SITM Fee Structure',
-    fullName: 'Saroj Institute of Technology & Management (SITM), Lucknow',
-    address: 'Ahimamau P.O. Arjunganj Sultanpur Road Lucknow | Phone: 9555699988',
+  SSITM: {
+    label: 'SSITM Aligarh Fee Structure (Session 2026-27)',
+    shortName: 'SSITM, Aligarh',
+    fullName: 'Shivdan Singh Institute of Technology & Management (SSITM), Aligarh',
+    tagline: "Aligarh's Oldest & Most Trusted Institution • ESTD. 1997",
+    code: 'AKTU CODE: 007',
+    approvals: 'APPROVED BY AICTE, NEW DELHI & PCI, NEW DELHI',
+    address: '10th KM Stone, Aligarh - Mathura Road, Aligarh, Uttar Pradesh 202002',
+    phone: '+91 9810054878',
+    website: 'www.ssitm.in',
     session: '2026-2027',
-    fees: sitmFees,
+    isSpecialScholarship: true,
+    fees: ssitmFees,
+    eligibility: 'Minimum 60% marks required for admission under this fee structure.',
+    scholarshipTerms: 'Special scholarship rates up to ₹25,000/- per year valid for the First 25 students only. After limit, fees may increase.',
     notes: [
-      'Fees once deposited are non-refundable.',
-      'Examination, form, and enrollment fees are to be paid directly to the university.',
-      'Dress and transportation charges are separate (if availed).',
-      'Hostel fee is ₹60,000/year, inclusive of mess facility.',
-      '10% of the total fee will be charged as a Development Fee.',
+      'Scholarship Up to ₹25,000/- (25K) per year applicable across all approved courses.',
+      'Beti Padhao Beti Bachao: Special fee benefits and concessions for girl students.',
+      'Minimum 60% marks required in the qualifying exam for scholarship eligibility.',
+      'Academic fees once deposited are strictly non-refundable and non-transferable.',
+      'Examination, university enrollment, and form fees are to be paid directly to AKTU / BTE / PCI.',
+      'Optional on-campus hostel with mess available at ₹50,000 - ₹60,000/year.',
+      'Bus transportation connectivity across Aligarh is available separately.',
     ],
   },
-  SSITM: {
-    label: 'SSITM Fee Structure',
-    fullName: 'Shivdan Singh Institute of Technology & Management (SSITM), Aligarh',
-    address: '10th Km Stone, Aligarh-Mathura Road, Aligarh, Uttar Pradesh 202001 | Phone: 9555699988',
+  SITM: {
+    label: 'SITM Lucknow Fee Structure (Session 2026-27)',
+    shortName: 'SITM, Lucknow',
+    fullName: 'Saroj Institute of Technology & Management (SITM), Lucknow',
+    tagline: "Premier Technical & Professional Institute • AKTU Code 123",
+    code: 'AKTU CODE: 123',
+    approvals: 'APPROVED BY AICTE & PCI, NEW DELHI',
+    address: 'Ahimamau P.O. Arjunganj Sultanpur Road Lucknow',
+    phone: '9555699988',
+    website: 'www.sitmlko.org',
     session: '2026-2027',
-    fees: ssitmFees,
+    isSpecialScholarship: false,
+    fees: sitmFees,
     notes: [
-      'Fees once deposited are non-refundable.',
+      '10% Development Fee applicable.',
+      'Scholarships applicable only on Tuition Fees.',
+      'Sibling Discount: 15% on Total Fees.',
+      'Installment option available (₹2,000 extra).',
+      'Hostel & Bus charges separate (if availed).',
+      '50% seats eligible for scholarship (50% scholarship seats reserved for girls).',
       'Examination, form, and enrollment fees are to be paid directly to the university.',
-      'Dress and transportation charges are separate (if availed).',
-      'Hostel fee is ₹60,000/year, inclusive of mess facility.',
-      '10% of the total fee will be charged as a Development Fee.',
+      'Fees once deposited are strictly non-refundable.',
     ],
   },
 };
 
 const FeeStructure = () => {
-  const [active, setActive] = useState('SITM');
+  const location = useLocation();
+  const [active, setActive] = useState('SSITM');
 
-  const data = active ? institutions[active] : null;
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const instParam = params.get('institution') || params.get('inst');
+    if (instParam && institutions[instParam.toUpperCase()]) {
+      setActive(instParam.toUpperCase());
+    } else if (location.hash === '#ssitm') {
+      setActive('SSITM');
+    } else if (location.hash === '#sitm') {
+      setActive('SITM');
+    }
+  }, [location]);
+
+  const data = institutions[active] || institutions.SSITM;
 
   return (
     <div className="fee-structure-page">
@@ -75,7 +110,7 @@ const FeeStructure = () => {
             <h1 className="fee-hero__title">Transparent <br />Fee Structure</h1>
             <div className="fee-hero__accent-line"></div>
             <p className="fee-hero__text">
-              We believe in transparency and providing clear information about our academic investments. Select an institution below to view its detailed fee structure.
+              We believe in transparency and providing clear information about our academic investments and scholarship schemes. Select an institution below to view its approved 2026-27 fee schedule.
             </p>
           </div>
           <div className="fee-hero__visual">
@@ -100,8 +135,8 @@ const FeeStructure = () => {
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" /></svg>
           </div>
           <div className="fee-stat-info">
-            <span className="fee-stat-value">Merit</span>
-            <span className="fee-stat-label">SCHOLARSHIPS</span>
+            <span className="fee-stat-value">Up to ₹25K</span>
+            <span className="fee-stat-label">SCHOLARSHIP / YR</span>
           </div>
         </div>
         <div className="fee-stat-item">
@@ -126,57 +161,160 @@ const FeeStructure = () => {
 
       {/* Institution Selector Buttons */}
       <div className="fee-selector">
-        <p className="fee-selector__label">Select Institution to View Fee Structure</p>
+        <p className="fee-selector__label">Select Institution to View Approved Fee Structure</p>
         <div className="fee-selector__buttons">
-          {Object.keys(institutions).map((key) => (
-            <button
-              key={key}
-              className={`fee-selector__btn${active === key ? ' fee-selector__btn--active' : ''}`}
-              onClick={() => setActive(active === key ? null : key)}
-            >
-              {institutions[key].label}
-            </button>
-          ))}
+          <button
+            className={`fee-selector__btn${active === 'SSITM' ? ' fee-selector__btn--active' : ''}`}
+            onClick={() => setActive('SSITM')}
+          >
+            SSITM, Aligarh (AKTU 007)
+          </button>
+          <button
+            className={`fee-selector__btn${active === 'SITM' ? ' fee-selector__btn--active' : ''}`}
+            onClick={() => setActive('SITM')}
+          >
+            SITM, Lucknow (AKTU 123)
+          </button>
         </div>
       </div>
 
-      {/* Fee Table */}
+      {/* Fee Table & Detailed Content */}
       {data && (
         <main className="fee-content">
           <section className="fee-section">
+            
+            {/* Institute Header Box */}
             <div className="fee-institute-header">
+              <div className="fee-badge-row">
+                <span className="fee-tag-badge">{data.code}</span>
+                <span className="fee-tag-badge fee-tag-badge--gold">{data.approvals}</span>
+              </div>
               <h2 className="fee-institute-header__name">{data.fullName}</h2>
-              <p className="fee-institute-header__session">Fee Structure for Session {data.session}</p>
-              <p className="fee-institute-header__address">{data.address}</p>
+              <p className="fee-institute-header__session">Approved Fee Structure for Session {data.session}</p>
+              <p className="fee-institute-header__address">{data.address} | Phone: <strong>{data.phone}</strong></p>
             </div>
 
+            {/* Special Highlights for SSITM */}
+            {data.isSpecialScholarship && (
+              <div className="fee-highlight-grid">
+                
+                {/* Beti Padhao Card */}
+                <div className="fee-highlight-card fee-highlight-card--pink">
+                  <div className="fee-highlight-tag fee-highlight-tag--pink">Special Initiative</div>
+                  <h3 className="fee-highlight-title">Empowering Future Women Professionals</h3>
+                  <div className="fee-highlight-subtag fee-highlight-subtag--pink">Beti Padhao Beti Bachao</div>
+                  <p className="fee-highlight-desc">
+                    Special fee concessions and dedicated scholarship benefits for girl students across all courses.
+                  </p>
+                </div>
+
+                {/* Scholarship Card */}
+                <div className="fee-highlight-card fee-highlight-card--orange">
+                  <div className="fee-highlight-tag fee-highlight-tag--orange">Scholarship Scheme</div>
+                  <div className="fee-highlight-value">SCHOLARSHIP UP TO ₹25K</div>
+                  <div className="fee-highlight-subtag">Per Year For Any Course</div>
+                  <p className="fee-highlight-desc">
+                    First 25 students only. Minimum 60% marks required for eligibility.
+                  </p>
+                </div>
+
+                {/* Healthcare & Helpline Card */}
+                <div className="fee-highlight-card fee-highlight-card--blue">
+                  <div className="fee-highlight-tag fee-highlight-tag--blue">Admissions 2026-27</div>
+                  <h3 className="fee-highlight-title">Build Your Career in Healthcare & Tech</h3>
+                  <div className="fee-highlight-desc" style={{ marginTop: '8px' }}>
+                    Helpline / Admission Enquiry:
+                  </div>
+                  <a href={`tel:${data.phone}`} className="fee-highlight-phone">
+                    📞 {data.phone}
+                  </a>
+                </div>
+
+              </div>
+            )}
+
+            {/* Fee Table */}
             <div className="fee-table-container">
-              <div className="fee-table-title">Quick Overview</div>
+              <div className="fee-table-title flex-between">
+                <span>{data.shortName} — Approved Course Fee Table (Session {data.session})</span>
+                {data.isSpecialScholarship && (
+                  <span className="fee-badge fee-badge--green">
+                    *Special Scholarship Fee (First 25 Students)
+                  </span>
+                )}
+              </div>
+
               <table className="fee-table">
                 <thead>
                   <tr>
+                    <th style={{ width: '60px', textAlign: 'center' }}>S.No.</th>
                     <th>Course</th>
-                    <th>Total Fees</th>
-                    <th>Tuition Fees</th>
+                    <th style={{ textAlign: 'right' }}>Total Fees Per Year</th>
+                    <th style={{ textAlign: 'right', color: data.isSpecialScholarship ? '#c2410c' : '#1e293b', background: data.isSpecialScholarship ? '#fff7ed' : '#f8fafc' }}>
+                      {data.isSpecialScholarship ? 'Fees After Scholarship* (Per Year)' : 'Tuition Fees / Year'}
+                    </th>
+                    {data.isSpecialScholarship && <th style={{ textAlign: 'center' }}>Annual Saving</th>}
                   </tr>
                 </thead>
                 <tbody>
                   {data.fees.map((item, i) => (
                     <tr key={i}>
-                      <td><strong>{item.course}</strong></td>
-                      <td>{item.total}</td>
-                      <td>{item.tuition}</td>
+                      <td style={{ textAlign: 'center', fontWeight: 'bold', color: '#64748b' }}>
+                        {item.sno || i + 1}
+                      </td>
+                      <td>
+                        <strong>{item.course}</strong>
+                        {item.badge && (
+                          <span className="fee-course-badge">{item.badge}</span>
+                        )}
+                      </td>
+                      <td style={{ textAlign: 'right', fontWeight: '600', color: '#334155' }}>
+                        {item.total}
+                      </td>
+                      <td style={{ textAlign: 'right', fontWeight: '800', fontSize: '16px', color: data.isSpecialScholarship ? '#c2410c' : '#1e293b', background: data.isSpecialScholarship ? '#fff7ed' : 'transparent' }}>
+                        {item.scholarshipFee || item.tuition}
+                      </td>
+                      {data.isSpecialScholarship && (
+                        <td style={{ textAlign: 'center' }}>
+                          <span className="fee-badge fee-badge--green">
+                            Save {item.savings}
+                          </span>
+                        </td>
+                      )}
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
 
-            <ul className="fee-notes">
-              {data.notes.map((note, i) => (
-                <li key={i}>• {note}</li>
-              ))}
-            </ul>
+            {/* Terms & Important Notes */}
+            <div className="fee-notes-box">
+              <h3 className="fee-notes-title">Important Notes & Policies</h3>
+              <ul className="fee-notes-list">
+                {data.notes.map((note, i) => (
+                  <li key={i}>• {note}</li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Contact & Helpline Bar */}
+            <div className="fee-cta-box">
+              <div>
+                <h3 className="fee-cta-title">Need Guidance on Fees & Scholarships?</h3>
+                <p className="fee-cta-desc">Speak directly with our expert academic admission counselors.</p>
+              </div>
+              <div className="fee-cta-actions">
+                <a href={`tel:${data.phone}`} className="fee-cta-btn fee-cta-btn--primary">
+                  📞 Call {data.phone}
+                </a>
+                {data.website && (
+                  <a href={`https://${data.website}`} target="_blank" rel="noopener noreferrer" className="fee-cta-btn fee-cta-btn--secondary">
+                    Visit {data.website}
+                  </a>
+                )}
+              </div>
+            </div>
+
           </section>
         </main>
       )}

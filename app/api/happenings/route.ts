@@ -16,10 +16,8 @@ export async function OPTIONS() {
 export async function GET() {
   try {
     await connectDB();
-    const items = await Happening.find().sort({ date: -1, createdAt: -1 }).limit(20);
-    return NextResponse.json(items, {
-      headers: { ...corsHeaders, 'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=300' },
-    });
+    const items = await Happening.find().sort({ date: -1, createdAt: -1 });
+    return NextResponse.json(items, { headers: corsHeaders });
   } catch (error) {
     logApiError('GET /api/happenings', error);
     const items = await readJsonFallback('happenings.json', []);

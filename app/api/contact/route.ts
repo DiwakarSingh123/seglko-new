@@ -13,8 +13,8 @@ const defaultContactData = {
     { label: "Facebook", icon: "facebook", url: "https://facebook.com/seglko" },
     { label: "Instagram", icon: "photo_camera", url: "https://instagram.com/seglko" },
     { label: "Twitter / X", icon: "alternate_email", url: "https://twitter.com/seglko" },
-    { label: "YouTube", icon: "play_circle", url: "https://youtube.com/@seglko" },
-    { label: "LinkedIn", icon: "work", url: "https://linkedin.com/company/seglko" },
+    { label: "YouTube", icon: "play_circle", url: "https://www.youtube.com/@seglucknow" },
+    { label: "LinkedIn", icon: "work", url: "https://www.linkedin.com/company/segindia" },
     { label: "WhatsApp", icon: "chat", url: "https://wa.me/919555699988" },
   ],
   faqs: [

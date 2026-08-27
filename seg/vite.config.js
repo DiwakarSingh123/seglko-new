@@ -4,31 +4,11 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   build: {
-    cssMinify: true
+    minify: true,
   },
   server: {
     proxy: {
       '/api': {
-        target: 'http://localhost:3000',
-        changeOrigin: true,
-      },
-      '/scl': {
-        target: 'http://localhost:3000',
-        changeOrigin: true,
-      },
-      '/scp': {
-        target: 'http://localhost:3000',
-        changeOrigin: true,
-      },
-      '/scep': {
-        target: 'http://localhost:3000',
-        changeOrigin: true,
-      },
-      '/sitm': {
-        target: 'http://localhost:3000',
-        changeOrigin: true,
-      },
-      '/lip': {
         target: 'http://localhost:3000',
         changeOrigin: true,
       },

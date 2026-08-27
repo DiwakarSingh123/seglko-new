@@ -1,40 +1,39 @@
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom'
-import { useEffect, lazy, Suspense } from 'react'
+import { useEffect, Suspense } from 'react'
 import TopBar from './components/TopBar'
 import Navbar from './components/Navbar'
+import Home from './pages/Home'
+import HistoryOfSeg from './pages/HistoryOfSeg'
+import ChairmansMessage from './pages/ChairmansMessage'
+import MissionVision from './pages/MissionVision'
+import WhyJoinSeg from './pages/WhyJoinSeg'
+import ContactUs from './pages/ContactUs'
+import AdmissionProcess from './pages/AdmissionProcess'
+import EligibilityCriteria from './pages/EligibilityCriteria'
+import PlacementsPage from './pages/PlacementsPage'
+import ExploreMore from './pages/ExploreMore'
+import FeeStructure from './pages/FeeStructure'
+import ManagementQuota from './pages/ManagementQuota'
+import ResearchProjects from './pages/ResearchProjects'
+import TechnologiesDeveloped from './pages/TechnologiesDeveloped'
+import AwardWinningProjects from './pages/AwardWinningProjects'
+import ResearchPublications from './pages/ResearchPublications'
+import FacultyPage from './pages/FacultyPage'
+import ProgramsPage from './pages/ProgramsPage'
+import ProgramDetailPage from './pages/ProgramDetailPage'
+import PayFeePage from './pages/PayFeePage'
+import StudentNoticePage from './pages/StudentNoticePage'
+import FacultyNewPage from './pages/FacultyNewPage'
+import FacultyProfilePage from './pages/FacultyProfilePage'
+import PrivacyPolicy from './pages/PrivacyPolicy'
+import TermsAndConditions from './pages/TermsAndConditions'
+import JobApplicationPage from './pages/JobApplicationPage'
+import InstitutionsPage from './pages/InstitutionsPage'
+import CareersPage from './pages/CareersPage'
+import EventDetailPage from './pages/EventDetailPage'
 import Footer from './components/Footer'
 import Chatbot from './components/Chatbot'
 import NoPaperPopup from './components/NoPaperPopup'
-
-const Home = lazy(() => import('./pages/Home'))
-const HistoryOfSeg = lazy(() => import('./pages/HistoryOfSeg'))
-const ChairmansMessage = lazy(() => import('./pages/ChairmansMessage'))
-const MissionVision = lazy(() => import('./pages/MissionVision'))
-const WhyJoinSeg = lazy(() => import('./pages/WhyJoinSeg'))
-const ContactUs = lazy(() => import('./pages/ContactUs'))
-const AdmissionProcess = lazy(() => import('./pages/AdmissionProcess'))
-const EligibilityCriteria = lazy(() => import('./pages/EligibilityCriteria'))
-const PlacementsPage = lazy(() => import('./pages/PlacementsPage'))
-const ExploreMore = lazy(() => import('./pages/ExploreMore'))
-const FeeStructure = lazy(() => import('./pages/FeeStructure'))
-const ManagementQuota = lazy(() => import('./pages/ManagementQuota'))
-const ResearchProjects = lazy(() => import('./pages/ResearchProjects'))
-const TechnologiesDeveloped = lazy(() => import('./pages/TechnologiesDeveloped'))
-const AwardWinningProjects = lazy(() => import('./pages/AwardWinningProjects'))
-const ResearchPublications = lazy(() => import('./pages/ResearchPublications'))
-const FacultyPage = lazy(() => import('./pages/FacultyPage'))
-const ProgramsPage = lazy(() => import('./pages/ProgramsPage'))
-const ProgramDetailPage = lazy(() => import('./pages/ProgramDetailPage'))
-const PayFeePage = lazy(() => import('./pages/PayFeePage'))
-const StudentNoticePage = lazy(() => import('./pages/StudentNoticePage'))
-const FacultyNewPage = lazy(() => import('./pages/FacultyNewPage'))
-const FacultyProfilePage = lazy(() => import('./pages/FacultyProfilePage'))
-const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'))
-const TermsAndConditions = lazy(() => import('./pages/TermsAndConditions'))
-const JobApplicationPage = lazy(() => import('./pages/JobApplicationPage'))
-const InstitutionsPage = lazy(() => import('./pages/InstitutionsPage'))
-const CareersPage = lazy(() => import('./pages/CareersPage'))
-const EventDetailPage = lazy(() => import('./pages/EventDetailPage'))
 
 function ScrollToTop() {
   const { pathname } = useLocation();
