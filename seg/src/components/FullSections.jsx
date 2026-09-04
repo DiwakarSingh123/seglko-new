@@ -1,18 +1,83 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { api } from '../api.js';
+
 const ssitmFallback = '/best-engineering-and-management-college-in-aligarh-shivdan-singh-institute-of-technology-and-management-saroj-educational-group.webp';
-const sitlFallback = '/best-engineering-and-management-college-in-lucknow-saroj-institute-of-technology-and-management-saroj-educational-group.webp';
+const sitmFallback = '/best-engineering-and-management-college-in-lucknow-saroj-institute-of-technology-and-management-saroj-educational-group.webp';
 const lawFallback = '/best-law-college-in-lucknow-saroj-college-of-law-saroj-educational-group.webp';
 const scpFallback = '/best-pharmacy-college-in-lucknow-saroj-college-of-pharmacy-saroj-educational-group.webp';
 const scepFallback = '/best-engineering-and-polytechnic-college-in-lucknow-saroj-college-of-engineering-and-polytechnics-saroj-educational-group.webp';
 
 const fallbackImages = {
   SSITM: ssitmFallback,
-  SITM: sitlFallback,
+  SITM: sitmFallback,
   SCL: lawFallback,
   SCP: scpFallback,
   SCEP: scepFallback,
+  LIP: scpFallback,
 };
+
+const defaultInstitutionsList = [
+  {
+    _id: 'default-ssitm',
+    id: 1,
+    title: 'Shivdan Singh Institute of Technology and Management',
+    code: '007',
+    tag: 'ENGINEERING',
+    short: 'SSITM',
+    approval: 'Approved by AICTE and affiliated to AKTU, Lucknow.',
+    url: 'https://ssitm.in/',
+    image: ssitmFallback,
+    type: 'Engineering',
+  },
+  {
+    _id: 'default-sitm',
+    id: 2,
+    title: 'Saroj Institute of Technology and Management',
+    code: '123',
+    tag: 'ENGINEERING',
+    short: 'SITM',
+    approval: 'Approved by AICTE and affiliated to AKTU, Lucknow.',
+    url: 'https://sitmlko.org/',
+    image: sitmFallback,
+    type: 'Engineering',
+  },
+  {
+    _id: 'default-scl',
+    id: 3,
+    title: 'Saroj College of Law',
+    code: 'BCI Approved',
+    tag: 'LAW',
+    short: 'SCL',
+    approval: 'Approved by Bar Council of India and affiliated to Lucknow University.',
+    url: '/scl/',
+    image: lawFallback,
+    type: 'Law',
+  },
+  {
+    _id: 'default-scp',
+    id: 4,
+    title: 'Saroj College of Pharmacy',
+    code: '2031',
+    tag: 'PHARMACY',
+    short: 'SCP',
+    approval: 'Approved by Pharmacy Council of India and affiliated to AKTU, Lucknow.',
+    url: '/scp/',
+    image: scpFallback,
+    type: 'Pharmacy',
+  },
+  {
+    _id: 'default-scep',
+    id: 5,
+    title: 'Saroj College of Engineering and Polytechnic',
+    code: 'SCEP',
+    tag: 'POLYTECHNIC',
+    short: 'SCEP',
+    approval: 'Approved by AICTE and affiliated to BTE, Lucknow.',
+    url: '/scep/',
+    image: scepFallback,
+    type: 'Polytechnic',
+  },
+];
 
 const ArrowRight = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -77,22 +142,57 @@ function getIcon(inst) {
   return <BuildingIcon />;
 }
 
+function getFallbackImage(inst) {
+  if (!inst) return ssitmFallback;
+  const code = (inst.short || '').toUpperCase();
+  if (fallbackImages[code]) return fallbackImages[code];
+  const title = (inst.title || '').toLowerCase();
+  if (title.includes('shivdan') || title.includes('ssitm') || title.includes('aligarh')) return ssitmFallback;
+  if (title.includes('law') || title.includes('scl')) return lawFallback;
+  if (title.includes('pharmacy') || title.includes('scp') || title.includes('lip')) return scpFallback;
+  if (title.includes('polytechnic') || title.includes('scep') || title.includes('engineering and polytechnic')) return scepFallback;
+  if (title.includes('saroj institute') || title.includes('sitm') || title.includes('technology and management')) return sitmFallback;
+  return ssitmFallback;
+}
+
 function getImage(inst) {
-  if (inst.customImage) return inst.customImage;
-  if (inst.image && inst.image.startsWith('http')) return inst.image;
-  return fallbackImages[inst.short] || ssitmFallback;
+  if (!inst) return ssitmFallback;
+  
+  if (inst.customImage && typeof inst.customImage === 'string' && inst.customImage.trim().length > 0) {
+    const custom = inst.customImage.trim();
+    if (custom.startsWith('/') || (custom.startsWith('data:image/') && custom.length > 100)) {
+      return custom;
+    }
+  }
+
+  if (inst.image && typeof inst.image === 'string') {
+    const trimmed = inst.image.trim();
+    if (trimmed.startsWith('/') || trimmed.startsWith('http://') || trimmed.startsWith('https://')) {
+      return trimmed;
+    }
+  }
+
+  return getFallbackImage(inst);
 }
 
 function InstitutionCard({ institution }) {
+  const imageSrc = getImage(institution);
+
   return (
     <article className="institutions-showcase__card">
       <img
-        src={institution.image}
+        src={imageSrc}
         alt={institution.title}
         className="institutions-showcase__card-image"
         loading="lazy"
+        onError={(e) => {
+          const fb = getFallbackImage(institution);
+          if (e.target.src !== fb) {
+            e.target.src = fb;
+          }
+        }}
       />
-      <div className="institutions-showcase__card-badge">{institution.icon}</div>
+      <div className="institutions-showcase__card-badge">{institution.icon || getIcon(institution)}</div>
       <div className="institutions-showcase__card-body">
         <h3 className="institutions-showcase__card-title">{institution.title}</h3>
 
@@ -128,7 +228,7 @@ function InstitutionCard({ institution }) {
 }
 
 export default function FullSections() {
-  const [list, setList] = useState([]);
+  const [list, setList] = useState(defaultInstitutionsList);
 
   useEffect(() => {
     fetch(api('/api/institutions'))
@@ -146,7 +246,6 @@ export default function FullSections() {
         <div className="institutions-showcase__header">
           <div className="institutions-showcase__intro">
             <div className="institutions-showcase__title-row">
-
               <h2 className="institutions-showcase__title">Our Institutions</h2>
             </div>
             <span className="institutions-showcase__accent" />
@@ -157,8 +256,8 @@ export default function FullSections() {
         </div>
 
         <div className="institutions-showcase__grid">
-          {gridItems.map((inst) => (
-            <InstitutionCard key={inst._id} institution={{ ...inst, image: getImage(inst), icon: getIcon(inst) }} />
+          {gridItems.map((inst, idx) => (
+            <InstitutionCard key={inst._id || inst.id || idx} institution={{ ...inst, image: getImage(inst), icon: getIcon(inst) }} />
           ))}
         </div>
 
@@ -170,6 +269,12 @@ export default function FullSections() {
                 alt={featured.title}
                 className="institutions-showcase__featured-image"
                 loading="lazy"
+                onError={(e) => {
+                  const fb = getFallbackImage(featured);
+                  if (e.target.src !== fb) {
+                    e.target.src = fb;
+                  }
+                }}
               />
               <span className="institutions-showcase__featured-badge">{getIcon(featured)}</span>
             </div>
