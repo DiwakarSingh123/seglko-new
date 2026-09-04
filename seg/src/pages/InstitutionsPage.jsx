@@ -2,12 +2,12 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { api } from '../api.js'
 import './InstitutionsPage.css'
-import program1 from '../assets/program1.png'
-import program2 from '../assets/program2.png'
-import program3 from '../assets/program3.png'
-import program4 from '../assets/program4.png'
-import program5 from '../assets/programsimg.jpeg'
-import program6 from '../assets/seg.jpeg'
+import program1 from '../assets/images/program1.png'
+import program2 from '../assets/images/program2.png'
+import program3 from '../assets/images/program3.png'
+import program4 from '../assets/images/program4.png'
+import program5 from '../assets/images/programsimg.jpeg'
+import program6 from '../assets/images/seg.jpeg'
 
 const institutions = [
   {
