@@ -1,3 +1,6 @@
+/* ===== Fonts from SIU ===== */
+@import './css/fonts.css';
+
 /* ===== CSS Reset & Design Tokens ===== */
 :root {
   /* Primary Colors from Figma */
@@ -12,9 +15,13 @@
   --color-text-dark: #3a3a3a;
   --color-text-body: #333333;
 
-  /* Typography */
-  --font-primary: 'Poppins', sans-serif;
-  --font-secondary: 'Inter', sans-serif;
+  /* Typography - Matched to SIU Style */
+  --font-primary: 'FunnelDisplay', 'Outfit', 'DM Sans', 'Poppins', sans-serif;
+  --font-secondary: 'DM Sans', 'Outfit', 'Inter', sans-serif;
+  --font-display: 'FunnelDisplay', 'Outfit', sans-serif;
+  --font-heading: 'FunnelDisplay', 'Outfit', sans-serif;
+  --font-serif: 'Playfair Display', 'BreeSerif', 'RobotoSlab', serif;
+  --font-body: 'DM Sans', 'Outfit', sans-serif;
 
   /* Spacing */
   --max-width: 1350px;
