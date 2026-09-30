@@ -228,7 +228,54 @@ const AdScriptBanner = () => {
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        margin: '2rem 0',
+      }}
+    />
+  );
+};
+
+const AdHighRevenueBanner = () => {
+  const bannerRef = useRef(null);
+
+  useEffect(() => {
+    if (!bannerRef.current) return;
+    if (bannerRef.current.querySelector('iframe') || bannerRef.current.querySelector('script')) return;
+
+    const confScript = document.createElement('script');
+    confScript.type = 'text/javascript';
+    confScript.text = `
+      atOptions = {
+        'key' : 'e93df10eb258c67a460e377aecd5a03d',
+        'format' : 'iframe',
+        'height' : 60,
+        'width' : 468,
+        'params' : {}
+      };
+    `;
+
+    const invokeScript = document.createElement('script');
+    invokeScript.type = 'text/javascript';
+    invokeScript.src = 'https://www.highrevenueformat.com/e93df10eb258c67a460e377aecd5a03d/invoke.js';
+
+    bannerRef.current.appendChild(confScript);
+    bannerRef.current.appendChild(invokeScript);
+
+    return () => {
+      if (bannerRef.current) {
+        bannerRef.current.innerHTML = '';
+      }
+    };
+  }, []);
+
+  return (
+    <div
+      ref={bannerRef}
+      className="ad-high-revenue-slot"
+      style={{
+        width: '100%',
+        minHeight: '60px',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
       }}
     />
   );
@@ -420,8 +467,9 @@ export default function HappeningsShowcase() {
           </div>
         </section>
 
-        <section className="happenings-showcase__cta-section">
+        <section className="happenings-showcase__cta-section" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '1.5rem', width: '100%', margin: '2.5rem 0' }}>
           <AdScriptBanner />
+          <AdHighRevenueBanner />
         </section>
       </div>
     </section>
