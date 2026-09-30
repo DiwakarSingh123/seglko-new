@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { api } from '../api.js';
 import aboutBg from '../assets/images/hapen2.jpeg';
@@ -6,7 +6,6 @@ import campusBg from '../assets/images/eventImg9.jpeg';
 import facultyBg from '../assets/images/hapen1.jpeg';
 import heroBg from '../assets/images/HappeningsImage1.jpg';
 import event from '../assets/images/sports-meet-10.jpeg';
-import logoImg from '../assets/images/logo.png';
 const ArrowRight = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
@@ -67,16 +66,6 @@ const NotesIcon = () => (
     <rect x="5" y="3.5" width="14" height="17" rx="2.5" stroke="currentColor" strokeWidth="1.8" />
     <path d="M8.5 8H15.5M8.5 12H15.5M8.5 16H12.8" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
     <path d="M8 3.5V6.2M16 3.5V6.2" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-  </svg>
-);
-
-const CapIcon = () => (
-  <svg width="88" height="88" viewBox="0 0 88 88" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <circle cx="44" cy="44" r="41" stroke="rgba(255,255,255,0.95)" strokeWidth="4" />
-    <path d="M22 38L44 29L66 38L44 47L22 38Z" fill="#FDB515" />
-    <path d="M31 42V53.5C31 55 38 59 44 59C50 59 57 55 57 53.5V42" fill="#FDB515" />
-    <path d="M63 39V50.5" stroke="#FDB515" strokeWidth="4" strokeLinecap="round" />
-    <circle cx="63" cy="54.5" r="4" fill="#FDB515" />
   </svg>
 );
 
@@ -207,6 +196,43 @@ const announcementStats = [
     icon: <NotesIcon />,
   },
 ];
+
+const AdScriptBanner = () => {
+  const containerRef = useRef(null);
+
+  useEffect(() => {
+    if (!containerRef.current) return;
+    const existing = containerRef.current.querySelector('script[src*="profitableratecpmnetwork"]');
+    if (existing) return;
+
+    const script = document.createElement('script');
+    script.type = 'text/javascript';
+    script.src = 'https://pl31584952.profitableratecpmnetwork.com/12/43/ae/1243aead08d0066918f6f86a2f04aace.js';
+    script.async = true;
+    containerRef.current.appendChild(script);
+
+    return () => {
+      if (containerRef.current) {
+        containerRef.current.innerHTML = '';
+      }
+    };
+  }, []);
+
+  return (
+    <div
+      ref={containerRef}
+      className="ad-banner-slot"
+      style={{
+        width: '100%',
+        minHeight: '90px',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        margin: '2rem 0',
+      }}
+    />
+  );
+};
 
 export default function HappeningsShowcase() {
   const [apiEvents, setApiEvents] = useState([]);
@@ -395,51 +421,7 @@ export default function HappeningsShowcase() {
         </section>
 
         <section className="happenings-showcase__cta-section">
-          <article className="happenings-showcase__cta-panel">
-            <span className="happenings-showcase__cta-rail happenings-showcase__cta-rail--left" aria-hidden="true" />
-            <span className="happenings-showcase__cta-rail happenings-showcase__cta-rail--right" aria-hidden="true" />
-            <span className="happenings-showcase__cta-dots happenings-showcase__cta-dots--left" aria-hidden="true" />
-            <span className="happenings-showcase__cta-dots happenings-showcase__cta-dots--right" aria-hidden="true" />
-
-            <div className="happenings-showcase__cta-visual">
-              <div className="happenings-showcase__cta-orbit">
-                <CapIcon />
-              </div>
-            </div>
-
-            <div className="happenings-showcase__cta-content">
-              <h3 className="happenings-showcase__cta-title">
-                <span className="happenings-showcase__cta-title-line">Start Your Journey with</span>
-                <span className="happenings-showcase__cta-title-highlight">Saroj Education Group</span>
-              </h3>
-
-              <div className="happenings-showcase__cta-actions">
-                <a href="https://ssitm.in/" target="_blank" rel="noopener noreferrer" className="btn btn--primary happenings-showcase__cta-button">
-                  Apply now
-                  <span className="btn__arrow">
-                    <ArrowRight />
-                  </span>
-                </a>
-
-                <a href="#happenings-showcase" className="btn btn--secondary happenings-showcase__cta-button happenings-showcase__cta-button--light">
-                  Speak with Expert
-                  <span className="btn__arrow">
-                    <ArrowRight />
-                  </span>
-                </a>
-              </div>
-            </div>
-
-            <div className="happenings-showcase__cta-building" aria-hidden="true">
-              <span className="happenings-showcase__building-block happenings-showcase__building-block--left" />
-              <span className="happenings-showcase__building-block happenings-showcase__building-block--center" />
-              <span className="happenings-showcase__building-block happenings-showcase__building-block--right" />
-            </div>
-
-            <div className="happenings-showcase__cta-badge">
-              <img src={logoImg} alt="SEG Logo" className="happenings-showcase__cta-badge-logo" />
-            </div>
-          </article>
+          <AdScriptBanner />
         </section>
       </div>
     </section>
